@@ -1785,7 +1785,9 @@ function importPortfolioWorkbook(wb) {
   if (!sheet) return { fatal: L.sheetFatal };
   const rows = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: null });
   const report = []; const port = [];
-  for (let i = 2; i < rows.length; i++) {
+  const ex1 = String((rows[1] || [])[0] || '').trim();
+  const startRow = (ex1 === 'Kanonkop Estate' || ex1 === 'Simonsig Estate') ? 2 : 1; // skip the grey example row only if it's still there
+  for (let i = startRow; i < rows.length; i++) {
     const row = rows[i];
     if (!row || row.every(v => v == null || String(v).trim() === '')) continue;
     const [producer, wine, country, region, appellation, colour, method, grapesT,
