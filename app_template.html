@@ -250,8 +250,11 @@
         <div><label data-i18n="lblCategory">Kategori</label><select id="ofMain"><option value="" data-i18n="optAllCategories">Alle kategorier</option></select></div>
         <div style="flex:0;min-width:150px"><label>&nbsp;</label>
           <button class="btn" id="oppExport" style="width:100%;padding:6px 10px" onclick="exportShortlist()"><span data-i18n="btnShortlistExport">Eksporter shortlist</span> <span id="shortlistCount"></span></button></div>
+        <div style="flex:0;min-width:170px"><label>&nbsp;</label>
+          <button class="btn ghost" style="width:100%;padding:6px 10px" data-i18n="btnDeadlineIcs" onclick="exportDeadlinesICS()">Fristvarsler (kalender)</button></div>
       </div>
       <p class="note" id="oppSummary" style="margin:2px 0 8px;font-weight:600"></p>
+      <div id="oppDigest" style="margin:0 0 10px"></div>
       <div id="oppList"></div>
     </div>
   </section>
@@ -283,6 +286,27 @@
       <div class="tiles" id="mwTiles"></div>
       <div id="mwResults"></div>
       <div id="mwCta" style="margin-top:14px"></div>
+    </div>
+    <div class="card" id="mwListCard" style="display:none">
+      <h2 data-i18n="mwlH">List vinen — fyll ut det bare du vet</h2>
+      <p class="note" style="margin:0 0 12px" data-i18n="mwlNote">Disse feltene avgjør om et anbud faktisk kan vinnes, og bare du som produsent kan bekrefte dem. Når du lagrer, teller vinen som <b>kildeført</b> (ikke lenger et ubekreftet lead), datastyrken øker, og importører kan finne den. Alt kjører lokalt — eksporter JSON for å ta det med videre.</p>
+      <div class="mw-grid">
+        <div><label data-i18n="mwlProducer">Produsent *</label><input id="mwlProducer" data-i18n-ph="mwlProducerPh" placeholder="produsentnavn"></div>
+        <div><label data-i18n="mwlWine">Vinnavn</label><input id="mwlName"></div>
+        <div><label data-i18n="mwlFob">FOB € (fra kjeller) *</label><input type="number" id="mwlFob" step="0.5" data-i18n-ph="mwlFobPh" placeholder="f.eks. 4.20"></div>
+        <div><label data-i18n="mwlVol">Volum (flasker tilgjengelig)</label><input type="number" id="mwlVol" step="1000" data-i18n-ph="mwlVolPh" placeholder="f.eks. 12000"></div>
+        <div><label data-i18n="mwlVintages">Årganger tilgjengelig</label><input id="mwlVintages" data-i18n-ph="mwlVintagesPh" placeholder="f.eks. 2023, 2024"></div>
+        <div><label data-i18n="mwlGrapes">Druesammensetning</label><input id="mwlGrapes" data-i18n-ph="mwlGrapesPh" placeholder="f.eks. riesling 100"></div>
+        <div><label data-i18n="mwlSugar">Restsukker (g/l)</label><input type="number" id="mwlSugar" step="0.5"></div>
+        <div><label data-i18n="mwlWood">Fatbruk</label><select id="mwlWood">
+          <option value="" data-i18n="mwlWoodUnknown">—</option>
+          <option value="none" data-i18n="mwlWoodNone">Ingen / ståltank</option>
+          <option value="discreet" data-i18n="mwlWoodDiscreet">Diskret / brukt fat</option>
+          <option value="barrel" data-i18n="mwlWoodBarrel">Fatgjæret / nytt eik</option></select></div>
+        <div><label data-i18n="mwlWeight">Flaskevekt (g)</label><input type="number" id="mwlWeight" step="10" data-i18n-ph="mwlWeightPh" placeholder="tom flaske"></div>
+        <div style="flex:0;min-width:160px"><label>&nbsp;</label><button class="btn" style="width:100%;padding:7px 10px" data-i18n="mwlSave" onclick="saveProducerProfile()">Lagre til databasen</button></div>
+      </div>
+      <div id="mwlResult" style="margin-top:12px"></div>
     </div>
   </section>
 
@@ -535,6 +559,11 @@ const I18N = {
     oppCandV: 'kandidater', oppIntroV: 'introduksjoner', oppFobV: 'trenger ≤ FOB', oppDeadV: 'frist',
     oppScoreV: 'score', oppSeeks: 'søker', oppFrom: ' fra ',
     oppSummary: n => `${n} anbud med kvalifiserte viner i denne planen`,
+    btnDeadlineIcs: 'Fristvarsler (kalender)',
+    digestTitle: n => `${n} anbud i shortlist — kommende frister:`,
+    digestHint: 'Last ned kalendervarsler (.ics) med påminnelse 7 og 1 dag før frist. I produksjon sendes de samme varslene på e-post.',
+    oppNoShortlist: 'Stjernemerk noen viner først (★) for å bygge en shortlist.',
+    oppNoDeadlines: 'Ingen av de shortlistede anbudene har en dato å varsle om.',
     evidence: 'Datastyrke', evStrong: 'Sterk', evModerate: 'Middels', evThin: 'Tynn',
     evNote: 'scoren måler attraktivitet; datastyrken viser hvor solid grunnlaget er (de fleste kandidatene er foreløpig ubekreftede leads).',
     evTip: (s, t, c, r) => `Datastyrke bak scoren: ${s} av ${t} kandidater har kildeførte data · ${c}% av kravene bekreftet · ${r}% med verifisert NO-status. Frødata teller svakt til produsenten eller katalogen bekrefter dem.`,
@@ -552,12 +581,31 @@ const I18N = {
     mwResultH: n => n ? `Vinen din kvalifiserer til ${n} anbud` : 'Ingen anbud matcher ennå',
     mwTileMatches: 'anbud den kan vinne', mwTileIntro: 'der du er urepresentert', mwTileBest: 'beste marginrom €',
     mwNoMatch: 'Ingen av anbudene i denne planen passer akkurat denne profilen. Prøv en annen plan øverst til høyre, juster druen/prisen, eller se <b>Analyse</b> for hvilke opprinnelser og druer som går igjen.',
-    mwCompete: n => n === 0 ? 'ingen andre viner konkurrerer ennå — sterk posisjon' : n === 1 ? '1 annen vin konkurrerer' : `${n} andre viner konkurrerer`,
+    mwListed: n => n === 0 ? 'ingen viner er listet for dette i basen ennå' : n === 1 ? '1 vin er listet for dette i basen' : `${n} viner er listet for dette i basen`,
+    mwFirstMover: 'vær blant de første importørene ser — legg inn vinen',
+    mwCoverage: 'Konkurransetallet gjelder kun viner som alt er i databasen (et delvis utvalg som vokser når produsenter legger inn viner) — ikke hele verdensmarkedet. Et lavt tall betyr «få kjente konkurrenter her», ikke «ingen konkurranse».',
     mwNeedFob: e => `du må treffe ≤ €${e} FOB`,
     mwPriceFits: 'din FOB passer ✓', mwPriceHigh: 'din FOB er for høy',
     mwClausePass: n => `${n} krav oppfylt`, mwUnknown: n => `${n} å bekrefte`,
     mwCtaText: 'Ser du anbud du kan vinne? Legg vinen (og resten av porteføljen) inn så importører finner den automatisk.',
     mwCtaBtn: 'List vinen min →', mwWinnable: 'Vinnbart',
+    mwlH: 'List vinen — fyll ut det bare du vet',
+    mwlNote: 'Disse feltene avgjør om et anbud faktisk kan vinnes, og bare du som produsent kan bekrefte dem. Når du lagrer, teller vinen som <b>kildeført</b> (ikke lenger et ubekreftet lead), datastyrken øker, og importører kan finne den. Alt kjører lokalt — eksporter JSON for å ta det med videre.',
+    mwlProducer: 'Produsent *', mwlProducerPh: 'produsentnavn', mwlWine: 'Vinnavn',
+    mwlFob: 'FOB € (fra kjeller) *', mwlFobPh: 'f.eks. 4.20',
+    mwlVol: 'Volum (flasker tilgjengelig)', mwlVolPh: 'f.eks. 12000',
+    mwlVintages: 'Årganger tilgjengelig', mwlVintagesPh: 'f.eks. 2023, 2024',
+    mwlGrapes: 'Druesammensetning', mwlGrapesPh: 'f.eks. riesling 100',
+    mwlSugar: 'Restsukker (g/l)', mwlWood: 'Fatbruk', mwlWeight: 'Flaskevekt (g)', mwlWeightPh: 'tom flaske',
+    mwlWoodUnknown: '—', mwlWoodNone: 'Ingen / ståltank', mwlWoodDiscreet: 'Diskret / brukt fat', mwlWoodBarrel: 'Fatgjæret / nytt eik',
+    mwlSave: 'Lagre til databasen',
+    mwlErrProducer: 'Produsentnavn er påkrevd.', mwlErrFob: 'FOB må være et tall over 0.',
+    mwlConfirmed: 'produsentbekreftet', mwlSelf: 'egenrapportert', mwlPending: 'ikke oppgitt ennå',
+    mwlRepPending: 'NO-status avgjøres av Vinmonopolet-katalogen',
+    mwlAudit: 'produsent la inn/oppdaterte profil i appen',
+    mwlClaimed: 'Profil oppdatert og bekreftet.', mwlAdded: 'Vin lagt til databasen.',
+    mwlSavedBody: n => `Den teller nå som kildeført, og matcher ${n} anbud i denne planen.`,
+    mwlDownload: 'Last ned JSON', mwlSeeOpp: 'Se i Muligheter →',
     introX: 'Skjul (vises ikke igjen)', introH: 'Slik fungerer det',
     introLi1: 'Last opp vinene dine én gang under <b>Min portefølje</b> — eller utforsk demodataene som allerede ligger inne.',
     introLi2: 'Under <b>Anbud</b> og <b>Marketplace</b> matches vinene automatisk mot Vinmonopolets krav, så du ser hvilke anbud du kan vinne.',
@@ -717,6 +765,11 @@ const I18N = {
     oppCandV: 'candidates', oppIntroV: 'introductions', oppFobV: 'needs ≤ FOB', oppDeadV: 'deadline',
     oppScoreV: 'score', oppSeeks: 'seeks', oppFrom: ' from ',
     oppSummary: n => `${n} tenders with qualified wines in this plan`,
+    btnDeadlineIcs: 'Deadline reminders (calendar)',
+    digestTitle: n => `${n} shortlisted tenders — upcoming deadlines:`,
+    digestHint: 'Download calendar reminders (.ics) with alerts 7 and 1 day before the deadline. In production the same alerts are emailed.',
+    oppNoShortlist: 'Star some wines first (★) to build a shortlist.',
+    oppNoDeadlines: 'None of the shortlisted tenders has a date to remind about.',
     evidence: 'Evidence', evStrong: 'Strong', evModerate: 'Moderate', evThin: 'Thin',
     evNote: 'the score measures attractiveness; evidence shows how solid the basis is (most candidates are still unconfirmed leads).',
     evTip: (s, t, c, r) => `Evidence behind the score: ${s} of ${t} candidates have sourced data · ${c}% of requirements confirmed · ${r}% with verified NO status. Seeded leads count weakly until a producer or the catalog confirms them.`,
@@ -734,12 +787,31 @@ const I18N = {
     mwResultH: n => n ? `Your wine qualifies for ${n} tenders` : 'No tenders match yet',
     mwTileMatches: 'tenders it can win', mwTileIntro: 'where you are unrepresented', mwTileBest: 'best margin headroom €',
     mwNoMatch: 'None of the tenders in this plan fit this exact profile. Try another plan (top right), adjust the grape/price, or see <b>Analytics</b> for which origins and grapes recur.',
-    mwCompete: n => n === 0 ? 'no other wines compete yet — strong position' : n === 1 ? '1 other wine competes' : `${n} other wines compete`,
+    mwListed: n => n === 0 ? 'no wines are listed for this in the database yet' : n === 1 ? '1 wine is listed for this in the database' : `${n} wines are listed for this in the database`,
+    mwFirstMover: 'be among the first importers see — list your wine',
+    mwCoverage: 'This count is only wines already in the database (a partial set that grows as producers add wines) — not the whole world market. A low number means "few known competitors here", not "no competition".',
     mwNeedFob: e => `you must hit ≤ €${e} FOB`,
     mwPriceFits: 'your FOB fits ✓', mwPriceHigh: 'your FOB is too high',
     mwClausePass: n => `${n} requirements met`, mwUnknown: n => `${n} to confirm`,
     mwCtaText: 'See tenders you can win? Add this wine (and the rest of your portfolio) so importers find it automatically.',
     mwCtaBtn: 'List my wine →', mwWinnable: 'Winnable',
+    mwlH: 'List the wine — fill in what only you know',
+    mwlNote: 'These fields decide whether a tender can actually be won, and only you, the producer, can confirm them. When you save, the wine counts as <b>sourced</b> (no longer an unconfirmed lead), its evidence strength rises, and importers can find it. Everything runs locally — export the JSON to take it with you.',
+    mwlProducer: 'Producer *', mwlProducerPh: 'producer name', mwlWine: 'Wine name',
+    mwlFob: 'FOB € (ex-cellar) *', mwlFobPh: 'e.g. 4.20',
+    mwlVol: 'Volume (bottles available)', mwlVolPh: 'e.g. 12000',
+    mwlVintages: 'Vintages available', mwlVintagesPh: 'e.g. 2023, 2024',
+    mwlGrapes: 'Grape composition', mwlGrapesPh: 'e.g. riesling 100',
+    mwlSugar: 'Residual sugar (g/l)', mwlWood: 'Oak', mwlWeight: 'Bottle weight (g)', mwlWeightPh: 'empty bottle',
+    mwlWoodUnknown: '—', mwlWoodNone: 'None / steel tank', mwlWoodDiscreet: 'Discreet / used oak', mwlWoodBarrel: 'Barrel-fermented / new oak',
+    mwlSave: 'Save to the database',
+    mwlErrProducer: 'Producer name is required.', mwlErrFob: 'FOB must be a number above 0.',
+    mwlConfirmed: 'producer-confirmed', mwlSelf: 'self-reported', mwlPending: 'not stated yet',
+    mwlRepPending: 'NO status is decided by the Vinmonopolet catalog',
+    mwlAudit: 'producer added/updated profile in the app',
+    mwlClaimed: 'Profile updated and confirmed.', mwlAdded: 'Wine added to the database.',
+    mwlSavedBody: n => `It now counts as sourced, and matches ${n} tenders in this plan.`,
+    mwlDownload: 'Download JSON', mwlSeeOpp: 'See in Opportunities →',
     introX: "Hide (won't show again)", introH: 'How it works',
     introLi1: 'Upload your wines once under <b>My portfolio</b> — or explore the demo data already loaded.',
     introLi2: "Under <b>Tenders</b> and <b>Marketplace</b> your wines are matched automatically against Vinmonopolet's requirements, so you see which tenders you can win.",
@@ -2548,6 +2620,7 @@ function toggleStar(ref, id, el) {
   if (SHORTLIST.has(k)) SHORTLIST.delete(k); else SHORTLIST.add(k);
   saveShortlist(); if (el) el.classList.toggle('on', SHORTLIST.has(k));
   const c = $('shortlistCount'); if (c) c.textContent = SHORTLIST.size ? `(${SHORTLIST.size})` : '';
+  renderDigest();
 }
 function renderOpportunities() {
   const list = $('oppList'); if (!list) return;
@@ -2567,6 +2640,7 @@ function renderOpportunities() {
     })
     .sort((a, b) => b.score - a.score);
   $('oppSummary').innerHTML = L.oppSummary(rows.length) + ` <span style="font-weight:400;color:var(--muted)">— ${L.evNote}</span>`;
+  renderDigest();
   const c = $('shortlistCount'); if (c) c.textContent = SHORTLIST.size ? `(${SHORTLIST.size})` : '';
   if (!rows.length) { list.innerHTML = `<p class="note">${L.oppEmpty}</p>`; return; }
   const maxScore = rows[0].score || 1;
@@ -2622,6 +2696,53 @@ function exportShortlist() {
   a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
   a.download = 'shortlist_' + currentPlan.replace(/\W+/g, '_') + '.csv'; a.click();
 }
+function shortlistSpecs() {
+  return [...new Set([...SHORTLIST].map(k => k.split('|')[0]))]
+    .map(ref => SPECS.find(s => s.ref === ref)).filter(Boolean);
+}
+function renderDigest() {
+  const el = $('oppDigest'); if (!el) return;
+  const items = shortlistSpecs().map(s => ({ s, dtd: daysToDeadline(s) }))
+    .sort((a, b) => (a.dtd == null ? 1e9 : a.dtd) - (b.dtd == null ? 1e9 : b.dtd));
+  if (!items.length) { el.innerHTML = ''; return; }
+  el.innerHTML = `<div class="samplebar" style="border-color:color-mix(in oklab,var(--accent,#4670e0) 40%,var(--border))">
+    <b>${L.digestTitle(items.length)}</b> ${items.slice(0, 8).map(x =>
+      `${esc(x.s.ref)} <span style="color:${x.dtd != null && x.dtd >= 0 && x.dtd <= 30 ? 'var(--warn)' : 'var(--muted)'}">${x.dtd != null && x.dtd >= 0 ? x.dtd + 'd' : L.oppNoDeadline}</span>`).join(' · ')}
+    <br><span style="color:var(--muted)">${L.digestHint}</span></div>`;
+}
+function icsEsc(s) { return String(s).replace(/([,;\\])/g, '\\$1').replace(/\r?\n/g, '\\n'); }
+function exportDeadlinesICS() {
+  const items = shortlistSpecs();
+  if (!items.length) { alert(L.oppNoShortlist); return; }
+  const pad = n => String(n).padStart(2, '0');
+  const toDate = s => {
+    let m = String(s || '').match(/(\d{4})-(\d{2})-(\d{2})/); if (m) return m[1] + m[2] + m[3];
+    m = String(s || '').match(/(\d{1,2})[.\/](\d{1,2})[.\/](\d{4})/); if (m) return m[3] + pad(+m[2]) + pad(+m[1]);
+    return null;
+  };
+  const now = new Date();
+  const stamp = now.getUTCFullYear() + pad(now.getUTCMonth() + 1) + pad(now.getUTCDate()) + 'T' +
+    pad(now.getUTCHours()) + pad(now.getUTCMinutes()) + pad(now.getUTCSeconds()) + 'Z';
+  let ics = 'BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//Tender Intelligence//EN\r\nCALSCALE:GREGORIAN\r\n', n = 0;
+  for (const s of items) {
+    const d = toDate(s.deadline || s.launch); if (!d) continue;
+    const y = +d.slice(0, 4), mo = +d.slice(4, 6), da = +d.slice(6, 8);
+    const end = new Date(Date.UTC(y, mo - 1, da + 1));
+    const de = end.getUTCFullYear() + pad(end.getUTCMonth() + 1) + pad(end.getUTCDate());
+    const sum = `Tender ${s.ref} — ${groupLabel(s.group)} ${s.country || ''}`.trim();
+    const desc = `${s.price_text || ''} · ${(s.spec || '').slice(0, 140)}`;
+    ics += `BEGIN:VEVENT\r\nUID:${s.ref}@tender-intel\r\nDTSTAMP:${stamp}\r\nDTSTART;VALUE=DATE:${d}\r\nDTEND;VALUE=DATE:${de}\r\n` +
+      `SUMMARY:${icsEsc(sum)}\r\nDESCRIPTION:${icsEsc(desc)}\r\n` +
+      `BEGIN:VALARM\r\nTRIGGER:-P7D\r\nACTION:DISPLAY\r\nDESCRIPTION:${icsEsc(sum)}\r\nEND:VALARM\r\n` +
+      `BEGIN:VALARM\r\nTRIGGER:-P1D\r\nACTION:DISPLAY\r\nDESCRIPTION:${icsEsc(sum)}\r\nEND:VALARM\r\nEND:VEVENT\r\n`;
+    n++;
+  }
+  ics += 'END:VCALENDAR\r\n';
+  if (!n) { alert(L.oppNoDeadlines); return; }
+  const a = document.createElement('a');
+  a.href = 'data:text/calendar;charset=utf-8,' + encodeURIComponent(ics);
+  a.download = 'tender_deadlines.ics'; a.click();
+}
 
 /* ============ producer: match my wine ============ */
 let MW_INIT = false, MW_DEMOED = false;
@@ -2666,6 +2787,7 @@ function initMatchWine() {
 }
 function fillLead(i) {
   const w = (window._mwLeads || [])[i]; if (!w) return;
+  window._mwLead = w;
   $('mwName').value = w.name || ''; $('mwCountry').value = w.country || '';
   const colOpt = [...$('mwColour').options].find(o => (w.color || '').includes(o.value));
   if (colOpt) $('mwColour').value = colOpt.value;
@@ -2720,11 +2842,77 @@ function runMatchWine() {
       <span class="opp-title">${esc(s.ref)} — ${esc(groupLabel(s.group))}<small>${esc(s.country) || L.openOrigin} · ${esc((s.spec || '').slice(0, 90))}</small></span>
       <span style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">${need} ${pf} ${clauses}</span>
       </div><div class="opp-body" style="display:block;padding-top:0">
-      <p class="note" style="margin:6px 0 0">${L.oppSeeks} <b>${esc(specGrapes(s).slice(0,4).join(', ') || mainDisp(mainCat(s)))}</b> · ${esc(s.price_text)} · <b>${L.mwCompete(h.compet)}</b></p>
+      <p class="note" style="margin:6px 0 0">${L.oppSeeks} <b>${esc(specGrapes(s).slice(0,4).join(', ') || mainDisp(mainCat(s)))}</b> · ${esc(s.price_text)} · ${L.mwListed(h.compet)}${h.compet <= 2 ? ` <span style="color:var(--good-text)">— ${L.mwFirstMover}</span>` : ''}</p>
       </div></div>`;
-  }).join('');
+  }).join('') + `<p class="note" style="margin:10px 0 0;color:var(--muted)">${L.mwCoverage}</p>`;
   $('mwCta').innerHTML = `<div class="samplebar" style="border-color:color-mix(in oklab,var(--accent,#4670e0) 40%,var(--border))">
-    ${L.mwCtaText} <button class="btn" style="margin-left:8px" onclick="gotoTab('opplasting')">${L.mwCtaBtn}</button></div>`;
+    ${L.mwCtaText} <button class="btn" style="margin-left:8px" onclick="openListForm()">${L.mwCtaBtn}</button></div>`;
+}
+function openListForm() {
+  const lead = window._mwLead;
+  $('mwlProducer').value = $('mwlProducer').value || (lead && lead.producer) || '';
+  $('mwlName').value = $('mwlName').value || val('mwName') || (lead && lead.name) || '';
+  $('mwlFob').value = $('mwlFob').value || val('mwFob') || '';
+  const g = val('mwGrape').trim();
+  if (!$('mwlGrapes').value && g) $('mwlGrapes').value = g + ' 100';
+  $('mwListCard').style.display = 'block';
+  $('mwListCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+function parseGrapeInput(s) {
+  const out = {}; let any = false;
+  for (const part of String(s || '').split(/[;,]/)) {
+    const m = part.trim().match(/^(.+?)\s+(\d+(?:\.\d+)?)\s*%?$/);
+    if (m) { out[m[1].trim().toLowerCase()] = +m[2]; any = true; }
+    else if (part.trim()) { out[part.trim().toLowerCase()] = 0; any = true; }
+  }
+  return any ? out : null;
+}
+function saveProducerProfile() {
+  const producer = val('mwlProducer').trim();
+  const fob = parseFloat(val('mwlFob'));
+  const errs = [];
+  if (!producer) errs.push(L.mwlErrProducer);
+  if (!(fob > 0)) errs.push(L.mwlErrFob);
+  if (errs.length) { $('mwlResult').innerHTML = `<p class="note" style="color:var(--warn)">${errs.join('<br>')}</p>`; return; }
+  const colour = val('mwColour'), name = (val('mwlName').trim() || val('mwName').trim() || '—');
+  const grapes = parseGrapeInput(val('mwlGrapes')) || (val('mwGrape').trim() ? { [val('mwGrape').trim().toLowerCase()]: 100 } : {});
+  const vintages = (val('mwlVintages').match(/(?:19|20)\d\d/g) || []).map(Number);
+  const certs = val('mwCert').split(/[;,]/).map(s => s.trim()).filter(Boolean);
+  const num = v => { const x = parseFloat(v); return isNaN(x) ? null : x; };
+  const conf = note => ({ tier: 'verified', note: (L.mwlConfirmed) + (note ? ' — ' + note : '') });
+  const rec = {
+    id: 'prod' + Date.now(),
+    producer, name, country: val('mwCountry'), region: '', appellation: '',
+    grapes, color: colour, method: /sparkling/.test(colour) ? 'traditional' : null,
+    vintages_available: vintages, abv: num(val('mwAbv')), sugar_g_l: num(val('mwlSugar')),
+    wood: val('mwlWood') || null, certs, cert_on_label: !!certs.length,
+    vines_age: null, maceration_days: null,
+    volume_bottles: num(val('mwlVol')), fob_eur: fob,
+    packaging: { type: null, weight_g: num(val('mwlWeight')) },
+    representation: { NO: 'unrepresented — open for import', SE: 'unknown', FI: 'unknown' },
+    no_gap: 'open', pending_claim: false, source: 'producer self-reported (in app)',
+    verify: {
+      producer: conf(''), name: conf(''), country: conf(''),
+      grapes: conf(L.mwlSelf), abv: conf(L.mwlSelf), fob_eur: conf(L.mwlSelf),
+      volume_bottles: num(val('mwlVol')) != null ? conf(L.mwlSelf) : { tier: 'unknown', note: L.mwlPending },
+      sugar_g_l: num(val('mwlSugar')) != null ? conf(L.mwlSelf) : { tier: 'unknown', note: L.mwlPending },
+      certs: certs.length ? conf(L.mwlSelf) : { tier: 'unknown', note: L.mwlPending },
+      representation: { tier: 'unknown', note: L.mwlRepPending },
+    },
+  };
+  stampAudit(rec, L.mwlAudit);
+  // claim-in-place if this producer+wine already exists (e.g. the seed lead), else add
+  const key = (producer + '|' + name).toLowerCase();
+  const idx = WINES.findIndex(w => ((w.producer || '') + '|' + (w.name || '')).toLowerCase() === key);
+  let claimed = false;
+  if (idx >= 0) { rec.id = WINES[idx].id; WINES[idx] = rec; claimed = true; } else WINES.push(rec);
+  recompute();
+  const hits = mwHits(rec);
+  const json = 'data:application/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(rec, null, 1));
+  $('mwlResult').innerHTML = `<div class="samplebar" style="border-color:var(--good-text)">
+    <b>${claimed ? L.mwlClaimed : L.mwlAdded}</b> ${L.mwlSavedBody(hits)}
+    <a class="btn ghost" style="margin-left:8px" href="${json}" download="${esc(producer.replace(/\W+/g,'_'))}_profile.json">${L.mwlDownload}</a>
+    <button class="btn ghost" style="margin-left:6px" onclick="gotoTab('muligheter')">${L.mwlSeeOpp}</button></div>`;
 }
 
 $('specFilters').querySelectorAll('button').forEach(b => b.addEventListener('click', () => {

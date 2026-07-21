@@ -41,7 +41,7 @@ jobs:
           IDX=vmp_catalog_index.json
           [ -f "$IDX" ] || IDX=/nonexistent.json
           python3 ingest_systembolaget.py --file assortment.json --vmp-index "$IDX" --out seed_se.json
-          python3 make_seed_sample.py --in seed_se.json --per-country 22 --cap 240 --out seed_sample.json
+          python3 make_seed_sample.py --in seed_se.json --per-country 26 --cap 360 --out seed_sample.json
 
       - name: Rebuild index.html with the refreshed leads
         run: |

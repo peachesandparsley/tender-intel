@@ -43,6 +43,10 @@ COUNTRY_EN = {
     "bulgarien": "Bulgaria", "slovenien": "Slovenia", "cypern": "Cyprus",
     "georgien": "Georgia", "kroatien": "Croatia", "rumanien": "Romania",
     "rumänien": "Romania", "israel": "Israel", "moldavien": "Moldova",
+    "ukraina": "Ukraine", "nordmakedonien": "North Macedonia",
+    "storbritannien": "United Kingdom", "tjeckien": "Czechia",
+    "luxemburg": "Luxembourg", "armenien": "Armenia", "uruguay": "Uruguay",
+    "libanon2": "Lebanon", "turkiet": "Türkiye", "brasilien": "Brazil",
 }
 
 
