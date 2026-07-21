@@ -40,22 +40,32 @@ API_PATH = os.environ.get("VMP_API_PATH", "/products/v0/details-normal")
 TODAY = datetime.date.today().isoformat()
 
 
-def g(product, *keys):
-    """First non-empty value among the given field-name aliases."""
-    for k in keys:
-        val = product.get(k)
-        if val not in (None, ""):
-            return val
+def dig(obj, *names):
+    """Find the first key in `names` anywhere in a nested dict/list, non-empty.
+    The products/v0 API nests fields in groups (basic, origins, prices, …), so
+    we search by field name rather than a fixed path."""
+    targets = [n.lower() for n in names]
+    queue = [obj]
+    while queue:
+        cur = queue.pop(0)
+        if isinstance(cur, dict):
+            for k, v in cur.items():
+                if k.lower() in targets and v not in (None, "", [], {}):
+                    return v
+            queue.extend(cur.values())
+        elif isinstance(cur, list):
+            queue.extend(cur)
     return None
 
 
 def map_color(product):
-    cat = " ".join(str(v) for v in [g(product, "mainCategory"), g(product, "mainSubCategory"),
-                                     g(product, "productType")] if v).lower()
+    cat = " ".join(str(v) for v in [dig(product, "mainProductTypeName"),
+                                    dig(product, "subProductTypeName"),
+                                    dig(product, "productGroupName")] if v).lower()
     method = None
     if "musserende" in cat or "sparkling" in cat:
         color = "sparkling rose" if ("rosé" in cat or "rose" in cat) else "sparkling white"
-        method = "traditional" if any(x in cat for x in ("champagne", "cava", "cap classique")) else "sparkling"
+        method = "traditional" if any(x in cat for x in ("champagne", "cava", "cap classique", "traditional")) else "sparkling"
     elif "rosé" in cat or "rosevin" in cat:
         color = "rose"
     elif "hvit" in cat or "white" in cat:
@@ -69,53 +79,58 @@ def map_color(product):
     return color, method
 
 
-def parse_litres(container):
-    m = re.search(r"([\d.,]+)", str(container or ""))
+def parse_litres(volume):
+    m = re.search(r"([\d.,]+)", str(volume or ""))
     if not m:
         return None
     val = float(m.group(1).replace(",", "."))
-    return val / 100 if val > 10 else val  # handle "75 cl" vs "0.75 l"
+    return val / 100 if val > 10 else val  # API volume may be cl (75) or l (0.75)
 
 
 def to_wine(product, idx):
-    code = str(g(product, "code", "varenummer", "productId") or "").strip()
+    code = str(dig(product, "productId", "code", "varenummer") or "").strip()
     color, method = map_color(product)
-    vintage = g(product, "vintage")
-    vintages = [int(vintage)] if str(vintage or "").isdigit() and int(vintage) > 1900 else []
-    F, Fr, T = g(product, "fullness"), g(product, "freshness"), g(product, "tannins")
-    prof = {"fylde": F, "friskhet": Fr, "garvestoffer": T} if any(v not in (None, "") for v in (F, Fr, T)) else None
-    wholesaler = str(g(product, "wholesaler", "distributor") or "").strip()
-    url = g(product, "url") or f"https://www.vinmonopolet.no/p/{code}"
+    vintage = dig(product, "vintage")
+    vintages = [int(vintage)] if str(vintage or "").isdigit() and 1900 < int(vintage) < 2100 else []
+    certs = [c for c, flag in (("Organic", dig(product, "organic")),
+                               ("Biodynamic", dig(product, "biodynamic")),
+                               ("Kosher", dig(product, "kosher")))
+             if flag in (True, "true", "True", 1, "1", "Ja", "ja")]
+    wholesaler = str(dig(product, "wholesalerName", "wholesaler", "distributorName") or "").strip()
+    weight = dig(product, "packagingWeight")
+    url = f"https://www.vinmonopolet.no/p/{code}"
     src = f"Vinmonopolet catalog (varenr {code})"
     ver = lambda note: {"tier": "verified", "note": f"{note} — {src}, {TODAY}", "source": url}
     unk = lambda note: {"tier": "unknown", "note": note}
     return {
         "id": f"vmp{code or idx}",
-        "producer": str(g(product, "mainProducer") or "").strip(),
-        "name": str(g(product, "name") or "").strip(),
-        "country": str(g(product, "mainCountry") or "").strip(),
-        "region": " / ".join(x for x in [str(g(product, "district") or "").strip(),
-                                         str(g(product, "subDistrict") or "").strip()] if x),
-        "appellation": "",
+        "producer": str(dig(product, "manufacturerName", "vendorName", "mainProducer", "producer") or "").strip(),
+        "name": str(dig(product, "productLongName", "productShortName", "name") or "").strip(),
+        "country": str(dig(product, "countryName", "country", "mainCountry") or "").strip(),
+        "region": " / ".join(x for x in [str(dig(product, "regionName", "region", "district") or "").strip(),
+                                         str(dig(product, "subRegionName", "subRegion", "subDistrict") or "").strip()] if x),
+        "appellation": str(dig(product, "localQualityClassif") or "").strip(),
         "grapes": {},                    # producer/tech-sheet only
         "method": method,
         "vintages_available": vintages,
-        "abv": g(product, "abv"),
-        "sugar_g_l": g(product, "sugar", "sweetness_g_l"),
+        "abv": dig(product, "alcoholContent", "abv"),
+        "sugar_g_l": dig(product, "sugarContent", "sugar"),
         "wood": None,
-        "certs": [],
+        "certs": certs,
         "cert_on_label": False,
         "vines_age": None,
         "maceration_days": None,
         "volume_bottles": None,          # producer only (committed volume)
         "fob_eur": None,                 # producer only (ex-cellar price)
-        "retail_nok": g(product, "price"),
-        "profile": prof,
+        "retail_nok": dig(product, "salesPrice", "price"),
+        "profile": None,
         "color": color,
-        "packaging": {"type": g(product, "containerType"), "weight_g": None},
+        "packaging": {"type": dig(product, "packagingMaterial", "containerType"),
+                      "weight_g": int(weight) if str(weight or "").replace(".", "").isdigit() else None,
+                      "closure": dig(product, "corkType")},
         "catalog_no": {"status": "listed", "product_id": code,
-                       "checked_by": "Vinmonopolet catalog", "checked_at": TODAY,
-                       "note": g(product, "name")},
+                       "checked_by": "Vinmonopolet API (products/v0)", "checked_at": TODAY,
+                       "note": dig(product, "productLongName", "productShortName")},
         "representation": {"NO": f"importer: {wholesaler}" if wholesaler else "listed in VMP catalog",
                            "SE": "unknown", "FI": "unknown"},
         "source": src,
@@ -125,7 +140,10 @@ def to_wine(product, idx):
         "verify": {
             "producer": ver("stated in the catalog"), "name": ver("stated in the catalog"),
             "country": ver("stated in the catalog"), "region": ver("stated in the catalog"),
-            "abv": ver("stated in the catalog"), "profile": ver("taste profile from the catalog"),
+            "appellation": ver("origin/classification from the catalog"),
+            "abv": ver("stated in the catalog"),
+            "certs": ver("organic/biodynamic flag from the catalog") if certs else unk("no cert flag in catalog"),
+            "packaging": ver("packaging/weight from the catalog") if weight else unk("bottle weight not in catalog"),
             "representation": ver("wholesaler stated in the catalog"),
             "fob_eur": unk("ex-cellar price must be supplied by the producer"),
             "volume_bottles": unk("available volume must be supplied by the producer"),
@@ -177,7 +195,7 @@ def main():
     else:
         ap.error("pass --api or --file")
 
-    wines = [to_wine(p, i) for i, p in enumerate(products) if str(g(p, "code", "varenummer", "productId") or "").strip()]
+    wines = [to_wine(p, i) for i, p in enumerate(products) if str(dig(p, "productId", "code", "varenummer") or "").strip()]
     merged = {}
     if os.path.exists(args.out):
         for w in json.load(open(args.out, encoding="utf-8")).get("wines", []):
