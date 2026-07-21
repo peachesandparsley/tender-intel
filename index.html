@@ -244,6 +244,7 @@
         <button data-of="all" class="on" data-i18n="oppAll">Alle muligheter</button>
         <button data-of="intro" data-i18n="oppIntro">Kun introduksjoner</button>
         <button data-of="soon" data-i18n="oppSoon">Frist snart</button>
+        <button data-of="sourced" data-i18n="oppSourced" data-i18n-title="oppSourcedTip" title="Skjul muligheter som bare hviler på ubekreftede leads">Kun kildeført grunnlag</button>
       </div>
       <div class="dimbar" style="margin-bottom:6px">
         <div><label data-i18n="lblGeo">Geografi</label><select id="ofCountry"><option value="" data-i18n="optAllCountries">Alle land</option></select></div>
@@ -577,6 +578,8 @@ const I18N = {
     h2Opp: 'Muligheter — anbud verdt å forfølge',
     noteOpp: 'Anbud rangert etter mulighet: urepresenterte kandidater (introduksjoner), marginrom og hvor nær fristen er. Åpne et anbud for de best matchede vinene og økonomien — stjernemerk dem du vil forfølge og eksporter lista.',
     oppAll: 'Alle muligheter', oppIntro: 'Kun introduksjoner', oppSoon: 'Frist snart',
+    oppSourced: 'Kun kildeført grunnlag', oppSourcedTip: 'Skjul muligheter som bare hviler på ubekreftede leads (tynn datastyrke)',
+    oppEmptySourced: 'Ingen muligheter har kildeført nok grunnlag ennå — de fleste kandidatene er ubekreftede leads. Datastyrken øker når produsenter fullfører profilene sine og Vinmonopolet-katalogen bekrefter representasjon.',
     btnShortlistExport: 'Eksporter shortlist',
     oppCandV: 'kandidater', oppIntroV: 'introduksjoner', oppFobV: 'trenger ≤ FOB', oppDeadV: 'frist',
     oppScoreV: 'score', oppSeeks: 'søker', oppFrom: ' fra ',
@@ -783,6 +786,8 @@ const I18N = {
     h2Opp: 'Opportunities — tenders worth chasing',
     noteOpp: 'Tenders ranked by opportunity: unrepresented candidates (introductions), margin headroom and how near the deadline is. Open a tender for the best-matched wines and the economics — star the ones to chase and export the list.',
     oppAll: 'All opportunities', oppIntro: 'Introductions only', oppSoon: 'Deadline soon',
+    oppSourced: 'Sourced evidence only', oppSourcedTip: 'Hide opportunities resting only on unconfirmed leads (thin evidence)',
+    oppEmptySourced: 'No opportunities have sourced-enough evidence yet — most candidates are unconfirmed leads. Evidence strengthens as producers complete their profiles and the Vinmonopolet catalog confirms representation.',
     btnShortlistExport: 'Export shortlist',
     oppCandV: 'candidates', oppIntroV: 'introductions', oppFobV: 'needs ≤ FOB', oppDeadV: 'deadline',
     oppScoreV: 'score', oppSeeks: 'seeks', oppFrom: ' from ',
@@ -2652,19 +2657,21 @@ function renderOpportunities() {
   const mainOpts = [...new Set(SPECS.map(s => mainCat(s)).filter(Boolean))].map(c => [c, mainDisp(c)]).sort((a, b) => a[1].localeCompare(b[1]));
   fillSelValueLabel('ofMain', mainOpts, OPPFILT.main);
   let rows = MARKET.filter(m => m.matches.length)
-    .map(m => ({ m, ...opportunityScore(m) }))
+    .map(m => ({ m, st: datasetStrength(m), ...opportunityScore(m) }))
     .filter(r => {
       if (OPPFILT.country && r.m.spec.country !== OPPFILT.country) return false;
       if (OPPFILT.main && mainCat(r.m.spec) !== OPPFILT.main) return false;
       if (OPPF === 'intro' && r.nIntro === 0) return false;
       if (OPPF === 'soon' && !(r.dtd != null && r.dtd >= 0 && r.dtd <= 60)) return false;
+      if (OPPF === 'sourced' && r.st.level === 'low') return false;   // hide thin-evidence opportunities
       return true;
     })
-    .sort((a, b) => b.score - a.score);
+    // rank by attractiveness, then let evidence break ties (rounded score avoids float-noise ties)
+    .sort((a, b) => (Math.round(b.score * 10) - Math.round(a.score * 10)) || (b.st.pct - a.st.pct));
   $('oppSummary').innerHTML = L.oppSummary(rows.length) + ` <span style="font-weight:400;color:var(--muted)">— ${L.evNote}</span>`;
   renderDigest();
   const c = $('shortlistCount'); if (c) c.textContent = SHORTLIST.size ? `(${SHORTLIST.size})` : '';
-  if (!rows.length) { list.innerHTML = `<p class="note">${L.oppEmpty}</p>`; return; }
+  if (!rows.length) { list.innerHTML = `<p class="note">${OPPF === 'sourced' ? L.oppEmptySourced : L.oppEmpty}</p>`; return; }
   const maxScore = rows[0].score || 1;
   list.innerHTML = rows.map((r, i) => {
     const m = r.m, s = m.spec;
@@ -2672,7 +2679,7 @@ function renderOpportunities() {
       (isIntroOpp(b) - isIntroOpp(a)) || (b.passes - a.passes) || (a.unknowns - b.unknowns));
     const dl = r.dtd != null ? (r.dtd >= 0 ? `${r.dtd}d` : L.oppNoDeadline) : L.oppNoDeadline;
     const fob = r.fobEur ? '€' + fmt(r.fobEur, 1) : '–';
-    const st = datasetStrength(m);
+    const st = r.st;
     const stLabel = st.level === 'high' ? L.evStrong : st.level === 'med' ? L.evModerate : L.evThin;
     const body = `<table><thead><tr><th>${L.thPick}</th><th>${L.thWineCol}</th><th>${L.thFitCol}</th><th>${L.thStatusCol}</th></tr></thead><tbody>${
       cands.map(x => {
