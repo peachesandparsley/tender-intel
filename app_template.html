@@ -142,6 +142,11 @@
   .intro .x:hover { background: color-mix(in oklab, var(--accent) 12%, transparent); color: var(--text-primary); }
   .plan-label { color: var(--muted); font-size: 12px; font-family: system-ui, sans-serif; font-weight: 400;
     letter-spacing: 0; margin-left: 4px; }
+  .samplebar { background: color-mix(in oklab, var(--warn) 13%, var(--surface-1));
+    border: 1px solid color-mix(in oklab, var(--warn) 38%, var(--border)); border-radius: 10px;
+    padding: 10px 14px; margin: 0 0 14px; font-size: 12.5px; color: var(--text-secondary); }
+  .samplebar b { color: var(--text-primary); }
+  .chip.sample { background: color-mix(in oklab, var(--warn) 24%, transparent); color: var(--text-primary); }
 </style>
 </head>
 <body class="viz-root">
@@ -229,6 +234,7 @@
     <div class="card">
       <h2 data-i18n="h2Market">Marketplace — viner som møter anbudskravene</h2>
       <p class="note" style="margin:0 0 12px" data-i18n="noteMarket"><b>Slik leser du listen:</b> Hvert anbud viser først hva Vinmonopolet ber om, deretter vinene i databasen som oppfyller kravene. Fire statuser avgjør om det er verdt å gå videre: kravene, prisen, om vinen allerede står i sortimentet, og om produsenten er åpen for import. Klikk en vinrad for klausul-for-klausul-vurderingen.</p>
+      <div class="samplebar" data-i18n="sampleBannerShort"><b>Prøvedata:</b> kandidatvinene er AI-seedede eksempler (FOB/volum er estimat). Ekte data kommer fra Vinmonopolet-katalogen og produsentopplasting.</div>
       <div class="filters" id="marketFilters">
         <button data-mf="hide" class="on" data-i18n="mfHideListed">Skjul viner som alt er i VMP</button>
         <button data-mf="all" data-i18n="mfShowAll">Vis alle</button>
@@ -275,6 +281,7 @@
   <section class="tab" id="tab-viner">
     <div class="card">
       <h2><span data-i18n="h2Wines">Vindatabase</span> <span class="pill" id="wineCount"></span></h2>
+      <div class="samplebar" data-i18n="sampleBanner"><b>Prøvedata:</b> vinene under er AI-seedede eksempler fra offentlige kilder — FOB, volum og smaksprofil er <b>estimat</b>, ikke verifisert. Ekte, kildeførte data hentes fra Vinmonopolets katalog (<code>ingest_vmp.py</code>) og fra produsentopplasting. Ikke ta tallene for god fisk ennå.</div>
       <p class="note" style="margin:0 0 10px" data-i18n="noteWinesMem">Kjører i minnet i denne økten. Eksporter for å lagre; importer JSON for å fortsette senere.</p>
       <div class="dimbar">
         <div><label data-i18n="lblGeo">Geografi</label><select id="wfCountry"><option value="" data-i18n="optAllCountries">Alle land</option></select></div>
@@ -443,6 +450,9 @@ const I18N = {
     thComponent: 'Komponent', thKr: 'kr', thShare: 'Andel',
     calcFooter: 'Alkoholavgift 5,41 kr/vol%/l (4,7–22 %) · avanse 10,82 kr/l + 21 % (knekk 133,70, tak 250) · mva 25 %. Verifisert mot Vinmonopolets priseksempel (199,90 kr → grossist 80,67 kr).',
     h2Wines: 'Vindatabase', noteWinesMem: 'Kjører i minnet i denne økten. Eksporter for å lagre; importer JSON for å fortsette senere.',
+    sampleBanner: '<b>Prøvedata:</b> vinene under er AI-seedede eksempler fra offentlige kilder — FOB, volum og smaksprofil er <b>estimat</b>, ikke verifisert. Ekte, kildeførte data hentes fra Vinmonopolets katalog (<code>ingest_vmp.py</code>) og fra produsentopplasting.',
+    sampleBannerShort: '<b>Prøvedata:</b> kandidatvinene er AI-seedede eksempler (FOB/volum er estimat). Ekte data kommer fra Vinmonopolet-katalogen og produsentopplasting.',
+    sampleBadge: 'prøvedata', sampleBadgeTitle: 'AI-seedet eksempel — ikke verifisert mot en ekte kilde',
     lblCert: 'Sertifisering', lblStatusNO: 'Status Norge', phWineText: 'produsent, vin, drue…',
     noteWineMapClick: 'Klikk et land på kartet for å filtrere listen; klikk igjen for å oppheve. ',
     btnExportXlsx: 'Eksporter (xlsx)', btnImportXlsx: 'Importer (xlsx)', btnExportJson: 'Eksporter (JSON)', btnImportJson: 'Importer (JSON)',
@@ -585,6 +595,9 @@ const I18N = {
     thComponent: 'Component', thKr: 'kr', thShare: 'Share',
     calcFooter: "Alcohol duty 5.41 kr/vol%/l (4.7–22 %) · markup 10.82 kr/l + 21 % (knee 133.70, cap 250) · VAT 25 %. Verified against Vinmonopolet's price example (199.90 kr → wholesale 80.67 kr).",
     h2Wines: 'Wine database', noteWinesMem: 'Runs in memory for this session. Export to save; import JSON to continue later.',
+    sampleBanner: '<b>Sample data:</b> the wines below are AI-seeded examples from public sources — FOB, volume and taste profile are <b>estimates</b>, not verified. Real, sourced data is pulled from Vinmonopolet\'s catalog (<code>ingest_vmp.py</code>) and from producer uploads. Don\'t rely on these numbers yet.',
+    sampleBannerShort: '<b>Sample data:</b> the candidate wines are AI-seeded examples (FOB/volume are estimates). Real data comes from the Vinmonopolet catalog and producer uploads.',
+    sampleBadge: 'sample', sampleBadgeTitle: 'AI-seeded example — not verified against a real source',
     lblCert: 'Certification', lblStatusNO: 'Status Norway', phWineText: 'producer, wine, grape…',
     noteWineMapClick: 'Click a country on the map to filter the list; click again to clear. ',
     btnExportXlsx: 'Export (xlsx)', btnImportXlsx: 'Import (xlsx)', btnExportJson: 'Export (JSON)', btnImportJson: 'Import (JSON)',
@@ -1198,22 +1211,41 @@ function subCat(spec) {
 }
 function mainDisp(canon) { return canon === 'Wine' ? L.mainTypes.Wine : groupDisp(canon); }
 function subDisp(canon) { return canon === 'sp_white' ? L.subWhite : canon === 'sp_rose' ? L.subRose : groupDisp(canon); }
-// extract classification tiers (1er/grand cru, DOCG, villages, riserva …) from appellation + spec text
-const CLASS_TIERS = [
-  ['Grand Cru', /grand cru/],
-  ['Premier Cru', /premier cru|1er cru|1 er cru/],
-  ['DOCG', /docg/],
-  ['Villages', /villages/],
-  ['Riserva', /riserva/],
-  ['Gran Reserva', /gran reserva/],
-  ['Kabinett/Prädikat', /kabinett|spatlese|auslese|pradikat/],
-  ['Grosses Gewächs', /grosses gewachs|grosse lage/],
-];
+// Classification tiers, comprehensive, from the real tender text. Prestige/quality tiers
+// are matched in the full requirement text; the appellation-system codes (AOC/DOC/DO…)
+// are matched only in the appellation field, so short codes like \bdo\b stay precise.
 function specClasses(spec) {
   if (spec._class) return spec._class;
-  const t = N((spec.appellation || '') + ' ' + (spec.spec || '') + ' ' + (spec.quality || ''));
-  const out = [];
-  for (const [label, re] of CLASS_TIERS) if (re.test(t)) out.push(label);
+  const ap = N(spec.appellation || '');
+  const all = N((spec.appellation || '') + ' ' + (spec.spec || '') + ' ' + (spec.quality || ''));
+  const out = [], add = l => { if (!out.includes(l)) out.push(l); };
+  // prestige / quality tiers
+  if (/grand cru classe|1er grand cru|premier grand cru/.test(all)) add('Grand Cru Classé');
+  else if (/grand cru/.test(all)) add('Grand Cru');
+  if (/premier cru|1er cru|1 er cru|1eme cru/.test(all)) add('Premier Cru');
+  if (/villages/.test(all)) add('Villages');
+  if (/gran reserva/.test(all)) add('Gran Reserva');
+  else if (/\breserva\b/.test(all)) add('Reserva');
+  if (/riserva/.test(all)) add('Riserva');
+  if (/kabinett|spatlese|auslese|beerenauslese|trockenbeeren|eiswein|pradikat|\bqmp\b/.test(all)) add('Kabinett/Prädikat');
+  if (/grosses gewachs|grosse lage|erste lage|\bvdp\b/.test(all)) add('Grosses Gewächs (VDP)');
+  if (/federspiel|smaragd|steinfeder/.test(all)) add('Vinea Wachau');
+  if (/ortswein/.test(all)) add('Ortswein');
+  // appellation-system tiers (appellation field only, for precision)
+  if (/\bdac\b/.test(ap)) add('DAC');
+  if (/docg/.test(ap)) add('DOCG');
+  if (/doca|calificada/.test(ap)) add('DOCa');
+  if (/\bdoc\b/.test(ap)) add('DOC');
+  if (/\bdo\b/.test(ap)) add('DO');
+  if (/\baoc\b|\baop\b/.test(ap)) add('AOC/AOP');
+  if (/\bigt\b/.test(ap)) add('IGT');
+  if (/\bigp\b/.test(ap)) add('IGP');
+  if (/\bava\b/.test(ap)) add('AVA');
+  if (/\bgi\b/.test(ap)) add('GI');
+  if (/\bwo\b/.test(ap)) add('WO');
+  if (/\bpdo\b/.test(ap)) add('PDO');
+  if (/\bpgi\b/.test(ap)) add('PGI');
+  if (/corpinnat/.test(ap)) add('Corpinnat');
   return (spec._class = out);
 }
 // selection filter: canonical key -> matcher against the (EN or NO) selection text
@@ -1655,7 +1687,7 @@ function renderWines() {
       const [sym, col] = TIER[s.tier] || ['·','inherit'];
       return `<span style="color:${col};font-weight:700">${sym}</span> <b>${L.fieldNames[f] || f}</b> — ${esc(s.note)}`;
     }).join('<br>') : L.qNoData;
-    return `<tr class="rowx"><td><b>${esc(w.producer)}</b></td><td>${esc(w.name)}</td><td>${esc(w.country)}</td>
+    return `<tr class="rowx"><td><b>${esc(w.producer)}</b>${isSeed(w) ? ` <span class="chip sample" title="${esc(L.sampleBadgeTitle)}">${L.sampleBadge}</span>` : ''}</td><td>${esc(w.name)}</td><td>${esc(w.country)}</td>
      <td>${esc(w.color)}${w.method ? L.tradMethod : ''}</td>
      <td>${Object.entries(w.grapes || {}).map(([g, p]) => `${esc(g)} ${p}%`).join(', ')}</td>
      <td class="num">${w.sugar_g_l ?? '–'}</td>
@@ -1669,6 +1701,8 @@ function renderWines() {
   }).join('');
   hookRows($('wineTable').querySelector('tbody'));
 }
+// seed/demo record? (AI-seeded illustrative data, not from a real source)
+const isSeed = w => /systemfr|seed/i.test((w.audit && w.audit.created_by) || '');
 function stampAudit(w, action) {
   const who = ($('whoAmI').value || 'ukjent').trim();
   const now = new Date().toISOString().slice(0, 16).replace('T', ' ');
