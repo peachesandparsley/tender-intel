@@ -191,6 +191,12 @@
   .star.on { color: #f0b23a; }
   .scorebar { display: inline-block; height: 6px; border-radius: 3px; background: var(--accent, #4670e0);
     vertical-align: middle; }
+  .ev-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 4px;
+    vertical-align: baseline; }
+  .ev-high { background: var(--good-text, #2e9e5b); }
+  .ev-med { background: var(--warn, #d8922a); }
+  .ev-low { background: var(--muted, #9aa0ab); }
+  .opp-metric .v.ev { font-size: 12.5px; }
 </style>
 </head>
 <body class="viz-root">
@@ -551,6 +557,9 @@ const I18N = {
     oppCandV: 'kandidater', oppIntroV: 'introduksjoner', oppFobV: 'trenger ≤ FOB', oppDeadV: 'frist',
     oppScoreV: 'score', oppSeeks: 'søker', oppFrom: ' fra ',
     oppSummary: n => `${n} anbud med kvalifiserte viner i denne planen`,
+    evidence: 'Datastyrke', evStrong: 'Sterk', evModerate: 'Middels', evThin: 'Tynn',
+    evNote: 'scoren måler attraktivitet; datastyrken viser hvor solid grunnlaget er (de fleste kandidatene er foreløpig ubekreftede leads).',
+    evTip: (s, t, c, r) => `Datastyrke bak scoren: ${s} av ${t} kandidater har kildeførte data · ${c}% av kravene bekreftet · ${r}% med verifisert NO-status. Frødata teller svakt til produsenten eller katalogen bekrefter dem.`,
     oppEmpty: 'Ingen anbud med kvalifiserte viner i valgt filter. Prøv «Alle muligheter», bytt plan, eller legg til flere viner.',
     thWineCol: 'Vin', thFitCol: 'Match', thStatusCol: 'Status i NO', thPick: '★',
     oppIntroBadge: 'introduksjon', oppRepBadge: 'representert', oppOpenNO: 'åpen i NO',
@@ -730,6 +739,9 @@ const I18N = {
     oppCandV: 'candidates', oppIntroV: 'introductions', oppFobV: 'needs ≤ FOB', oppDeadV: 'deadline',
     oppScoreV: 'score', oppSeeks: 'seeks', oppFrom: ' from ',
     oppSummary: n => `${n} tenders with qualified wines in this plan`,
+    evidence: 'Evidence', evStrong: 'Strong', evModerate: 'Moderate', evThin: 'Thin',
+    evNote: 'the score measures attractiveness; evidence shows how solid the basis is (most candidates are still unconfirmed leads).',
+    evTip: (s, t, c, r) => `Evidence behind the score: ${s} of ${t} candidates have sourced data · ${c}% of requirements confirmed · ${r}% with verified NO status. Seeded leads count weakly until a producer or the catalog confirms them.`,
     oppEmpty: 'No tenders with qualified wines under this filter. Try "All opportunities", switch plan, or add more wines.',
     thWineCol: 'Wine', thFitCol: 'Fit', thStatusCol: 'Status in NO', thPick: '★',
     oppIntroBadge: 'introduction', oppRepBadge: 'represented', oppOpenNO: 'open in NO',
@@ -2522,6 +2534,31 @@ function opportunityScore(m) {
   const urgencyPts = (dtd != null && dtd >= 0) ? Math.max(0, 6 - dtd / 20) : 0;
   return { score: introPts + candPts + marginPts + urgencyPts, n, nIntro, fobEur, dtd };
 }
+// How solid is the evidence UNDER the score? A score built on unverified seed leads is
+// worth less than one built on sourced/verified candidates. Three honest drivers:
+//   provenance — how sourced the candidate wines' fields are (verified/public vs estimate/unknown)
+//   confirmed  — share of tender requirements actually met (pass) vs still unknown for the candidates
+//   repKnown   — share of candidates whose NO representation is confirmed (live catalog / verified)
+function datasetStrength(m) {
+  const cs = m.matches;
+  if (!cs.length) return { level: 'low', pct: 0, sourced: 0, total: 0, confirmed: 0, rep: 0 };
+  let prov = 0, passN = 0, denN = 0, repK = 0, sourced = 0;
+  for (const x of cs) {
+    const q = qualitySummary(x.wine);
+    const tot = (q.verified + q.public + q.estimate + q.unknown) || 1;
+    const pv = (q.verified + 0.6 * q.public) / tot;
+    prov += pv; if (pv >= 0.6) sourced++;
+    passN += x.passes; denN += x.passes + x.unknowns;
+    const repVer = !!(x.catalogMatch && x.catalogMatch.live) ||
+      (x.wine.verify && x.wine.verify.representation && x.wine.verify.representation.tier === 'verified');
+    if (repVer) repK++;
+  }
+  const n = cs.length;
+  const provenance = prov / n, confirmed = denN ? passN / denN : 0, rep = repK / n;
+  const pct = 0.4 * provenance + 0.35 * confirmed + 0.25 * rep;
+  const level = pct >= 0.66 ? 'high' : pct >= 0.4 ? 'med' : 'low';
+  return { level, pct, sourced, total: n, confirmed: Math.round(confirmed * 100), rep: Math.round(rep * 100) };
+}
 function statusCell(x) {
   if (isIntroOpp(x)) return `<span class="chip hi" title="${esc(x.wine.representation?.NO || '')}">${L.oppIntroBadge}</span>`;
   if (isOnVMP(x)) return `<span class="chip mid">${L.oppRepBadge}</span>`;
@@ -2551,7 +2588,7 @@ function renderOpportunities() {
       return true;
     })
     .sort((a, b) => b.score - a.score);
-  $('oppSummary').textContent = L.oppSummary(rows.length);
+  $('oppSummary').innerHTML = L.oppSummary(rows.length) + ` <span style="font-weight:400;color:var(--muted)">— ${L.evNote}</span>`;
   const c = $('shortlistCount'); if (c) c.textContent = SHORTLIST.size ? `(${SHORTLIST.size})` : '';
   if (!rows.length) { list.innerHTML = `<p class="note">${L.oppEmpty}</p>`; return; }
   const maxScore = rows[0].score || 1;
@@ -2561,6 +2598,8 @@ function renderOpportunities() {
       (isIntroOpp(b) - isIntroOpp(a)) || (b.passes - a.passes) || (a.unknowns - b.unknowns));
     const dl = r.dtd != null ? (r.dtd >= 0 ? `${r.dtd}d` : L.oppNoDeadline) : L.oppNoDeadline;
     const fob = r.fobEur ? '€' + fmt(r.fobEur, 1) : '–';
+    const st = datasetStrength(m);
+    const stLabel = st.level === 'high' ? L.evStrong : st.level === 'med' ? L.evModerate : L.evThin;
     const body = `<table><thead><tr><th>${L.thPick}</th><th>${L.thWineCol}</th><th>${L.thFitCol}</th><th>${L.thStatusCol}</th></tr></thead><tbody>${
       cands.map(x => {
         const k = slKey(s.ref, x.wine.id), on = SHORTLIST.has(k) ? ' on' : '';
@@ -2579,6 +2618,7 @@ function renderOpportunities() {
         <span class="opp-metric"><span class="v">${r.n}</span><span class="l">${L.oppCandV}</span></span>
         <span class="opp-metric"><span class="v">${fob}</span><span class="l">${L.oppFobV}</span></span>
         <span class="opp-metric"><span class="v">${dl}</span><span class="l">${L.oppDeadV}</span></span>
+        <span class="opp-metric" title="${esc(L.evTip(st.sourced, st.total, st.confirmed, st.rep))}"><span class="v ev"><span class="ev-dot ev-${st.level}"></span>${stLabel}</span><span class="l">${L.evidence}</span></span>
         <span class="opp-metric" title="${L.oppScoreV}"><span class="scorebar" style="width:${Math.round(38*r.score/maxScore)}px"></span></span>
       </div>
       <div class="opp-body">${body}</div></div>`;
@@ -2586,16 +2626,18 @@ function renderOpportunities() {
 }
 function exportShortlist() {
   if (!SHORTLIST.size) { alert(L.oppEmpty); return; }
-  const rows = [['tender', 'deadline', 'price_band', 'need_fob_eur', 'producer', 'wine', 'country', 'grapes', 'status_no']];
+  const rows = [['tender', 'deadline', 'price_band', 'need_fob_eur', 'producer', 'wine', 'country', 'grapes', 'status_no', 'evidence']];
   for (const k of SHORTLIST) {
     const [ref, id] = k.split('|');
     const spec = SPECS.find(s => s.ref === ref), w = WINES.find(v => v.id === id);
     if (!spec || !w) continue;
     const hi = spec.price_hi ?? spec.price_lo;
     const fob = hi ? fobFromRetail(+hi, guessAbv(spec), spec.litres || 0.75) : null;
+    const q = qualitySummary(w), tot = (q.verified + q.public + q.estimate + q.unknown) || 1;
+    const ev = (q.verified + 0.6 * q.public) / tot >= 0.6 ? 'sourced' : (isSeed(w) ? 'seed-lead' : 'estimate');
     rows.push([ref, spec.deadline || spec.launch || '', spec.price_text || '',
       fob ? fmt(fob.eur, 1) : '', w.producer, w.name, w.country || '',
-      Object.keys(w.grapes || {}).join(' '), (w.representation?.NO || '').replace(/[\n,]/g, ' ')]);
+      Object.keys(w.grapes || {}).join(' '), (w.representation?.NO || '').replace(/[\n,]/g, ' '), ev]);
   }
   const csv = rows.map(r => r.map(c => `"${String(c).replace(/"/g, '""')}"`).join(',')).join('\n');
   const a = document.createElement('a');
