@@ -1,0 +1,62 @@
+name: Refresh cross-monopoly seed sample
+
+# Regenerates seed_sample.json — the curated supply-side leads shown in the app —
+# from Sweden's open Systembolaget assortment, cross-checked against the Vinmonopolet
+# catalog index (if present) for the NO representation gap. A wine listed in SE but
+# absent from VMP is a monopoly-proven producer unrepresented in Norway.
+#
+# The full run yields thousands of leads; the app inlines a capped, diverse sample.
+# Runs after the VMP index refresh so the NO gap is scored against a fresh index.
+
+on:
+  schedule:
+    - cron: "30 6 * * 1"   # weekly, Mondays 06:30 UTC (Systembolaget updates ~weekly)
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: seed-sample
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Fetch the Systembolaget open assortment
+        run: |
+          curl -sSL --retry 3 -o assortment.json \
+            https://raw.githubusercontent.com/AlexGustafsson/systembolaget-api-data/main/data/assortment.json
+          python3 -c "import json;print('SE rows:',len(json.load(open('assortment.json'))))"
+
+      - name: Build SE leads and the curated app sample
+        run: |
+          IDX=vmp_catalog_index.json
+          [ -f "$IDX" ] || IDX=/nonexistent.json
+          python3 ingest_systembolaget.py --file assortment.json --vmp-index "$IDX" --out seed_se.json
+          python3 make_seed_sample.py --in seed_se.json --per-country 22 --cap 240 --out seed_sample.json
+
+      - name: Rebuild index.html with the refreshed leads
+        run: |
+          # SheetJS is fetched at build time (not committed); provide it for the build.
+          npm pack xlsx@0.18.5 >/dev/null 2>&1 && tar xzf xlsx-0.18.5.tgz
+          python3 build_app.py
+
+      - name: Commit refreshed sample + app if changed
+        run: |
+          if [ -n "$(git status --porcelain seed_sample.json index.html)" ]; then
+            git config user.name "seed-sample-bot"
+            git config user.email "actions@users.noreply.github.com"
+            git add seed_sample.json index.html
+            git commit -m "Refresh cross-monopoly seed sample ($(date -u +%Y-%m-%d))"
+            git push
+          else
+            echo "No change in seed sample."
+          fi

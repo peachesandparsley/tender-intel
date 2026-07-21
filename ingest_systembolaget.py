@@ -65,6 +65,37 @@ def parse_grapes(p):
     return out
 
 
+def parse_certs(p):
+    """Real, public certification flags carried in the Systembolaget feed — these are
+    verifiable facts (organic/ethical/kosher/sustainable), and several are literal
+    tender gates, so they are worth seeding (unlike producer-only analytical data)."""
+    certs = []
+    if p.get("isOrganic"):
+        certs.append("Organic")
+    lbl = str(p.get("ethicalLabel") or "").strip()
+    if p.get("isEthical") or lbl:
+        certs.append("Fairtrade" if "fair" in lbl.lower() or not lbl else lbl)
+    if p.get("isKosher"):
+        certs.append("Kosher")
+    if p.get("isSustainableChoice"):
+        certs.append("Sustainable choice (Systembolaget)")
+    # de-dup while preserving order
+    seen, out = set(), []
+    for c in certs:
+        if c.lower() not in seen:
+            seen.add(c.lower()); out.append(c)
+    return out
+
+
+def parse_sugar(p):
+    """sugarContentGramPer100ml -> g/l (public analytical figure Systembolaget prints)."""
+    v = p.get("sugarContentGramPer100ml")
+    try:
+        return round(float(v) * 10, 1) if v not in (None, "") else None
+    except (TypeError, ValueError):
+        return None
+
+
 def match_vmp(producer, name, vmp):
     if vmp is None:
         return None
@@ -84,7 +115,12 @@ def representation(producer, name, supplier, vmp):
         return "represented", f"listed in VMP catalog (varenr {varenr})"
     if any(t in N(supplier) for t in PAN_NORDIC):
         return "pan_nordic", f"Swedish supplier '{supplier}' is pan-Nordic — likely reachable in NO"
-    return "open", f"unrepresented in NO — open for import (in SE via {supplier or 'unknown supplier'})"
+    via = supplier or "unknown supplier"
+    if vmp is None:
+        # No catalog cross-check was run — don't assert "unrepresented", only that it's a
+        # candidate for import whose VMP status is pending the live catalog check.
+        return "open", f"candidate for import — VMP catalog check pending (in SE via {via})"
+    return "open", f"unrepresented in NO — open for import (in SE via {via})"
 
 
 def to_record(p, idx, vmp):
@@ -96,7 +132,12 @@ def to_record(p, idx, vmp):
     supplier = str(p.get("supplierName") or "").strip()
     status, rep_no = representation(producer, name, supplier, vmp)
     vintage = p.get("vintage")
-    vintages = [int(vintage)] if str(vintage or "").isdigit() and 1900 < int(vintage) < 2100 else []
+    se_vintage = int(vintage) if str(vintage or "").isdigit() and 1900 < int(vintage) < 2100 else None
+    # A lead commits NO vintage: the SE-listed year only proves the wine exists, it is
+    # not a bid offer, and tenders are forward-looking. Keep it for display (se_vintage),
+    # but leave vintages_available empty so vintage clauses read "unknown", not "fail".
+    certs = parse_certs(p)
+    sugar = parse_sugar(p)
     url = f"https://www.systembolaget.se/produkt/{p.get('productId', '')}"
     src = "Systembolaget open data"
     pub = lambda note: {"tier": "public", "note": f"{note} — {src}", "source": url}
@@ -110,9 +151,10 @@ def to_record(p, idx, vmp):
         "appellation": str(p.get("originLevel2") or p.get("originLevel1") or "").strip(),
         "grapes": parse_grapes(p),
         "method": "traditional" if color_of(p) == "sparkling" else None,
-        "vintages_available": vintages,
+        "vintages_available": [],        # a lead commits no vintage — see se_vintage
+        "se_vintage": se_vintage,        # year of the SE-listed bottle (reference only)
         "abv": p.get("alcoholPercentage"),
-        "sugar_g_l": None, "wood": None, "certs": [], "cert_on_label": False,
+        "sugar_g_l": sugar, "wood": None, "certs": certs, "cert_on_label": bool(certs),
         "vines_age": None, "maceration_days": None,
         "volume_bottles": None,          # committed volume — producer only
         "fob_eur": None,                 # ex-cellar — producer only
@@ -133,6 +175,10 @@ def to_record(p, idx, vmp):
             "country": pub("stated in Systembolaget"), "region": pub("stated in Systembolaget"),
             "grapes": pub("varieties from Systembolaget; exact % to be confirmed by producer"),
             "abv": pub("stated in Systembolaget"),
+            "certs": (pub("certification flags published by Systembolaget") if certs
+                      else unk("no certification recorded in the Systembolaget feed")),
+            "sugar_g_l": (pub("residual sugar published by Systembolaget") if sugar is not None
+                          else unk("not published; to be confirmed by producer / analysis")),
             "representation": {"tier": "verified" if vmp is not None else "unknown",
                                "note": f"NO gap = {status}, derived from the VMP catalog index + pan-Nordic filter"},
             "fob_eur": unk("ex-cellar price to be supplied by the producer"),

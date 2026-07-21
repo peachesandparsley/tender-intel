@@ -451,9 +451,9 @@ const I18N = {
     thComponent: 'Komponent', thKr: 'kr', thShare: 'Andel',
     calcFooter: 'Alkoholavgift 5,41 kr/vol%/l (4,7–22 %) · avanse 10,82 kr/l + 21 % (knekk 133,70, tak 250) · mva 25 %. Verifisert mot Vinmonopolets priseksempel (199,90 kr → grossist 80,67 kr).',
     h2Wines: 'Vindatabase', noteWinesMem: 'Kjører i minnet i denne økten. Eksporter for å lagre; importer JSON for å fortsette senere.',
-    sampleBanner: '<b>Prøvedata:</b> vinene under er AI-seedede eksempler fra offentlige kilder — FOB, volum og smaksprofil er <b>estimat</b>, ikke verifisert. Ekte, kildeførte data hentes fra Vinmonopolets katalog (<code>ingest_vmp.py</code>) og fra produsentopplasting.',
-    sampleBannerShort: '<b>Prøvedata:</b> kandidatvinene er AI-seedede eksempler (FOB/volum er estimat). Ekte data kommer fra Vinmonopolet-katalogen og produsentopplasting.',
-    sampleBadge: 'prøvedata', sampleBadgeTitle: 'AI-seedet eksempel — ikke verifisert mot en ekte kilde',
+    sampleBanner: '<b>Prøve- og lead-data:</b> de merkede vinene er enten AI-seedede eksempler (de opprinnelige) eller <b>ekte leads</b> fra åpne nordiske monopolkataloger (Systembolaget) — druer, sertifiseringer, sukker og region er ekte offentlige data, men <b>uverifisert for NO</b> og venter på at produsenten bekrefter. Produsent-eide tall (FOB, volum) er blanke til produsenten fyller dem inn. Representasjon i NO avgjøres av Vinmonopolet-katalogen (<code>ingest_vmp.py</code>).',
+    sampleBannerShort: '<b>Prøve/lead:</b> merkede viner er AI-eksempler eller ekte, men uverifiserte leads fra nordiske monopolkataloger. FOB/volum er blanke til produsenten bekrefter.',
+    sampleBadge: 'lead', sampleBadgeTitle: 'Seedet lead — ekte offentlige data der de finnes, men uverifisert for NO og venter på produsentbekreftelse',
     lblCert: 'Sertifisering', lblStatusNO: 'Status Norge', phWineText: 'produsent, vin, drue…',
     noteWineMapClick: 'Klikk et land på kartet for å filtrere listen; klikk igjen for å oppheve. ',
     btnExportXlsx: 'Eksporter (xlsx)', btnImportXlsx: 'Importer (xlsx)', btnExportJson: 'Eksporter (JSON)', btnImportJson: 'Importer (JSON)',
@@ -597,9 +597,9 @@ const I18N = {
     thComponent: 'Component', thKr: 'kr', thShare: 'Share',
     calcFooter: "Alcohol duty 5.41 kr/vol%/l (4.7–22 %) · markup 10.82 kr/l + 21 % (knee 133.70, cap 250) · VAT 25 %. Verified against Vinmonopolet's price example (199.90 kr → wholesale 80.67 kr).",
     h2Wines: 'Wine database', noteWinesMem: 'Runs in memory for this session. Export to save; import JSON to continue later.',
-    sampleBanner: '<b>Sample data:</b> the wines below are AI-seeded examples from public sources — FOB, volume and taste profile are <b>estimates</b>, not verified. Real, sourced data is pulled from Vinmonopolet\'s catalog (<code>ingest_vmp.py</code>) and from producer uploads. Don\'t rely on these numbers yet.',
-    sampleBannerShort: '<b>Sample data:</b> the candidate wines are AI-seeded examples (FOB/volume are estimates). Real data comes from the Vinmonopolet catalog and producer uploads.',
-    sampleBadge: 'sample', sampleBadgeTitle: 'AI-seeded example — not verified against a real source',
+    sampleBanner: '<b>Sample & lead data:</b> the badged wines are either AI-seeded examples (the originals) or <b>real leads</b> from open Nordic monopoly catalogs (Systembolaget) — grapes, certifications, sugar and region are real public data, but <b>unverified for NO</b> and pending producer confirmation. Producer-owned figures (FOB, volume) are left blank until the producer fills them in. NO representation is decided by the Vinmonopolet catalog (<code>ingest_vmp.py</code>).',
+    sampleBannerShort: '<b>Sample/lead:</b> badged wines are AI examples or real-but-unverified leads from Nordic monopoly catalogs. FOB/volume left blank pending producer confirmation.',
+    sampleBadge: 'lead', sampleBadgeTitle: 'Seeded lead — real public data where available, but unverified for NO and pending producer confirmation',
     lblCert: 'Certification', lblStatusNO: 'Status Norway', phWineText: 'producer, wine, grape…',
     noteWineMapClick: 'Click a country on the map to filter the list; click again to clear. ',
     btnExportXlsx: 'Export (xlsx)', btnImportXlsx: 'Import (xlsx)', btnExportJson: 'Export (JSON)', btnImportJson: 'Import (JSON)',
@@ -855,6 +855,7 @@ function checkClause(cl, w) {
   if (t === 'method') return w.method && N(w.method).includes(N(cl.method).split(' ')[0]) ? 'pass' : 'fail';
   if (t === 'vintage') {
     const a = w.vintages_available || [];
+    if (!a.length) return 'unknown';   // no vintage stated (e.g. a seeded lead) → unknown, not a fail
     if (a.includes(0)) return 'pass';
     if (cl.min_year != null) return a.some(y => y >= cl.min_year) ? 'pass' : 'fail';
     return (cl.years || []).some(y => a.includes(y)) ? 'pass' : 'fail';
@@ -1544,7 +1545,7 @@ function recompute() {
 function renderTiles() {
   const withM = MARKET.filter(m => m.matches.length);
   const openIntro = new Set();
-  withM.forEach(m => m.matches.forEach(x => { if (/unrepresented/.test(x.wine.representation?.NO || '')) openIntro.add(x.wine.id); }));
+  withM.forEach(m => m.matches.forEach(x => { if (isIntroOpp(x)) openIntro.add(x.wine.id); }));
   $('tiles').innerHTML = [
     [SPECS.length, L.tilesSpecs],
     [withM.length, L.tilesWithMatches],
@@ -1598,6 +1599,14 @@ function wantsLine(m) {
 // a wine counts as "already on Vinmonopolet" if this exact cuvée is listed in the catalog
 function isOnVMP(x) {
   return x.catalog === 'listed' || /listed in v(mp|inmonopolet)/i.test(x.wine.representation?.NO || '');
+}
+// an "introduction opportunity" = matches a tender AND is not already on Vinmonopolet.
+// The live catalog index (when loaded) is authoritative; otherwise fall back to the
+// wine's stated NO representation (covers seeded leads whose VMP check is still pending).
+function isIntroOpp(x) {
+  if (x.catalog === 'not_found' || x.catalog === 'not_found_search') return true;   // live check: not on VMP
+  if (x.catalog === 'listed' || x.catalog === 'listed_producer') return false;      // live check: on VMP
+  return /unrepresented|open for import|candidate for import/i.test(x.wine.representation?.NO || '');
 }
 function renderMarket() {
   const tb = $('marketTable').querySelector('tbody');

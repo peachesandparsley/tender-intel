@@ -23,7 +23,10 @@ works offline). Served via GitHub Pages at the repository's Pages URL.
 | `ingest_vmp.py` | Populates the wine DB with **verified** data from Vinmonopolet's own catalog (API key or portal export); producer-only fields stay flagged for confirmation |
 | `demand_map.py` | Ranks recurring tender demand (origin × grape × style × price × cert) → where to seed producers first (writes `demand_map.md`) |
 | `seed_producers.py` | Cold-starts the producer DB from **official** public sources (WoSA / WO scheme / IPW / WIETA), marked unverified-pending-claim; derives representation from the VMP index (see `SEED_SOURCES.md`) |
-| `ingest_systembolaget.py` | Cross-monopoly seed: turns Sweden's open Systembolaget assortment into supply-side leads — a wine listed in SE but not in VMP is a monopoly-proven, NO-unrepresented producer. Scores the NO gap at the **importer** level (`represented` / `pan_nordic` via Anora et al. / `open`) against the VMP index |
+| `ingest_systembolaget.py` | Cross-monopoly seed (Sweden): turns the open Systembolaget assortment into supply-side leads — a wine listed in SE but not in VMP is a monopoly-proven, NO-unrepresented producer. Scores the NO gap at the **importer** level (`represented` / `pan_nordic` via Anora et al. / `open`) against the VMP index. Extracts real public grapes/certs/sugar; FOB/volume left for the producer |
+| `ingest_alko.py` | Cross-monopoly seed (Finland): the Alko mirror of the above — joins Alko's price list with its supplier+importer list on product code, then scores the same NO gap (Anora/Altia is Finnish-origin, so `pan_nordic` matters most here) |
+| `scrape_producers.py` | Seeds producers from a national body's **public directory** (Austrian Wine API-first, WoSA via Chromium) → same schema, representation derived from the VMP index. API-first, rate-limited, EU-database-right aware (see `SEED_SOURCES.md`) |
+| `make_seed_sample.py` | Curates a capped, origin-diverse, English-normalised sample of the (large) seed files for the app to inline |
 | `make_*_template.py` | Generators for the producer/importer Excel templates |
 | `wines.json` | Wine records (real producers; estimates flagged in audit fields) |
 | `specs_*.json` | Parsed tender plans: 2020-1, 2026-1, 2026-2, 2027-1 |
@@ -34,6 +37,12 @@ works offline). Served via GitHub Pages at the repository's Pages URL.
 ```bash
 python3 build_app.py   # regenerates index.html; needs package/dist/xlsx.full.min.js (npm pack xlsx@0.18.5)
 ```
+
+`build_app.py` also inlines `seed_sample.json` (curated cross-monopoly supply-side
+leads) into `WINES` alongside `wines.json`, normalising each to the full schema. The
+leads are auto-badged (they carry `seed:` provenance) and shown as unverified,
+pending-claim. Regenerate the sample with `make_seed_sample.py`, or let the
+`refresh-seed-sample` workflow do it weekly.
 
 Commit `index.html` and GitHub Pages redeploys automatically (~1 min).
 

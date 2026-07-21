@@ -1,12 +1,22 @@
-# Producer-seed sources — official only
+# Producer-seed sources
 
-Principle: the producer database is cold-started **only from official / authoritative
-public sources**, and every seeded record is marked **unverified, pending producer
-claim**. The tender-critical numbers a producer alone holds — ex-cellar FOB,
-committed volume, exact grape %, residual sugar, wood regime, bottle weight — are
-never seeded; the producer supplies them on claiming. Representation is *derived*
-from the real Vinmonopolet catalog (not in the catalog → unrepresented), never
-assumed.
+Principle: the producer database is cold-started from **authoritative public
+sources** — official trade bodies, the national origin schemes, certification
+registries, and the **open catalogs of the other Nordic monopolies** — and every
+seeded record is marked **unverified, pending producer claim**. The tender-critical
+numbers a producer alone holds — ex-cellar FOB, committed volume, exact grape %,
+residual sugar, wood regime, bottle weight — are never seeded; the producer supplies
+them on claiming. Representation is *derived* from the real Vinmonopolet catalog (not
+in the catalog → unrepresented), never assumed.
+
+Two ways in, both built:
+- **Cross-monopoly** (`ingest_systembolaget.py`, `ingest_alko.py`): a wine listed in
+  Sweden/Finland but absent from Vinmonopolet is a monopoly-proven producer that is
+  unrepresented in Norway — a high-quality lead with real specs (grapes, certs, sugar,
+  region, ABV) already attached. This is the strongest cold-start: structured, official,
+  free, pre-vetted by another monopoly.
+- **Directory** (`seed_producers.py`, `scrape_producers.py`): the national wine bodies'
+  own producer directories — the primary identity/region/variety source per origin.
 
 **Seed broadly, not by grape.** Within an origin, seed the *whole* producer set
 from its official body (WoSA lists every SA producer, not just the common
@@ -97,12 +107,45 @@ Legitimately-open metadata alternatives worth a look: **Wikidata** (open licence
 structured producer/region/variety) and **Wine-Searcher** (paid API; prices +
 aggregated critic scores).
 
+## Scraping public directories — the balanced stance
+
+Scraping the national bodies' **public, factual producer directories** to bootstrap a
+lead list is legitimate and normal — the bodies publish them precisely so buyers find
+their producers. It is not the "last resort" an earlier version of this file implied.
+Do it the right way (`scrape_producers.py` implements this):
+
+1. **API-first.** A faceted search UI (e.g. Austrian Wine's `/search/wine`) is backed
+   by a JSON endpoint — take that structured feed rather than parsing rendered HTML.
+   Check the browser Network tab to find it.
+2. **Use a real browser, politely.** These sites sit behind bot protection (both
+   austrianwine.com and wosa.co.za return 403 to plain HTTP clients). Drive a real
+   Chromium via Playwright, set an honest User-Agent, and rate-limit (`--delay`).
+   Respect `robots.txt` and each site's terms.
+3. **Mind the EU database right.** The EU Database Directive gives the *maker of a
+   database* a sui-generis right against extraction of a **substantial part**, even of
+   non-copyrightable facts. Vacuuming an entire EU directory wholesale is the risk zone;
+   the safe pattern is **identify** producers from the directory, then pull detail from
+   each producer's **own** site / by contacting them. (WoSA/South Africa is outside this
+   regime — its ToS is the thing to check there.)
+4. **It only fills the lead layer.** Scraping yields identity, region, variety, website —
+   never FOB, volume, exact grape %, sugar, wood or bottle weight. So a scraped record is
+   still unverified and pending producer claim; scraping widens the top of the funnel, it
+   does not shortcut verification.
+
+A trade body is also a **distribution partner**: for anything beyond public identity,
+approach them directly for a producer feed — many will give one because being found by
+importers is their mission.
+
 ## Rules
 
-- Prefer an official **data feed / export / partnership** over scraping. Check each
-  body's terms of use; the trade bodies are distribution partners — approach them
-  directly for a producer feed.
+- **API/feed/partnership first, respectful scraping second, wholesale extraction never.**
+  For public identity data, scraping a directory the right way (above) is fine; for
+  substantial datasets or anything an EU database right covers, get a feed/partnership.
 - A seeded record is a **lead, not a fact**: shown as unverified so an importer
   reads it as "worth confirming," and a producer is prompted to claim & complete it.
 - Never seed FOB/volume/analytical data. If a source implies them, drop them —
   they must come from the producer.
+- Certification and residual-sugar flags that a monopoly *publishes* (Systembolaget's
+  `isOrganic`/`ethicalLabel`, Alko's `luomu`) are verifiable public facts and ARE
+  seeded — they're often literal tender gates. They remain unverified-for-NO until the
+  producer confirms.
