@@ -5,6 +5,17 @@ clause-level specs, matches wine records against them, washes matches against th
 live catalog, and computes required producer FOB from retail price bands
 (pricing model verified against Vinmonopolet's published example).
 
+Two role-based entry points sit at the front of the app:
+
+- **Opportunities** (importers) — tenders ranked by an opportunity score
+  (unrepresented candidates / introductions, margin headroom, deadline proximity).
+  Expand a tender for the best-matched wines, their economics and NO status; star
+  and export a shortlist. This is the buy-side value that justifies paying.
+- **Match my wine** (producers) — no upload needed: describe a wine (or click a real
+  lead) and instantly see which tenders it can win, the FOB to hit, and how many
+  competitors there are, with a CTA to list the full portfolio. This is the
+  discovery hook that makes producers add wines.
+
 **Live app:** `index.html` — a fully self-contained single-page app (no server,
 works offline). Served via GitHub Pages at the repository's Pages URL.
 
