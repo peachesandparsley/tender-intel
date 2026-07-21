@@ -1145,9 +1145,28 @@ function groupCanon(raw) {
 }
 const GRP_LABEL = { red:'grpRed', white:'grpWhite', rose:'grpRose', sparkling:'grpSparkling',
   sparkling_white:'grpSparklingWhite', sparkling_rose:'grpSparklingRose', fortified:'grpFortified' };
+// Norwegian labels for the beer/spirits/other styles (keyed on the normalized canonical key)
+const STYLE_NO = {
+  'top fermented':'Overgjæret', 'india pale ale':'India Pale Ale', 'pale lager':'Lys lager',
+  'dark lager':'Mørk lager', 'sour beer':'Surøl', 'wheat beer':'Hveteøl', 'pale ale':'Pale ale',
+  'porter & stout':'Porter og stout', 'saison & farmhouse ale':'Saison og farmhouse ale',
+  'monastic/abbey style or brown ale':'Klosterøl eller brown ale',
+  'whisky':'Whisky', 'whisky, malt':'Whisky, malt', 'whisky, other':'Whisky, annen',
+  'aquavit, clear':'Akevitt, klar', 'aquavit, brown':'Akevitt, brun',
+  'brandy':'Brandy', 'vodka':'Vodka', 'gin':'Gin', 'rum':'Rom', 'tequila':'Tequila', 'bourbon':'Bourbon',
+  'fruit spirits':'Fruktbrennevin', 'flavoured spirits':'Smakssatt brennevin',
+  'other spirits below 15 %':'Annet brennevin under 15 %',
+  'liqueur, cream':'Likør, fløte', 'liqueur, fruits and berries':'Likør, frukt og bær',
+  'liqueurs, fruits and berries':'Likør, frukt og bær',
+  'spirits-based cocktail or rtd':'Brennevinsbasert cocktail/RTD',
+  'aromatised wine products':'Aromatiserte vinprodukter', 'vermouth':'Vermut',
+  'fortified wine, other':'Sterkvin, annen',
+};
 function groupDisp(canon) {
   if (!canon) return '';
-  return GRP_LABEL[canon] ? L[GRP_LABEL[canon]] : (L.mainTypes[canon] || canon);
+  if (GRP_LABEL[canon]) return L[GRP_LABEL[canon]];
+  if (L.mainTypes[canon]) return L.mainTypes[canon];
+  return (LANG === 'no' && STYLE_NO[N(canon)]) || canon;
 }
 const MAIN_MAP = { 'wine':'Wine', 'fortified wine':'Wine', 'beer':'Beer', 'spirits':'Spirits', 'cider':'Cider' };
 function mainCanon(spec) {
@@ -1317,18 +1336,34 @@ function drawGeoMap(svgId, rawCounts, activeRaw, onToggle) {
     html += `<path d="${w.d}" data-c="${esc(w.n)}" fill="${has ? 'color-mix(in oklab, var(--s1) 14%, var(--grid))' : 'var(--grid)'}" stroke="var(--surface-1)" stroke-width="0.6"${has ? ' style="cursor:pointer"' : ''}></path>`;
   }
   const maxC = Math.max(...[...agg.values()].map(a => a.count), 1);
-  for (const [mn, a] of [...agg.entries()].sort((x, y) => y[1].count - x[1].count)) {
-    const ll = CENTROID[mn]; if (!ll) continue;
-    const r = 6 + 14 * Math.sqrt(a.count / maxC);
-    const isActive = activeMap === mn, dimmed = activeRaw && !isActive;
-    html += `<g class="mapdot" data-c="${esc(mn)}" style="cursor:pointer">
-      <circle cx="${mx(ll[0])}" cy="${my(ll[1])}" r="${r}" fill="${dimmed ? 'var(--baseline)' : 'var(--s1)'}"
+  // build marker nodes at true centroids, then push apart so dense regions (Europe) don't overlap
+  const nodes = [...agg.entries()].sort((x, y) => y[1].count - x[1].count)
+    .map(([mn, a]) => { const ll = CENTROID[mn]; return ll ? { mn, a, ox: mx(ll[0]), oy: my(ll[1]),
+      x: mx(ll[0]), y: my(ll[1]), r: 6 + 13 * Math.sqrt(a.count / maxC) } : null; }).filter(Boolean);
+  for (let iter = 0; iter < 140; iter++) {
+    let moved = false;
+    for (let i = 0; i < nodes.length; i++) for (let j = i + 1; j < nodes.length; j++) {
+      const A = nodes[i], B = nodes[j];
+      const dx = B.x - A.x, dy = B.y - A.y, d = Math.hypot(dx, dy) || 0.01, min = A.r + B.r + 2;
+      if (d < min) { const push = (min - d) / 2, ux = dx / d, uy = dy / d;
+        A.x -= ux * push; A.y -= uy * push; B.x += ux * push; B.y += uy * push; moved = true; }
+    }
+    for (const n of nodes) { n.x += (n.ox - n.x) * 0.03; n.y += (n.oy - n.y) * 0.03; } // stay near true location
+    if (!moved) break;
+  }
+  let lines = '', dots = '';
+  for (const n of nodes) {
+    const { mn, a } = n, isActive = activeMap === mn, dimmed = activeRaw && !isActive;
+    if (Math.hypot(n.x - n.ox, n.y - n.oy) > n.r * 0.5)
+      lines += `<line x1="${n.ox}" y1="${n.oy}" x2="${n.x}" y2="${n.y}" stroke="var(--s1)" stroke-width="0.8" opacity="${dimmed ? 0.2 : 0.45}"></line>`;
+    dots += `<g class="mapdot" data-c="${esc(mn)}" style="cursor:pointer">
+      <circle cx="${n.x}" cy="${n.y}" r="${n.r}" fill="${dimmed ? 'var(--baseline)' : 'var(--s1)'}"
         stroke="var(--surface-1)" stroke-width="2" opacity="${dimmed ? 0.55 : 0.92}"></circle>
-      <text x="${mx(ll[0])}" y="${my(ll[1]) + 3.5}" text-anchor="middle" font-size="${r > 11 ? 11 : 9}"
+      <text x="${n.x}" y="${n.y + 3.5}" text-anchor="middle" font-size="${n.r > 11 ? 11 : 9}"
         fill="#fff" font-weight="700" pointer-events="none">${a.count}</text>
     </g>`;
   }
-  svg.innerHTML = html;
+  svg.innerHTML = html + lines + dots;
   svg.querySelectorAll('.mapdot, path[data-c]').forEach(el => {
     const mn = el.getAttribute('data-c');
     const a = agg.get(mn);
