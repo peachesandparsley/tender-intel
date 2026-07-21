@@ -1,5 +1,5 @@
 """Assembles the self-contained app: inlines SheetJS, embeds specs + wines +
-the producer template (base64). Output: tender-intel-app.html"""
+the producer template (base64). Output: index.html (the file GitHub Pages serves)."""
 import base64, json
 
 html = open("app_template.html", encoding="utf-8").read()
@@ -22,5 +22,5 @@ html = html.replace("/*PLANS*/{}", json.dumps(plans, ensure_ascii=False))
 html = html.replace("/*WINES*/[]", json.dumps(wines, ensure_ascii=False))
 html = html.replace('"/*TEMPLATE_B64*/"', json.dumps(tpl_b64))
 html = html.replace('"/*IMPORTER_TEMPLATE_B64*/"', json.dumps(imp_b64))
-open("tender-intel-app.html", "w", encoding="utf-8").write(html)
-print(f"tender-intel-app.html written ({len(html)//1024} KB)")
+open("index.html", "w", encoding="utf-8").write(html)
+print(f"index.html written ({len(html)//1024} KB)")

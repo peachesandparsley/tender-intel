@@ -127,81 +127,110 @@
   th.sortable.active { color: var(--accent); font-weight: 600; }
   .tender-head td { background: color-mix(in oklab, var(--accent) 7%, transparent);
     font-size: 13.5px; border-top: 2px solid color-mix(in oklab, var(--accent) 30%, transparent); }
+  /* ---- orientation: per-tab help line + first-run how-it-works strip ---- */
+  .tabhelp { color: var(--text-secondary); font-size: 12.5px; margin: -6px 0 16px; max-width: 760px; }
+  .intro { position: relative; background: color-mix(in oklab, var(--accent) 6%, var(--surface-1));
+    border: 1px solid color-mix(in oklab, var(--accent) 22%, var(--border)); border-radius: 14px;
+    padding: 16px 20px 14px; margin: 0 0 18px; }
+  .intro h2 { margin: 0 0 8px; font-size: 16px; }
+  .intro ol { margin: 0; padding-left: 20px; }
+  .intro li { margin: 3px 0; color: var(--text-secondary); }
+  .intro li b { color: var(--text-primary); }
+  .intro .foot { color: var(--muted); font-size: 12px; margin: 9px 0 0; }
+  .intro .x { position: absolute; top: 8px; right: 10px; font: inherit; font-size: 18px; line-height: 1;
+    background: none; border: none; color: var(--muted); cursor: pointer; padding: 4px 8px; border-radius: 8px; }
+  .intro .x:hover { background: color-mix(in oklab, var(--accent) 12%, transparent); color: var(--text-primary); }
+  .plan-label { color: var(--muted); font-size: 12px; font-family: system-ui, sans-serif; font-weight: 400;
+    letter-spacing: 0; margin-left: 4px; }
 </style>
 </head>
 <body class="viz-root">
 <div class="wrap">
   <header>
-    <button class="theme-toggle" onclick="toggleTheme()">lys/mørk</button>
-    <input id="whoAmI" value="Espen (demo)" title="Brukes til å stemple hvem som lastet opp/endret data"
+    <button class="theme-toggle" data-i18n="themeToggle" onclick="toggleTheme()">lys/mørk</button>
+    <button class="theme-toggle" id="langToggle" style="margin-right:8px" onclick="switchLang()">English</button>
+    <input id="whoAmI" value="Espen (demo)" data-i18n-title="whoTitle" title="Brukes til å stemple hvem som lastet opp/endret data"
       style="float:right;margin-right:8px;font:inherit;font-size:12px;padding:4px 10px;border-radius:999px;border:1px solid var(--border);background:var(--surface-1);color:var(--text-secondary);width:130px">
 
     <h1>Tender Intelligence
-      <select id="planSelect" class="pill" style="font:inherit;font-size:12px;background:var(--surface-1);color:var(--text-secondary);cursor:pointer"></select>
+      <span class="plan-label" data-i18n="planLabel">Plan:</span><select id="planSelect" class="pill" data-i18n-title="planTitle" title="Bytt lanseringsplan — hele appen viser data fra planen du velger her" style="font:inherit;font-size:12px;background:var(--surface-1);color:var(--text-secondary);cursor:pointer;margin-left:4px"></select>
     </h1>
-    <p>Nordiske monopolanbud · klausulmatching · FOB-kalkulator · produsentopplasting — alt kjører i denne filen, ingen server.</p>
+    <p data-i18n="subtitle">Nordiske monopolanbud · klausulmatching · FOB-kalkulator · produsentopplasting — alt kjører i denne filen, ingen server.</p>
   </header>
 
   <nav id="nav">
-    <button data-t="anbud" class="on">Anbud</button>
-    <button data-t="marked">Marketplace</button>
-    <button data-t="kalk">Kalkulator</button>
-    <button data-t="viner">Viner</button>
-    <button data-t="portefolje">Min portefølje</button>
-    <button data-t="katalog">Katalog</button>
-    <button data-t="analyse">Analyse</button>
-    <button data-t="opplasting">Last opp</button>
+    <button data-t="anbud" class="on" data-i18n="navAnbud">Anbud</button>
+    <button data-t="marked" data-i18n="navMarked">Marketplace</button>
+    <button data-t="kalk" data-i18n="navKalk">Kalkulator</button>
+    <button data-t="viner" data-i18n="navViner">Viner</button>
+    <button data-t="portefolje" data-i18n="navPort">Min portefølje</button>
+    <button data-t="katalog" data-i18n="navKat">Katalog</button>
+    <button data-t="analyse" data-i18n="navAnalyse">Analyse</button>
+    <button data-t="opplasting" data-i18n="navOpp">Last opp</button>
   </nav>
+  <p class="tabhelp" id="tabHelp"></p>
 
   <!-- ANBUD -->
   <section class="tab on" id="tab-anbud">
+    <div class="intro" id="intro">
+      <button class="x" onclick="dismissIntro()" data-i18n-title="introX" title="Skjul (vises ikke igjen)" aria-label="Lukk">×</button>
+      <h2 data-i18n="introH">Slik fungerer det</h2>
+      <ol>
+        <li data-i18n="introLi1">Last opp vinene dine én gang under <b>Min portefølje</b> — eller utforsk demodataene som allerede ligger inne.</li>
+        <li data-i18n="introLi2">Under <b>Anbud</b> og <b>Marketplace</b> matches vinene automatisk mot Vinmonopolets krav, så du ser hvilke anbud du kan vinne.</li>
+        <li data-i18n="introLi3">Bruk <b>Kalkulator</b> til å sjekke at produsentprisen treffer prisbåndet — <b>FOB</b> = prisen produsenten tar fra kjeller, før frakt, avgifter og importørmargin.</li>
+      </ol>
+      <p class="foot" data-i18n="introFoot">Bytt lanseringsplan øverst til høyre. Alt kjører lokalt i nettleseren — ingen data forlater maskinen.</p>
+    </div>
     <div class="tiles" id="tiles"></div>
     <div class="card">
-      <h2>Filtre og fordeling</h2>
+      <h2 data-i18n="h2FilterDist">Filtre og fordeling</h2>
       <div class="dimbar">
-        <div><label>Geografi</label><select id="fCountry"><option value="">Alle land</option></select></div>
-        <div><label>Type</label><select id="fGroup"><option value="">Alle typer</option></select></div>
-        <div><label>Drue</label><select id="fGrape"><option value="">Alle druer</option></select></div>
-        <div><label>Prisbånd</label><select id="fPrice"><option value="">Alle priser</option></select></div>
-        <div><label>Utvalg</label><select id="fSel"><option value="">Alle utvalg</option></select></div>
-        <div style="flex:1.4"><label>Fritekst</label><input id="fQ" placeholder="søk i spesifikasjonstekst…"></div>
-        <div style="min-width:90px;flex:0"><label>&nbsp;</label><button class="btn ghost" style="width:100%;padding:5px 8px" onclick="resetFilters()">Nullstill</button></div>
+        <div><label data-i18n="lblGeo">Geografi</label><select id="fCountry"><option value="" data-i18n="optAllCountries">Alle land</option></select></div>
+        <div><label data-i18n="lblCategory">Kategori</label><select id="fMain"><option value="" data-i18n="optAllCategories">Alle kategorier</option></select></div>
+        <div><label data-i18n="lblType">Type</label><select id="fGroup"><option value="" data-i18n="optAllTypes">Alle typer</option></select></div>
+        <div><label data-i18n="lblGrape">Drue</label><select id="fGrape"><option value="" data-i18n="optAllGrapes">Alle druer</option></select></div>
+        <div><label data-i18n="lblClass">Klassifisering</label><select id="fClass"><option value="" data-i18n="optAllClasses">Alle klassifiseringer</option></select></div>
+        <div><label data-i18n="lblPrice">Prisbånd</label><select id="fPrice"><option value="" data-i18n="optAllPrices">Alle priser</option></select></div>
+        <div><label data-i18n="lblSelection" data-i18n-title="ttSelection" title="Basisutvalget = fast sortiment. Partiutvalget = engangskjøp (parti).">Utvalg</label><select id="fSel"><option value="" data-i18n="optAllRanges">Alle utvalg</option></select></div>
+        <div style="flex:1.4"><label data-i18n="lblText">Fritekst</label><input id="fQ" data-i18n-ph="phSpecText" placeholder="søk i spesifikasjonstekst…"></div>
+        <div style="min-width:90px;flex:0"><label>&nbsp;</label><button class="btn ghost" data-i18n="btnReset" style="width:100%;padding:5px 8px" onclick="resetFilters()">Nullstill</button></div>
       </div>
-      <p class="note" style="margin:4px 0 2px">Klikk en stolpe eller et land på kartet for å filtrere; klikk igjen for å oppheve. <span id="filterCount"></span></p>
+      <p class="note" style="margin:4px 0 2px"><span data-i18n="noteMapClick">Klikk en stolpe eller et land på kartet for å filtrere; klikk igjen for å oppheve. </span><span id="filterCount"></span></p>
       <div style="margin:8px 0 4px">
         <svg id="mapSvg" style="width:100%;display:block;border-radius:10px"></svg>
       </div>
       <div class="charts-grid">
-        <div class="chart-box"><h3>Geografi</h3><svg id="chCountry"></svg></div>
-        <div class="chart-box"><h3>Produkttype</h3><svg id="chGroup"></svg></div>
-        <div class="chart-box"><h3>Drue / metode</h3><svg id="chGrape"></svg></div>
-        <div class="chart-box"><h3>Prisbånd (kr)</h3><svg id="chPrice"></svg></div>
+        <div class="chart-box"><h3 data-i18n="chGeo">Geografi</h3><svg id="chCountry"></svg></div>
+        <div class="chart-box"><h3 data-i18n="chType">Produkttype</h3><svg id="chGroup"></svg></div>
+        <div class="chart-box"><h3 data-i18n="chGrape">Drue / metode</h3><svg id="chGrape"></svg></div>
+        <div class="chart-box"><h3 data-i18n="chPrice">Prisbånd (kr)</h3><svg id="chPrice"></svg></div>
       </div>
     </div>
     <div class="card">
-      <h2>Anbudsspesifikasjoner</h2>
+      <h2 data-i18n="h2Specs">Anbudsspesifikasjoner</h2>
       <div class="filters" id="specFilters">
-        <button data-f="all" class="on">Alle</button>
-        <button data-f="match">Med kvalifiserte viner</button>
-        <button data-f="wine">Kun vin</button>
+        <button data-f="all" class="on" data-i18n="fAll">Alle</button>
+        <button data-f="match" data-i18n="fMatch">Med kvalifiserte viner</button>
+        <button data-f="wine" data-i18n="fWine">Kun vin</button>
       </div>
       <table id="specTable"><thead><tr>
-        <th data-sort="ref">Ref</th><th data-sort="launch">Lansering</th><th data-sort="sel">Utvalg</th>
-        <th data-sort="group">Gruppe</th><th data-sort="country">Opprinnelse</th>
-        <th>Spesifikasjon</th><th class="num" data-sort="price">Prisbånd</th>
-        <th class="num" data-sort="fob">Trenger ≤ FOB</th><th class="num" data-sort="hits">Treff</th>
+        <th data-sort="ref" data-i18n="thRef">Ref</th><th data-sort="launch" data-i18n="thLaunch">Lansering</th><th data-sort="sel" data-i18n="thSel">Utvalg</th>
+        <th data-sort="group" data-i18n="thGroup">Gruppe</th><th data-sort="country" data-i18n="thOrigin">Opprinnelse</th>
+        <th data-i18n="thSpec">Spesifikasjon</th><th class="num" data-sort="price" data-i18n="thPriceBand">Prisbånd</th>
+        <th class="num" data-sort="fob" data-i18n="thNeedFob">Trenger ≤ FOB</th><th class="num" data-sort="hits" data-i18n="thHits">Treff</th>
       </tr></thead><tbody></tbody></table>
-      <p class="note">Klikk en rad for klausulene. «Trenger ≤ FOB» = maks produsentpris som treffer prisbåndets tak (kalkulatorens forutsetninger).</p>
+      <p class="note" data-i18n="noteSpecTable">Klikk en rad for klausulene. «Trenger ≤ FOB» = høyeste produsentpris fra kjeller (før frakt, avgifter og margin) som fortsatt treffer prisbåndets tak, gitt kalkulatorens forutsetninger.</p>
     </div>
   </section>
 
   <!-- MARKETPLACE -->
   <section class="tab" id="tab-marked">
     <div class="card">
-      <h2>Marketplace — viner som møter anbudskravene</h2>
-      <p class="note" style="margin:0 0 12px"><b>Slik leser du listen:</b> Hvert anbud viser først hva Vinmonopolet ber om, deretter vinene i databasen som oppfyller kravene. Fire statuser avgjør om det er verdt å gå videre: kravene, prisen, om vinen allerede står i sortimentet, og om produsenten er åpen for import. Klikk en vinrad for klausul-for-klausul-vurderingen.</p>
+      <h2 data-i18n="h2Market">Marketplace — viner som møter anbudskravene</h2>
+      <p class="note" style="margin:0 0 12px" data-i18n="noteMarket"><b>Slik leser du listen:</b> Hvert anbud viser først hva Vinmonopolet ber om, deretter vinene i databasen som oppfyller kravene. Fire statuser avgjør om det er verdt å gå videre: kravene, prisen, om vinen allerede står i sortimentet, og om produsenten er åpen for import. Klikk en vinrad for klausul-for-klausul-vurderingen.</p>
       <table id="marketTable"><thead><tr>
-        <th style="width:40%">Kandidatvin</th><th>Vurdering</th>
+        <th style="width:40%" data-i18n="thCandidate">Kandidatvin</th><th data-i18n="thAssessment">Vurdering</th>
       </tr></thead><tbody></tbody></table>
     </div>
   </section>
@@ -209,84 +238,85 @@
   <!-- KALKULATOR -->
   <section class="tab" id="tab-kalk">
     <div class="card">
-      <h2>Prisbånd-kalkulator — fra hyllepris til påkrevd FOB (2026-satser, Norge)</h2>
+      <h2 data-i18n="h2Calc">Prisbånd-kalkulator — fra hyllepris til påkrevd FOB (2026-satser, Norge)</h2>
+      <p class="note" style="margin:0 0 12px" data-i18n="noteCalc">Fyll inn hylleprisen Vinmonopolet vil ha, så regner appen seg bakover til hvor lav <b>FOB</b> (produsentens pris fra kjeller, før frakt, avgifter og importørmargin) må være for at regnestykket skal gå opp.</p>
       <div class="calc-grid">
-        <div><label>Hyllepris (kr)</label><input type="number" id="inRetail" value="199.90" step="5"></div>
-        <div><label>Alkohol (%)</label><input type="number" id="inAbv" value="13.0" step="0.5"></div>
-        <div><label>Volum (liter)</label><input type="number" id="inVol" value="0.75" step="0.05"></div>
-        <div><label>Emballasje</label><select id="inPack">
-          <option value="glass">Glass (1,45 kr)</option><option value="bib">BiB/plast (2,01 kr)</option>
-          <option value="carton">Kartong (1,55 kr)</option><option value="metal">Metall (1,45 kr)</option></select></div>
-        <div><label>Importørmargin (%)</label><input type="number" id="inMargin" value="25" step="1"></div>
-        <div><label>Frakt+håndtering (kr/fl)</label><input type="number" id="inFreight" value="9" step="0.5"></div>
-        <div><label>NOK per EUR</label><input type="number" id="inEur" value="11.6" step="0.1"></div>
-        <div><label>Valuta 2</label><select id="inCur2"><option>USD</option><option>ZAR</option><option>GBP</option><option>AUD</option><option>CLP</option></select></div>
-        <div><label>NOK per valuta 2</label><input type="number" id="inCur2Rate" value="10.4" step="0.01"></div>
+        <div><label data-i18n="lblRetail">Hyllepris (kr)</label><input type="number" id="inRetail" value="199.90" step="5"></div>
+        <div><label data-i18n="lblAbv">Alkohol (%)</label><input type="number" id="inAbv" value="13.0" step="0.5"></div>
+        <div><label data-i18n="lblVol">Volum (liter)</label><input type="number" id="inVol" value="0.75" step="0.05"></div>
+        <div><label data-i18n="lblPack">Emballasje</label><select id="inPack">
+          <option value="glass" data-i18n="packGlass">Glass (1,45 kr)</option><option value="bib" data-i18n="packBib">BiB/plast (2,01 kr)</option>
+          <option value="carton" data-i18n="packCarton">Kartong (1,55 kr)</option><option value="metal" data-i18n="packMetal">Metall (1,45 kr)</option></select></div>
+        <div><label data-i18n="lblMargin">Importørmargin (%)</label><input type="number" id="inMargin" value="25" step="1"></div>
+        <div><label data-i18n="lblFreight">Frakt+håndtering (kr/fl)</label><input type="number" id="inFreight" value="9" step="0.5"></div>
+        <div><label data-i18n="lblEur">NOK per EUR</label><input type="number" id="inEur" value="11.6" step="0.1"></div>
+        <div><label data-i18n="lblCur2">Valuta 2</label><select id="inCur2"><option>USD</option><option>ZAR</option><option>GBP</option><option>AUD</option><option>CLP</option></select></div>
+        <div><label data-i18n="lblCur2Rate">NOK per valuta 2</label><input type="number" id="inCur2Rate" value="10.4" step="0.01"></div>
       </div>
       <svg id="stackbar" role="img" aria-label="Prisoppbygging per flaske"></svg>
       <div class="legend" id="legend"></div>
       <div class="fob-out">
-        <div class="tile"><div class="v" id="outFobNok">–</div><div class="l">Påkrevd FOB, NOK</div></div>
+        <div class="tile"><div class="v" id="outFobNok">–</div><div class="l" data-i18n="outFobNokL">Påkrevd FOB, NOK</div></div>
         <div class="tile"><div class="v" id="outFobCur2">–</div><div class="l" id="outFobCur2Label">FOB i USD</div></div>
-        <div class="tile"><div class="v" id="outFobEur">–</div><div class="l">FOB i euro (€)</div></div>
-        <div class="tile"><div class="v" id="outVerdict">–</div><div class="l">Vurdering</div></div>
+        <div class="tile"><div class="v" id="outFobEur">–</div><div class="l" data-i18n="outFobEurL">FOB i euro (€)</div></div>
+        <div class="tile"><div class="v" id="outVerdict">–</div><div class="l" data-i18n="outVerdictL">Vurdering</div></div>
       </div>
-      <table id="breakdownTable"><thead><tr><th>Komponent</th><th class="num">kr</th><th class="num">Andel</th></tr></thead><tbody></tbody></table>
-      <footer>Alkoholavgift 5,41 kr/vol%/l (4,7–22 %) · avanse 10,82 kr/l + 21 % (knekk 133,70, tak 250) · mva 25 %. Verifisert mot Vinmonopolets priseksempel (199,90 kr → grossist 80,67 kr).</footer>
+      <table id="breakdownTable"><thead><tr><th data-i18n="thComponent">Komponent</th><th class="num" data-i18n="thKr">kr</th><th class="num" data-i18n="thShare">Andel</th></tr></thead><tbody></tbody></table>
+      <footer data-i18n="calcFooter">Alkoholavgift 5,41 kr/vol%/l (4,7–22 %) · avanse 10,82 kr/l + 21 % (knekk 133,70, tak 250) · mva 25 %. Verifisert mot Vinmonopolets priseksempel (199,90 kr → grossist 80,67 kr).</footer>
     </div>
   </section>
 
   <!-- VINER -->
   <section class="tab" id="tab-viner">
     <div class="card">
-      <h2>Vindatabase <span class="pill" id="wineCount"></span></h2>
-      <p class="note" style="margin:0 0 10px">Kjører i minnet i denne økten. Eksporter for å lagre; importer JSON for å fortsette senere.</p>
+      <h2><span data-i18n="h2Wines">Vindatabase</span> <span class="pill" id="wineCount"></span></h2>
+      <p class="note" style="margin:0 0 10px" data-i18n="noteWinesMem">Kjører i minnet i denne økten. Eksporter for å lagre; importer JSON for å fortsette senere.</p>
       <div class="dimbar">
-        <div><label>Geografi</label><select id="wfCountry"><option value="">Alle land</option></select></div>
-        <div><label>Type</label><select id="wfType"><option value="">Alle typer</option></select></div>
-        <div><label>Sertifisering</label><select id="wfCert"><option value="">Alle</option></select></div>
-        <div><label>Status Norge</label><select id="wfRep"><option value="">Alle</option><option value="open">Åpen for import</option><option value="taken">Representert/listet</option><option value="unknown">Ukjent</option></select></div>
-        <div style="flex:1.4"><label>Fritekst</label><input id="wfQ" placeholder="produsent, vin, drue…"></div>
-        <div style="min-width:90px;flex:0"><label>&nbsp;</label><button class="btn ghost" style="width:100%;padding:5px 8px" onclick="resetWineFilters()">Nullstill</button></div>
+        <div><label data-i18n="lblGeo">Geografi</label><select id="wfCountry"><option value="" data-i18n="optAllCountries">Alle land</option></select></div>
+        <div><label data-i18n="lblType">Type</label><select id="wfType"><option value="" data-i18n="optAllTypes">Alle typer</option></select></div>
+        <div><label data-i18n="lblCert">Sertifisering</label><select id="wfCert"><option value="" data-i18n="optAll">Alle</option></select></div>
+        <div><label data-i18n="lblStatusNO">Status Norge</label><select id="wfRep"><option value="" data-i18n="optAll">Alle</option><option value="open" data-i18n="optOpenImport">Åpen for import</option><option value="taken" data-i18n="optRepresented">Representert/listet</option><option value="unknown" data-i18n="optUnknown">Ukjent</option></select></div>
+        <div style="flex:1.4"><label data-i18n="lblText">Fritekst</label><input id="wfQ" data-i18n-ph="phWineText" placeholder="produsent, vin, drue…"></div>
+        <div style="min-width:90px;flex:0"><label>&nbsp;</label><button class="btn ghost" data-i18n="btnReset" style="width:100%;padding:5px 8px" onclick="resetWineFilters()">Nullstill</button></div>
       </div>
       <svg id="wineMapSvg" style="width:100%;display:block;border-radius:10px;margin:6px 0 4px"></svg>
-      <p class="note" style="margin:0 0 8px">Klikk et land på kartet for å filtrere listen; klikk igjen for å oppheve. <span id="wineFilterCount"></span></p>
+      <p class="note" style="margin:0 0 8px"><span data-i18n="noteWineMapClick">Klikk et land på kartet for å filtrere listen; klikk igjen for å oppheve. </span><span id="wineFilterCount"></span></p>
       <p>
-        <button class="btn ghost" onclick="exportWinesXlsx()">Eksporter (xlsx)</button>
-        <label class="btn ghost" style="cursor:pointer">Importer (xlsx)<input type="file" id="wineXlsxIn" accept=".xlsx,.xls" style="display:none"></label>
-        <button class="btn ghost" onclick="exportWines()">Eksporter (JSON)</button>
-        <label class="btn ghost" style="cursor:pointer">Importer (JSON)<input type="file" id="wineJsonIn" accept=".json" style="display:none"></label>
+        <button class="btn ghost" data-i18n="btnExportXlsx" onclick="exportWinesXlsx()">Eksporter (xlsx)</button>
+        <label class="btn ghost" style="cursor:pointer"><span data-i18n="btnImportXlsx">Importer (xlsx)</span><input type="file" id="wineXlsxIn" accept=".xlsx,.xls" style="display:none"></label>
+        <button class="btn ghost" data-i18n="btnExportJson" onclick="exportWines()">Eksporter (JSON)</button>
+        <label class="btn ghost" style="cursor:pointer"><span data-i18n="btnImportJson">Importer (JSON)</span><input type="file" id="wineJsonIn" accept=".json" style="display:none"></label>
       </p>
       <table id="wineTable"><thead><tr>
-        <th data-sort="producer">Produsent</th><th data-sort="name">Vin</th><th data-sort="country">Land</th>
-        <th data-sort="type">Type</th><th>Druer</th>
-        <th class="num" data-sort="sugar" title="sukker g/l">Sukker</th>
-        <th class="num" title="Fylde / Friskhet / Garvestoffer (1–12, som Vinmonopolets smaksprofil)">Profil F/F/G</th>
-        <th title="emballasje + kork">Emb./kork</th>
-        <th class="num" data-sort="fob">FOB €</th><th>Sert.</th><th data-sort="rep">Rep. NO</th>
-        <th data-sort="updated" title="hvem som la inn/endret raden, og når">Oppdatert</th>
-        <th data-sort="quality" title="verifiseringsstatus per felt — klikk raden for detaljer">Datakvalitet</th>
+        <th data-sort="producer" data-i18n="thProducer">Produsent</th><th data-sort="name" data-i18n="thWine">Vin</th><th data-sort="country" data-i18n="thCountry">Land</th>
+        <th data-sort="type" data-i18n="thTypeCol">Type</th><th data-i18n="thGrapes">Druer</th>
+        <th class="num" data-sort="sugar" data-i18n-title="ttSugar" title="sukker g/l" data-i18n="thSugar">Sukker</th>
+        <th class="num" data-i18n-title="ttProfile" title="Fylde / Friskhet / Garvestoffer (1–12, som Vinmonopolets smaksprofil)" data-i18n="thProfile">Profil F/F/G</th>
+        <th data-i18n-title="ttPackClosure" title="emballasje + kork" data-i18n="thPackClosure">Emb./kork</th>
+        <th class="num" data-sort="fob" data-i18n="thFob">FOB €</th><th data-i18n="thCert">Sert.</th><th data-sort="rep" data-i18n="thRepNo">Rep. NO</th>
+        <th data-sort="updated" data-i18n-title="ttUpdated" title="hvem som la inn/endret raden, og når" data-i18n="thUpdated">Oppdatert</th>
+        <th data-sort="quality" data-i18n-title="ttQuality" title="verifiseringsstatus per felt — klikk raden for detaljer" data-i18n="thQuality">Datakvalitet</th>
       </tr></thead><tbody></tbody></table>
-      <p class="note">✓ verifisert mot kilde · ◦ offentlig dokumentert (lenke ikke arkivert) · ~ estimat som venter bekreftelse · ? mangler. Klikk en rad for felt-for-felt-status. I produksjon fylles ✓ av katalogsync, registeroppslag, produsentens tech sheet/analysebevis og parts-bekreftelser med tidsstempel — og verifisering eldes: en ✓ eldre enn 12 mnd faller tilbake til ◦.</p>
+      <p class="note" data-i18n="noteWineLegend">✓ verifisert mot kilde · ◦ offentlig dokumentert (lenke ikke arkivert) · ~ estimat som venter bekreftelse · ? mangler. Klikk en rad for felt-for-felt-status. I produksjon fylles ✓ av katalogsync, registeroppslag, produsentens tech sheet/analysebevis og parts-bekreftelser med tidsstempel — og verifisering eldes: en ✓ eldre enn 12 mnd faller tilbake til ◦.</p>
     </div>
   </section>
 
   <!-- MIN PORTEFØLJE -->
   <section class="tab" id="tab-portefolje">
     <div class="card">
-      <h2>Min portefølje <span class="pill" id="portCount">0 viner</span></h2>
-      <p class="note" style="margin:0 0 8px">Last opp porteføljen din én gang — hver ny lanseringsplan matches automatisk mot den (i produksjonsversjonen varsles du på e-post). Du er selv ansvarlig for at radene er komplette og korrekte: blanke felt gir «trenger bekreftelse» i stedet for rene treff.</p>
+      <h2><span data-i18n="h2Port">Min portefølje</span> <span class="pill" id="portCount">0 viner</span></h2>
+      <p class="note" style="margin:0 0 8px" data-i18n="notePort">Last opp porteføljen din én gang — hver ny lanseringsplan matches automatisk mot den (i produksjonsversjonen varsles du på e-post). Du er selv ansvarlig for at radene er komplette og korrekte: blanke felt gir «trenger bekreftelse» i stedet for rene treff.</p>
       <p>
-        <a class="btn" id="dlImporterTemplate" download="importer_portfolio_template.xlsx">Last ned porteføljemal (.xlsx)</a>
-        <label class="btn ghost" style="cursor:pointer">Last opp utfylt portefølje<input type="file" id="portIn" accept=".xlsx" style="display:none"></label>
+        <a class="btn" id="dlImporterTemplate" download="importer_portfolio_template.xlsx" data-i18n="btnDlPortTemplate">Last ned porteføljemal (.xlsx)</a>
+        <label class="btn ghost" style="cursor:pointer"><span data-i18n="btnUploadPort">Last opp utfylt portefølje</span><input type="file" id="portIn" accept=".xlsx" style="display:none"></label>
       </p>
       <div class="report" id="portReport" style="display:none"></div>
     </div>
     <div class="card">
-      <h2>Anbud i <span id="portPlanName"></span> som porteføljen din kan vinne</h2>
+      <h2><span data-i18n="portMatchPre">Anbud i </span><span id="portPlanName"></span><span data-i18n="portMatchPost"> som porteføljen din kan vinne</span></h2>
       <table id="portMatchTable"><thead><tr>
-        <th>Anbud</th><th>Frist</th><th class="num">Prisbånd</th><th>Din vin</th>
-        <th class="num">Klausuler</th><th>Pris</th>
+        <th data-i18n="thTender">Anbud</th><th data-i18n="thDeadline">Frist</th><th class="num" data-i18n="thPriceBand">Prisbånd</th><th data-i18n="thYourWine">Din vin</th>
+        <th class="num" data-i18n="thClauses">Klausuler</th><th data-i18n="thPrice">Pris</th>
       </tr></thead><tbody></tbody></table>
       <p class="note" id="portMatchNote"></p>
     </div>
@@ -295,20 +325,20 @@
   <!-- KATALOG -->
   <section class="tab" id="tab-katalog">
     <div class="card">
-      <h2>Katalog — produsenter og representasjon per marked</h2>
-      <p class="note" style="margin:0 0 10px">Avledet av vinregistrene. I produksjon bygges denne automatisk fra monopolkatalogene (grossist er oppgitt på hvert produkt — offentlige data) og korrigeres av partene selv. «Åpen» = urepresentert og synlig som introduksjonsmulighet.</p>
+      <h2 data-i18n="h2Kat">Katalog — produsenter og representasjon per marked</h2>
+      <p class="note" style="margin:0 0 10px" data-i18n="noteKat">Avledet av vinregistrene. I produksjon bygges denne automatisk fra monopolkatalogene (grossist er oppgitt på hvert produkt — offentlige data) og korrigeres av partene selv. «Åpen» = urepresentert og synlig som introduksjonsmulighet.</p>
       <div class="filters" id="katFilters">
-        <button data-k="all" class="on">Alle</button>
-        <button data-k="openNO">Åpne i Norge</button>
-        <button data-k="takenNO">Representert i Norge</button>
+        <button data-k="all" class="on" data-i18n="katAll">Alle</button>
+        <button data-k="openNO" data-i18n="katOpenNO">Åpne i Norge</button>
+        <button data-k="takenNO" data-i18n="katTakenNO">Representert i Norge</button>
       </div>
       <div class="dimbar">
-        <div><label>Land</label><select id="kfCountry"><option value="">Alle land</option></select></div>
-        <div style="flex:1.4"><label>Fritekst</label><input id="kfQ" placeholder="produsentnavn…"></div>
+        <div><label data-i18n="lblLand">Land</label><select id="kfCountry"><option value="" data-i18n="optAllCountries">Alle land</option></select></div>
+        <div style="flex:1.4"><label data-i18n="lblText">Fritekst</label><input id="kfQ" data-i18n-ph="phProducerName" placeholder="produsentnavn…"></div>
       </div>
       <table id="katTable"><thead><tr>
-        <th data-sort="producer">Produsent</th><th data-sort="country">Land</th><th class="num" data-sort="wines">Viner</th>
-        <th data-sort="no">Norge</th><th data-sort="se">Sverige</th><th data-sort="fi">Finland</th>
+        <th data-sort="producer" data-i18n="thProducer">Produsent</th><th data-sort="country" data-i18n="thCountry">Land</th><th class="num" data-sort="wines" data-i18n="thWinesCount">Viner</th>
+        <th data-sort="no" data-i18n="thNO">Norge</th><th data-sort="se" data-i18n="thSE">Sverige</th><th data-sort="fi" data-i18n="thFI">Finland</th>
       </tr></thead><tbody></tbody></table>
     </div>
   </section>
@@ -316,14 +346,14 @@
   <!-- ANALYSE -->
   <section class="tab" id="tab-analyse">
     <div class="card">
-      <h2>Historisk analyse på tvers av lanseringsplaner</h2>
-      <p class="note" style="margin:0 0 10px">Gjentakelsesmønstre over alle innlastede planer — hvilke opprinnelser og druer Vinmonopolet ber om igjen og igjen, og hvor prisbåndene ligger. Dette er datagrunnlaget som vokser med hver plan.</p>
+      <h2 data-i18n="h2Ana">Historisk analyse på tvers av lanseringsplaner</h2>
+      <p class="note" style="margin:0 0 10px" data-i18n="noteAna">Gjentakelsesmønstre over alle innlastede planer — hvilke opprinnelser og druer Vinmonopolet ber om igjen og igjen, og hvor prisbåndene ligger. Dette er datagrunnlaget som vokser med hver plan.</p>
       <div class="tiles" id="anaTiles"></div>
       <div class="charts-grid" style="grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));">
-        <div class="chart-box"><h3>Anbud per land per plan</h3><svg id="anaCountry"></svg><div class="legend" id="anaLegend1"></div></div>
-        <div class="chart-box"><h3>Mest etterspurte druer per plan</h3><svg id="anaGrape"></svg><div class="legend" id="anaLegend2"></div></div>
-        <div class="chart-box"><h3>Median prisbåndstak (kr) per plan</h3><svg id="anaPrice"></svg></div>
-        <div class="chart-box"><h3>Sertifiseringskrav (andel av vinanbud)</h3><svg id="anaCert"></svg></div>
+        <div class="chart-box"><h3 data-i18n="anaCh1">Anbud per land per plan</h3><svg id="anaCountry"></svg><div class="legend" id="anaLegend1"></div></div>
+        <div class="chart-box"><h3 data-i18n="anaCh2">Mest etterspurte druer per plan</h3><svg id="anaGrape"></svg><div class="legend" id="anaLegend2"></div></div>
+        <div class="chart-box"><h3 data-i18n="anaCh3">Median prisbåndstak (kr) per plan</h3><svg id="anaPrice"></svg></div>
+        <div class="chart-box"><h3 data-i18n="anaCh4">Sertifiseringskrav (andel av vinanbud)</h3><svg id="anaCert"></svg></div>
       </div>
     </div>
   </section>
@@ -331,18 +361,18 @@
   <!-- OPPLASTING -->
   <section class="tab" id="tab-opplasting">
     <div class="card">
-      <h2>1 · Produsent: last ned mal, fyll ut, last opp</h2>
-      <p><a class="btn" id="dlTemplate" download="producer_upload_template.xlsx">Last ned produsentmal (.xlsx)</a></p>
-      <div class="drop" id="dropProducer">Slipp utfylt produsentmal her, eller
-        <label style="color:var(--accent);cursor:pointer"><u>velg fil</u><input type="file" id="producerIn" accept=".xlsx" style="display:none"></label>
+      <h2 data-i18n="h2Upload1">1 · Produsent: last ned mal, fyll ut, last opp</h2>
+      <p><a class="btn" id="dlTemplate" download="producer_upload_template.xlsx" data-i18n="btnDlProducer">Last ned produsentmal (.xlsx)</a></p>
+      <div class="drop" id="dropProducer"><span data-i18n="dropProducerText">Slipp utfylt produsentmal her, eller </span>
+        <label style="color:var(--accent);cursor:pointer"><u data-i18n="chooseFile">velg fil</u><input type="file" id="producerIn" accept=".xlsx" style="display:none"></label>
       </div>
       <div class="report" id="producerReport" style="display:none"></div>
     </div>
     <div class="card">
-      <h2>2 · Lanseringsplan: last opp Vinmonopolets Excel</h2>
-      <p class="note" style="margin:0 0 8px">Hent filen fra <b>vinmonopolet.no → Lanseringer</b> (norsk eller engelsk utgave). Anbuds- og marketplace-fanene oppdateres umiddelbart.</p>
-      <div class="drop" id="dropPlan">Slipp lanseringsplan-filen her, eller
-        <label style="color:var(--accent);cursor:pointer"><u>velg fil</u><input type="file" id="planIn" accept=".xlsx" style="display:none"></label>
+      <h2 data-i18n="h2Upload2">2 · Lanseringsplan: last opp Vinmonopolets Excel</h2>
+      <p class="note" style="margin:0 0 8px" data-i18n="noteUpload2">Hent filen fra <b>vinmonopolet.no → Lanseringer</b> (norsk eller engelsk utgave). Anbuds- og marketplace-fanene oppdateres umiddelbart.</p>
+      <div class="drop" id="dropPlan"><span data-i18n="dropPlanText">Slipp lanseringsplan-filen her, eller </span>
+        <label style="color:var(--accent);cursor:pointer"><u data-i18n="chooseFile">velg fil</u><input type="file" id="planIn" accept=".xlsx" style="display:none"></label>
       </div>
       <div class="report" id="planReport" style="display:none"></div>
     </div>
@@ -361,6 +391,318 @@ let WINES = /*WINES*/[];
 const TEMPLATE_B64 = "/*TEMPLATE_B64*/";
 const IMPORTER_TEMPLATE_B64 = "/*IMPORTER_TEMPLATE_B64*/";
 let MYPORT = [];
+
+/* ============ i18n (Norwegian default, English switchable) ============ */
+const I18N = {
+  no: {
+    themeToggle: 'lys/mørk', whoTitle: 'Brukes til å stemple hvem som lastet opp/endret data',
+    planLabel: 'Plan:', planTitle: 'Bytt lanseringsplan — hele appen viser data fra planen du velger her',
+    subtitle: 'Nordiske monopolanbud · klausulmatching · FOB-kalkulator · produsentopplasting — alt kjører i denne filen, ingen server.',
+    navAnbud: 'Anbud', navMarked: 'Marketplace', navKalk: 'Kalkulator', navViner: 'Viner',
+    navPort: 'Min portefølje', navKat: 'Katalog', navAnalyse: 'Analyse', navOpp: 'Last opp',
+    introX: 'Skjul (vises ikke igjen)', introH: 'Slik fungerer det',
+    introLi1: 'Last opp vinene dine én gang under <b>Min portefølje</b> — eller utforsk demodataene som allerede ligger inne.',
+    introLi2: 'Under <b>Anbud</b> og <b>Marketplace</b> matches vinene automatisk mot Vinmonopolets krav, så du ser hvilke anbud du kan vinne.',
+    introLi3: 'Bruk <b>Kalkulator</b> til å sjekke at produsentprisen treffer prisbåndet — <b>FOB</b> = prisen produsenten tar fra kjeller, før frakt, avgifter og importørmargin.',
+    introFoot: 'Bytt lanseringsplan øverst til høyre. Alt kjører lokalt i nettleseren — ingen data forlater maskinen.',
+    h2FilterDist: 'Filtre og fordeling', lblGeo: 'Geografi', lblType: 'Type', lblGrape: 'Drue',
+    lblPrice: 'Prisbånd', lblSelection: 'Utvalg', lblText: 'Fritekst',
+    optAllCountries: 'Alle land', optAllTypes: 'Alle typer', optAllGrapes: 'Alle druer',
+    optAllPrices: 'Alle priser', optAllRanges: 'Alle utvalg', optAll: 'Alle',
+    lblCategory: 'Kategori', optAllCategories: 'Alle kategorier',
+    lblClass: 'Klassifisering', optAllClasses: 'Alle klassifiseringer',
+    ttSelection: 'Basisutvalget = fast sortiment. Partiutvalget = engangskjøp (parti).',
+    selBasis: 'Basisutvalget (fast)', selParti: 'Partiutvalget (engangs)',
+    mainTypes: { Wine: 'Vin', Beer: 'Øl', Spirits: 'Brennevin', Cider: 'Sider' },
+    grpRed: 'Rødvin', grpWhite: 'Hvitvin', grpRose: 'Rosévin', grpSparkling: 'Musserende',
+    grpSparklingWhite: 'Musserende, hvit', grpSparklingRose: 'Musserende, rosé', grpFortified: 'Sterkvin',
+    optOpenImport: 'Åpen for import', optRepresented: 'Representert/listet', optUnknown: 'Ukjent',
+    phSpecText: 'søk i spesifikasjonstekst…', btnReset: 'Nullstill',
+    noteMapClick: 'Klikk en stolpe eller et land på kartet for å filtrere; klikk igjen for å oppheve. ',
+    chGeo: 'Geografi', chType: 'Produkttype', chGrape: 'Drue / metode', chPrice: 'Prisbånd (kr)',
+    h2Specs: 'Anbudsspesifikasjoner', fAll: 'Alle', fMatch: 'Med kvalifiserte viner', fWine: 'Kun vin',
+    thRef: 'Ref', thLaunch: 'Lansering', thSel: 'Utvalg', thGroup: 'Gruppe', thOrigin: 'Opprinnelse',
+    thSpec: 'Spesifikasjon', thPriceBand: 'Prisbånd', thNeedFob: 'Trenger ≤ FOB', thHits: 'Treff',
+    noteSpecTable: 'Klikk en rad for klausulene. «Trenger ≤ FOB» = høyeste produsentpris fra kjeller (før frakt, avgifter og margin) som fortsatt treffer prisbåndets tak, gitt kalkulatorens forutsetninger.',
+    h2Market: 'Marketplace — viner som møter anbudskravene',
+    noteMarket: '<b>Slik leser du listen:</b> Hvert anbud viser først hva Vinmonopolet ber om, deretter vinene i databasen som oppfyller kravene. Fire statuser avgjør om det er verdt å gå videre: kravene, prisen, om vinen allerede står i sortimentet, og om produsenten er åpen for import. Klikk en vinrad for klausul-for-klausul-vurderingen.',
+    thCandidate: 'Kandidatvin', thAssessment: 'Vurdering',
+    h2Calc: 'Prisbånd-kalkulator — fra hyllepris til påkrevd FOB (2026-satser, Norge)',
+    noteCalc: 'Fyll inn hylleprisen Vinmonopolet vil ha, så regner appen seg bakover til hvor lav <b>FOB</b> (produsentens pris fra kjeller, før frakt, avgifter og importørmargin) må være for at regnestykket skal gå opp.',
+    lblRetail: 'Hyllepris (kr)', lblAbv: 'Alkohol (%)', lblVol: 'Volum (liter)', lblPack: 'Emballasje',
+    lblMargin: 'Importørmargin (%)', lblFreight: 'Frakt+håndtering (kr/fl)', lblEur: 'NOK per EUR',
+    lblCur2: 'Valuta 2', lblCur2Rate: 'NOK per valuta 2',
+    packGlass: 'Glass (1,45 kr)', packBib: 'BiB/plast (2,01 kr)', packCarton: 'Kartong (1,55 kr)', packMetal: 'Metall (1,45 kr)',
+    outFobNokL: 'Påkrevd FOB, NOK', outFobEurL: 'FOB i euro (€)', outVerdictL: 'Vurdering',
+    thComponent: 'Komponent', thKr: 'kr', thShare: 'Andel',
+    calcFooter: 'Alkoholavgift 5,41 kr/vol%/l (4,7–22 %) · avanse 10,82 kr/l + 21 % (knekk 133,70, tak 250) · mva 25 %. Verifisert mot Vinmonopolets priseksempel (199,90 kr → grossist 80,67 kr).',
+    h2Wines: 'Vindatabase', noteWinesMem: 'Kjører i minnet i denne økten. Eksporter for å lagre; importer JSON for å fortsette senere.',
+    lblCert: 'Sertifisering', lblStatusNO: 'Status Norge', phWineText: 'produsent, vin, drue…',
+    noteWineMapClick: 'Klikk et land på kartet for å filtrere listen; klikk igjen for å oppheve. ',
+    btnExportXlsx: 'Eksporter (xlsx)', btnImportXlsx: 'Importer (xlsx)', btnExportJson: 'Eksporter (JSON)', btnImportJson: 'Importer (JSON)',
+    thProducer: 'Produsent', thWine: 'Vin', thCountry: 'Land', thTypeCol: 'Type', thGrapes: 'Druer',
+    thSugar: 'Sukker', ttSugar: 'sukker g/l', thProfile: 'Profil F/F/G',
+    ttProfile: 'Fylde / Friskhet / Garvestoffer (1–12, som Vinmonopolets smaksprofil)',
+    thPackClosure: 'Emb./kork', ttPackClosure: 'emballasje + kork', thFob: 'FOB €', thCert: 'Sert.', thRepNo: 'Rep. NO',
+    thUpdated: 'Oppdatert', ttUpdated: 'hvem som la inn/endret raden, og når',
+    thQuality: 'Datakvalitet', ttQuality: 'verifiseringsstatus per felt — klikk raden for detaljer',
+    noteWineLegend: '✓ verifisert mot kilde · ◦ offentlig dokumentert (lenke ikke arkivert) · ~ estimat som venter bekreftelse · ? mangler. Klikk en rad for felt-for-felt-status. I produksjon fylles ✓ av katalogsync, registeroppslag, produsentens tech sheet/analysebevis og parts-bekreftelser med tidsstempel — og verifisering eldes: en ✓ eldre enn 12 mnd faller tilbake til ◦.',
+    h2Port: 'Min portefølje',
+    notePort: 'Last opp porteføljen din én gang — hver ny lanseringsplan matches automatisk mot den (i produksjonsversjonen varsles du på e-post). Du er selv ansvarlig for at radene er komplette og korrekte: blanke felt gir «trenger bekreftelse» i stedet for rene treff.',
+    btnDlPortTemplate: 'Last ned porteføljemal (.xlsx)', btnUploadPort: 'Last opp utfylt portefølje',
+    portMatchPre: 'Anbud i ', portMatchPost: ' som porteføljen din kan vinne',
+    thTender: 'Anbud', thDeadline: 'Frist', thYourWine: 'Din vin', thClauses: 'Klausuler', thPrice: 'Pris',
+    h2Kat: 'Katalog — produsenter og representasjon per marked',
+    noteKat: 'Avledet av vinregistrene. I produksjon bygges denne automatisk fra monopolkatalogene (grossist er oppgitt på hvert produkt — offentlige data) og korrigeres av partene selv. «Åpen» = urepresentert og synlig som introduksjonsmulighet.',
+    katAll: 'Alle', katOpenNO: 'Åpne i Norge', katTakenNO: 'Representert i Norge',
+    lblLand: 'Land', phProducerName: 'produsentnavn…',
+    thWinesCount: 'Viner', thNO: 'Norge', thSE: 'Sverige', thFI: 'Finland',
+    h2Ana: 'Historisk analyse på tvers av lanseringsplaner',
+    noteAna: 'Gjentakelsesmønstre over alle innlastede planer — hvilke opprinnelser og druer Vinmonopolet ber om igjen og igjen, og hvor prisbåndene ligger. Dette er datagrunnlaget som vokser med hver plan.',
+    anaCh1: 'Anbud per land per plan', anaCh2: 'Mest etterspurte druer per plan',
+    anaCh3: 'Median prisbåndstak (kr) per plan', anaCh4: 'Sertifiseringskrav (andel av vinanbud)',
+    h2Upload1: '1 · Produsent: last ned mal, fyll ut, last opp', btnDlProducer: 'Last ned produsentmal (.xlsx)',
+    dropProducerText: 'Slipp utfylt produsentmal her, eller ', chooseFile: 'velg fil',
+    h2Upload2: '2 · Lanseringsplan: last opp Vinmonopolets Excel',
+    noteUpload2: 'Hent filen fra <b>vinmonopolet.no → Lanseringer</b> (norsk eller engelsk utgave). Anbuds- og marketplace-fanene oppdateres umiddelbart.',
+    dropPlanText: 'Slipp lanseringsplan-filen her, eller ',
+    tabHelp: {
+      anbud: 'Alle anbud i valgt plan. Filtrer på land, drue, type og prisbånd — og se hvor mange kvalifiserte viner databasen har til hvert anbud.',
+      marked: 'Anbudene parret med viner som oppfyller kravene: for hver kandidat ser du krav, pris, om vinen alt er i sortimentet, og om produsenten er ledig.',
+      kalk: 'Regn deg bakover fra hylleprisen til hvor lav produsentprisen (FOB) må være — med alle norske avgifter og marginer for 2026.',
+      viner: 'Hele vindatabasen med datakvalitet per felt. Sorter, filtrer, og importer/eksporter for å jobbe med dine egne data.',
+      portefolje: 'Last opp dine egne viner én gang — hver lanseringsplan matches automatisk mot porteføljen din.',
+      katalog: 'Produsenter og hvem som representerer dem i hvert marked. «Åpen» = urepresentert, altså en ledig introduksjonsmulighet.',
+      analyse: 'Mønstre på tvers av alle innlastede planer — hvilke opprinnelser og druer som går igjen, og hvordan prisbåndene beveger seg.',
+      opplasting: 'Last opp en ny lanseringsplan fra Vinmonopolet, eller produsentdata i bulk via Excel-malen.',
+    },
+    tilesSpecs: 'spesifikasjoner i planen', tilesWithMatches: 'anbud med kvalifiserte viner',
+    tilesWines: 'viner i databasen', tilesIntro: 'introduksjonsmuligheter (åpne viner)', anaWineTenders: 'vinanbud',
+    filterCount: (n, tot) => `Viser ${n} av ${tot} anbud.`,
+    wineFilterCountFn: (n, tot) => `Viser ${n} av ${tot} viner.`,
+    wineCountFn: (n, tot) => `${n} av ${tot} viner`, portCountFn: n => `${n} viner`,
+    chipMine: '★ min', chipMineTitle: 'matcher din portefølje',
+    marketEmpty: 'Ingen viner i databasen oppfyller kravene i denne planen ennå.',
+    seeksPre: 'Vinmonopolet søker: ', seeksFrom: ' fra ', openOrigin: 'åpen opprinnelse', openCountry: 'Åpen',
+    ttPriceCap: 'prisbåndets tak:', detailDeadline: 'Frist:',
+    kravAll: n => `Oppfyller alle ${n} krav`,
+    kravSome: (p, tot, u) => `Oppfyller ${p} av ${tot} krav — ${u} må bekreftes`,
+    kravTitle: 'klikk raden for detaljer',
+    priceIn: 'Pris innenfor båndet', priceHigh: 'FOB for høy for båndet', priceUnknown: 'Pris ukjent',
+    catListed: 'Allerede i VMP-sortimentet ⚠', catListedTitle: id => `varenr ${id} — basis/parti = uaktuell; bestillingsutvalg kan være fordel`,
+    catProducer: 'Produsent i sortimentet ⚠', catProducerTitle: 'produsenten er i katalogen; denne cuvéen ikke funnet — sjekk hvilket utvalg',
+    catNotFound: 'Ikke funnet i sortimentet', catNotFoundTitle: 'websøk mot katalogen fant ingen listing — endelig sjekk via API',
+    catInconclusive: 'Sortiment uavklart', catInconclusiveTitle: 'websøk ga ikke sikkert svar for dette merket',
+    catUnchecked: 'Sortiment usjekket',
+    wlGrapes: 'Druer: ', wlVintage: 'Årgang ', wlBand: 'Prisbånd ', wlKr: ' kr',
+    wlFob: e => `→ produsentpris må være ≤ €${e} etter avgifter og marginer`, wlDeadline: 'Frist ',
+    repOpen: 'Åpen', repOpenDetail: 'ingen norsk listing funnet — introduksjonsmulighet',
+    repHasImporter: 'har norsk importør',
+    repProducerListed: 'Produsent i VMP-katalog', repProducerListedDetail: 'produsenten er listet (verifisert) — denne cuvéen ikke bekreftet',
+    repInVmp: 'I VMP-katalog ✓', repInVmpDetail: 'listet — verifisert mot katalogen',
+    repInconclusive: 'Uavklart — sjekk API', repInconclusiveDetail: 'websøk ga ikke sikkert svar',
+    repLikely: 'Trolig representert', repLikelyDetail: 'ikke verifisert ennå',
+    repNotSeeking: 'Søker ikke', repUnknown: 'Ukjent', repUnknownDetail: 'ikke verifisert',
+    tipFilter: (k, v) => `<b>${k}</b><br>${v} anbud — klikk for å filtrere`,
+    mapTip: (labels, count) => `<b>${labels}</b><br>${count} — klikk for å filtrere`,
+    mapOpenNote: n => `+ ${n} uten kartfestet opprinnelse (åpen/Europa)`,
+    tipSeries: (cat, sn, v) => `<b>${cat}</b> · ${sn}<br>${v} anbud`,
+    cpProducer: 'Produsent (FOB)', cpFreight: 'Frakt + håndtering', cpMargin: 'Importørmargin',
+    cpExcise: 'Alkoholavgift', cpAvanse: 'Avanse + emballasje', cpVat: 'Mva (25 %)', cpRetail: 'Hyllepris',
+    fobImpossible: 'umulig', fobLabelPrefix: 'FOB i ',
+    vdImpossible: '✗ Ikke gjennomførbart', vdTight: '⚠ Svært stramt', vdBulk: '⚠ Kun bulknivå', vdRealistic: '✓ Realistisk',
+    fieldNames: { producer: 'Produsent', name: 'Vin', country: 'Land', region: 'Region',
+      appellation: 'Klassifisering', grapes: 'Druer', method: 'Metode', abv: 'Alkohol', wood: 'Fat/eik',
+      certs: 'Sertifiseringer', sugar_g_l: 'Sukker', profile: 'Smaksprofil', vintages_available: 'Årganger',
+      volume_bottles: 'Volum', fob_eur: 'FOB-pris', packaging: 'Emballasje/vekt', closure: 'Kork', representation: 'Representasjon' },
+    qUnrated: 'uvurdert', qNoData: 'Ingen verifiseringsdata.', tradMethod: ' · trad.metode',
+    portNoteEmpty: 'Last opp porteføljen for å se treff.',
+    portNoteNoMatch: 'Ingen anbud i denne planen matcher porteføljen — prøv en annen plan i velgeren øverst.',
+    portNoteSome: n => `${n} anbud matcher. Klikk en rad for klausulvurderingene.`,
+    pIn: 'innenfor', pHigh: 'for høy', pUnknown: 'ukjent',
+    katUnknown: 'ukjent', katEmpty: 'Ingen produsenter i dette utvalget.',
+    rpImported: (a, r) => `${a} viner importert, ${r} avvist`, rowWord: 'rad', errWord: 'FEIL:', warnWord: 'advarsel:',
+    planNoSpecs: 'Fant ingen spesifikasjoner — er dette en lanseringsplan-fil?',
+    planLoaded: (n, f) => `${n} spesifikasjoner lastet fra ${f}.\nAnbuds-, marketplace- og analysefanene er oppdatert.`,
+    sheetFatal: "Fant ikke arket 'Wines' — er dette riktig mal?",
+    portImported: (a, r) => `${a} viner i porteføljen, ${r} rader avvist`,
+    xlsxAlert: (a, r) => `${a} viner importert, ${r} rader avvist (duplikater/feil).`,
+    invalidJson: 'Ugyldig JSON',
+    groupMap: { 'red wine': 'Rødvin', 'white wine': 'Hvitvin', 'rosé wine': 'Rosé', 'rose wine': 'Rosé',
+      'sparkling wine, white': 'Musserende hvit', 'sparkling wine white': 'Musserende hvit',
+      'sparkling wine, rosé': 'Musserende rosé', 'fortified wine': 'Sterkvin' },
+  },
+  en: {
+    themeToggle: 'light/dark', whoTitle: 'Used to stamp who uploaded / edited data',
+    planLabel: 'Plan:', planTitle: 'Switch launch plan — the whole app shows data from the plan you pick here',
+    subtitle: 'Nordic monopoly tenders · clause matching · FOB calculator · producer upload — everything runs in this one file, no server.',
+    navAnbud: 'Tenders', navMarked: 'Marketplace', navKalk: 'Calculator', navViner: 'Wines',
+    navPort: 'My portfolio', navKat: 'Directory', navAnalyse: 'Analytics', navOpp: 'Upload',
+    introX: "Hide (won't show again)", introH: 'How it works',
+    introLi1: 'Upload your wines once under <b>My portfolio</b> — or explore the demo data already loaded.',
+    introLi2: "Under <b>Tenders</b> and <b>Marketplace</b> your wines are matched automatically against Vinmonopolet's requirements, so you see which tenders you can win.",
+    introLi3: 'Use the <b>Calculator</b> to check the producer price hits the price band — <b>FOB</b> = the price the producer charges ex-cellar, before freight, duties and importer margin.',
+    introFoot: 'Switch launch plan at the top right. Everything runs locally in your browser — no data leaves your machine.',
+    h2FilterDist: 'Filters and distribution', lblGeo: 'Geography', lblType: 'Type', lblGrape: 'Grape',
+    lblPrice: 'Price band', lblSelection: 'Range', lblText: 'Free text',
+    optAllCountries: 'All countries', optAllTypes: 'All types', optAllGrapes: 'All grapes',
+    optAllPrices: 'All prices', optAllRanges: 'All ranges', optAll: 'All',
+    lblCategory: 'Category', optAllCategories: 'All categories',
+    lblClass: 'Classification', optAllClasses: 'All classifications',
+    ttSelection: 'Base range = permanent listing. One-lot = single spot purchase (parti).',
+    selBasis: 'Base range (permanent)', selParti: 'One-lot (single purchase)',
+    mainTypes: { Wine: 'Wine', Beer: 'Beer', Spirits: 'Spirits', Cider: 'Cider' },
+    grpRed: 'Red wine', grpWhite: 'White wine', grpRose: 'Rosé wine', grpSparkling: 'Sparkling',
+    grpSparklingWhite: 'Sparkling, white', grpSparklingRose: 'Sparkling, rosé', grpFortified: 'Fortified wine',
+    optOpenImport: 'Open to import', optRepresented: 'Represented/listed', optUnknown: 'Unknown',
+    phSpecText: 'search specification text…', btnReset: 'Reset',
+    noteMapClick: 'Click a bar or a country on the map to filter; click again to clear. ',
+    chGeo: 'Geography', chType: 'Product type', chGrape: 'Grape / method', chPrice: 'Price band (kr)',
+    h2Specs: 'Tender specifications', fAll: 'All', fMatch: 'With qualifying wines', fWine: 'Wine only',
+    thRef: 'Ref', thLaunch: 'Launch', thSel: 'Range', thGroup: 'Group', thOrigin: 'Origin',
+    thSpec: 'Specification', thPriceBand: 'Price band', thNeedFob: 'Needs ≤ FOB', thHits: 'Matches',
+    noteSpecTable: 'Click a row for the clauses. "Needs ≤ FOB" = the highest ex-cellar producer price (before freight, duties and margin) that still hits the top of the price band, given the calculator\'s assumptions.',
+    h2Market: 'Marketplace — wines that meet the tender requirements',
+    noteMarket: "<b>How to read this:</b> Each tender first shows what Vinmonopolet asks for, then the wines in the database that meet it. Four statuses decide whether it's worth pursuing: the requirements, the price, whether the wine is already in the range, and whether the producer is open to import. Click a wine row for the clause-by-clause assessment.",
+    thCandidate: 'Candidate wine', thAssessment: 'Assessment',
+    h2Calc: 'Price-band calculator — from shelf price to required FOB (2026 rates, Norway)',
+    noteCalc: 'Enter the shelf price Vinmonopolet wants, and the app works backwards to how low the <b>FOB</b> (the producer\'s ex-cellar price, before freight, duties and importer margin) must be for the maths to work.',
+    lblRetail: 'Shelf price (kr)', lblAbv: 'Alcohol (%)', lblVol: 'Volume (litres)', lblPack: 'Packaging',
+    lblMargin: 'Importer margin (%)', lblFreight: 'Freight+handling (kr/btl)', lblEur: 'NOK per EUR',
+    lblCur2: 'Currency 2', lblCur2Rate: 'NOK per currency 2',
+    packGlass: 'Glass (1.45 kr)', packBib: 'BiB/plastic (2.01 kr)', packCarton: 'Carton (1.55 kr)', packMetal: 'Metal (1.45 kr)',
+    outFobNokL: 'Required FOB, NOK', outFobEurL: 'FOB in euros (€)', outVerdictL: 'Verdict',
+    thComponent: 'Component', thKr: 'kr', thShare: 'Share',
+    calcFooter: "Alcohol duty 5.41 kr/vol%/l (4.7–22 %) · markup 10.82 kr/l + 21 % (knee 133.70, cap 250) · VAT 25 %. Verified against Vinmonopolet's price example (199.90 kr → wholesale 80.67 kr).",
+    h2Wines: 'Wine database', noteWinesMem: 'Runs in memory for this session. Export to save; import JSON to continue later.',
+    lblCert: 'Certification', lblStatusNO: 'Status Norway', phWineText: 'producer, wine, grape…',
+    noteWineMapClick: 'Click a country on the map to filter the list; click again to clear. ',
+    btnExportXlsx: 'Export (xlsx)', btnImportXlsx: 'Import (xlsx)', btnExportJson: 'Export (JSON)', btnImportJson: 'Import (JSON)',
+    thProducer: 'Producer', thWine: 'Wine', thCountry: 'Country', thTypeCol: 'Type', thGrapes: 'Grapes',
+    thSugar: 'Sugar', ttSugar: 'sugar g/l', thProfile: 'Profile B/F/T',
+    ttProfile: 'Body / Freshness / Tannin (1–12, like Vinmonopolet\'s taste profile)',
+    thPackClosure: 'Pack./closure', ttPackClosure: 'packaging + closure', thFob: 'FOB €', thCert: 'Cert.', thRepNo: 'Rep. NO',
+    thUpdated: 'Updated', ttUpdated: 'who entered/edited the row, and when',
+    thQuality: 'Data quality', ttQuality: 'verification status per field — click the row for details',
+    noteWineLegend: '✓ verified against source · ◦ publicly documented (link not archived) · ~ estimate awaiting confirmation · ? missing. Click a row for field-by-field status. In production ✓ is filled by catalog sync, registry lookups, the producer\'s tech sheet/analysis certificate and counterparty confirmations with timestamps — and verification ages: a ✓ older than 12 months falls back to ◦.',
+    h2Port: 'My portfolio',
+    notePort: 'Upload your portfolio once — every new launch plan is matched against it automatically (in the production version you get an email alert). You are responsible for rows being complete and correct: blank fields give "needs confirmation" instead of clean matches.',
+    btnDlPortTemplate: 'Download portfolio template (.xlsx)', btnUploadPort: 'Upload completed portfolio',
+    portMatchPre: 'Tenders in ', portMatchPost: ' your portfolio can win',
+    thTender: 'Tender', thDeadline: 'Deadline', thYourWine: 'Your wine', thClauses: 'Clauses', thPrice: 'Price',
+    h2Kat: 'Directory — producers and representation per market',
+    noteKat: 'Derived from the wine records. In production this is built automatically from the monopoly catalogs (the wholesaler is stated on each product — public data) and corrected by the parties themselves. "Open" = unrepresented and visible as an introduction opportunity.',
+    katAll: 'All', katOpenNO: 'Open in Norway', katTakenNO: 'Represented in Norway',
+    lblLand: 'Country', phProducerName: 'producer name…',
+    thWinesCount: 'Wines', thNO: 'Norway', thSE: 'Sweden', thFI: 'Finland',
+    h2Ana: 'Historical analysis across launch plans',
+    noteAna: 'Recurrence patterns across all loaded plans — which origins and grapes Vinmonopolet asks for again and again, and where the price bands sit. This is the dataset that grows with every plan.',
+    anaCh1: 'Tenders per country per plan', anaCh2: 'Most requested grapes per plan',
+    anaCh3: 'Median price-band cap (kr) per plan', anaCh4: 'Certification requirements (share of wine tenders)',
+    h2Upload1: '1 · Producer: download template, fill in, upload', btnDlProducer: 'Download producer template (.xlsx)',
+    dropProducerText: 'Drop the completed producer template here, or ', chooseFile: 'choose file',
+    h2Upload2: "2 · Launch plan: upload Vinmonopolet's Excel",
+    noteUpload2: 'Get the file from <b>vinmonopolet.no → Launches</b> (Norwegian or English edition). The Tenders and Marketplace tabs update instantly.',
+    dropPlanText: 'Drop the launch-plan file here, or ',
+    tabHelp: {
+      anbud: 'Every tender in the selected plan. Filter by country, grape, type and price band — and see how many qualifying wines the database has for each.',
+      marked: "The tenders paired with wines that meet the requirements: for each candidate you see the requirements, price, whether the wine is already in the range, and whether the producer is available.",
+      kalk: 'Work backwards from the shelf price to how low the producer price (FOB) must be — with all Norwegian duties and margins for 2026.',
+      viner: 'The whole wine database with data quality per field. Sort, filter, and import/export to work with your own data.',
+      portefolje: 'Upload your own wines once — every launch plan is matched against your portfolio automatically.',
+      katalog: 'Producers and who represents them in each market. "Open" = unrepresented, i.e. an available introduction opportunity.',
+      analyse: 'Patterns across all loaded plans — which origins and grapes recur, and how the price bands move.',
+      opplasting: "Upload a new launch plan from Vinmonopolet, or producer data in bulk via the Excel template.",
+    },
+    tilesSpecs: 'specifications in the plan', tilesWithMatches: 'tenders with qualifying wines',
+    tilesWines: 'wines in the database', tilesIntro: 'introduction opportunities (open wines)', anaWineTenders: 'wine tenders',
+    filterCount: (n, tot) => `Showing ${n} of ${tot} tenders.`,
+    wineFilterCountFn: (n, tot) => `Showing ${n} of ${tot} wines.`,
+    wineCountFn: (n, tot) => `${n} of ${tot} wines`, portCountFn: n => `${n} wines`,
+    chipMine: '★ mine', chipMineTitle: 'matches your portfolio',
+    marketEmpty: "No wines in the database meet this plan's requirements yet.",
+    seeksPre: 'Vinmonopolet is looking for: ', seeksFrom: ' from ', openOrigin: 'open origin', openCountry: 'Open',
+    ttPriceCap: 'price-band cap:', detailDeadline: 'Deadline:',
+    kravAll: n => `Meets all ${n} requirements`,
+    kravSome: (p, tot, u) => `Meets ${p} of ${tot} requirements — ${u} to confirm`,
+    kravTitle: 'click the row for details',
+    priceIn: 'Price within band', priceHigh: 'FOB too high for band', priceUnknown: 'Price unknown',
+    catListed: 'Already in VMP range ⚠', catListedTitle: id => `item no. ${id} — base/parti = not relevant; special-order range may be an advantage`,
+    catProducer: 'Producer in range ⚠', catProducerTitle: 'the producer is in the catalog; this cuvée not found — check which range',
+    catNotFound: 'Not found in range', catNotFoundTitle: 'web search against the catalog found no listing — final check via API',
+    catInconclusive: 'Range unclear', catInconclusiveTitle: 'web search gave no definite answer for this label',
+    catUnchecked: 'Range unchecked',
+    wlGrapes: 'Grapes: ', wlVintage: 'Vintage ', wlBand: 'Price band ', wlKr: ' kr',
+    wlFob: e => `→ producer price must be ≤ €${e} after duties and margins`, wlDeadline: 'Deadline ',
+    repOpen: 'Open', repOpenDetail: 'no Norwegian listing found — introduction opportunity',
+    repHasImporter: 'has a Norwegian importer',
+    repProducerListed: 'Producer in VMP catalog', repProducerListedDetail: 'the producer is listed (verified) — this cuvée not confirmed',
+    repInVmp: 'In VMP catalog ✓', repInVmpDetail: 'listed — verified against the catalog',
+    repInconclusive: 'Unclear — check API', repInconclusiveDetail: 'web search gave no definite answer',
+    repLikely: 'Likely represented', repLikelyDetail: 'not verified yet',
+    repNotSeeking: 'Not seeking', repUnknown: 'Unknown', repUnknownDetail: 'not verified',
+    tipFilter: (k, v) => `<b>${k}</b><br>${v} tenders — click to filter`,
+    mapTip: (labels, count) => `<b>${labels}</b><br>${count} — click to filter`,
+    mapOpenNote: n => `+ ${n} without mapped origin (open/Europe)`,
+    tipSeries: (cat, sn, v) => `<b>${cat}</b> · ${sn}<br>${v} tenders`,
+    cpProducer: 'Producer (FOB)', cpFreight: 'Freight + handling', cpMargin: 'Importer margin',
+    cpExcise: 'Alcohol duty', cpAvanse: 'Markup + packaging', cpVat: 'VAT (25 %)', cpRetail: 'Shelf price',
+    fobImpossible: 'impossible', fobLabelPrefix: 'FOB in ',
+    vdImpossible: '✗ Not viable', vdTight: '⚠ Very tight', vdBulk: '⚠ Bulk level only', vdRealistic: '✓ Realistic',
+    fieldNames: { producer: 'Producer', name: 'Wine', country: 'Country', region: 'Region',
+      appellation: 'Classification', grapes: 'Grapes', method: 'Method', abv: 'Alcohol', wood: 'Wood/oak',
+      certs: 'Certifications', sugar_g_l: 'Sugar', profile: 'Taste profile', vintages_available: 'Vintages',
+      volume_bottles: 'Volume', fob_eur: 'FOB price', packaging: 'Packaging/weight', closure: 'Closure', representation: 'Representation' },
+    qUnrated: 'unrated', qNoData: 'No verification data.', tradMethod: ' · trad. method',
+    portNoteEmpty: 'Upload your portfolio to see matches.',
+    portNoteNoMatch: 'No tenders in this plan match your portfolio — try another plan in the selector at the top.',
+    portNoteSome: n => `${n} tenders match. Click a row for the clause assessments.`,
+    pIn: 'within', pHigh: 'too high', pUnknown: 'unknown',
+    katUnknown: 'unknown', katEmpty: 'No producers in this selection.',
+    rpImported: (a, r) => `${a} wines imported, ${r} rejected`, rowWord: 'row', errWord: 'ERROR:', warnWord: 'warning:',
+    planNoSpecs: 'Found no specifications — is this a launch-plan file?',
+    planLoaded: (n, f) => `${n} specifications loaded from ${f}.\nThe Tenders, Marketplace and Analytics tabs have been updated.`,
+    sheetFatal: "Couldn't find the 'Wines' sheet — is this the right template?",
+    portImported: (a, r) => `${a} wines in the portfolio, ${r} rows rejected`,
+    xlsxAlert: (a, r) => `${a} wines imported, ${r} rows rejected (duplicates/errors).`,
+    invalidJson: 'Invalid JSON',
+    groupMap: {},
+  },
+};
+let LANG = 'no';
+let L = I18N.no;
+function applyStaticI18n() {
+  document.documentElement.setAttribute('lang', LANG);
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const v = L[el.getAttribute('data-i18n')]; if (v != null) el.innerHTML = v;
+  });
+  document.querySelectorAll('[data-i18n-ph]').forEach(el => {
+    const v = L[el.getAttribute('data-i18n-ph')]; if (v != null) el.setAttribute('placeholder', v);
+  });
+  document.querySelectorAll('[data-i18n-title]').forEach(el => {
+    const v = L[el.getAttribute('data-i18n-title')]; if (v != null) el.setAttribute('title', v);
+  });
+}
+function setLang(lang) {
+  LANG = I18N[lang] ? lang : 'no';
+  L = I18N[LANG];
+  // keep an active open-origin country filter valid when the sentinel label changes language
+  if (typeof FILTERS !== 'undefined' && (FILTERS.country === I18N.no.openCountry || FILTERS.country === I18N.en.openCountry))
+    FILTERS.country = L.openCountry;
+  // category/type facets now hold language-neutral canonical keys, so they persist across a switch
+  try { localStorage.setItem('ti_lang', LANG); } catch (e) {}
+  const btn = $('langToggle'); if (btn) btn.textContent = LANG === 'no' ? 'English' : 'Norsk';
+  applyStaticI18n();
+  const active = document.querySelector('nav button.on');
+  setTabHelp(active ? active.dataset.t : 'anbud');
+  recompute(); calc(); renderAnalyse(); renderPortfolio(); renderKatalog();
+}
+function switchLang() { setLang(LANG === 'no' ? 'en' : 'no'); }
+function initLang() {
+  let saved = 'no';
+  try { saved = localStorage.getItem('ti_lang') || 'no'; } catch (e) {}
+  setLang(saved);
+}
 
 /* ============ pricing engine (2026, verified) ============ */
 const RATES = { excise: 5.41, avanseL: 10.82, avansePct: 0.21, knee: 133.70,
@@ -662,7 +1004,7 @@ const COLOR_MAP = { 'red':'red','white':'white','rosé':'rose','rose':'rose',
   'fortified':'fortified','orange/skin-contact':'white' };
 function importProducerWorkbook(wb) {
   const sheet = wb.Sheets['Wines'];
-  if (!sheet) return { fatal: "Fant ikke arket 'Wines' — er dette riktig mal?" };
+  if (!sheet) return { fatal: L.sheetFatal };
   const rows = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: null });
   const existing = new Set(WINES.map(w => (w.producer + '|' + w.name).toLowerCase()));
   let nextId = Math.max(0, ...WINES.map(w => parseInt((w.id || 'w0').slice(1)) || 0)) + 1;
@@ -742,18 +1084,86 @@ function importProducerWorkbook(wb) {
 const $ = id => document.getElementById(id);
 const val = id => $(id).value;
 const css = v => getComputedStyle(document.body).getPropertyValue(v).trim();
-const fmt = (x, d = 2) => (+x).toLocaleString('no-NO', { minimumFractionDigits: d, maximumFractionDigits: d });
+const fmt = (x, d = 2) => (+x).toLocaleString(LANG === 'en' ? 'en-GB' : 'no-NO', { minimumFractionDigits: d, maximumFractionDigits: d });
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 let MARKET = [], specFilter = 'all';
-const FILTERS = { country: '', group: '', grape: '', price: '', sel: '', q: '' };
+const openTerm = () => L.openCountry;
+const FILTERS = { country: '', mainType: '', group: '', grape: '', classification: '', price: '', sel: '', q: '' };
 const GRAPE_LEX = ['chardonnay','chenin blanc','pinot noir','pinotage','cabernet franc',
   'cabernet sauvignon','merlot','syrah','shiraz','grenache','garnacha','cinsault','mourvedre','mataro',
   'tempranillo','sangiovese','nebbiolo','barbera','riesling','gruner veltliner','sauvignon blanc',
   'malbec','carmenere','zinfandel','primitivo','gamay','chasselas','albarino','godello','verdejo',
   'gewurztraminer','pinot gris','pinot blanc','viognier','marsanne','roussanne','touriga','melon de bourgogne',
-  'furmint','assyrtiko','xinomavro','agiorgitiko','carignan','petit verdot','semillon','muscat','moscato','glera'];
+  'furmint','assyrtiko','xinomavro','agiorgitiko','carignan','petit verdot','semillon','muscat','moscato','glera',
+  // --- expanded lexicon ---
+  'vermentino','fiano','greco','falanghina','avola','montepulciano','aglianico','corvina','rondinella','molinara',
+  'garganega','verdicchio','trebbiano','cortese','arneis','dolcetto','lambrusco','sagrantino','vernaccia','nascetta',
+  'pelaverga','grillo','catarratto','frappato','nerello','ribolla','friulano','malvasia','pecorino','teroldego',
+  'lagrein','grignolino','freisa','timorasso','ciliegiolo','negroamaro','gaglioppo','croatina','schiava','ruche',
+  'mencia','monastrell','bobal','graciano','macabeo','xarel','parellada','palomino','pedro ximenez','airen',
+  'viura','mazuelo','treixadura','loureiro','listan','trepat','callet','hondarrabi','alicante bouschet','prieto picudo',
+  'touriga nacional','touriga franca','tinta roriz','aragonez','trincadeira','baga','alvarinho','arinto','encruzado','bical',
+  'castelao','avesso','antao vaz','gouveio','sercial','verdelho','fernao pires',
+  'aligote','savagnin','trousseau','poulsard','mondeuse','altesse','jacquere','ugni blanc','colombard','picpoul',
+  'clairette','tannat','petit manseng','gros manseng','mauzac','negrette','pineau','grolleau','romorantin','folle blanche',
+  'bourboulenc','counoise','tibouren','pinot meunier','courbu',
+  'muller-thurgau','muller thurgau','silvaner','sylvaner','scheurebe','zweigelt','blaufrankisch','sankt laurent',
+  'welschriesling','weissburgunder','spatburgunder','grauburgunder','kerner','muskateller','dornfelder','lemberger',
+  'portugieser','neuburger','rotgipfler','zierfandler','elbling',
+  'harslevelu','kadarka','kekfrankos','olaszrizling','juhfark','irsai',
+  'moschofilero','roditis','savatiano','robola','malagousia','malagouzia','vidiano','mavrodaphne','mandilaria','kotsifali',
+  'liatiko','vilana','athiri','limnio',
+  'saperavi','rkatsiteli','mtsvane','feteasca','grasevina','plavac','posip','malvazija','teran','rebula','tamaioasa','babeasca',
+  'petite sirah','durif','torrontes','sauvignon gris','muscat ottonel'];
 const PRICE_BUCKETS = [[0,100,'< 100'],[100,150,'100–150'],[150,200,'150–200'],
   [200,250,'200–250'],[250,350,'250–350'],[350,1e9,'350+']];
+// 'group' field: derive a language-neutral canonical key (for filtering) + a translated
+// display label (for the UI). Dual naming so an active facet survives a language switch.
+function titleCase2(s) { return String(s || '').replace(/\b\w/g, c => c.toUpperCase()).replace(/\s+/g, ' ').trim(); }
+function groupCanon(raw) {
+  const g = N(raw).replace(/\s+/g, ' ').trim();
+  if (!g) return '';
+  if (/rose/.test(g) && /sparkling|semi-sparkling|musserende/.test(g)) return 'sparkling_rose';
+  if (/white|hvit/.test(g) && /sparkling|semi-sparkling|musserende/.test(g)) return 'sparkling_white';
+  if (/sparkling|musserende/.test(g)) return 'sparkling';
+  if (/fortified|sterkvin/.test(g)) return 'fortified';
+  if (/rose/.test(g) && /wine|vin/.test(g)) return 'rose';
+  if (/red|rodvin/.test(g) && /wine|vin/.test(g)) return 'red';
+  if (/white|hvit/.test(g) && /wine|vin/.test(g)) return 'white';
+  return titleCase2(raw); // beer/spirits styles: title-cased raw is itself language-neutral
+}
+const GRP_LABEL = { red:'grpRed', white:'grpWhite', rose:'grpRose', sparkling:'grpSparkling',
+  sparkling_white:'grpSparklingWhite', sparkling_rose:'grpSparklingRose', fortified:'grpFortified' };
+function groupDisp(canon) {
+  if (!canon) return '';
+  return GRP_LABEL[canon] ? L[GRP_LABEL[canon]] : (L.mainTypes[canon] || canon);
+}
+const MAIN_MAP = { 'wine':'Wine', 'fortified wine':'Wine', 'beer':'Beer', 'spirits':'Spirits', 'cider':'Cider' };
+function mainCanon(spec) {
+  const key = N(spec.main_type || '').trim();
+  return MAIN_MAP[key] || (spec.main_type ? titleCase2(spec.main_type) : '');
+}
+function mainDisp(canon) { return canon ? (L.mainTypes[canon] || canon) : ''; }
+// extract classification tiers (1er/grand cru, DOCG, villages, riserva …) from appellation + spec text
+const CLASS_TIERS = [
+  ['Grand Cru', /grand cru/],
+  ['Premier Cru', /premier cru|1er cru|1 er cru/],
+  ['DOCG', /docg/],
+  ['Villages', /villages/],
+  ['Riserva', /riserva/],
+  ['Gran Reserva', /gran reserva/],
+  ['Kabinett/Prädikat', /kabinett|spatlese|auslese|pradikat/],
+  ['Grosses Gewächs', /grosses gewachs|grosse lage/],
+];
+function specClasses(spec) {
+  if (spec._class) return spec._class;
+  const t = N((spec.appellation || '') + ' ' + (spec.spec || '') + ' ' + (spec.quality || ''));
+  const out = [];
+  for (const [label, re] of CLASS_TIERS) if (re.test(t)) out.push(label);
+  return (spec._class = out);
+}
+// selection filter: canonical key -> matcher against the (EN or NO) selection text
+const SEL_MATCH = { basis: /basi[sc]/, parti: /one-?lot|parti/ };
 
 function specGrapes(spec) {
   if (spec._grapes) return spec._grapes;
@@ -777,11 +1187,13 @@ function specBucket(spec) {
   return b ? b[2] : null;
 }
 function passes(spec, skip) {
-  if (skip !== 'country' && FILTERS.country && (spec.country || 'Åpen') !== FILTERS.country) return false;
-  if (skip !== 'group' && FILTERS.group && (spec.group || spec.main_type || '?') !== FILTERS.group) return false;
+  if (skip !== 'country' && FILTERS.country && (spec.country || openTerm()) !== FILTERS.country) return false;
+  if (skip !== 'mainType' && FILTERS.mainType && mainCanon(spec) !== FILTERS.mainType) return false;
+  if (skip !== 'group' && FILTERS.group && (groupCanon(spec.group) || mainCanon(spec) || '?') !== FILTERS.group) return false;
   if (skip !== 'grape' && FILTERS.grape && !specGrapes(spec).includes(FILTERS.grape)) return false;
+  if (skip !== 'classification' && FILTERS.classification && !specClasses(spec).includes(FILTERS.classification)) return false;
   if (skip !== 'price' && FILTERS.price && specBucket(spec) !== FILTERS.price) return false;
-  if (skip !== 'sel' && FILTERS.sel && !(spec.selection || '').toLowerCase().includes(FILTERS.sel.toLowerCase())) return false;
+  if (skip !== 'sel' && FILTERS.sel && !(SEL_MATCH[FILTERS.sel] || /.^/).test(N(spec.selection))) return false;
   if (FILTERS.q && !N([spec.ref, spec.country, spec.region, spec.appellation, spec.group, spec.spec, spec.quality].join(' ')).includes(N(FILTERS.q))) return false;
   return true;
 }
@@ -796,7 +1208,8 @@ function counts(dim, keyFn) {
   }
   return c;
 }
-function drawDimChart(svgId, dim, keyFn, activeVal, fixedOrder) {
+function drawDimChart(svgId, dim, keyFn, activeVal, fixedOrder, labelFn) {
+  const disp = labelFn || (k => k);
   const svg = $(svgId);
   const c = counts(dim, keyFn);
   let entries = [...c.entries()];
@@ -818,7 +1231,8 @@ function drawDimChart(svgId, dim, keyFn, activeVal, fixedOrder) {
     lab.setAttribute('text-anchor', 'end'); lab.setAttribute('font-size', '11');
     lab.setAttribute('fill', css(active ? '--text-primary' : '--text-secondary'));
     if (active) lab.setAttribute('font-weight', '700');
-    lab.textContent = String(k).length > 15 ? String(k).slice(0, 14) + '…' : k;
+    const dlab = disp(k);
+    lab.textContent = String(dlab).length > 15 ? String(dlab).slice(0, 14) + '…' : dlab;
     g.appendChild(lab);
     const w = Math.max((W - labW - 30) * v / max, 2);
     const r = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
@@ -832,10 +1246,10 @@ function drawDimChart(svgId, dim, keyFn, activeVal, fixedOrder) {
     val2.setAttribute('font-size', '11'); val2.setAttribute('fill', css('--muted'));
     val2.textContent = v;
     g.appendChild(val2);
-    g.addEventListener('click', () => { setFilter(dim, active ? '' : k); });
+    g.addEventListener('click', () => { setFilter(dim, active ? '' : k, true); });
     g.addEventListener('mousemove', e => { tip.style.display = 'block';
       tip.style.left = e.clientX + 12 + 'px'; tip.style.top = e.clientY - 10 + 'px';
-      tip.innerHTML = `<b>${esc(k)}</b><br>${v} anbud — klikk for å filtrere`; });
+      tip.innerHTML = L.tipFilter(esc(disp(k)), v); });
     g.addEventListener('mouseleave', () => tip.style.display = 'none');
     svg.appendChild(g);
   });
@@ -915,7 +1329,7 @@ function drawGeoMap(svgId, rawCounts, activeRaw, onToggle) {
     el.addEventListener('mousemove', e => {
       tip.style.display = 'block';
       tip.style.left = e.clientX + 12 + 'px'; tip.style.top = e.clientY - 10 + 'px';
-      tip.innerHTML = `<b>${esc([...a.labels].join(', '))}</b><br>${a.count} — klikk for å filtrere`;
+      tip.innerHTML = L.mapTip(esc([...a.labels].join(', ')), a.count);
     });
     el.addEventListener('mouseleave', () => tip.style.display = 'none');
   });
@@ -923,49 +1337,68 @@ function drawGeoMap(svgId, rawCounts, activeRaw, onToggle) {
     const note = document.createElementNS('http://www.w3.org/2000/svg', 'text');
     note.setAttribute('x', 8); note.setAttribute('y', MAP_H - 36);
     note.setAttribute('font-size', '11'); note.setAttribute('fill', css('--muted'));
-    note.textContent = `+ ${openCount} uten kartfestet opprinnelse (åpen/Europa)`;
+    note.textContent = L.mapOpenNote(openCount);
     svg.appendChild(note);
   }
 }
 function renderMap() {
-  drawGeoMap('mapSvg', counts('country', s => s.country || 'Åpen'), FILTERS.country,
-    lab => setFilter('country', lab));
+  drawGeoMap('mapSvg', counts('country', s => s.country || openTerm()), FILTERS.country,
+    lab => setFilter('country', lab, true));
 }
 
-const DIM_SELECT = { country: 'fCountry', group: 'fGroup', grape: 'fGrape', price: 'fPrice', sel: 'fSel' };
-function setFilter(dim, val) {
+const DIM_SELECT = { country: 'fCountry', mainType: 'fMain', group: 'fGroup', grape: 'fGrape',
+  classification: 'fClass', price: 'fPrice', sel: 'fSel' };
+function setFilter(dim, val, scroll) {
   FILTERS[dim] = val;
   if (DIM_SELECT[dim]) $(DIM_SELECT[dim]).value = val;
   renderDims(); renderSpecs();
+  if (scroll && val) scrollToSpecs();
+}
+function scrollToSpecs() {
+  const el = $('specTable');
+  if (el) el.closest('.card').scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 function resetFilters() {
   Object.keys(FILTERS).forEach(k => FILTERS[k] = '');
-  Object.values(DIM_SELECT).forEach(id => $(id).value = '');
+  Object.values(DIM_SELECT).forEach(id => { const e = $(id); if (e) e.value = ''; });
   $('fQ').value = '';
   renderDims(); renderSpecs();
 }
 function fillSelect(id, keys, current) {
-  const sel = $(id), first = sel.options[0].outerHTML;
+  const sel = $(id); if (!sel) return;
+  const first = sel.options[0].outerHTML;
   sel.innerHTML = first + keys.map(k => `<option${k === current ? ' selected' : ''}>${esc(k)}</option>`).join('');
+  sel.value = current || '';
+}
+// selection facet uses value≠label (canonical key vs. human label)
+function fillSelValueLabel(id, opts, current) {
+  const sel = $(id); if (!sel) return;
+  const first = sel.options[0].outerHTML;
+  sel.innerHTML = first + opts.map(([v, lab]) =>
+    `<option value="${esc(v)}"${v === current ? ' selected' : ''}>${esc(lab)}</option>`).join('');
   sel.value = current || '';
 }
 function renderDims() {
   renderMap();
-  drawDimChart('chCountry', 'country', s => s.country || 'Åpen', FILTERS.country);
-  drawDimChart('chGroup', 'group', s => s.group || s.main_type || '?', FILTERS.group);
+  drawDimChart('chCountry', 'country', s => s.country || openTerm(), FILTERS.country);
+  drawDimChart('chGroup', 'group', s => groupCanon(s.group) || mainCanon(s) || '?', FILTERS.group, null, groupDisp);
   drawDimChart('chGrape', 'grape', s => specGrapes(s), FILTERS.grape);
   drawDimChart('chPrice', 'price', s => specBucket(s), FILTERS.price, PRICE_BUCKETS.map(b => b[2]));
-  fillSelect('fCountry', [...counts('country', s => s.country || 'Åpen').keys()].sort(), FILTERS.country);
-  fillSelect('fGroup', [...counts('group', s => s.group || s.main_type || '?').keys()].sort(), FILTERS.group);
+  fillSelect('fCountry', [...counts('country', s => s.country || openTerm()).keys()].sort(), FILTERS.country);
+  const mainOpts = [...counts('mainType', s => mainCanon(s)).keys()].map(c => [c, mainDisp(c)]).sort((a, b) => a[1].localeCompare(b[1]));
+  fillSelValueLabel('fMain', mainOpts, FILTERS.mainType);
+  const grpOpts = [...counts('group', s => groupCanon(s.group) || mainCanon(s) || '?').keys()].map(c => [c, groupDisp(c)]).sort((a, b) => a[1].localeCompare(b[1]));
+  fillSelValueLabel('fGroup', grpOpts, FILTERS.group);
   fillSelect('fGrape', [...counts('grape', s => specGrapes(s)).keys()].sort(), FILTERS.grape);
+  fillSelect('fClass', [...counts('classification', s => specClasses(s)).keys()].sort(), FILTERS.classification);
   fillSelect('fPrice', PRICE_BUCKETS.map(b => b[2]), FILTERS.price);
-  fillSelect('fSel', ['Basis', 'One-lot'], FILTERS.sel);
+  fillSelValueLabel('fSel', [['basis', L.selBasis], ['parti', L.selParti]], FILTERS.sel);
   const n = MARKET.filter(m => passes(m.spec)).length;
-  $('filterCount').textContent = `Viser ${n} av ${SPECS.length} anbud.`;
+  $('filterCount').textContent = L.filterCount(n, SPECS.length);
 }
 
 function recompute() {
-  SPECS.forEach(s => delete s._grapes);
+  SPECS.forEach(s => { delete s._grapes; delete s._class; });
   MARKET = computeMarket();
   renderTiles(); renderDims(); renderSpecs(); renderMarket(); renderWineDims(); renderWines();
 }
@@ -974,10 +1407,10 @@ function renderTiles() {
   const openIntro = new Set();
   withM.forEach(m => m.matches.forEach(x => { if (/unrepresented/.test(x.wine.representation?.NO || '')) openIntro.add(x.wine.id); }));
   $('tiles').innerHTML = [
-    [SPECS.length, 'spesifikasjoner i planen'],
-    [withM.length, 'anbud med kvalifiserte viner'],
-    [WINES.length, 'viner i databasen'],
-    [openIntro.size, 'introduksjonsmuligheter (åpne viner)'],
+    [SPECS.length, L.tilesSpecs],
+    [withM.length, L.tilesWithMatches],
+    [WINES.length, L.tilesWines],
+    [openIntro.size, L.tilesIntro],
   ].map(([v, l]) => `<div class="tile"><div class="v">${v}</div><div class="l">${l}</div></div>`).join('');
 }
 function renderSpecs() {
@@ -996,18 +1429,18 @@ function renderSpecs() {
     const star = mineRefs.has(s.ref) ? ' <span class="chip hi" title="matcher din portefølje">★ min</span>' : '';
     const chip = (n ? `<span class="chip ${n > 1 ? 'hi' : 'mid'}">${n}</span>` : '<span class="chip lo">0</span>') + star;
     const p = s.price_hi ?? s.price_lo;
-    const mini = p ? `<div class="minibar" title="prisbåndets tak: ${fmt(p,0)} kr"><i style="width:${Math.min(100, 100*p/maxP)}%"></i></div>` : '';
+    const mini = p ? `<div class="minibar" title="${esc(L.ttPriceCap)} ${fmt(p,0)} kr"><i style="width:${Math.min(100, 100*p/maxP)}%"></i></div>` : '';
     const gr = specGrapes(s).slice(0, 3).join(', ');
     return `<tr class="rowx" data-i="${i}">
       <td><b>${esc(s.ref)}</b></td><td>${esc(s.launch)}</td><td>${esc((s.selection || '').replace('utvalget',''))}</td>
-      <td>${esc(s.group)}${gr ? `<br><span style="color:var(--muted);font-size:11.5px">${esc(gr)}</span>` : ''}</td>
-      <td>${esc(s.country) || 'Åpen'}${s.region ? `<br><span style="color:var(--muted);font-size:11.5px">${esc(s.region)}</span>` : ''}</td>
+      <td>${esc(groupDisp(groupCanon(s.group))) || esc(s.group)}${gr ? `<br><span style="color:var(--muted);font-size:11.5px">${esc(gr)}</span>` : ''}</td>
+      <td>${esc(s.country) || openTerm()}${s.region ? `<br><span style="color:var(--muted);font-size:11.5px">${esc(s.region)}</span>` : ''}${s.appellation ? `<br><span style="color:var(--muted);font-size:11px" title="${esc(s.appellation)}">${esc(s.appellation.length > 42 ? s.appellation.slice(0, 40) + '…' : s.appellation)}</span>` : ''}${specClasses(s).length ? `<br>${specClasses(s).map(c => `<span class="chip lo" style="font-size:10.5px;padding:1px 6px;margin:2px 3px 0 0">${esc(c)}</span>`).join('')}` : ''}</td>
       <td>${esc((s.spec || '').slice(0, 110))}${(s.spec || '').length > 110 ? '…' : ''}</td>
       <td class="num">${esc(s.price_text)}${mini}</td>
       <td class="num">${m.fob && m.fob.nok > 0 ? '€ ' + fmt(m.fob.eur, 1) : '–'}</td>
       <td class="num">${chip}</td></tr>
     <tr class="detail" style="display:none"><td colspan="9">${
-      clausesForSpec(s).map(c => `[${c.type}] ${esc(c.text)}`).join('<br>')}${s.deadline ? '<br><b>Frist:</b> ' + esc(s.deadline) : ''}</td></tr>`;
+      clausesForSpec(s).map(c => `[${c.type}] ${esc(c.text)}`).join('<br>')}${s.deadline ? '<br><b>' + esc(L.detailDeadline) + '</b> ' + esc(s.deadline) : ''}</td></tr>`;
   }).join('');
   hookRows(tb);
 }
@@ -1015,12 +1448,12 @@ function wantsLine(m) {
   const s = m.spec;
   const grapes = specGrapes(s).filter(g => g !== 'traditional method');
   const bits = [];
-  if (grapes.length) bits.push('Druer: ' + grapes.join(', '));
+  if (grapes.length) bits.push(L.wlGrapes + grapes.join(', '));
   if (s.appellation) bits.push(esc(s.appellation));
-  if (s.vintage) bits.push('Årgang ' + esc(s.vintage));
-  bits.push('Prisbånd ' + esc(s.price_text) + ' kr');
-  if (m.fob) bits.push(`→ produsentpris må være ≤ €${fmt(m.fob.eur, 1)} etter avgifter og marginer`);
-  if (s.deadline) bits.push('Frist ' + esc(s.deadline));
+  if (s.vintage) bits.push(L.wlVintage + esc(s.vintage));
+  bits.push(L.wlBand + esc(s.price_text) + L.wlKr);
+  if (m.fob) bits.push(L.wlFob(fmt(m.fob.eur, 1)));
+  if (s.deadline) bits.push(L.wlDeadline + esc(s.deadline));
   return bits.join(' · ');
 }
 function renderMarket() {
@@ -1028,30 +1461,30 @@ function renderMarket() {
   const V = { pass: '✓', fail: '✗', unknown: '?', info: 'ℹ' };
   const withM = MARKET.filter(m => m.matches.length);
   if (!withM.length) {
-    tb.innerHTML = '<tr><td colspan="2" style="color:var(--muted)">Ingen viner i databasen oppfyller kravene i denne planen ennå.</td></tr>';
+    tb.innerHTML = `<tr><td colspan="2" style="color:var(--muted)">${L.marketEmpty}</td></tr>`;
     return;
   }
   tb.innerHTML = withM.map(m => {
     const head = `<tr class="tender-head"><td colspan="2">
-      <b>${esc(m.spec.ref)}</b> — Vinmonopolet søker: <b>${esc(GROUP_NO(m.spec.group))}</b> fra <b>${esc(m.spec.country) || 'åpen opprinnelse'}</b><br>
+      <b>${esc(m.spec.ref)}</b> — ${L.seeksPre}<b>${esc(groupLabel(m.spec.group))}</b>${L.seeksFrom}<b>${esc(m.spec.country) || L.openOrigin}</b><br>
       <span style="color:var(--text-secondary)">${wantsLine(m)}</span></td></tr>`;
     return head + m.matches.map(x => {
       const w = x.wine;
       const krav = x.unknowns
-        ? `<span class="chip mid" title="klikk raden for detaljer">Oppfyller ${x.passes} av ${x.total} krav — ${x.unknowns} må bekreftes</span>`
-        : `<span class="chip hi">Oppfyller alle ${x.total} krav</span>`;
-      const pris = x.priceOk === true ? '<span class="chip hi">Pris innenfor båndet</span>'
-        : x.priceOk === false ? '<span class="chip mid">FOB for høy for båndet</span>'
-        : '<span class="chip lo">Pris ukjent</span>';
+        ? `<span class="chip mid" title="${esc(L.kravTitle)}">${L.kravSome(x.passes, x.total, x.unknowns)}</span>`
+        : `<span class="chip hi">${L.kravAll(x.total)}</span>`;
+      const pris = x.priceOk === true ? `<span class="chip hi">${L.priceIn}</span>`
+        : x.priceOk === false ? `<span class="chip mid">${L.priceHigh}</span>`
+        : `<span class="chip lo">${L.priceUnknown}</span>`;
       const cat = x.catalog === 'listed'
-        ? `<span class="chip mid" title="varenr ${esc(w.catalog_no?.product_id || '?')} — basis/parti = uaktuell; bestillingsutvalg kan være fordel">Allerede i VMP-sortimentet ⚠</span>`
+        ? `<span class="chip mid" title="${esc(L.catListedTitle(w.catalog_no?.product_id || '?'))}">${L.catListed}</span>`
         : x.catalog === 'listed_producer'
-        ? '<span class="chip mid" title="produsenten er i katalogen; denne cuvéen ikke funnet — sjekk hvilket utvalg">Produsent i sortimentet ⚠</span>'
+        ? `<span class="chip mid" title="${esc(L.catProducerTitle)}">${L.catProducer}</span>`
         : (x.catalog === 'not_found' || x.catalog === 'not_found_search')
-        ? '<span class="chip hi" title="websøk mot katalogen fant ingen listing — endelig sjekk via API">Ikke funnet i sortimentet</span>'
+        ? `<span class="chip hi" title="${esc(L.catNotFoundTitle)}">${L.catNotFound}</span>`
         : x.catalog === 'inconclusive'
-        ? '<span class="chip lo" title="websøk ga ikke sikkert svar for dette merket">Sortiment uavklart</span>'
-        : '<span class="chip lo">Sortiment usjekket</span>';
+        ? `<span class="chip lo" title="${esc(L.catInconclusiveTitle)}">${L.catInconclusive}</span>`
+        : `<span class="chip lo">${L.catUnchecked}</span>`;
       return `<tr class="rowx">
         <td><b>${esc(w.producer)}</b> — ${esc(w.name)}<br>
           <span style="color:var(--muted);font-size:12px">${esc(w.country)} · FOB €${w.fob_eur != null ? fmt(w.fob_eur, 1) : '?'}</span></td>
@@ -1064,33 +1497,27 @@ function renderMarket() {
 function repInfo(raw) {
   const s = String(raw || ''), l = s.toLowerCase();
   if (l.includes('unrepresented') || l.includes('no vmp listing found'))
-    return { k: 'open', label: 'Åpen', cls: 'hi', detail: 'ingen norsk listing funnet — introduksjonsmulighet' };
+    return { k: 'open', label: L.repOpen, cls: 'hi', detail: L.repOpenDetail };
   if (l.startsWith('importer:'))
-    return { k: 'taken', label: s.replace(/importer:\s*/i, ''), cls: 'lo', detail: 'har norsk importør' };
+    return { k: 'taken', label: s.replace(/importer:\s*/i, ''), cls: 'lo', detail: L.repHasImporter };
   if (l.includes('producer listed'))
-    return { k: 'taken', label: 'Produsent i VMP-katalog', cls: 'mid', detail: 'produsenten er listet (verifisert) — denne cuvéen ikke bekreftet' };
+    return { k: 'taken', label: L.repProducerListed, cls: 'mid', detail: L.repProducerListedDetail };
   if (l.includes('listed in vinmonopolet') || l.includes('listed in vmp'))
-    return { k: 'taken', label: 'I VMP-katalog ✓', cls: 'mid', detail: 'listet — verifisert mot katalogen' };
+    return { k: 'taken', label: L.repInVmp, cls: 'mid', detail: L.repInVmpDetail };
   if (l.includes('search inconclusive'))
-    return { k: 'unknown', label: 'Uavklart — sjekk API', cls: 'lo', detail: 'websøk ga ikke sikkert svar' };
+    return { k: 'unknown', label: L.repInconclusive, cls: 'lo', detail: L.repInconclusiveDetail };
   if (l.includes('likely listed'))
-    return { k: 'taken', label: 'Trolig representert', cls: 'lo', detail: 'ikke verifisert ennå' };
+    return { k: 'taken', label: L.repLikely, cls: 'lo', detail: L.repLikelyDetail };
   if (l.includes('not seeking'))
-    return { k: 'none', label: 'Søker ikke', cls: 'lo', detail: '' };
-  return { k: 'unknown', label: 'Ukjent', cls: 'lo', detail: 'ikke verifisert' };
+    return { k: 'none', label: L.repNotSeeking, cls: 'lo', detail: '' };
+  return { k: 'unknown', label: L.repUnknown, cls: 'lo', detail: L.repUnknownDetail };
 }
 const repChip = raw => { const r = repInfo(raw);
   return `<span class="chip ${r.cls}" title="${esc(r.detail)}">${esc(r.label)}</span>`; };
-const GROUP_NO = g => ({ 'red wine':'Rødvin','white wine':'Hvitvin','rosé wine':'Rosé','rose wine':'Rosé',
-  'sparkling wine, white':'Musserende hvit','sparkling wine white':'Musserende hvit',
-  'sparkling wine, rosé':'Musserende rosé','fortified wine':'Sterkvin' }[N(g).trim()] || g);
+const titleCase = s => String(s || '').replace(/\b\w/g, c => c.toUpperCase());
+const groupLabel = g => LANG === 'en' ? titleCase(g) : (L.groupMap[N(g).trim()] || g);
 const TIER = { verified: ['✓','var(--good-text)'], public: ['◦','var(--text-secondary)'],
                estimate: ['~','var(--warn)'], unknown: ['?','var(--muted)'] };
-const FIELD_NAMES = { producer:'Produsent', name:'Vin', country:'Land', region:'Region',
-  appellation:'Klassifisering', grapes:'Druer', method:'Metode', abv:'Alkohol', wood:'Fat/eik',
-  certs:'Sertifiseringer', sugar_g_l:'Sukker', profile:'Smaksprofil', vintages_available:'Årganger',
-  volume_bottles:'Volum', fob_eur:'FOB-pris', packaging:'Emballasje/vekt', closure:'Kork',
-  representation:'Representasjon' };
 function qualitySummary(w) {
   const c = { verified: 0, public: 0, estimate: 0, unknown: 0 };
   Object.values(w.verify || {}).forEach(f => c[f.tier] != null && c[f.tier]++);
@@ -1130,8 +1557,8 @@ function resetWineFilters() {
 }
 function renderWines() {
   const shown = applySort(WINES.filter(w => winePass(w)), SORTS.wine, WINE_GET);
-  $('wineCount').textContent = shown.length + ' av ' + WINES.length + ' viner';
-  $('wineFilterCount') && ($('wineFilterCount').textContent = `Viser ${shown.length} av ${WINES.length} viner.`);
+  $('wineCount').textContent = L.wineCountFn(shown.length, WINES.length);
+  $('wineFilterCount') && ($('wineFilterCount').textContent = L.wineFilterCountFn(shown.length, WINES.length));
   $('wineTable').querySelector('tbody').innerHTML = shown.map(w => {
     const pr = w.profile ? `${w.profile.fylde}/${w.profile.friskhet}/${w.profile.garvestoffer}` : '–';
     const emb = [w.packaging?.type ? esc(w.packaging.type) + (w.packaging.weight_g ? ` ${w.packaging.weight_g}g` : '') : null,
@@ -1143,13 +1570,13 @@ function renderWines() {
     const q = qualitySummary(w);
     const qCell = w.verify
       ? `<span style="color:${TIER.verified[1]}">${q.verified}✓</span> <span>${q.public}◦</span> <span style="color:${TIER.estimate[1]}">${q.estimate}~</span> <span style="color:${TIER.unknown[1]}">${q.unknown}?</span>`
-      : '<span class="chip lo">uvurdert</span>';
+      : `<span class="chip lo">${L.qUnrated}</span>`;
     const detail = w.verify ? Object.entries(w.verify).map(([f, s]) => {
       const [sym, col] = TIER[s.tier] || ['·','inherit'];
-      return `<span style="color:${col};font-weight:700">${sym}</span> <b>${FIELD_NAMES[f] || f}</b> — ${esc(s.note)}`;
-    }).join('<br>') : 'Ingen verifiseringsdata.';
+      return `<span style="color:${col};font-weight:700">${sym}</span> <b>${L.fieldNames[f] || f}</b> — ${esc(s.note)}`;
+    }).join('<br>') : L.qNoData;
     return `<tr class="rowx"><td><b>${esc(w.producer)}</b></td><td>${esc(w.name)}</td><td>${esc(w.country)}</td>
-     <td>${esc(w.color)}${w.method ? ' · trad.metode' : ''}</td>
+     <td>${esc(w.color)}${w.method ? L.tradMethod : ''}</td>
      <td>${Object.entries(w.grapes || {}).map(([g, p]) => `${esc(g)} ${p}%`).join(', ')}</td>
      <td class="num">${w.sugar_g_l ?? '–'}</td>
      <td class="num">${pr}</td><td style="font-size:12px">${emb}</td>
@@ -1189,22 +1616,22 @@ function calc() {
   const vat = retail - retail / (1 + RATES.vat);
   const im = ws * margin, fob = ws - im - freight;
   const parts = [
-    { name: 'Produsent (FOB)', v: Math.max(fob, 0), s: 0 },
-    { name: 'Frakt + håndtering', v: freight, s: 1 },
-    { name: 'Importørmargin', v: im, s: 2 },
-    { name: 'Alkoholavgift', v: ex, s: 3 },
-    { name: 'Avanse + emballasje', v: av + pk, s: 4 },
-    { name: 'Mva (25 %)', v: vat, s: 5 },
+    { name: L.cpProducer, v: Math.max(fob, 0), s: 0 },
+    { name: L.cpFreight, v: freight, s: 1 },
+    { name: L.cpMargin, v: im, s: 2 },
+    { name: L.cpExcise, v: ex, s: 3 },
+    { name: L.cpAvanse, v: av + pk, s: 4 },
+    { name: L.cpVat, v: vat, s: 5 },
   ];
-  $('outFobNok').textContent = fob > 0 ? fmt(fob) + ' kr' : 'umulig';
+  $('outFobNok').textContent = fob > 0 ? fmt(fob) + ' kr' : L.fobImpossible;
   $('outFobCur2').textContent = fob > 0 ? cur2 + ' ' + fmt(fob / cur2rate) : '–';
-  $('outFobCur2Label').textContent = 'FOB i ' + cur2;
+  $('outFobCur2Label').textContent = L.fobLabelPrefix + cur2;
   $('outFobEur').textContent = fob > 0 ? '€ ' + fmt(fob / eur) : '–';
-  $('outVerdict').textContent = fob <= 0 ? '✗ Ikke gjennomførbart' : fob < 8 ? '⚠ Svært stramt' : fob / eur < 2.2 ? '⚠ Kun bulknivå' : '✓ Realistisk';
+  $('outVerdict').textContent = fob <= 0 ? L.vdImpossible : fob < 8 ? L.vdTight : fob / eur < 2.2 ? L.vdBulk : L.vdRealistic;
   drawBar(parts, retail);
   $('breakdownTable').querySelector('tbody').innerHTML = parts.map(p =>
     `<tr><td>${p.name}</td><td class="num">${fmt(p.v)}</td><td class="num">${fmt(100 * p.v / retail, 1)} %</td></tr>`).join('') +
-    `<tr><td><b>Hyllepris</b></td><td class="num"><b>${fmt(retail)}</b></td><td class="num">100 %</td></tr>`;
+    `<tr><td><b>${L.cpRetail}</b></td><td class="num"><b>${fmt(retail)}</b></td><td class="num">100 %</td></tr>`;
   renderSpecs(); // FOB column depends on calculator assumptions
 }
 function drawBar(parts, total) {
@@ -1252,10 +1679,10 @@ function handleProducerFile(file) {
     const res = importProducerWorkbook(wb);
     const el = $('producerReport'); el.style.display = 'block';
     if (res.fatal) { el.textContent = res.fatal; return; }
-    el.textContent = `${res.added} viner importert, ${res.report.filter(r => r.status === 'REJECTED').length} avvist\n\n` +
-      res.report.map(r => `rad ${r.row} [${r.status}] ${r.wine}` +
-        r.errors.map(e => `\n   FEIL: ${e}`).join('') +
-        r.warnings.map(w => `\n   advarsel: ${w}`).join('')).join('\n');
+    el.textContent = `${L.rpImported(res.added, res.report.filter(r => r.status === 'REJECTED').length)}\n\n` +
+      res.report.map(r => `${L.rowWord} ${r.row} [${r.status}] ${r.wine}` +
+        r.errors.map(e => `\n   ${L.errWord} ${e}`).join('') +
+        r.warnings.map(w => `\n   ${L.warnWord} ${w}`).join('')).join('\n');
     recompute();
   });
 }
@@ -1263,12 +1690,12 @@ function handlePlanFile(file) {
   readXlsx(file, wb => {
     const specs = parsePlanWorkbook(wb);
     const el = $('planReport'); el.style.display = 'block';
-    if (!specs.length) { el.textContent = 'Fant ingen spesifikasjoner — er dette en lanseringsplan-fil?'; return; }
+    if (!specs.length) { el.textContent = L.planNoSpecs; return; }
     PLANS[file.name] = specs;
     currentPlan = file.name;
     SPECS = specs;
     renderPlanSelect();
-    el.textContent = `${specs.length} spesifikasjoner lastet fra ${file.name}.\nAnbuds-, marketplace- og analysefanene er oppdatert.`;
+    el.textContent = L.planLoaded(specs.length, file.name);
     recompute();
   });
 }
@@ -1315,7 +1742,7 @@ function drawGrouped(svgId, legendId, cats, seriesNames, matrix) {
       r.setAttribute('fill', css(SLOTS[si]));
       r.addEventListener('mousemove', e => { tip.style.display = 'block';
         tip.style.left = e.clientX + 12 + 'px'; tip.style.top = e.clientY - 10 + 'px';
-        tip.innerHTML = `<b>${esc(cat)}</b> · ${esc(sn)}<br>${v} anbud`; });
+        tip.innerHTML = L.tipSeries(esc(cat), esc(sn), v); });
       r.addEventListener('mouseleave', () => tip.style.display = 'none');
       svg.appendChild(r);
       if (v) {
@@ -1334,16 +1761,16 @@ function renderAnalyse() {
   const names = Object.keys(PLANS);
   const wineSpecs = n => PLANS[n].filter(isWineSpec);
   $('anaTiles').innerHTML = names.map(n =>
-    `<div class="tile"><div class="v">${PLANS[n].length}</div><div class="l">${esc(n)}<br>${wineSpecs(n).length} vinanbud</div></div>`
+    `<div class="tile"><div class="v">${PLANS[n].length}</div><div class="l">${esc(n)}<br>${wineSpecs(n).length} ${L.anaWineTenders}</div></div>`
   ).join('');
   // top countries across all plans
   const cAll = new Map();
   names.forEach(n => wineSpecs(n).forEach(s => {
-    const k = s.country || 'Åpen'; cAll.set(k, (cAll.get(k) || 0) + 1);
+    const k = s.country || openTerm(); cAll.set(k, (cAll.get(k) || 0) + 1);
   }));
   const topC = [...cAll.entries()].sort((a, b) => b[1] - a[1]).slice(0, 8).map(e => e[0]);
   drawGrouped('anaCountry', 'anaLegend1', topC, names,
-    names.map(n => topC.map(c => wineSpecs(n).filter(s => (s.country || 'Åpen') === c).length)));
+    names.map(n => topC.map(c => wineSpecs(n).filter(s => (s.country || openTerm()) === c).length)));
   // top grapes
   const gAll = new Map();
   names.forEach(n => wineSpecs(n).forEach(s => specGrapes(s).forEach(g =>
@@ -1438,7 +1865,7 @@ $('wineXlsxIn').addEventListener('change', e => {
   readXlsx(f, wb => {
     const res = importProducerWorkbook(wb);
     if (res.fatal) { alert(res.fatal); return; }
-    alert(res.added + ' viner importert, ' + res.report.filter(r => r.status === 'REJECTED').length + ' rader avvist (duplikater/feil).');
+    alert(L.xlsxAlert(res.added, res.report.filter(r => r.status === 'REJECTED').length));
     recompute();
   });
   e.target.value = '';
@@ -1453,7 +1880,7 @@ $('wineJsonIn').addEventListener('change', e => {
   const f = e.target.files[0]; if (!f) return;
   const r = new FileReader();
   r.onload = ev => { try { const d = JSON.parse(ev.target.result);
-      WINES = d.wines || d; recompute(); } catch { alert('Ugyldig JSON'); } };
+      WINES = d.wines || d; recompute(); } catch { alert(L.invalidJson); } };
   r.readAsText(f);
 });
 
@@ -1462,10 +1889,12 @@ $('dlImporterTemplate').href = URL.createObjectURL(b64ToBlob(IMPORTER_TEMPLATE_B
   'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'));
 function importPortfolioWorkbook(wb) {
   const sheet = wb.Sheets['Wines'];
-  if (!sheet) return { fatal: "Fant ikke arket 'Wines' — er dette riktig mal?" };
+  if (!sheet) return { fatal: L.sheetFatal };
   const rows = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: null });
   const report = []; const port = [];
-  for (let i = 2; i < rows.length; i++) {
+  const ex1 = String((rows[1] || [])[0] || '').trim();
+  const startRow = (ex1 === 'Kanonkop Estate' || ex1 === 'Simonsig Estate') ? 2 : 1; // skip the grey example row only if it's still there
+  for (let i = startRow; i < rows.length; i++) {
     const row = rows[i];
     if (!row || row.every(v => v == null || String(v).trim() === '')) continue;
     const [producer, wine, country, region, appellation, colour, method, grapesT,
@@ -1515,10 +1944,10 @@ $('portIn').addEventListener('change', e => {
     const el = $('portReport'); el.style.display = 'block';
     if (res.fatal) { el.textContent = res.fatal; return; }
     MYPORT = res.port;
-    el.textContent = `${res.port.length} viner i porteføljen, ${res.report.filter(r => r.status === 'REJECTED').length} rader avvist\n\n` +
-      res.report.map(r => `rad ${r.row} [${r.status}] ${r.wine}` +
-        r.errors.map(x => `\n   FEIL: ${x}`).join('') +
-        r.warnings.map(x => `\n   advarsel: ${x}`).join('')).join('\n');
+    el.textContent = `${L.portImported(res.port.length, res.report.filter(r => r.status === 'REJECTED').length)}\n\n` +
+      res.report.map(r => `${L.rowWord} ${r.row} [${r.status}] ${r.wine}` +
+        r.errors.map(x => `\n   ${L.errWord} ${x}`).join('') +
+        r.warnings.map(x => `\n   ${L.warnWord} ${x}`).join('')).join('\n');
     renderPortfolio(); renderSpecs();
   });
 });
@@ -1533,13 +1962,13 @@ function portfolioMatches() {
   return out;
 }
 function renderPortfolio() {
-  $('portCount').textContent = MYPORT.length + ' viner';
+  $('portCount').textContent = L.portCountFn(MYPORT.length);
   $('portPlanName').textContent = currentPlan;
   const pm = portfolioMatches();
   const V = { pass: '✓', fail: '✗', unknown: '?', info: 'ℹ' };
   $('portMatchTable').querySelector('tbody').innerHTML = pm.map(m => m.matches.map((x, wi) => {
-    const price = x.priceOk === true ? '<span class="chip hi">innenfor</span>'
-      : x.priceOk === false ? '<span class="chip mid">for høy</span>' : '<span class="chip lo">ukjent</span>';
+    const price = x.priceOk === true ? `<span class="chip hi">${L.pIn}</span>`
+      : x.priceOk === false ? `<span class="chip mid">${L.pHigh}</span>` : `<span class="chip lo">${L.pUnknown}</span>`;
     return `<tr class="rowx">
       <td>${wi === 0 ? `<b>${esc(m.spec.ref)}</b><br><span style="color:var(--muted)">${esc(m.spec.group)} · ${esc(m.spec.country)} · ${esc((m.spec.spec || '').slice(0, 70))}…</span>` : ''}</td>
       <td>${wi === 0 ? esc(m.spec.deadline || m.spec.launch) : ''}</td>
@@ -1551,9 +1980,9 @@ function renderPortfolio() {
   }).join('')).join('');
   hookRows($('portMatchTable').querySelector('tbody'));
   $('portMatchNote').textContent = MYPORT.length === 0
-    ? 'Last opp porteføljen for å se treff.'
-    : pm.length === 0 ? 'Ingen anbud i denne planen matcher porteføljen — prøv en annen plan i velgeren øverst.'
-    : `${pm.length} anbud matcher. Klikk en rad for klausulvurderingene.`;
+    ? L.portNoteEmpty
+    : pm.length === 0 ? L.portNoteNoMatch
+    : L.portNoteSome(pm.length);
 }
 
 /* ---- directory ---- */
@@ -1577,7 +2006,7 @@ function renderKatalog() {
   };
   const cell = arr => {
     const r = best(arr);
-    if (r.k === 'unknown') return '<span style="color:var(--muted);font-size:12px">ukjent</span>';
+    if (r.k === 'unknown') return `<span style="color:var(--muted);font-size:12px">${L.katUnknown}</span>`;
     return `<span class="chip ${r.cls}" title="${esc(r.detail)}">${esc(r.label)}</span>`;
   };
   let rows = [...byProd.entries()].filter(([name, p]) => {
@@ -1592,12 +2021,12 @@ function renderKatalog() {
   rows = SORTS.kat.key ? applySort(rows, SORTS.kat, KAT_GET) : rows.sort((a, b) => a[0].localeCompare(b[0]));
   const allCountries = [...new Set([...byProd.values()].map(p => p.country))].sort();
   const sel = $('kfCountry'), cur = KATF.country;
-  sel.innerHTML = '<option value="">Alle land</option>' + allCountries.map(c =>
+  sel.innerHTML = `<option value="">${esc(L.optAllCountries)}</option>` + allCountries.map(c =>
     `<option value="${esc(c)}"${c === cur ? ' selected' : ''}>${esc(c)}</option>`).join('');
   $('katTable').querySelector('tbody').innerHTML = rows.length ? rows.map(([name, p]) =>
     `<tr><td><b>${esc(name)}</b></td><td>${esc(p.country)}</td><td class="num">${p.wines}</td>
      <td>${cell(p.rep.NO)}</td><td>${cell(p.rep.SE)}</td><td>${cell(p.rep.FI)}</td></tr>`).join('')
-    : '<tr><td colspan="6" style="color:var(--muted)">Ingen produsenter i dette utvalget.</td></tr>';
+    : `<tr><td colspan="6" style="color:var(--muted)">${L.katEmpty}</td></tr>`;
 }
 $('katFilters').querySelectorAll('button').forEach(b => b.addEventListener('click', () => {
   katFilter = b.dataset.k;
@@ -1636,7 +2065,7 @@ function wireSort(tableId, state, rerender) {
   });
 }
 const SPEC_GET = { ref: m => m.spec.ref, launch: m => m.spec.launch, sel: m => m.spec.selection,
-  group: m => m.spec.group, country: m => m.spec.country || 'Åpen',
+  group: m => m.spec.group, country: m => m.spec.country || openTerm(),
   price: m => m.spec.price_hi ?? m.spec.price_lo ?? null,
   fob: m => m.fob ? m.fob.eur : null, hits: m => m.matches.length };
 const WINE_GET = { producer: w => w.producer, name: w => w.name, country: w => w.country,
@@ -1653,10 +2082,22 @@ wireSort('wineTable', SORTS.wine, () => renderWines());
 wireSort('katTable', SORTS.kat, () => renderKatalog());
 
 /* ---- nav & theme ---- */
+const setTabHelp = t => { $('tabHelp').textContent = (L.tabHelp && L.tabHelp[t]) || ''; };
+function dismissIntro() {
+  $('intro').style.display = 'none';
+  try { localStorage.setItem('ti_intro_dismissed', '1'); } catch (e) {}
+}
+function initOrientation() {
+  let dismissed = false;
+  try { dismissed = localStorage.getItem('ti_intro_dismissed') === '1'; } catch (e) {}
+  if (dismissed) $('intro').style.display = 'none';
+  setTabHelp('anbud');
+}
 $('nav').querySelectorAll('button').forEach(b => b.addEventListener('click', () => {
   $('nav').querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b));
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('on'));
   $('tab-' + b.dataset.t).classList.add('on');
+  setTabHelp(b.dataset.t);
   if (b.dataset.t === 'kalk') calc();
   if (b.dataset.t === 'analyse') renderAnalyse();
   if (b.dataset.t === 'portefolje') renderPortfolio();
@@ -1685,7 +2126,7 @@ function toggleTheme() {
   const ws = wholesaleFromRetail(199.90, 13.0, 0.75, 'glass');
   console.log('SELFTEST wholesale =', ws.toFixed(2), '(expect 80.67)');
 })();
-renderPlanSelect(); calc(); recompute();
+renderPlanSelect(); initLang(); initOrientation();
 </script>
 </body>
 </html>
