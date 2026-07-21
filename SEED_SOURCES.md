@@ -8,10 +8,16 @@ never seeded; the producer supplies them on claiming. Representation is *derived
 from the real Vinmonopolet catalog (not in the catalog → unrepresented), never
 assumed.
 
-Seed order follows `demand_map.py` (what tenders actually ask for, repeatedly).
-South Africa is first: it hits three recurring targets (Syrah, Chenin, Cap
-Classique) and its certification bodies give *verifiable* cert data for the lanes
-where a certification is the gate.
+**Seed broadly, not by grape.** Within an origin, seed the *whole* producer set
+from its official body (WoSA lists every SA producer, not just the common
+varieties) — the long-tail/niche tenders are exactly where competition is lowest
+and an unrepresented producer most easily wins, so narrow seeding would throw away
+the best opportunities. `demand_map.py` is for **sequencing origins and
+prioritising active producer recruitment**, not a cap on what gets seeded.
+
+Seed *order* by that map: South Africa first — it hits three recurring targets
+(Syrah, Chenin, Cap Classique) and its certification bodies give *verifiable* cert
+data for the lanes where a certification is the gate.
 
 ## South Africa (built — `seed_producers.py`)
 
@@ -41,6 +47,34 @@ representation → `verified` (derived from the VMP index); FOB/volume/grape %/A
 Cross-origin certification registries (authoritative, verifiable):
 EU organic — TRACES / EU organic certificate database · Fairtrade — FLOCERT ·
 Biodynamic — Demeter.
+
+## Enrichment sources (secondary — licensed, and NOT for core specs)
+
+Consumer wine apps (CellarTracker, Vivino, Vinify) came up as possible data. What
+they actually offer, and why they're secondary here:
+
+| App | Offers | Reality for us |
+|---|---|---|
+| **CellarTracker** | community ratings, tasting notes, wine metadata | personal/**non-commercial** licence; reuse/derivative works prohibited; no open API (needs a license/revenue agreement) |
+| **Vivino** | huge ratings/reviews/prices | **no public API** (shut years ago); ToS **prohibits scraping** |
+| **Vinify** | cellar management; **Liv-ex** market value | a tool, not a data feed; Liv-ex = fine/**investment** wine (narrow, mostly Bordeaux/Burgundy) |
+
+Three reasons these are enrichment, not a source of truth:
+1. **Not what tenders judge on.** Vinmonopolet judges *blind* on spec compliance +
+   price. A Vivino/CellarTracker score doesn't make a wine eligible.
+2. **Licensing, not scraping.** All three are proprietary and ToS-restricted;
+   scraping them would violate the very "official/solid sources" rule this file
+   sets. Use only via a formal agreement.
+3. **Skew.** Ratings favour famous wines; Liv-ex covers investment wine — the
+   opposite of the unrepresented long tail we care about.
+
+Where they *can* help, via proper licensing, as a **secondary signal**: a
+quality/credibility score to help an importer rank wines that already match, and a
+market-price sanity check. Treat as phase-2, never as the spec source.
+
+Legitimately-open metadata alternatives worth a look: **Wikidata** (open licence;
+structured producer/region/variety) and **Wine-Searcher** (paid API; prices +
+aggregated critic scores).
 
 ## Rules
 
