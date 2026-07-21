@@ -127,6 +127,21 @@
   th.sortable.active { color: var(--accent); font-weight: 600; }
   .tender-head td { background: color-mix(in oklab, var(--accent) 7%, transparent);
     font-size: 13.5px; border-top: 2px solid color-mix(in oklab, var(--accent) 30%, transparent); }
+  /* ---- orientation: per-tab help line + first-run how-it-works strip ---- */
+  .tabhelp { color: var(--text-secondary); font-size: 12.5px; margin: -6px 0 16px; max-width: 760px; }
+  .intro { position: relative; background: color-mix(in oklab, var(--accent) 6%, var(--surface-1));
+    border: 1px solid color-mix(in oklab, var(--accent) 22%, var(--border)); border-radius: 14px;
+    padding: 16px 20px 14px; margin: 0 0 18px; }
+  .intro h2 { margin: 0 0 8px; font-size: 16px; }
+  .intro ol { margin: 0; padding-left: 20px; }
+  .intro li { margin: 3px 0; color: var(--text-secondary); }
+  .intro li b { color: var(--text-primary); }
+  .intro .foot { color: var(--muted); font-size: 12px; margin: 9px 0 0; }
+  .intro .x { position: absolute; top: 8px; right: 10px; font: inherit; font-size: 18px; line-height: 1;
+    background: none; border: none; color: var(--muted); cursor: pointer; padding: 4px 8px; border-radius: 8px; }
+  .intro .x:hover { background: color-mix(in oklab, var(--accent) 12%, transparent); color: var(--text-primary); }
+  .plan-label { color: var(--muted); font-size: 12px; font-family: system-ui, sans-serif; font-weight: 400;
+    letter-spacing: 0; margin-left: 4px; }
 </style>
 </head>
 <body class="viz-root">
@@ -137,7 +152,7 @@
       style="float:right;margin-right:8px;font:inherit;font-size:12px;padding:4px 10px;border-radius:999px;border:1px solid var(--border);background:var(--surface-1);color:var(--text-secondary);width:130px">
 
     <h1>Tender Intelligence
-      <select id="planSelect" class="pill" style="font:inherit;font-size:12px;background:var(--surface-1);color:var(--text-secondary);cursor:pointer"></select>
+      <span class="plan-label">Plan:</span><select id="planSelect" class="pill" title="Bytt lanseringsplan — hele appen viser data fra planen du velger her" style="font:inherit;font-size:12px;background:var(--surface-1);color:var(--text-secondary);cursor:pointer;margin-left:4px"></select>
     </h1>
     <p>Nordiske monopolanbud · klausulmatching · FOB-kalkulator · produsentopplasting — alt kjører i denne filen, ingen server.</p>
   </header>
@@ -152,9 +167,20 @@
     <button data-t="analyse">Analyse</button>
     <button data-t="opplasting">Last opp</button>
   </nav>
+  <p class="tabhelp" id="tabHelp"></p>
 
   <!-- ANBUD -->
   <section class="tab on" id="tab-anbud">
+    <div class="intro" id="intro">
+      <button class="x" onclick="dismissIntro()" title="Skjul (vises ikke igjen)" aria-label="Lukk">×</button>
+      <h2>Slik fungerer det</h2>
+      <ol>
+        <li>Last opp vinene dine én gang under <b>Min portefølje</b> — eller utforsk demodataene som allerede ligger inne.</li>
+        <li>Under <b>Anbud</b> og <b>Marketplace</b> matches vinene automatisk mot Vinmonopolets krav, så du ser hvilke anbud du kan vinne.</li>
+        <li>Bruk <b>Kalkulator</b> til å sjekke at produsentprisen treffer prisbåndet — <b>FOB</b> = prisen produsenten tar fra kjeller, før frakt, avgifter og importørmargin.</li>
+      </ol>
+      <p class="foot">Bytt lanseringsplan øverst til høyre. Alt kjører lokalt i nettleseren — ingen data forlater maskinen.</p>
+    </div>
     <div class="tiles" id="tiles"></div>
     <div class="card">
       <h2>Filtre og fordeling</h2>
@@ -191,7 +217,7 @@
         <th>Spesifikasjon</th><th class="num" data-sort="price">Prisbånd</th>
         <th class="num" data-sort="fob">Trenger ≤ FOB</th><th class="num" data-sort="hits">Treff</th>
       </tr></thead><tbody></tbody></table>
-      <p class="note">Klikk en rad for klausulene. «Trenger ≤ FOB» = maks produsentpris som treffer prisbåndets tak (kalkulatorens forutsetninger).</p>
+      <p class="note">Klikk en rad for klausulene. «Trenger ≤ FOB» = høyeste produsentpris fra kjeller (før frakt, avgifter og margin) som fortsatt treffer prisbåndets tak, gitt kalkulatorens forutsetninger.</p>
     </div>
   </section>
 
@@ -210,6 +236,7 @@
   <section class="tab" id="tab-kalk">
     <div class="card">
       <h2>Prisbånd-kalkulator — fra hyllepris til påkrevd FOB (2026-satser, Norge)</h2>
+      <p class="note" style="margin:0 0 12px">Fyll inn hylleprisen Vinmonopolet vil ha, så regner appen seg bakover til hvor lav <b>FOB</b> (produsentens pris fra kjeller, før frakt, avgifter og importørmargin) må være for at regnestykket skal gå opp.</p>
       <div class="calc-grid">
         <div><label>Hyllepris (kr)</label><input type="number" id="inRetail" value="199.90" step="5"></div>
         <div><label>Alkohol (%)</label><input type="number" id="inAbv" value="13.0" step="0.5"></div>
@@ -1653,10 +1680,32 @@ wireSort('wineTable', SORTS.wine, () => renderWines());
 wireSort('katTable', SORTS.kat, () => renderKatalog());
 
 /* ---- nav & theme ---- */
+const TAB_HELP = {
+  anbud: 'Alle anbud i valgt plan. Filtrer på land, drue, type og prisbånd — og se hvor mange kvalifiserte viner databasen har til hvert anbud.',
+  marked: 'Anbudene parret med viner som oppfyller kravene: for hver kandidat ser du krav, pris, om vinen alt er i sortimentet, og om produsenten er ledig.',
+  kalk: 'Regn deg bakover fra hylleprisen til hvor lav produsentprisen (FOB) må være — med alle norske avgifter og marginer for 2026.',
+  viner: 'Hele vindatabasen med datakvalitet per felt. Sorter, filtrer, og importer/eksporter for å jobbe med dine egne data.',
+  portefolje: 'Last opp dine egne viner én gang — hver lanseringsplan matches automatisk mot porteføljen din.',
+  katalog: 'Produsenter og hvem som representerer dem i hvert marked. «Åpen» = urepresentert, altså en ledig introduksjonsmulighet.',
+  analyse: 'Mønstre på tvers av alle innlastede planer — hvilke opprinnelser og druer som går igjen, og hvordan prisbåndene beveger seg.',
+  opplasting: 'Last opp en ny lanseringsplan fra Vinmonopolet, eller produsentdata i bulk via Excel-malen.',
+};
+const setTabHelp = t => { $('tabHelp').textContent = TAB_HELP[t] || ''; };
+function dismissIntro() {
+  $('intro').style.display = 'none';
+  try { localStorage.setItem('ti_intro_dismissed', '1'); } catch (e) {}
+}
+function initOrientation() {
+  let dismissed = false;
+  try { dismissed = localStorage.getItem('ti_intro_dismissed') === '1'; } catch (e) {}
+  if (dismissed) $('intro').style.display = 'none';
+  setTabHelp('anbud');
+}
 $('nav').querySelectorAll('button').forEach(b => b.addEventListener('click', () => {
   $('nav').querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b));
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('on'));
   $('tab-' + b.dataset.t).classList.add('on');
+  setTabHelp(b.dataset.t);
   if (b.dataset.t === 'kalk') calc();
   if (b.dataset.t === 'analyse') renderAnalyse();
   if (b.dataset.t === 'portefolje') renderPortfolio();
@@ -1685,7 +1734,7 @@ function toggleTheme() {
   const ws = wholesaleFromRetail(199.90, 13.0, 0.75, 'glass');
   console.log('SELFTEST wholesale =', ws.toFixed(2), '(expect 80.67)');
 })();
-renderPlanSelect(); calc(); recompute();
+renderPlanSelect(); calc(); recompute(); initOrientation();
 </script>
 </body>
 </html>
