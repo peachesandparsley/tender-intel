@@ -23,6 +23,7 @@ works offline). Served via GitHub Pages at the repository's Pages URL.
 | `ingest_vmp.py` | Populates the wine DB with **verified** data from Vinmonopolet's own catalog (API key or portal export); producer-only fields stay flagged for confirmation |
 | `demand_map.py` | Ranks recurring tender demand (origin × grape × style × price × cert) → where to seed producers first (writes `demand_map.md`) |
 | `seed_producers.py` | Cold-starts the producer DB from **official** public sources (WoSA / WO scheme / IPW / WIETA), marked unverified-pending-claim; derives representation from the VMP index (see `SEED_SOURCES.md`) |
+| `ingest_systembolaget.py` | Cross-monopoly seed: turns Sweden's open Systembolaget assortment into supply-side leads — a wine listed in SE but not in VMP is a monopoly-proven, NO-unrepresented producer. Scores the NO gap at the **importer** level (`represented` / `pan_nordic` via Anora et al. / `open`) against the VMP index |
 | `make_*_template.py` | Generators for the producer/importer Excel templates |
 | `wines.json` | Wine records (real producers; estimates flagged in audit fields) |
 | `specs_*.json` | Parsed tender plans: 2020-1, 2026-1, 2026-2, 2027-1 |
