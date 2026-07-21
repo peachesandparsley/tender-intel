@@ -1,0 +1,1813 @@
+{
+ "_note": "REAL producers and cuvées only. Facts (producer, wine, origin, appellation, grapes, method, certifications) are from public sources. Vintages, sugar/profile numbers, volumes and FOB are ESTIMATES pending producer/importer confirmation — see audit.note per record. Schema fields mirror Vinmonopolet's search facets: varetype/color, land/distrikt, råstoff/grapes, sukker, fylde/friskhet/garvestoffer (1-12), økologisk/Fairtrade/vegansk via certs, emballasje (type+vekt), korktype, lagringsgrad, årgang, volum, pris.",
+ "wines": [
+  {
+   "id": "w001",
+   "producer": "Simonsig",
+   "name": "Kaapse Vonkel Brut",
+   "country": "South Africa",
+   "region": "Stellenbosch",
+   "appellation": "WO Stellenbosch",
+   "grapes": {
+    "chardonnay": 51,
+    "pinot noir": 47,
+    "pinot meunier": 2
+   },
+   "color": "sparkling white",
+   "method": "traditional (Cap Classique)",
+   "vintages_available": [
+    2021,
+    2022
+   ],
+   "abv": 12.0,
+   "sugar_g_l": 8.5,
+   "acid_g_l": null,
+   "wood": "none",
+   "certs": [
+    "WIETA",
+    "IPW/WSB"
+   ],
+   "cert_on_label": false,
+   "vines_age": null,
+   "maceration_days": null,
+   "profile": {
+    "fylde": 5,
+    "friskhet": 9,
+    "garvestoffer": 0
+   },
+   "packaging": {
+    "type": "glass",
+    "weight_g": null
+   },
+   "closure": "cork (sparkling)",
+   "storable": null,
+   "volume_bottles": 100000,
+   "fob_eur": 5.5,
+   "representation": {
+    "NO": "likely listed — verify",
+    "SE": "unknown — verify",
+    "FI": "unknown — verify"
+   },
+   "audit": {
+    "created_by": "Claude (systemfrø)",
+    "created_at": "2026-07-20T14:10",
+    "updated_by": "Claude (systemfrø)",
+    "updated_at": "2026-07-20T14:10",
+    "note": "Frødata fra offentlige kilder (produsentens tech sheets, Vinmonopolet-katalog, sertifiseringsregistre). FOB, volum og profil er ESTIMAT — bekreftes av produsent/importør."
+   },
+   "catalog_no": {
+    "status": "unchecked",
+    "product_id": null,
+    "checked_by": null,
+    "checked_at": null
+   }
+  },
+  {
+   "id": "w002",
+   "producer": "Graham Beck",
+   "name": "Brut NV",
+   "country": "South Africa",
+   "region": "Robertson",
+   "appellation": "WO Western Cape",
+   "grapes": {
+    "chardonnay": 55,
+    "pinot noir": 45
+   },
+   "color": "sparkling white",
+   "method": "traditional (Cap Classique)",
+   "vintages_available": [
+    0
+   ],
+   "abv": 12.0,
+   "sugar_g_l": 9.0,
+   "acid_g_l": null,
+   "wood": "none",
+   "certs": [
+    "WIETA",
+    "IPW/WSB"
+   ],
+   "cert_on_label": false,
+   "vines_age": null,
+   "maceration_days": null,
+   "profile": {
+    "fylde": 5,
+    "friskhet": 9,
+    "garvestoffer": 0
+   },
+   "packaging": {
+    "type": "glass",
+    "weight_g": null
+   },
+   "closure": "cork (sparkling)",
+   "storable": null,
+   "volume_bottles": 200000,
+   "fob_eur": 4.5,
+   "representation": {
+    "NO": "likely listed — verify",
+    "SE": "unknown — verify",
+    "FI": "unknown — verify"
+   },
+   "audit": {
+    "created_by": "Claude (systemfrø)",
+    "created_at": "2026-07-20T14:10",
+    "updated_by": "Claude (systemfrø)",
+    "updated_at": "2026-07-20T14:10",
+    "note": "Frødata fra offentlige kilder (produsentens tech sheets, Vinmonopolet-katalog, sertifiseringsregistre). FOB, volum og profil er ESTIMAT — bekreftes av produsent/importør."
+   },
+   "catalog_no": {
+    "status": "unchecked",
+    "product_id": null,
+    "checked_by": null,
+    "checked_at": null
+   }
+  },
+  {
+   "id": "w003",
+   "producer": "Le Lude",
+   "name": "Brut Réserve NV",
+   "country": "South Africa",
+   "region": "Franschhoek",
+   "appellation": "WO Franschhoek",
+   "grapes": {
+    "chardonnay": 58,
+    "pinot noir": 42
+   },
+   "color": "sparkling white",
+   "method": "traditional (Cap Classique)",
+   "vintages_available": [
+    0
+   ],
+   "abv": 12.5,
+   "sugar_g_l": 7.0,
+   "acid_g_l": null,
+   "wood": "none",
+   "certs": [
+    "IPW/WSB"
+   ],
+   "cert_on_label": false,
+   "vines_age": null,
+   "maceration_days": null,
+   "profile": {
+    "fylde": 6,
+    "friskhet": 9,
+    "garvestoffer": 0
+   },
+   "packaging": {
+    "type": "glass",
+    "weight_g": null
+   },
+   "closure": "cork (sparkling)",
+   "storable": null,
+   "volume_bottles": 15000,
+   "fob_eur": 8.0,
+   "representation": {
+    "NO": "unrepresented (unverified)",
+    "SE": "unknown — verify",
+    "FI": "unknown — verify"
+   },
+   "audit": {
+    "created_by": "Claude (systemfrø)",
+    "created_at": "2026-07-20T14:10",
+    "updated_by": "Claude (systemfrø)",
+    "updated_at": "2026-07-20T14:10",
+    "note": "Frødata fra offentlige kilder (produsentens tech sheets, Vinmonopolet-katalog, sertifiseringsregistre). FOB, volum og profil er ESTIMAT — bekreftes av produsent/importør."
+   },
+   "catalog_no": {
+    "status": "not_found",
+    "product_id": null,
+    "checked_by": "Claude (websøk vinmonopolet.no)",
+    "checked_at": "2026-07-20T19:05"
+   }
+  },
+  {
+   "id": "w004",
+   "producer": "Kanonkop",
+   "name": "Kadette Pinotage",
+   "country": "South Africa",
+   "region": "Stellenbosch",
+   "appellation": "WO Stellenbosch",
+   "grapes": {
+    "pinotage": 100
+   },
+   "color": "red",
+   "method": null,
+   "vintages_available": [
+    2023,
+    2024
+   ],
+   "abv": 13.9,
+   "sugar_g_l": 2.3,
+   "acid_g_l": null,
+   "wood": "old oak (discreet)",
+   "certs": [
+    "WIETA",
+    "IPW/WSB"
+   ],
+   "cert_on_label": false,
+   "vines_age": null,
+   "maceration_days": null,
+   "profile": {
+    "fylde": 7,
+    "friskhet": 6,
+    "garvestoffer": 6
+   },
+   "packaging": {
+    "type": "glass",
+    "weight_g": null
+   },
+   "closure": "screwcap",
+   "storable": "drink or keep 3-5 yrs",
+   "volume_bottles": 150000,
+   "fob_eur": 4.2,
+   "representation": {
+    "NO": "likely listed — verify",
+    "SE": "unknown — verify",
+    "FI": "unknown — verify"
+   },
+   "audit": {
+    "created_by": "Claude (systemfrø)",
+    "created_at": "2026-07-20T14:10",
+    "updated_by": "Claude (systemfrø)",
+    "updated_at": "2026-07-20T14:10",
+    "note": "Frødata fra offentlige kilder (produsentens tech sheets, Vinmonopolet-katalog, sertifiseringsregistre). FOB, volum og profil er ESTIMAT — bekreftes av produsent/importør."
+   },
+   "catalog_no": {
+    "status": "unchecked",
+    "product_id": null,
+    "checked_by": null,
+    "checked_at": null
+   }
+  },
+  {
+   "id": "w005",
+   "producer": "Kanonkop",
+   "name": "Estate Pinotage",
+   "country": "South Africa",
+   "region": "Stellenbosch",
+   "appellation": "WO Simonsberg-Stellenbosch",
+   "grapes": {
+    "pinotage": 100
+   },
+   "color": "red",
+   "method": null,
+   "vintages_available": [
+    2021,
+    2022
+   ],
+   "abv": 14.0,
+   "sugar_g_l": 2.5,
+   "acid_g_l": null,
+   "wood": "prominent (new oak)",
+   "certs": [
+    "WIETA",
+    "IPW/WSB"
+   ],
+   "cert_on_label": false,
+   "vines_age": 60,
+   "maceration_days": null,
+   "profile": {
+    "fylde": 8,
+    "friskhet": 6,
+    "garvestoffer": 8
+   },
+   "packaging": {
+    "type": "glass",
+    "weight_g": null
+   },
+   "closure": "natural cork",
+   "storable": "10+ yrs",
+   "volume_bottles": 40000,
+   "fob_eur": 16.0,
+   "representation": {
+    "NO": "likely listed — verify",
+    "SE": "unknown — verify",
+    "FI": "unknown — verify"
+   },
+   "audit": {
+    "created_by": "Claude (systemfrø)",
+    "created_at": "2026-07-20T14:10",
+    "updated_by": "Claude (systemfrø)",
+    "updated_at": "2026-07-20T14:10",
+    "note": "Frødata fra offentlige kilder (produsentens tech sheets, Vinmonopolet-katalog, sertifiseringsregistre). FOB, volum og profil er ESTIMAT — bekreftes av produsent/importør."
+   },
+   "catalog_no": {
+    "status": "unchecked",
+    "product_id": null,
+    "checked_by": null,
+    "checked_at": null
+   }
+  },
+  {
+   "id": "w006",
+   "producer": "Kaapzicht",
+   "name": "The 1947 Chenin Blanc",
+   "country": "South Africa",
+   "region": "Stellenbosch",
+   "appellation": "WO Bottelary",
+   "grapes": {
+    "chenin blanc": 100
+   },
+   "color": "white",
+   "method": null,
+   "vintages_available": [
+    2022,
+    2023
+   ],
+   "abv": 13.5,
+   "sugar_g_l": 3.0,
+   "acid_g_l": null,
+   "wood": "barrel fermented (older oak)",
+   "certs": [
+    "Old Vine Project",
+    "WIETA",
+    "IPW/WSB"
+   ],
+   "cert_on_label": true,
+   "vines_age": 77,
+   "maceration_days": null,
+   "profile": {
+    "fylde": 7,
+    "friskhet": 7,
+    "garvestoffer": 1
+   },
+   "packaging": {
+    "type": "glass",
+    "weight_g": null
+   },
+   "closure": "natural cork",
+   "storable": "8-10 yrs",
+   "volume_bottles": 8000,
+   "fob_eur": 12.0,
+   "representation": {
+    "NO": "unrepresented (unverified)",
+    "SE": "unknown — verify",
+    "FI": "unknown — verify"
+   },
+   "audit": {
+    "created_by": "Claude (systemfrø)",
+    "created_at": "2026-07-20T14:10",
+    "updated_by": "Claude (systemfrø)",
+    "updated_at": "2026-07-20T14:10",
+    "note": "Frødata fra offentlige kilder (produsentens tech sheets, Vinmonopolet-katalog, sertifiseringsregistre). FOB, volum og profil er ESTIMAT — bekreftes av produsent/importør."
+   },
+   "catalog_no": {
+    "status": "not_found",
+    "product_id": null,
+    "checked_by": "Claude (websøk vinmonopolet.no)",
+    "checked_at": "2026-07-20T19:05"
+   }
+  },
+  {
+   "id": "w007",
+   "producer": "Beaumont Family Wines",
+   "name": "Hope Marguerite Chenin Blanc",
+   "country": "South Africa",
+   "region": "Bot River",
+   "appellation": "WO Bot River",
+   "grapes": {
+    "chenin blanc": 100
+   },
+   "color": "white",
+   "method": null,
+   "vintages_available": [
+    2022,
+    2023
+   ],
+   "abv": 13.5,
+   "sugar_g_l": 3.5,
+   "acid_g_l": null,
+   "wood": "old oak (discreet)",
+   "certs": [
+    "Old Vine Project",
+    "IPW/WSB"
+   ],
+   "cert_on_label": true,
+   "vines_age": 44,
+   "maceration_days": null,
+   "profile": {
+    "fylde": 7,
+    "friskhet": 8,
+    "garvestoffer": 1
+   },
+   "packaging": {
+    "type": "glass",
+    "weight_g": null
+   },
+   "closure": "natural cork",
+   "storable": "8 yrs",
+   "volume_bottles": 12000,
+   "fob_eur": 9.5,
+   "representation": {
+    "NO": "unrepresented (unverified)",
+    "SE": "unknown — verify",
+    "FI": "unknown — verify"
+   },
+   "audit": {
+    "created_by": "Claude (systemfrø)",
+    "created_at": "2026-07-20T14:10",
+    "updated_by": "Claude (systemfrø)",
+    "updated_at": "2026-07-20T14:10",
+    "note": "Frødata fra offentlige kilder (produsentens tech sheets, Vinmonopolet-katalog, sertifiseringsregistre). FOB, volum og profil er ESTIMAT — bekreftes av produsent/importør."
+   },
+   "catalog_no": {
+    "status": "not_found",
+    "product_id": null,
+    "checked_by": "Claude (websøk vinmonopolet.no)",
+    "checked_at": "2026-07-20T19:05"
+   }
+  },
+  {
+   "id": "w008",
+   "producer": "Mother Rock",
+   "name": "Force Celeste Chenin Blanc",
+   "country": "South Africa",
+   "region": "Swartland",
+   "appellation": "WO Swartland",
+   "grapes": {
+    "chenin blanc": 100
+   },
+   "color": "white",
+   "method": null,
+   "vintages_available": [
+    2023,
+    2024
+   ],
+   "abv": 12.5,
+   "sugar_g_l": 2.0,
+   "acid_g_l": null,
+   "wood": "old oak (discreet)",
+   "certs": [
+    "IPW/WSB"
+   ],
+   "cert_on_label": false,
+   "vines_age": 38,
+   "maceration_days": null,
+   "profile": {
+    "fylde": 6,
+    "friskhet": 9,
+    "garvestoffer": 1
+   },
+   "packaging": {
+    "type": "glass",
+    "weight_g": null
+   },
+   "closure": "natural cork",
+   "storable": null,
+   "volume_bottles": 15000,
+   "fob_eur": 4.8,
+   "representation": {
+    "NO": "unrepresented (unverified)",
+    "SE": "unknown — verify",
+    "FI": "unknown — verify"
+   },
+   "audit": {
+    "created_by": "Claude (systemfrø)",
+    "created_at": "2026-07-20T14:10",
+    "updated_by": "Claude (systemfrø)",
+    "updated_at": "2026-07-20T14:10",
+    "note": "Frødata fra offentlige kilder (produsentens tech sheets, Vinmonopolet-katalog, sertifiseringsregistre). FOB, volum og profil er ESTIMAT — bekreftes av produsent/importør."
+   },
+   "catalog_no": {
+    "status": "unchecked",
+    "product_id": null,
+    "checked_by": null,
+    "checked_at": null
+   }
+  },
+  {
+   "id": "w009",
+   "producer": "A.A. Badenhorst",
+   "name": "Secateurs Chenin Blanc",
+   "country": "South Africa",
+   "region": "Swartland",
+   "appellation": "WO Swartland",
+   "grapes": {
+    "chenin blanc": 95,
+    "other white": 5
+   },
+   "color": "white",
+   "method": null,
+   "vintages_available": [
+    2024,
+    2025
+   ],
+   "abv": 13.0,
+   "sugar_g_l": 3.0,
+   "acid_g_l": null,
+   "wood": "old foudre (discreet)",
+   "certs": [
+    "IPW/WSB"
+   ],
+   "cert_on_label": false,
+   "vines_age": 40,
+   "maceration_days": null,
+   "profile": {
+    "fylde": 6,
+    "friskhet": 8,
+    "garvestoffer": 1
+   },
+   "packaging": {
+    "type": "glass",
+    "weight_g": null
+   },
+   "closure": "screwcap",
+   "storable": null,
+   "volume_bottles": 120000,
+   "fob_eur": 5.5,
+   "representation": {
+    "NO": "listed in Vinmonopolet catalog — importer on file (verify)",
+    "SE": "unknown — verify",
+    "FI": "unknown — verify"
+   },
+   "audit": {
+    "created_by": "Claude (systemfrø)",
+    "created_at": "2026-07-20T14:10",
+    "updated_by": "Claude (systemfrø)",
+    "updated_at": "2026-07-20T14:10",
+    "note": "Frødata fra offentlige kilder (produsentens tech sheets, Vinmonopolet-katalog, sertifiseringsregistre). FOB, volum og profil er ESTIMAT — bekreftes av produsent/importør."
+   },
+   "catalog_no": {
+    "status": "listed",
+    "product_id": "1695701",
+    "checked_by": "Claude (websøk vinmonopolet.no)",
+    "checked_at": "2026-07-20T19:05"
+   }
+  },
+  {
+   "id": "w010",
+   "producer": "Mullineux",
+   "name": "Syrah",
+   "country": "South Africa",
+   "region": "Swartland",
+   "appellation": "WO Swartland",
+   "grapes": {
+    "syrah": 100
+   },
+   "color": "red",
+   "method": null,
+   "vintages_available": [
+    2023,
+    2024
+   ],
+   "abv": 13.5,
+   "sugar_g_l": 2.0,
+   "acid_g_l": null,
+   "wood": "old oak, whole bunch (discreet)",
+   "certs": [
+    "Old Vine Project",
+    "IPW/WSB"
+   ],
+   "cert_on_label": false,
+   "vines_age": null,
+   "maceration_days": null,
+   "profile": {
+    "fylde": 7,
+    "friskhet": 7,
+    "garvestoffer": 6
+   },
+   "packaging": {
+    "type": "glass",
+    "weight_g": null
+   },
+   "closure": "natural cork",
+   "storable": "10 yrs",
+   "volume_bottles": 25000,
+   "fob_eur": 15.0,
+   "representation": {
+    "NO": "likely listed — verify",
+    "SE": "unknown — verify",
+    "FI": "unknown — verify"
+   },
+   "audit": {
+    "created_by": "Claude (systemfrø)",
+    "created_at": "2026-07-20T14:10",
+    "updated_by": "Claude (systemfrø)",
+    "updated_at": "2026-07-20T14:10",
+    "note": "Frødata fra offentlige kilder (produsentens tech sheets, Vinmonopolet-katalog, sertifiseringsregistre). FOB, volum og profil er ESTIMAT — bekreftes av produsent/importør."
+   },
+   "catalog_no": {
+    "status": "unchecked",
+    "product_id": null,
+    "checked_by": null,
+    "checked_at": null
+   }
+  },
+  {
+   "id": "w011",
+   "producer": "Paul Cluver",
+   "name": "Estate Riesling",
+   "country": "South Africa",
+   "region": "Elgin",
+   "appellation": "WO Elgin",
+   "grapes": {
+    "riesling": 100
+   },
+   "color": "white",
+   "method": null,
+   "vintages_available": [
+    2023,
+    2024
+   ],
+   "abv": 11.5,
+   "sugar_g_l": 8.0,
+   "acid_g_l": null,
+   "wood": "none",
+   "certs": [
+    "WIETA",
+    "IPW/WSB",
+    "WWF Conservation Champion"
+   ],
+   "cert_on_label": true,
+   "vines_age": null,
+   "maceration_days": null,
+   "profile": {
+    "fylde": 5,
+    "friskhet": 10,
+    "garvestoffer": 0
+   },
+   "packaging": {
+    "type": "glass",
+    "weight_g": null
+   },
+   "closure": "screwcap",
+   "storable": "5-8 yrs",
+   "volume_bottles": 40000,
+   "fob_eur": 4.5,
+   "representation": {
+    "NO": "likely listed — verify",
+    "SE": "unknown — verify",
+    "FI": "unknown — verify"
+   },
+   "audit": {
+    "created_by": "Claude (systemfrø)",
+    "created_at": "2026-07-20T14:10",
+    "updated_by": "Claude (systemfrø)",
+    "updated_at": "2026-07-20T14:10",
+    "note": "Frødata fra offentlige kilder (produsentens tech sheets, Vinmonopolet-katalog, sertifiseringsregistre). FOB, volum og profil er ESTIMAT — bekreftes av produsent/importør."
+   },
+   "catalog_no": {
+    "status": "not_found",
+    "product_id": null,
+    "checked_by": "Claude (websøk vinmonopolet.no)",
+    "checked_at": "2026-07-20T19:05"
+   }
+  },
+  {
+   "id": "w012",
+   "producer": "Reyneke",
+   "name": "Organic Sauvignon Blanc",
+   "country": "South Africa",
+   "region": "Stellenbosch",
+   "appellation": "WO Western Cape",
+   "grapes": {
+    "sauvignon blanc": 100
+   },
+   "color": "white",
+   "method": null,
+   "vintages_available": [
+    2024,
+    2025
+   ],
+   "abv": 13.0,
+   "sugar_g_l": 2.5,
+   "acid_g_l": null,
+   "wood": "none",
+   "certs": [
+    "Organic",
+    "Biodynamic (Demeter)",
+    "WIETA"
+   ],
+   "cert_on_label": true,
+   "vines_age": null,
+   "maceration_days": null,
+   "profile": {
+    "fylde": 5,
+    "friskhet": 10,
+    "garvestoffer": 0
+   },
+   "packaging": {
+    "type": "glass",
+    "weight_g": null
+   },
+   "closure": "screwcap",
+   "storable": null,
+   "volume_bottles": 60000,
+   "fob_eur": 5.0,
+   "representation": {
+    "NO": "likely listed — verify",
+    "SE": "unknown — verify",
+    "FI": "unknown — verify"
+   },
+   "audit": {
+    "created_by": "Claude (systemfrø)",
+    "created_at": "2026-07-20T14:10",
+    "updated_by": "Claude (systemfrø)",
+    "updated_at": "2026-07-20T14:10",
+    "note": "Frødata fra offentlige kilder (produsentens tech sheets, Vinmonopolet-katalog, sertifiseringsregistre). FOB, volum og profil er ESTIMAT — bekreftes av produsent/importør."
+   },
+   "catalog_no": {
+    "status": "unchecked",
+    "product_id": null,
+    "checked_by": null,
+    "checked_at": null
+   }
+  },
+  {
+   "id": "w013",
+   "producer": "Bosman Family Vineyards",
+   "name": "Generation 8 Chenin Blanc",
+   "country": "South Africa",
+   "region": "Wellington",
+   "appellation": "WO Wellington",
+   "grapes": {
+    "chenin blanc": 100
+   },
+   "color": "white",
+   "method": null,
+   "vintages_available": [
+    2024,
+    2025
+   ],
+   "abv": 13.0,
+   "sugar_g_l": 3.5,
+   "acid_g_l": null,
+   "wood": "none",
+   "certs": [
+    "Fairtrade",
+    "WIETA",
+    "IPW/WSB"
+   ],
+   "cert_on_label": true,
+   "vines_age": null,
+   "maceration_days": null,
+   "profile": {
+    "fylde": 5,
+    "friskhet": 8,
+    "garvestoffer": 0
+   },
+   "packaging": {
+    "type": "glass (lightweight)",
+    "weight_g": 410
+   },
+   "closure": "screwcap",
+   "storable": null,
+   "volume_bottles": 100000,
+   "fob_eur": 3.2,
+   "representation": {
+    "NO": "unrepresented (unverified)",
+    "SE": "unknown — verify",
+    "FI": "unknown — verify"
+   },
+   "audit": {
+    "created_by": "Claude (systemfrø)",
+    "created_at": "2026-07-20T14:10",
+    "updated_by": "Claude (systemfrø)",
+    "updated_at": "2026-07-20T14:10",
+    "note": "Frødata fra offentlige kilder (produsentens tech sheets, Vinmonopolet-katalog, sertifiseringsregistre). FOB, volum og profil er ESTIMAT — bekreftes av produsent/importør."
+   },
+   "catalog_no": {
+    "status": "unchecked",
+    "product_id": null,
+    "checked_by": null,
+    "checked_at": null
+   }
+  },
+  {
+   "id": "w014",
+   "producer": "Crystallum",
+   "name": "Peter Max Pinot Noir",
+   "country": "South Africa",
+   "region": "Hemel-en-Aarde",
+   "appellation": "WO Hemel-en-Aarde",
+   "grapes": {
+    "pinot noir": 100
+   },
+   "color": "red",
+   "method": null,
+   "vintages_available": [
+    2023,
+    2024
+   ],
+   "abv": 13.0,
+   "sugar_g_l": 2.0,
+   "acid_g_l": null,
+   "wood": "old oak (discreet)",
+   "certs": [
+    "IPW/WSB"
+   ],
+   "cert_on_label": false,
+   "vines_age": null,
+   "maceration_days": null,
+   "profile": {
+    "fylde": 6,
+    "friskhet": 8,
+    "garvestoffer": 4
+   },
+   "packaging": {
+    "type": "glass",
+    "weight_g": null
+   },
+   "closure": "natural cork",
+   "storable": "5-8 yrs",
+   "volume_bottles": 30000,
+   "fob_eur": 11.0,
+   "representation": {
+    "NO": "likely listed — verify",
+    "SE": "unknown — verify",
+    "FI": "unknown — verify"
+   },
+   "audit": {
+    "created_by": "Claude (systemfrø)",
+    "created_at": "2026-07-20T14:10",
+    "updated_by": "Claude (systemfrø)",
+    "updated_at": "2026-07-20T14:10",
+    "note": "Frødata fra offentlige kilder (produsentens tech sheets, Vinmonopolet-katalog, sertifiseringsregistre). FOB, volum og profil er ESTIMAT — bekreftes av produsent/importør."
+   },
+   "catalog_no": {
+    "status": "unchecked",
+    "product_id": null,
+    "checked_by": null,
+    "checked_at": null
+   }
+  },
+  {
+   "id": "w015",
+   "producer": "Domäne Wachau",
+   "name": "Terrassen Grüner Veltliner Federspiel",
+   "country": "Austria",
+   "region": "Wachau",
+   "appellation": "Wachau DAC",
+   "grapes": {
+    "grüner veltliner": 100
+   },
+   "color": "white",
+   "method": null,
+   "vintages_available": [
+    2023,
+    2024
+   ],
+   "abv": 12.5,
+   "sugar_g_l": 2.0,
+   "acid_g_l": null,
+   "wood": "none",
+   "certs": [
+    "Sustainability scheme (Nachhaltig Austria)"
+   ],
+   "cert_on_label": false,
+   "vines_age": null,
+   "maceration_days": null,
+   "profile": {
+    "fylde": 5,
+    "friskhet": 9,
+    "garvestoffer": 0
+   },
+   "packaging": {
+    "type": "glass",
+    "weight_g": null
+   },
+   "closure": "screwcap",
+   "storable": null,
+   "volume_bottles": 200000,
+   "fob_eur": 5.5,
+   "representation": {
+    "NO": "likely listed — verify",
+    "SE": "unknown — verify",
+    "FI": "unknown — verify"
+   },
+   "audit": {
+    "created_by": "Claude (systemfrø)",
+    "created_at": "2026-07-20T14:10",
+    "updated_by": "Claude (systemfrø)",
+    "updated_at": "2026-07-20T14:10",
+    "note": "Frødata fra offentlige kilder (produsentens tech sheets, Vinmonopolet-katalog, sertifiseringsregistre). FOB, volum og profil er ESTIMAT — bekreftes av produsent/importør."
+   },
+   "catalog_no": {
+    "status": "unchecked",
+    "product_id": null,
+    "checked_by": null,
+    "checked_at": null
+   }
+  },
+  {
+   "id": "w016",
+   "producer": "Loimer",
+   "name": "Lois Grüner Veltliner",
+   "country": "Austria",
+   "region": "Kamptal",
+   "appellation": "Niederösterreich",
+   "grapes": {
+    "grüner veltliner": 100
+   },
+   "color": "white",
+   "method": null,
+   "vintages_available": [
+    2024
+   ],
+   "abv": 12.0,
+   "sugar_g_l": 1.5,
+   "acid_g_l": null,
+   "wood": "none",
+   "certs": [
+    "Organic",
+    "Biodynamic (respekt-BIODYN)"
+   ],
+   "cert_on_label": true,
+   "vines_age": null,
+   "maceration_days": null,
+   "profile": {
+    "fylde": 4,
+    "friskhet": 10,
+    "garvestoffer": 0
+   },
+   "packaging": {
+    "type": "glass",
+    "weight_g": null
+   },
+   "closure": "screwcap",
+   "storable": null,
+   "volume_bottles": 80000,
+   "fob_eur": 5.0,
+   "representation": {
+    "NO": "likely listed — verify",
+    "SE": "unknown — verify",
+    "FI": "unknown — verify"
+   },
+   "audit": {
+    "created_by": "Claude (systemfrø)",
+    "created_at": "2026-07-20T14:10",
+    "updated_by": "Claude (systemfrø)",
+    "updated_at": "2026-07-20T14:10",
+    "note": "Frødata fra offentlige kilder (produsentens tech sheets, Vinmonopolet-katalog, sertifiseringsregistre). FOB, volum og profil er ESTIMAT — bekreftes av produsent/importør."
+   },
+   "catalog_no": {
+    "status": "unchecked",
+    "product_id": null,
+    "checked_by": null,
+    "checked_at": null
+   }
+  },
+  {
+   "id": "w017",
+   "producer": "Weingut Leitz",
+   "name": "Eins Zwei Dry Riesling",
+   "country": "Germany",
+   "region": "Rheingau",
+   "appellation": "Qualitätswein Rheingau",
+   "grapes": {
+    "riesling": 100
+   },
+   "color": "white",
+   "method": null,
+   "vintages_available": [
+    2023,
+    2024
+   ],
+   "abv": 12.0,
+   "sugar_g_l": 6.0,
+   "acid_g_l": null,
+   "wood": "none",
+   "certs": [],
+   "cert_on_label": false,
+   "vines_age": null,
+   "maceration_days": null,
+   "profile": {
+    "fylde": 4,
+    "friskhet": 10,
+    "garvestoffer": 0
+   },
+   "packaging": {
+    "type": "glass",
+    "weight_g": null
+   },
+   "closure": "screwcap",
+   "storable": null,
+   "volume_bottles": 150000,
+   "fob_eur": 4.5,
+   "representation": {
+    "NO": "listed in Vinmonopolet catalog — importer on file (verify)",
+    "SE": "unknown — verify",
+    "FI": "unknown — verify"
+   },
+   "audit": {
+    "created_by": "Claude (systemfrø)",
+    "created_at": "2026-07-20T14:10",
+    "updated_by": "Claude (systemfrø)",
+    "updated_at": "2026-07-20T14:10",
+    "note": "Frødata fra offentlige kilder (produsentens tech sheets, Vinmonopolet-katalog, sertifiseringsregistre). FOB, volum og profil er ESTIMAT — bekreftes av produsent/importør."
+   },
+   "catalog_no": {
+    "status": "unchecked",
+    "product_id": null,
+    "checked_by": null,
+    "checked_at": null
+   }
+  },
+  {
+   "id": "w018",
+   "producer": "Dr. Loosen",
+   "name": "Riesling Trocken",
+   "country": "Germany",
+   "region": "Mosel",
+   "appellation": "Qualitätswein Mosel",
+   "grapes": {
+    "riesling": 100
+   },
+   "color": "white",
+   "method": null,
+   "vintages_available": [
+    2023,
+    2024
+   ],
+   "abv": 12.0,
+   "sugar_g_l": 7.5,
+   "acid_g_l": null,
+   "wood": "none",
+   "certs": [],
+   "cert_on_label": false,
+   "vines_age": null,
+   "maceration_days": null,
+   "profile": {
+    "fylde": 4,
+    "friskhet": 10,
+    "garvestoffer": 0
+   },
+   "packaging": {
+    "type": "glass",
+    "weight_g": null
+   },
+   "closure": "screwcap",
+   "storable": null,
+   "volume_bottles": 200000,
+   "fob_eur": 4.0,
+   "representation": {
+    "NO": "likely listed — verify",
+    "SE": "unknown — verify",
+    "FI": "unknown — verify"
+   },
+   "audit": {
+    "created_by": "Claude (systemfrø)",
+    "created_at": "2026-07-20T14:10",
+    "updated_by": "Claude (systemfrø)",
+    "updated_at": "2026-07-20T14:10",
+    "note": "Frødata fra offentlige kilder (produsentens tech sheets, Vinmonopolet-katalog, sertifiseringsregistre). FOB, volum og profil er ESTIMAT — bekreftes av produsent/importør."
+   },
+   "catalog_no": {
+    "status": "unchecked",
+    "product_id": null,
+    "checked_by": null,
+    "checked_at": null
+   }
+  },
+  {
+   "id": "w019",
+   "producer": "Langlois-Chateau",
+   "name": "Crémant de Loire Brut",
+   "country": "France",
+   "region": "Loire",
+   "appellation": "AOC/AOP Crémant de Loire",
+   "grapes": {
+    "chenin blanc": 60,
+    "chardonnay": 20,
+    "cabernet franc": 20
+   },
+   "color": "sparkling white",
+   "method": "traditional",
+   "vintages_available": [
+    0
+   ],
+   "abv": 12.5,
+   "sugar_g_l": 9.0,
+   "acid_g_l": null,
+   "wood": "none",
+   "certs": [
+    "Sustainability scheme (HVE)"
+   ],
+   "cert_on_label": false,
+   "vines_age": null,
+   "maceration_days": null,
+   "profile": {
+    "fylde": 5,
+    "friskhet": 9,
+    "garvestoffer": 0
+   },
+   "packaging": {
+    "type": "glass",
+    "weight_g": null
+   },
+   "closure": "cork (sparkling)",
+   "storable": null,
+   "volume_bottles": 100000,
+   "fob_eur": 6.5,
+   "representation": {
+    "NO": "likely listed — verify",
+    "SE": "unknown — verify",
+    "FI": "unknown — verify"
+   },
+   "audit": {
+    "created_by": "Claude (systemfrø)",
+    "created_at": "2026-07-20T14:10",
+    "updated_by": "Claude (systemfrø)",
+    "updated_at": "2026-07-20T14:10",
+    "note": "Frødata fra offentlige kilder (produsentens tech sheets, Vinmonopolet-katalog, sertifiseringsregistre). FOB, volum og profil er ESTIMAT — bekreftes av produsent/importør."
+   },
+   "catalog_no": {
+    "status": "unchecked",
+    "product_id": null,
+    "checked_by": null,
+    "checked_at": null
+   }
+  },
+  {
+   "id": "w020",
+   "producer": "Louis Latour",
+   "name": "Mâcon-Lugny Les Genièvres",
+   "country": "France",
+   "region": "Burgundy / Mâcon",
+   "appellation": "AOC/AOP Mâcon-Lugny",
+   "grapes": {
+    "chardonnay": 100
+   },
+   "color": "white",
+   "method": null,
+   "vintages_available": [
+    2023,
+    2024
+   ],
+   "abv": 13.0,
+   "sugar_g_l": 1.5,
+   "acid_g_l": null,
+   "wood": "none",
+   "certs": [],
+   "cert_on_label": false,
+   "vines_age": null,
+   "maceration_days": null,
+   "profile": {
+    "fylde": 5,
+    "friskhet": 8,
+    "garvestoffer": 0
+   },
+   "packaging": {
+    "type": "glass",
+    "weight_g": null
+   },
+   "closure": "natural cork",
+   "storable": null,
+   "volume_bottles": 250000,
+   "fob_eur": 6.0,
+   "representation": {
+    "NO": "likely listed — verify",
+    "SE": "unknown — verify",
+    "FI": "unknown — verify"
+   },
+   "audit": {
+    "created_by": "Claude (systemfrø)",
+    "created_at": "2026-07-20T14:10",
+    "updated_by": "Claude (systemfrø)",
+    "updated_at": "2026-07-20T14:10",
+    "note": "Frødata fra offentlige kilder (produsentens tech sheets, Vinmonopolet-katalog, sertifiseringsregistre). FOB, volum og profil er ESTIMAT — bekreftes av produsent/importør."
+   },
+   "catalog_no": {
+    "status": "unchecked",
+    "product_id": null,
+    "checked_by": null,
+    "checked_at": null
+   }
+  },
+  {
+   "id": "w021",
+   "producer": "Mandrarossa",
+   "name": "Costadune Grillo",
+   "country": "Italy",
+   "region": "Sicily",
+   "appellation": "DOC/DOP Sicilia",
+   "grapes": {
+    "grillo": 100
+   },
+   "color": "white",
+   "method": null,
+   "vintages_available": [
+    2024
+   ],
+   "abv": 12.5,
+   "sugar_g_l": 3.0,
+   "acid_g_l": null,
+   "wood": "none",
+   "certs": [
+    "Sustainability scheme (SOStain)"
+   ],
+   "cert_on_label": false,
+   "vines_age": null,
+   "maceration_days": null,
+   "profile": {
+    "fylde": 5,
+    "friskhet": 8,
+    "garvestoffer": 0
+   },
+   "packaging": {
+    "type": "glass",
+    "weight_g": null
+   },
+   "closure": "screwcap",
+   "storable": null,
+   "volume_bottles": 120000,
+   "fob_eur": 3.5,
+   "representation": {
+    "NO": "unrepresented (unverified)",
+    "SE": "unknown — verify",
+    "FI": "unknown — verify"
+   },
+   "audit": {
+    "created_by": "Claude (systemfrø)",
+    "created_at": "2026-07-20T14:10",
+    "updated_by": "Claude (systemfrø)",
+    "updated_at": "2026-07-20T14:10",
+    "note": "Frødata fra offentlige kilder (produsentens tech sheets, Vinmonopolet-katalog, sertifiseringsregistre). FOB, volum og profil er ESTIMAT — bekreftes av produsent/importør."
+   },
+   "catalog_no": {
+    "status": "unchecked",
+    "product_id": null,
+    "checked_by": null,
+    "checked_at": null
+   }
+  },
+  {
+   "id": "w022",
+   "producer": "Umani Ronchi",
+   "name": "Jorio Montepulciano d'Abruzzo",
+   "country": "Italy",
+   "region": "Abruzzo",
+   "appellation": "DOC Montepulciano d'Abruzzo",
+   "grapes": {
+    "montepulciano": 100
+   },
+   "color": "red",
+   "method": null,
+   "vintages_available": [
+    2022,
+    2023
+   ],
+   "abv": 13.5,
+   "sugar_g_l": 3.5,
+   "acid_g_l": null,
+   "wood": "partly oaked (discreet)",
+   "certs": [
+    "Organic"
+   ],
+   "cert_on_label": false,
+   "vines_age": null,
+   "maceration_days": null,
+   "profile": {
+    "fylde": 7,
+    "friskhet": 6,
+    "garvestoffer": 6
+   },
+   "packaging": {
+    "type": "glass",
+    "weight_g": null
+   },
+   "closure": "natural cork",
+   "storable": null,
+   "volume_bottles": 180000,
+   "fob_eur": 4.5,
+   "representation": {
+    "NO": "likely listed — verify",
+    "SE": "unknown — verify",
+    "FI": "unknown — verify"
+   },
+   "audit": {
+    "created_by": "Claude (systemfrø)",
+    "created_at": "2026-07-20T14:10",
+    "updated_by": "Claude (systemfrø)",
+    "updated_at": "2026-07-20T14:10",
+    "note": "Frødata fra offentlige kilder (produsentens tech sheets, Vinmonopolet-katalog, sertifiseringsregistre). FOB, volum og profil er ESTIMAT — bekreftes av produsent/importør."
+   },
+   "catalog_no": {
+    "status": "unchecked",
+    "product_id": null,
+    "checked_by": null,
+    "checked_at": null
+   }
+  },
+  {
+   "id": "w023",
+   "producer": "Valdesil",
+   "name": "Montenovo Godello",
+   "country": "Spain",
+   "region": "Galicia",
+   "appellation": "DO Valdeorras",
+   "grapes": {
+    "godello": 100
+   },
+   "color": "white",
+   "method": null,
+   "vintages_available": [
+    2023,
+    2024
+   ],
+   "abv": 13.0,
+   "sugar_g_l": 2.0,
+   "acid_g_l": null,
+   "wood": "none",
+   "certs": [],
+   "cert_on_label": false,
+   "vines_age": null,
+   "maceration_days": null,
+   "profile": {
+    "fylde": 5,
+    "friskhet": 8,
+    "garvestoffer": 0
+   },
+   "packaging": {
+    "type": "glass",
+    "weight_g": null
+   },
+   "closure": "natural cork",
+   "storable": null,
+   "volume_bottles": 60000,
+   "fob_eur": 4.8,
+   "representation": {
+    "NO": "unrepresented (unverified)",
+    "SE": "unknown — verify",
+    "FI": "unknown — verify"
+   },
+   "audit": {
+    "created_by": "Claude (systemfrø)",
+    "created_at": "2026-07-20T14:10",
+    "updated_by": "Claude (systemfrø)",
+    "updated_at": "2026-07-20T14:10",
+    "note": "Frødata fra offentlige kilder (produsentens tech sheets, Vinmonopolet-katalog, sertifiseringsregistre). FOB, volum og profil er ESTIMAT — bekreftes av produsent/importør."
+   },
+   "catalog_no": {
+    "status": "unchecked",
+    "product_id": null,
+    "checked_by": null,
+    "checked_at": null
+   }
+  },
+  {
+   "id": "w024",
+   "producer": "Quinta do Crasto",
+   "name": "Douro Red",
+   "country": "Portugal",
+   "region": "Douro",
+   "appellation": "DOC Douro",
+   "grapes": {
+    "tinta roriz": 40,
+    "touriga franca": 30,
+    "touriga nacional": 20,
+    "tinta barroca": 10
+   },
+   "color": "red",
+   "method": null,
+   "vintages_available": [
+    2022,
+    2023
+   ],
+   "abv": 14.0,
+   "sugar_g_l": 2.0,
+   "acid_g_l": null,
+   "wood": "partly oaked (discreet)",
+   "certs": [],
+   "cert_on_label": false,
+   "vines_age": null,
+   "maceration_days": null,
+   "profile": {
+    "fylde": 7,
+    "friskhet": 6,
+    "garvestoffer": 6
+   },
+   "packaging": {
+    "type": "glass",
+    "weight_g": null
+   },
+   "closure": "natural cork",
+   "storable": null,
+   "volume_bottles": 150000,
+   "fob_eur": 4.5,
+   "representation": {
+    "NO": "likely listed — verify",
+    "SE": "unknown — verify",
+    "FI": "unknown — verify"
+   },
+   "audit": {
+    "created_by": "Claude (systemfrø)",
+    "created_at": "2026-07-20T14:10",
+    "updated_by": "Claude (systemfrø)",
+    "updated_at": "2026-07-20T14:10",
+    "note": "Frødata fra offentlige kilder (produsentens tech sheets, Vinmonopolet-katalog, sertifiseringsregistre). FOB, volum og profil er ESTIMAT — bekreftes av produsent/importør."
+   },
+   "catalog_no": {
+    "status": "unchecked",
+    "product_id": null,
+    "checked_by": null,
+    "checked_at": null
+   }
+  },
+  {
+   "id": "w025",
+   "producer": "Emiliana",
+   "name": "Adobe Reserva Chardonnay",
+   "country": "Chile",
+   "region": "Casablanca",
+   "appellation": "DO Valle de Casablanca",
+   "grapes": {
+    "chardonnay": 100
+   },
+   "color": "white",
+   "method": null,
+   "vintages_available": [
+    2024
+   ],
+   "abv": 13.0,
+   "sugar_g_l": 2.5,
+   "acid_g_l": null,
+   "wood": "partly oaked (discreet)",
+   "certs": [
+    "Organic",
+    "Vegan"
+   ],
+   "cert_on_label": true,
+   "vines_age": null,
+   "maceration_days": null,
+   "profile": {
+    "fylde": 6,
+    "friskhet": 7,
+    "garvestoffer": 0
+   },
+   "packaging": {
+    "type": "glass (lightweight)",
+    "weight_g": 420
+   },
+   "closure": "screwcap",
+   "storable": null,
+   "volume_bottles": 200000,
+   "fob_eur": 3.0,
+   "representation": {
+    "NO": "likely listed — verify",
+    "SE": "unknown — verify",
+    "FI": "unknown — verify"
+   },
+   "audit": {
+    "created_by": "Claude (systemfrø)",
+    "created_at": "2026-07-20T14:10",
+    "updated_by": "Claude (systemfrø)",
+    "updated_at": "2026-07-20T14:10",
+    "note": "Frødata fra offentlige kilder (produsentens tech sheets, Vinmonopolet-katalog, sertifiseringsregistre). FOB, volum og profil er ESTIMAT — bekreftes av produsent/importør."
+   },
+   "catalog_no": {
+    "status": "unchecked",
+    "product_id": null,
+    "checked_by": null,
+    "checked_at": null
+   }
+  },
+  {
+   "id": "w026",
+   "producer": "Cono Sur",
+   "name": "Reserva Especial Pinot Noir",
+   "country": "Chile",
+   "region": "Casablanca",
+   "appellation": "DO Valle de Casablanca",
+   "grapes": {
+    "pinot noir": 100
+   },
+   "color": "red",
+   "method": null,
+   "vintages_available": [
+    2023,
+    2024
+   ],
+   "abv": 13.5,
+   "sugar_g_l": 2.5,
+   "acid_g_l": null,
+   "wood": "discreet",
+   "certs": [
+    "Sustainability scheme (Certified Sustainable WoC)",
+    "Vegan"
+   ],
+   "cert_on_label": false,
+   "vines_age": null,
+   "maceration_days": null,
+   "profile": {
+    "fylde": 6,
+    "friskhet": 7,
+    "garvestoffer": 4
+   },
+   "packaging": {
+    "type": "glass",
+    "weight_g": null
+   },
+   "closure": "screwcap",
+   "storable": null,
+   "volume_bottles": 250000,
+   "fob_eur": 3.5,
+   "representation": {
+    "NO": "likely listed — verify",
+    "SE": "unknown — verify",
+    "FI": "unknown — verify"
+   },
+   "audit": {
+    "created_by": "Claude (systemfrø)",
+    "created_at": "2026-07-20T14:10",
+    "updated_by": "Claude (systemfrø)",
+    "updated_at": "2026-07-20T14:10",
+    "note": "Frødata fra offentlige kilder (produsentens tech sheets, Vinmonopolet-katalog, sertifiseringsregistre). FOB, volum og profil er ESTIMAT — bekreftes av produsent/importør."
+   },
+   "catalog_no": {
+    "status": "unchecked",
+    "product_id": null,
+    "checked_by": null,
+    "checked_at": null
+   }
+  },
+  {
+   "id": "w027",
+   "producer": "Catena",
+   "name": "Chardonnay",
+   "country": "Argentina",
+   "region": "Mendoza",
+   "appellation": "Mendoza (high altitude)",
+   "grapes": {
+    "chardonnay": 100
+   },
+   "color": "white",
+   "method": null,
+   "vintages_available": [
+    2023
+   ],
+   "abv": 13.5,
+   "sugar_g_l": 2.0,
+   "acid_g_l": null,
+   "wood": "barrel fermented",
+   "certs": [
+    "Sustainability scheme (Bodegas de Argentina)"
+   ],
+   "cert_on_label": false,
+   "vines_age": null,
+   "maceration_days": null,
+   "profile": {
+    "fylde": 7,
+    "friskhet": 7,
+    "garvestoffer": 0
+   },
+   "packaging": {
+    "type": "glass",
+    "weight_g": null
+   },
+   "closure": "natural cork",
+   "storable": null,
+   "volume_bottles": 150000,
+   "fob_eur": 5.5,
+   "representation": {
+    "NO": "likely listed — verify",
+    "SE": "unknown — verify",
+    "FI": "unknown — verify"
+   },
+   "audit": {
+    "created_by": "Claude (systemfrø)",
+    "created_at": "2026-07-20T14:10",
+    "updated_by": "Claude (systemfrø)",
+    "updated_at": "2026-07-20T14:10",
+    "note": "Frødata fra offentlige kilder (produsentens tech sheets, Vinmonopolet-katalog, sertifiseringsregistre). FOB, volum og profil er ESTIMAT — bekreftes av produsent/importør."
+   },
+   "catalog_no": {
+    "status": "unchecked",
+    "product_id": null,
+    "checked_by": null,
+    "checked_at": null
+   }
+  },
+  {
+   "id": "w028",
+   "producer": "Yalumba",
+   "name": "Old Bush Vine Grenache",
+   "country": "Australia",
+   "region": "Barossa",
+   "appellation": "GI Barossa",
+   "grapes": {
+    "grenache": 100
+   },
+   "color": "red",
+   "method": null,
+   "vintages_available": [
+    2023,
+    2024
+   ],
+   "abv": 14.0,
+   "sugar_g_l": 2.5,
+   "acid_g_l": null,
+   "wood": "old oak (discreet)",
+   "certs": [
+    "Sustainability scheme (Sustainable Winegrowing Australia)"
+   ],
+   "cert_on_label": false,
+   "vines_age": 70,
+   "maceration_days": null,
+   "profile": {
+    "fylde": 7,
+    "friskhet": 6,
+    "garvestoffer": 5
+   },
+   "packaging": {
+    "type": "glass",
+    "weight_g": null
+   },
+   "closure": "screwcap",
+   "storable": null,
+   "volume_bottles": 60000,
+   "fob_eur": 6.5,
+   "representation": {
+    "NO": "likely listed — verify",
+    "SE": "unknown — verify",
+    "FI": "unknown — verify"
+   },
+   "audit": {
+    "created_by": "Claude (systemfrø)",
+    "created_at": "2026-07-20T14:10",
+    "updated_by": "Claude (systemfrø)",
+    "updated_at": "2026-07-20T14:10",
+    "note": "Frødata fra offentlige kilder (produsentens tech sheets, Vinmonopolet-katalog, sertifiseringsregistre). FOB, volum og profil er ESTIMAT — bekreftes av produsent/importør."
+   },
+   "catalog_no": {
+    "status": "listed",
+    "product_id": "10425801",
+    "checked_by": "Claude (websøk vinmonopolet.no)",
+    "checked_at": "2026-07-20T19:05"
+   }
+  },
+  {
+   "id": "w029",
+   "producer": "Villa Maria",
+   "name": "Private Bin Sauvignon Blanc",
+   "country": "New Zealand",
+   "region": "Marlborough",
+   "appellation": "Marlborough GI",
+   "grapes": {
+    "sauvignon blanc": 100
+   },
+   "color": "white",
+   "method": null,
+   "vintages_available": [
+    2024,
+    2025
+   ],
+   "abv": 12.5,
+   "sugar_g_l": 3.5,
+   "acid_g_l": null,
+   "wood": "none",
+   "certs": [
+    "Sustainability scheme (SWNZ)",
+    "Vegan"
+   ],
+   "cert_on_label": false,
+   "vines_age": null,
+   "maceration_days": null,
+   "profile": {
+    "fylde": 5,
+    "friskhet": 10,
+    "garvestoffer": 0
+   },
+   "packaging": {
+    "type": "glass (lightweight)",
+    "weight_g": 417
+   },
+   "closure": "screwcap",
+   "storable": null,
+   "volume_bottles": 400000,
+   "fob_eur": 4.0,
+   "representation": {
+    "NO": "listed in Vinmonopolet catalog — importer on file (verify)",
+    "SE": "unknown — verify",
+    "FI": "unknown — verify"
+   },
+   "audit": {
+    "created_by": "Claude (systemfrø)",
+    "created_at": "2026-07-20T14:10",
+    "updated_by": "Claude (systemfrø)",
+    "updated_at": "2026-07-20T14:10",
+    "note": "Frødata fra offentlige kilder (produsentens tech sheets, Vinmonopolet-katalog, sertifiseringsregistre). FOB, volum og profil er ESTIMAT — bekreftes av produsent/importør."
+   },
+   "catalog_no": {
+    "status": "unchecked",
+    "product_id": null,
+    "checked_by": null,
+    "checked_at": null
+   }
+  },
+  {
+   "id": "w030",
+   "producer": "Gusbourne",
+   "name": "Guinevere Chardonnay",
+   "country": "England",
+   "region": "Kent",
+   "appellation": "PDO English Quality Wine",
+   "grapes": {
+    "chardonnay": 100
+   },
+   "color": "white",
+   "method": null,
+   "vintages_available": [
+    2023,
+    2024
+   ],
+   "abv": 12.0,
+   "sugar_g_l": 1.5,
+   "acid_g_l": null,
+   "wood": "barrel fermented (older oak)",
+   "certs": [
+    "Sustainability scheme (WineGB Sustainable)"
+   ],
+   "cert_on_label": false,
+   "vines_age": null,
+   "maceration_days": null,
+   "profile": {
+    "fylde": 6,
+    "friskhet": 9,
+    "garvestoffer": 0
+   },
+   "packaging": {
+    "type": "glass",
+    "weight_g": null
+   },
+   "closure": "natural cork",
+   "storable": null,
+   "volume_bottles": 12000,
+   "fob_eur": 14.0,
+   "representation": {
+    "NO": "unrepresented (unverified)",
+    "SE": "unknown — verify",
+    "FI": "unknown — verify"
+   },
+   "audit": {
+    "created_by": "Claude (systemfrø)",
+    "created_at": "2026-07-20T14:10",
+    "updated_by": "Claude (systemfrø)",
+    "updated_at": "2026-07-20T14:10",
+    "note": "Frødata fra offentlige kilder (produsentens tech sheets, Vinmonopolet-katalog, sertifiseringsregistre). FOB, volum og profil er ESTIMAT — bekreftes av produsent/importør."
+   },
+   "catalog_no": {
+    "status": "listed",
+    "product_id": "12214101",
+    "checked_by": "Claude (websøk vinmonopolet.no)",
+    "checked_at": "2026-07-20T19:05"
+   }
+  },
+  {
+   "id": "w031",
+   "producer": "Erath",
+   "name": "Oregon Chardonnay",
+   "country": "USA",
+   "region": "Oregon",
+   "appellation": "AVA Willamette Valley",
+   "grapes": {
+    "chardonnay": 100
+   },
+   "color": "white",
+   "method": null,
+   "vintages_available": [
+    2023
+   ],
+   "abv": 13.5,
+   "sugar_g_l": 2.0,
+   "acid_g_l": null,
+   "wood": "partly oaked",
+   "certs": [
+    "Sustainability scheme (LIVE Certified)"
+   ],
+   "cert_on_label": false,
+   "vines_age": null,
+   "maceration_days": null,
+   "profile": {
+    "fylde": 6,
+    "friskhet": 7,
+    "garvestoffer": 0
+   },
+   "packaging": {
+    "type": "glass",
+    "weight_g": null
+   },
+   "closure": "screwcap",
+   "storable": null,
+   "volume_bottles": 80000,
+   "fob_eur": 6.0,
+   "representation": {
+    "NO": "unrepresented (unverified)",
+    "SE": "unknown — verify",
+    "FI": "unknown — verify"
+   },
+   "audit": {
+    "created_by": "Claude (systemfrø)",
+    "created_at": "2026-07-20T14:10",
+    "updated_by": "Claude (systemfrø)",
+    "updated_at": "2026-07-20T14:10",
+    "note": "Frødata fra offentlige kilder (produsentens tech sheets, Vinmonopolet-katalog, sertifiseringsregistre). FOB, volum og profil er ESTIMAT — bekreftes av produsent/importør."
+   },
+   "catalog_no": {
+    "status": "unchecked",
+    "product_id": null,
+    "checked_by": null,
+    "checked_at": null
+   }
+  }
+ ]
+}
