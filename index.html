@@ -187,10 +187,12 @@
       <h2 data-i18n="h2FilterDist">Filtre og fordeling</h2>
       <div class="dimbar">
         <div><label data-i18n="lblGeo">Geografi</label><select id="fCountry"><option value="" data-i18n="optAllCountries">Alle land</option></select></div>
+        <div><label data-i18n="lblCategory">Kategori</label><select id="fMain"><option value="" data-i18n="optAllCategories">Alle kategorier</option></select></div>
         <div><label data-i18n="lblType">Type</label><select id="fGroup"><option value="" data-i18n="optAllTypes">Alle typer</option></select></div>
         <div><label data-i18n="lblGrape">Drue</label><select id="fGrape"><option value="" data-i18n="optAllGrapes">Alle druer</option></select></div>
+        <div><label data-i18n="lblClass">Klassifisering</label><select id="fClass"><option value="" data-i18n="optAllClasses">Alle klassifiseringer</option></select></div>
         <div><label data-i18n="lblPrice">Prisbånd</label><select id="fPrice"><option value="" data-i18n="optAllPrices">Alle priser</option></select></div>
-        <div><label data-i18n="lblSelection">Utvalg</label><select id="fSel"><option value="" data-i18n="optAllRanges">Alle utvalg</option></select></div>
+        <div><label data-i18n="lblSelection" data-i18n-title="ttSelection" title="Basisutvalget = fast sortiment. Partiutvalget = engangskjøp (parti).">Utvalg</label><select id="fSel"><option value="" data-i18n="optAllRanges">Alle utvalg</option></select></div>
         <div style="flex:1.4"><label data-i18n="lblText">Fritekst</label><input id="fQ" data-i18n-ph="phSpecText" placeholder="søk i spesifikasjonstekst…"></div>
         <div style="min-width:90px;flex:0"><label>&nbsp;</label><button class="btn ghost" data-i18n="btnReset" style="width:100%;padding:5px 8px" onclick="resetFilters()">Nullstill</button></div>
       </div>
@@ -429,6 +431,13 @@ const I18N = {
     lblPrice: 'Prisbånd', lblSelection: 'Utvalg', lblText: 'Fritekst',
     optAllCountries: 'Alle land', optAllTypes: 'Alle typer', optAllGrapes: 'Alle druer',
     optAllPrices: 'Alle priser', optAllRanges: 'Alle utvalg', optAll: 'Alle',
+    lblCategory: 'Kategori', optAllCategories: 'Alle kategorier',
+    lblClass: 'Klassifisering', optAllClasses: 'Alle klassifiseringer',
+    ttSelection: 'Basisutvalget = fast sortiment. Partiutvalget = engangskjøp (parti).',
+    selBasis: 'Basisutvalget (fast)', selParti: 'Partiutvalget (engangs)',
+    mainTypes: { Wine: 'Vin', Beer: 'Øl', Spirits: 'Brennevin', Cider: 'Sider' },
+    grpRed: 'Rødvin', grpWhite: 'Hvitvin', grpRose: 'Rosévin', grpSparkling: 'Musserende',
+    grpSparklingWhite: 'Musserende, hvit', grpSparklingRose: 'Musserende, rosé', grpFortified: 'Sterkvin',
     optOpenImport: 'Åpen for import', optRepresented: 'Representert/listet', optUnknown: 'Ukjent',
     phSpecText: 'søk i spesifikasjonstekst…', btnReset: 'Nullstill',
     noteMapClick: 'Klikk en stolpe eller et land på kartet for å filtrere; klikk igjen for å oppheve. ',
@@ -560,6 +569,13 @@ const I18N = {
     lblPrice: 'Price band', lblSelection: 'Range', lblText: 'Free text',
     optAllCountries: 'All countries', optAllTypes: 'All types', optAllGrapes: 'All grapes',
     optAllPrices: 'All prices', optAllRanges: 'All ranges', optAll: 'All',
+    lblCategory: 'Category', optAllCategories: 'All categories',
+    lblClass: 'Classification', optAllClasses: 'All classifications',
+    ttSelection: 'Base range = permanent listing. One-lot = single spot purchase (parti).',
+    selBasis: 'Base range (permanent)', selParti: 'One-lot (single purchase)',
+    mainTypes: { Wine: 'Wine', Beer: 'Beer', Spirits: 'Spirits', Cider: 'Cider' },
+    grpRed: 'Red wine', grpWhite: 'White wine', grpRose: 'Rosé wine', grpSparkling: 'Sparkling',
+    grpSparklingWhite: 'Sparkling, white', grpSparklingRose: 'Sparkling, rosé', grpFortified: 'Fortified wine',
     optOpenImport: 'Open to import', optRepresented: 'Represented/listed', optUnknown: 'Unknown',
     phSpecText: 'search specification text…', btnReset: 'Reset',
     noteMapClick: 'Click a bar or a country on the map to filter; click again to clear. ',
@@ -695,6 +711,8 @@ function setLang(lang) {
   // keep an active open-origin country filter valid when the sentinel label changes language
   if (typeof FILTERS !== 'undefined' && (FILTERS.country === I18N.no.openCountry || FILTERS.country === I18N.en.openCountry))
     FILTERS.country = L.openCountry;
+  // category/type facet labels are language-specific; drop stale selections on switch
+  if (typeof FILTERS !== 'undefined') { FILTERS.mainType = ''; FILTERS.group = ''; }
   try { localStorage.setItem('ti_lang', LANG); } catch (e) {}
   const btn = $('langToggle'); if (btn) btn.textContent = LANG === 'no' ? 'English' : 'Norsk';
   applyStaticI18n();
@@ -1093,15 +1111,74 @@ const fmt = (x, d = 2) => (+x).toLocaleString(LANG === 'en' ? 'en-GB' : 'no-NO',
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 let MARKET = [], specFilter = 'all';
 const openTerm = () => L.openCountry;
-const FILTERS = { country: '', group: '', grape: '', price: '', sel: '', q: '' };
+const FILTERS = { country: '', mainType: '', group: '', grape: '', classification: '', price: '', sel: '', q: '' };
 const GRAPE_LEX = ['chardonnay','chenin blanc','pinot noir','pinotage','cabernet franc',
   'cabernet sauvignon','merlot','syrah','shiraz','grenache','garnacha','cinsault','mourvedre','mataro',
   'tempranillo','sangiovese','nebbiolo','barbera','riesling','gruner veltliner','sauvignon blanc',
   'malbec','carmenere','zinfandel','primitivo','gamay','chasselas','albarino','godello','verdejo',
   'gewurztraminer','pinot gris','pinot blanc','viognier','marsanne','roussanne','touriga','melon de bourgogne',
-  'furmint','assyrtiko','xinomavro','agiorgitiko','carignan','petit verdot','semillon','muscat','moscato','glera'];
+  'furmint','assyrtiko','xinomavro','agiorgitiko','carignan','petit verdot','semillon','muscat','moscato','glera',
+  // --- expanded lexicon ---
+  'vermentino','fiano','greco','falanghina','avola','montepulciano','aglianico','corvina','rondinella','molinara',
+  'garganega','verdicchio','trebbiano','cortese','arneis','dolcetto','lambrusco','sagrantino','vernaccia','nascetta',
+  'pelaverga','grillo','catarratto','frappato','nerello','ribolla','friulano','malvasia','pecorino','teroldego',
+  'lagrein','grignolino','freisa','timorasso','ciliegiolo','negroamaro','gaglioppo','croatina','schiava','ruche',
+  'mencia','monastrell','bobal','graciano','macabeo','xarel','parellada','palomino','pedro ximenez','airen',
+  'viura','mazuelo','treixadura','loureiro','listan','trepat','callet','hondarrabi','alicante bouschet','prieto picudo',
+  'touriga nacional','touriga franca','tinta roriz','aragonez','trincadeira','baga','alvarinho','arinto','encruzado','bical',
+  'castelao','avesso','antao vaz','gouveio','sercial','verdelho','fernao pires',
+  'aligote','savagnin','trousseau','poulsard','mondeuse','altesse','jacquere','ugni blanc','colombard','picpoul',
+  'clairette','tannat','petit manseng','gros manseng','mauzac','negrette','pineau','grolleau','romorantin','folle blanche',
+  'bourboulenc','counoise','tibouren','pinot meunier','courbu',
+  'muller-thurgau','muller thurgau','silvaner','sylvaner','scheurebe','zweigelt','blaufrankisch','sankt laurent',
+  'welschriesling','weissburgunder','spatburgunder','grauburgunder','kerner','muskateller','dornfelder','lemberger',
+  'portugieser','neuburger','rotgipfler','zierfandler','elbling',
+  'harslevelu','kadarka','kekfrankos','olaszrizling','juhfark','irsai',
+  'moschofilero','roditis','savatiano','robola','malagousia','malagouzia','vidiano','mavrodaphne','mandilaria','kotsifali',
+  'liatiko','vilana','athiri','limnio',
+  'saperavi','rkatsiteli','mtsvane','feteasca','grasevina','plavac','posip','malvazija','teran','rebula','tamaioasa','babeasca',
+  'petite sirah','durif','torrontes','sauvignon gris','muscat ottonel'];
 const PRICE_BUCKETS = [[0,100,'< 100'],[100,150,'100–150'],[150,200,'150–200'],
   [200,250,'200–250'],[250,350,'250–350'],[350,1e9,'350+']];
+// normalize the messy 'group' field: fix casing + merge punctuation/wording variants
+function normGroup(raw) {
+  const g = N(raw).replace(/\s+/g, ' ').trim();
+  if (!g) return '';
+  if (/rose/.test(g) && /sparkling|semi-sparkling|musserende/.test(g)) return L.grpSparklingRose;
+  if (/white|hvit/.test(g) && /sparkling|semi-sparkling|musserende/.test(g)) return L.grpSparklingWhite;
+  if (/sparkling|musserende/.test(g)) return L.grpSparkling;
+  if (/fortified|sterkvin/.test(g)) return L.grpFortified;
+  if (/rose|rosé/.test(g) && /wine|vin/.test(g)) return L.grpRose;
+  if (/red|rodvin/.test(g) && /wine|vin/.test(g)) return L.grpRed;
+  if (/white|hvit/.test(g) && /wine|vin/.test(g)) return L.grpWhite;
+  return raw.replace(/\b\w/g, c => c.toUpperCase()).replace(/\s+/g, ' ').trim(); // title-case others (beer/spirits styles)
+}
+const MAIN_MAP = { 'wine':'Wine', 'fortified wine':'Wine', 'beer':'Beer', 'spirits':'Spirits', 'cider':'Cider' };
+function mainTypeLabel(spec) {
+  const key = N(spec.main_type || '').trim();
+  const canon = MAIN_MAP[key] || (spec.main_type ? spec.main_type.replace(/\b\w/g, c => c.toUpperCase()) : '');
+  return canon ? (L.mainTypes[canon] || canon) : '';
+}
+// extract classification tiers (1er/grand cru, DOCG, villages, riserva …) from appellation + spec text
+const CLASS_TIERS = [
+  ['Grand Cru', /grand cru/],
+  ['Premier Cru', /premier cru|1er cru|1 er cru/],
+  ['DOCG', /docg/],
+  ['Villages', /villages/],
+  ['Riserva', /riserva/],
+  ['Gran Reserva', /gran reserva/],
+  ['Kabinett/Prädikat', /kabinett|spatlese|auslese|pradikat/],
+  ['Grosses Gewächs', /grosses gewachs|grosse lage/],
+];
+function specClasses(spec) {
+  if (spec._class) return spec._class;
+  const t = N((spec.appellation || '') + ' ' + (spec.spec || '') + ' ' + (spec.quality || ''));
+  const out = [];
+  for (const [label, re] of CLASS_TIERS) if (re.test(t)) out.push(label);
+  return (spec._class = out);
+}
+// selection filter: canonical key -> matcher against the (EN or NO) selection text
+const SEL_MATCH = { basis: /basi[sc]/, parti: /one-?lot|parti/ };
 
 function specGrapes(spec) {
   if (spec._grapes) return spec._grapes;
@@ -1126,10 +1203,12 @@ function specBucket(spec) {
 }
 function passes(spec, skip) {
   if (skip !== 'country' && FILTERS.country && (spec.country || openTerm()) !== FILTERS.country) return false;
-  if (skip !== 'group' && FILTERS.group && (spec.group || spec.main_type || '?') !== FILTERS.group) return false;
+  if (skip !== 'mainType' && FILTERS.mainType && mainTypeLabel(spec) !== FILTERS.mainType) return false;
+  if (skip !== 'group' && FILTERS.group && (normGroup(spec.group) || mainTypeLabel(spec) || '?') !== FILTERS.group) return false;
   if (skip !== 'grape' && FILTERS.grape && !specGrapes(spec).includes(FILTERS.grape)) return false;
+  if (skip !== 'classification' && FILTERS.classification && !specClasses(spec).includes(FILTERS.classification)) return false;
   if (skip !== 'price' && FILTERS.price && specBucket(spec) !== FILTERS.price) return false;
-  if (skip !== 'sel' && FILTERS.sel && !(spec.selection || '').toLowerCase().includes(FILTERS.sel.toLowerCase())) return false;
+  if (skip !== 'sel' && FILTERS.sel && !(SEL_MATCH[FILTERS.sel] || /.^/).test(N(spec.selection))) return false;
   if (FILTERS.q && !N([spec.ref, spec.country, spec.region, spec.appellation, spec.group, spec.spec, spec.quality].join(' ')).includes(N(FILTERS.q))) return false;
   return true;
 }
@@ -1180,7 +1259,7 @@ function drawDimChart(svgId, dim, keyFn, activeVal, fixedOrder) {
     val2.setAttribute('font-size', '11'); val2.setAttribute('fill', css('--muted'));
     val2.textContent = v;
     g.appendChild(val2);
-    g.addEventListener('click', () => { setFilter(dim, active ? '' : k); });
+    g.addEventListener('click', () => { setFilter(dim, active ? '' : k, true); });
     g.addEventListener('mousemove', e => { tip.style.display = 'block';
       tip.style.left = e.clientX + 12 + 'px'; tip.style.top = e.clientY - 10 + 'px';
       tip.innerHTML = L.tipFilter(esc(k), v); });
@@ -1277,43 +1356,60 @@ function drawGeoMap(svgId, rawCounts, activeRaw, onToggle) {
 }
 function renderMap() {
   drawGeoMap('mapSvg', counts('country', s => s.country || openTerm()), FILTERS.country,
-    lab => setFilter('country', lab));
+    lab => setFilter('country', lab, true));
 }
 
-const DIM_SELECT = { country: 'fCountry', group: 'fGroup', grape: 'fGrape', price: 'fPrice', sel: 'fSel' };
-function setFilter(dim, val) {
+const DIM_SELECT = { country: 'fCountry', mainType: 'fMain', group: 'fGroup', grape: 'fGrape',
+  classification: 'fClass', price: 'fPrice', sel: 'fSel' };
+function setFilter(dim, val, scroll) {
   FILTERS[dim] = val;
   if (DIM_SELECT[dim]) $(DIM_SELECT[dim]).value = val;
   renderDims(); renderSpecs();
+  if (scroll && val) scrollToSpecs();
+}
+function scrollToSpecs() {
+  const el = $('specTable');
+  if (el) el.closest('.card').scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 function resetFilters() {
   Object.keys(FILTERS).forEach(k => FILTERS[k] = '');
-  Object.values(DIM_SELECT).forEach(id => $(id).value = '');
+  Object.values(DIM_SELECT).forEach(id => { const e = $(id); if (e) e.value = ''; });
   $('fQ').value = '';
   renderDims(); renderSpecs();
 }
 function fillSelect(id, keys, current) {
-  const sel = $(id), first = sel.options[0].outerHTML;
+  const sel = $(id); if (!sel) return;
+  const first = sel.options[0].outerHTML;
   sel.innerHTML = first + keys.map(k => `<option${k === current ? ' selected' : ''}>${esc(k)}</option>`).join('');
+  sel.value = current || '';
+}
+// selection facet uses value≠label (canonical key vs. human label)
+function fillSelValueLabel(id, opts, current) {
+  const sel = $(id); if (!sel) return;
+  const first = sel.options[0].outerHTML;
+  sel.innerHTML = first + opts.map(([v, lab]) =>
+    `<option value="${esc(v)}"${v === current ? ' selected' : ''}>${esc(lab)}</option>`).join('');
   sel.value = current || '';
 }
 function renderDims() {
   renderMap();
   drawDimChart('chCountry', 'country', s => s.country || openTerm(), FILTERS.country);
-  drawDimChart('chGroup', 'group', s => s.group || s.main_type || '?', FILTERS.group);
+  drawDimChart('chGroup', 'group', s => normGroup(s.group) || mainTypeLabel(s) || '?', FILTERS.group);
   drawDimChart('chGrape', 'grape', s => specGrapes(s), FILTERS.grape);
   drawDimChart('chPrice', 'price', s => specBucket(s), FILTERS.price, PRICE_BUCKETS.map(b => b[2]));
   fillSelect('fCountry', [...counts('country', s => s.country || openTerm()).keys()].sort(), FILTERS.country);
-  fillSelect('fGroup', [...counts('group', s => s.group || s.main_type || '?').keys()].sort(), FILTERS.group);
+  fillSelect('fMain', [...counts('mainType', s => mainTypeLabel(s)).keys()].sort(), FILTERS.mainType);
+  fillSelect('fGroup', [...counts('group', s => normGroup(s.group) || mainTypeLabel(s) || '?').keys()].sort(), FILTERS.group);
   fillSelect('fGrape', [...counts('grape', s => specGrapes(s)).keys()].sort(), FILTERS.grape);
+  fillSelect('fClass', [...counts('classification', s => specClasses(s)).keys()].sort(), FILTERS.classification);
   fillSelect('fPrice', PRICE_BUCKETS.map(b => b[2]), FILTERS.price);
-  fillSelect('fSel', ['Basis', 'One-lot'], FILTERS.sel);
+  fillSelValueLabel('fSel', [['basis', L.selBasis], ['parti', L.selParti]], FILTERS.sel);
   const n = MARKET.filter(m => passes(m.spec)).length;
   $('filterCount').textContent = L.filterCount(n, SPECS.length);
 }
 
 function recompute() {
-  SPECS.forEach(s => delete s._grapes);
+  SPECS.forEach(s => { delete s._grapes; delete s._class; });
   MARKET = computeMarket();
   renderTiles(); renderDims(); renderSpecs(); renderMarket(); renderWineDims(); renderWines();
 }
@@ -1348,8 +1444,8 @@ function renderSpecs() {
     const gr = specGrapes(s).slice(0, 3).join(', ');
     return `<tr class="rowx" data-i="${i}">
       <td><b>${esc(s.ref)}</b></td><td>${esc(s.launch)}</td><td>${esc((s.selection || '').replace('utvalget',''))}</td>
-      <td>${esc(s.group)}${gr ? `<br><span style="color:var(--muted);font-size:11.5px">${esc(gr)}</span>` : ''}</td>
-      <td>${esc(s.country) || openTerm()}${s.region ? `<br><span style="color:var(--muted);font-size:11.5px">${esc(s.region)}</span>` : ''}</td>
+      <td>${esc(normGroup(s.group)) || esc(s.group)}${gr ? `<br><span style="color:var(--muted);font-size:11.5px">${esc(gr)}</span>` : ''}</td>
+      <td>${esc(s.country) || openTerm()}${s.region ? `<br><span style="color:var(--muted);font-size:11.5px">${esc(s.region)}</span>` : ''}${s.appellation ? `<br><span style="color:var(--muted);font-size:11px" title="${esc(s.appellation)}">${esc(s.appellation.length > 42 ? s.appellation.slice(0, 40) + '…' : s.appellation)}</span>` : ''}${specClasses(s).length ? `<br>${specClasses(s).map(c => `<span class="chip lo" style="font-size:10.5px;padding:1px 6px;margin:2px 3px 0 0">${esc(c)}</span>`).join('')}` : ''}</td>
       <td>${esc((s.spec || '').slice(0, 110))}${(s.spec || '').length > 110 ? '…' : ''}</td>
       <td class="num">${esc(s.price_text)}${mini}</td>
       <td class="num">${m.fob && m.fob.nok > 0 ? '€ ' + fmt(m.fob.eur, 1) : '–'}</td>
