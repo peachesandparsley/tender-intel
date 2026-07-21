@@ -20,6 +20,7 @@ works offline). Served via GitHub Pages at the repository's Pages URL.
 | `clauses.py` | Clause-level spec parsing (grapes, sugar, wood, certs, bottle weight…) |
 | `match.py` / `match_wines.py` | Portfolio scoring and wine↔spec eligibility engines |
 | `import_wines.py` | Producer bulk-upload validator |
+| `ingest_vmp.py` | Populates the wine DB with **verified** data from Vinmonopolet's own catalog (API key or portal export); producer-only fields stay flagged for confirmation |
 | `make_*_template.py` | Generators for the producer/importer Excel templates |
 | `wines.json` | Wine records (real producers; estimates flagged in audit fields) |
 | `specs_*.json` | Parsed tender plans: 2020-1, 2026-1, 2026-2, 2027-1 |
