@@ -157,7 +157,7 @@ def to_wine(product, idx):
 def fetch_api(extra=""):
     if not API_KEY:
         sys.exit("Set VMP_API_KEY (free key from https://api.vinmonopolet.no), or use --file with a portal export.")
-    products, start, page = [], 0, int(os.environ.get("VMP_PAGE", "10000"))
+    products, start, page = [], 0, int(os.environ.get("VMP_PAGE", "5000"))
     while True:
         url = f"{API_BASE}{API_PATH}?start={start}&maxResults={page}{extra}"
         req = urllib.request.Request(url, headers={"Ocp-Apim-Subscription-Key": API_KEY,
@@ -166,10 +166,12 @@ def fetch_api(extra=""):
             total = int(resp.headers.get("x-total-count") or 0)
             batch = json.loads(resp.read().decode("utf-8"))
         items = batch if isinstance(batch, list) else (batch.get("products") or batch.get("results") or [])
+        if not items:
+            break
         products += items
-        start += page
+        start += len(items)  # advance by ACTUAL count — robust if the server caps the page size
         print(f"  fetched {len(products)} / {total or '?'}…", file=sys.stderr)
-        if not items or len(items) < page or (total and start >= total):
+        if (total and start >= total) or (not total and len(items) < page):
             break
     return products
 
