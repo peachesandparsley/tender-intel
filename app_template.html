@@ -188,7 +188,7 @@
       <div class="dimbar">
         <div><label data-i18n="lblGeo">Geografi</label><select id="fCountry"><option value="" data-i18n="optAllCountries">Alle land</option></select></div>
         <div><label data-i18n="lblCategory">Kategori</label><select id="fMain"><option value="" data-i18n="optAllCategories">Alle kategorier</option></select></div>
-        <div><label data-i18n="lblType">Type</label><select id="fGroup"><option value="" data-i18n="optAllTypes">Alle typer</option></select></div>
+        <div><label data-i18n="lblSubType">Undertype</label><select id="fGroup"><option value="" data-i18n="optAllSubTypes">Alle undertyper</option></select></div>
         <div><label data-i18n="lblGrape">Drue</label><select id="fGrape"><option value="" data-i18n="optAllGrapes">Alle druer</option></select></div>
         <div><label data-i18n="lblClass">Klassifisering</label><select id="fClass"><option value="" data-i18n="optAllClasses">Alle klassifiseringer</option></select></div>
         <div><label data-i18n="lblPrice">Prisbånd</label><select id="fPrice"><option value="" data-i18n="optAllPrices">Alle priser</option></select></div>
@@ -415,11 +415,12 @@ const I18N = {
     optAllCountries: 'Alle land', optAllTypes: 'Alle typer', optAllGrapes: 'Alle druer',
     optAllPrices: 'Alle priser', optAllRanges: 'Alle utvalg', optAll: 'Alle',
     lblCategory: 'Kategori', optAllCategories: 'Alle kategorier',
+    lblSubType: 'Undertype', optAllSubTypes: 'Alle undertyper', subWhite: 'Hvit', subRose: 'Rosé',
     lblClass: 'Klassifisering', optAllClasses: 'Alle klassifiseringer',
     ttSelection: 'Basisutvalget = fast sortiment. Partiutvalget = engangskjøp (parti).',
     selBasis: 'Basisutvalget (fast)', selParti: 'Partiutvalget (engangs)',
     mainTypes: { Wine: 'Vin', Beer: 'Øl', Spirits: 'Brennevin', Cider: 'Sider' },
-    grpRed: 'Rødvin', grpWhite: 'Hvitvin', grpRose: 'Rosévin', grpSparkling: 'Musserende',
+    grpRed: 'Rødvin', grpWhite: 'Hvitvin', grpRose: 'Rosévin', grpSparkling: 'Musserende vin',
     grpSparklingWhite: 'Musserende, hvit', grpSparklingRose: 'Musserende, rosé', grpFortified: 'Sterkvin',
     optOpenImport: 'Åpen for import', optRepresented: 'Representert/listet', optUnknown: 'Ukjent',
     phSpecText: 'søk i spesifikasjonstekst…', btnReset: 'Nullstill',
@@ -556,11 +557,12 @@ const I18N = {
     optAllCountries: 'All countries', optAllTypes: 'All types', optAllGrapes: 'All grapes',
     optAllPrices: 'All prices', optAllRanges: 'All ranges', optAll: 'All',
     lblCategory: 'Category', optAllCategories: 'All categories',
+    lblSubType: 'Sub-type', optAllSubTypes: 'All sub-types', subWhite: 'White', subRose: 'Rosé',
     lblClass: 'Classification', optAllClasses: 'All classifications',
     ttSelection: 'Base range = permanent listing. One-lot = single spot purchase (parti).',
     selBasis: 'Base range (permanent)', selParti: 'One-lot (single purchase)',
     mainTypes: { Wine: 'Wine', Beer: 'Beer', Spirits: 'Spirits', Cider: 'Cider' },
-    grpRed: 'Red wine', grpWhite: 'White wine', grpRose: 'Rosé wine', grpSparkling: 'Sparkling',
+    grpRed: 'Red wine', grpWhite: 'White wine', grpRose: 'Rosé wine', grpSparkling: 'Sparkling wine',
     grpSparklingWhite: 'Sparkling, white', grpSparklingRose: 'Sparkling, rosé', grpFortified: 'Fortified wine',
     optOpenImport: 'Open to import', optRepresented: 'Represented/listed', optUnknown: 'Unknown',
     phSpecText: 'search specification text…', btnReset: 'Reset',
@@ -1173,7 +1175,29 @@ function mainCanon(spec) {
   const key = N(spec.main_type || '').trim();
   return MAIN_MAP[key] || (spec.main_type ? titleCase2(spec.main_type) : '');
 }
-function mainDisp(canon) { return canon ? (L.mainTypes[canon] || canon) : ''; }
+// Two-level taxonomy the way buyers think:
+//   main category = Red wine / White wine / Rosé wine / Sparkling wine / Fortified wine / Beer / Cider / Spirits
+//   sub-type      = the finer style, mainly for beer (IPA, lager…), spirits (whisky, gin…), sparkling (white/rosé)
+function mainCat(spec) {
+  const w = mainCanon(spec), gc = groupCanon(spec.group);
+  if (w === 'Wine') {
+    if (gc === 'sparkling' || gc === 'sparkling_white' || gc === 'sparkling_rose') return 'sparkling';
+    if (gc === 'red' || gc === 'white' || gc === 'rose' || gc === 'fortified') return gc;
+    return gc || 'Wine';
+  }
+  return w; // Beer / Cider / Spirits (or a title-cased other main_type)
+}
+function subCat(spec) {
+  const w = mainCanon(spec), gc = groupCanon(spec.group);
+  if (w === 'Wine') {
+    if (gc === 'sparkling_white') return 'sp_white';
+    if (gc === 'sparkling_rose') return 'sp_rose';
+    return '';
+  }
+  return (!gc || gc === w) ? '' : gc; // beer/spirits style
+}
+function mainDisp(canon) { return canon === 'Wine' ? L.mainTypes.Wine : groupDisp(canon); }
+function subDisp(canon) { return canon === 'sp_white' ? L.subWhite : canon === 'sp_rose' ? L.subRose : groupDisp(canon); }
 // extract classification tiers (1er/grand cru, DOCG, villages, riserva …) from appellation + spec text
 const CLASS_TIERS = [
   ['Grand Cru', /grand cru/],
@@ -1218,8 +1242,8 @@ function specBucket(spec) {
 }
 function passes(spec, skip) {
   if (skip !== 'country' && FILTERS.country && (spec.country || openTerm()) !== FILTERS.country) return false;
-  if (skip !== 'mainType' && FILTERS.mainType && mainCanon(spec) !== FILTERS.mainType) return false;
-  if (skip !== 'group' && FILTERS.group && (groupCanon(spec.group) || mainCanon(spec) || '?') !== FILTERS.group) return false;
+  if (skip !== 'mainType' && FILTERS.mainType && mainCat(spec) !== FILTERS.mainType) return false;
+  if (skip !== 'group' && FILTERS.group && subCat(spec) !== FILTERS.group) return false;
   if (skip !== 'grape' && FILTERS.grape && !specGrapes(spec).includes(FILTERS.grape)) return false;
   if (skip !== 'classification' && FILTERS.classification && !specClasses(spec).includes(FILTERS.classification)) return false;
   if (skip !== 'price' && FILTERS.price && specBucket(spec) !== FILTERS.price) return false;
@@ -1427,13 +1451,13 @@ function fillSelValueLabel(id, opts, current) {
 function renderDims() {
   renderMap();
   drawDimChart('chCountry', 'country', s => s.country || openTerm(), FILTERS.country);
-  drawDimChart('chGroup', 'group', s => groupCanon(s.group) || mainCanon(s) || '?', FILTERS.group, null, groupDisp);
+  drawDimChart('chGroup', 'mainType', s => mainCat(s), FILTERS.mainType, null, mainDisp);
   drawDimChart('chGrape', 'grape', s => specGrapes(s), FILTERS.grape);
   drawDimChart('chPrice', 'price', s => specBucket(s), FILTERS.price, PRICE_BUCKETS.map(b => b[2]));
   fillSelect('fCountry', [...counts('country', s => s.country || openTerm()).keys()].sort(), FILTERS.country);
-  const mainOpts = [...counts('mainType', s => mainCanon(s)).keys()].map(c => [c, mainDisp(c)]).sort((a, b) => a[1].localeCompare(b[1]));
+  const mainOpts = [...counts('mainType', s => mainCat(s)).keys()].map(c => [c, mainDisp(c)]).sort((a, b) => a[1].localeCompare(b[1]));
   fillSelValueLabel('fMain', mainOpts, FILTERS.mainType);
-  const grpOpts = [...counts('group', s => groupCanon(s.group) || mainCanon(s) || '?').keys()].map(c => [c, groupDisp(c)]).sort((a, b) => a[1].localeCompare(b[1]));
+  const grpOpts = [...counts('group', s => subCat(s)).keys()].map(c => [c, subDisp(c)]).sort((a, b) => a[1].localeCompare(b[1]));
   fillSelValueLabel('fGroup', grpOpts, FILTERS.group);
   fillSelect('fGrape', [...counts('grape', s => specGrapes(s)).keys()].sort(), FILTERS.grape);
   fillSelect('fClass', [...counts('classification', s => specClasses(s)).keys()].sort(), FILTERS.classification);
@@ -1479,7 +1503,7 @@ function renderSpecs() {
     const gr = specGrapes(s).slice(0, 3).join(', ');
     return `<tr class="rowx" data-i="${i}">
       <td><b>${esc(s.ref)}</b></td><td>${esc(s.launch)}</td><td>${esc((s.selection || '').replace('utvalget',''))}</td>
-      <td>${esc(groupDisp(groupCanon(s.group))) || esc(s.group)}${gr ? `<br><span style="color:var(--muted);font-size:11.5px">${esc(gr)}</span>` : ''}</td>
+      <td>${esc(mainDisp(mainCat(s))) || esc(s.group)}${subCat(s) ? ` <span style="color:var(--muted)">(${esc(subDisp(subCat(s)))})</span>` : ''}${gr ? `<br><span style="color:var(--muted);font-size:11.5px">${esc(gr)}</span>` : ''}</td>
       <td>${esc(s.country) || openTerm()}${s.region ? `<br><span style="color:var(--muted);font-size:11.5px">${esc(s.region)}</span>` : ''}${s.appellation ? `<br><span style="color:var(--muted);font-size:11px" title="${esc(s.appellation)}">${esc(s.appellation.length > 42 ? s.appellation.slice(0, 40) + '…' : s.appellation)}</span>` : ''}${specClasses(s).length ? `<br>${specClasses(s).map(c => `<span class="chip lo" style="font-size:10.5px;padding:1px 6px;margin:2px 3px 0 0">${esc(c)}</span>`).join('')}` : ''}</td>
       <td>${esc((s.spec || '').slice(0, 110))}${(s.spec || '').length > 110 ? '…' : ''}</td>
       <td class="num">${esc(s.price_text)}${mini}</td>
