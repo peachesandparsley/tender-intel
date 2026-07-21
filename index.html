@@ -229,6 +229,11 @@
     <div class="card">
       <h2 data-i18n="h2Market">Marketplace — viner som møter anbudskravene</h2>
       <p class="note" style="margin:0 0 12px" data-i18n="noteMarket"><b>Slik leser du listen:</b> Hvert anbud viser først hva Vinmonopolet ber om, deretter vinene i databasen som oppfyller kravene. Fire statuser avgjør om det er verdt å gå videre: kravene, prisen, om vinen allerede står i sortimentet, og om produsenten er åpen for import. Klikk en vinrad for klausul-for-klausul-vurderingen.</p>
+      <div class="filters" id="marketFilters">
+        <button data-mf="hide" class="on" data-i18n="mfHideListed">Skjul viner som alt er i VMP</button>
+        <button data-mf="all" data-i18n="mfShowAll">Vis alle</button>
+      </div>
+      <p class="note" id="marketHiddenNote" style="margin:0 0 6px"></p>
       <table id="marketTable"><thead><tr>
         <th style="width:40%" data-i18n="thCandidate">Kandidatvin</th><th data-i18n="thAssessment">Vurdering</th>
       </tr></thead><tbody></tbody></table>
@@ -511,7 +516,10 @@ const I18N = {
     kravSome: (p, tot, u) => `Oppfyller ${p} av ${tot} krav — ${u} må bekreftes`,
     kravTitle: 'klikk raden for detaljer',
     priceIn: 'Pris innenfor båndet', priceHigh: 'FOB for høy for båndet', priceUnknown: 'Pris ukjent',
-    catListed: 'Allerede i VMP-sortimentet ⚠', catListedTitle: id => `varenr ${id} — basis/parti = uaktuell; bestillingsutvalg kan være fordel`,
+    catListed: 'Allerede i VMP-sortimentet ⚠', catListedTitle: (id, date) => `varenr ${id}${date ? ' · sjekket ' + date + ' (statisk øyeblikksbilde, ikke sanntid)' : ''} — basis/parti = uaktuell; bestillingsutvalg kan være fordel`,
+    mfHideListed: 'Skjul viner som alt er i VMP', mfShowAll: 'Vis alle',
+    marketHidden: n => `${n} vin${n === 1 ? '' : 'er'} skjult fordi de allerede er i VMP-sortimentet. Trykk «Vis alle» for å se dem.`,
+    marketAllHidden: 'Alle kandidatene her er allerede i VMP-sortimentet. Trykk «Vis alle» for å se dem.',
     catProducer: 'Produsent i sortimentet ⚠', catProducerTitle: 'produsenten er i katalogen; denne cuvéen ikke funnet — sjekk hvilket utvalg',
     catNotFound: 'Ikke funnet i sortimentet', catNotFoundTitle: 'websøk mot katalogen fant ingen listing — endelig sjekk via API',
     catInconclusive: 'Sortiment uavklart', catInconclusiveTitle: 'websøk ga ikke sikkert svar for dette merket',
@@ -649,7 +657,10 @@ const I18N = {
     kravSome: (p, tot, u) => `Meets ${p} of ${tot} requirements — ${u} to confirm`,
     kravTitle: 'click the row for details',
     priceIn: 'Price within band', priceHigh: 'FOB too high for band', priceUnknown: 'Price unknown',
-    catListed: 'Already in VMP range ⚠', catListedTitle: id => `item no. ${id} — base/parti = not relevant; special-order range may be an advantage`,
+    catListed: 'Already in VMP range ⚠', catListedTitle: (id, date) => `item no. ${id}${date ? ' · checked ' + date + ' (static snapshot, not live)' : ''} — base/parti = not relevant; special-order range may be an advantage`,
+    mfHideListed: 'Hide wines already in VMP', mfShowAll: 'Show all',
+    marketHidden: n => `${n} wine${n === 1 ? '' : 's'} hidden because they are already in the VMP range. Click "Show all" to see them.`,
+    marketAllHidden: 'All candidates here are already in the VMP range. Click "Show all" to see them.',
     catProducer: 'Producer in range ⚠', catProducerTitle: 'the producer is in the catalog; this cuvée not found — check which range',
     catNotFound: 'Not found in range', catNotFoundTitle: 'web search against the catalog found no listing — final check via API',
     catInconclusive: 'Range unclear', catInconclusiveTitle: 'web search gave no definite answer for this label',
@@ -1108,7 +1119,7 @@ const val = id => $(id).value;
 const css = v => getComputedStyle(document.body).getPropertyValue(v).trim();
 const fmt = (x, d = 2) => (+x).toLocaleString(LANG === 'en' ? 'en-GB' : 'no-NO', { minimumFractionDigits: d, maximumFractionDigits: d });
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-let MARKET = [], specFilter = 'all';
+let MARKET = [], specFilter = 'all', marketHideListed = true;
 const openTerm = () => L.openCountry;
 const FILTERS = { country: '', mainType: '', group: '', grape: '', classification: '', price: '', sel: '', q: '' };
 const GRAPE_LEX = ['chardonnay','chenin blanc','pinot noir','pinotage','cabernet franc',
@@ -1478,15 +1489,25 @@ function wantsLine(m) {
   if (s.deadline) bits.push(L.wlDeadline + esc(s.deadline));
   return bits.join(' · ');
 }
+// a wine counts as "already on Vinmonopolet" if this exact cuvée is listed in the catalog
+function isOnVMP(x) {
+  return x.catalog === 'listed' || /listed in v(mp|inmonopolet)/i.test(x.wine.representation?.NO || '');
+}
 function renderMarket() {
   const tb = $('marketTable').querySelector('tbody');
   const V = { pass: '✓', fail: '✗', unknown: '?', info: 'ℹ' };
-  const withM = MARKET.filter(m => m.matches.length);
-  if (!withM.length) {
-    tb.innerHTML = `<tr><td colspan="2" style="color:var(--muted)">${L.marketEmpty}</td></tr>`;
+  let hidden = 0;
+  const rows = MARKET.map(m => {
+    let ms = m.matches;
+    if (marketHideListed) { const before = ms.length; ms = ms.filter(x => !isOnVMP(x)); hidden += before - ms.length; }
+    return { spec: m.spec, fob: m.fob, matches: ms };
+  }).filter(m => m.matches.length);
+  $('marketHiddenNote').textContent = hidden ? L.marketHidden(hidden) : '';
+  if (!rows.length) {
+    tb.innerHTML = `<tr><td colspan="2" style="color:var(--muted)">${hidden ? L.marketAllHidden : L.marketEmpty}</td></tr>`;
     return;
   }
-  tb.innerHTML = withM.map(m => {
+  tb.innerHTML = rows.map(m => {
     const head = `<tr class="tender-head"><td colspan="2">
       <b>${esc(m.spec.ref)}</b> — ${L.seeksPre}<b>${esc(groupLabel(m.spec.group))}</b>${L.seeksFrom}<b>${esc(m.spec.country) || L.openOrigin}</b><br>
       <span style="color:var(--text-secondary)">${wantsLine(m)}</span></td></tr>`;
@@ -1499,7 +1520,7 @@ function renderMarket() {
         : x.priceOk === false ? `<span class="chip mid">${L.priceHigh}</span>`
         : `<span class="chip lo">${L.priceUnknown}</span>`;
       const cat = x.catalog === 'listed'
-        ? `<span class="chip mid" title="${esc(L.catListedTitle(w.catalog_no?.product_id || '?'))}">${L.catListed}</span>`
+        ? `<span class="chip mid" title="${esc(L.catListedTitle(w.catalog_no?.product_id || '?', w.catalog_no?.checked_at))}">${L.catListed}</span>`
         : x.catalog === 'listed_producer'
         ? `<span class="chip mid" title="${esc(L.catProducerTitle)}">${L.catProducer}</span>`
         : (x.catalog === 'not_found' || x.catalog === 'not_found_search')
@@ -2129,6 +2150,11 @@ $('specFilters').querySelectorAll('button').forEach(b => b.addEventListener('cli
   specFilter = b.dataset.f;
   $('specFilters').querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b));
   renderSpecs();
+}));
+$('marketFilters').querySelectorAll('button').forEach(b => b.addEventListener('click', () => {
+  marketHideListed = b.dataset.mf === 'hide';
+  $('marketFilters').querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b));
+  renderMarket();
 }));
 ['inRetail','inAbv','inVol','inPack','inMargin','inFreight','inCur2','inCur2Rate','inEur']
   .forEach(id => $(id).addEventListener('input', () => { calc(); recompute(); }));
