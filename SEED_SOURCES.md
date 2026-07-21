@@ -34,19 +34,40 @@ Provenance written per field: identity/region → `public` (WoSA) or `verified`
 representation → `verified` (derived from the VMP index); FOB/volume/grape %/ABV →
 `unknown`, pending claim.
 
-## Next origins (from the demand map) — official bodies to source from
+## How to find producer data — per origin (the actual access points)
 
-| Origin | Recurring targets | Trade body (identity/region) | Classification | Sustainability / cert |
-|---|---|---|---|---|
-| **Germany** | Riesling, Pinot Noir | Deutsches Weininstitut (deutscheweine.de) | VDP (vdp.de); Prädikat/GG | EU organic (TRACES), Fair'n Green |
-| **Austria** | Riesling/Grüner (cert-heavy) | Austrian Wine (austrianwine.com) | DAC | Nachhaltig Austria; EU organic |
-| **New Zealand** | Pinot Noir, Sauvignon Blanc | NZ Winegrowers (nzwine.com) | GI | Sustainable Winegrowing NZ (SWNZ) |
-| **Portugal** | Encruzado, sparkling | ViniPortugal (viniportugal.pt); IVV | DOC/DOP via regional CVRs | EU organic |
-| **France** | sparkling Chardonnay, Cab Franc, Mondeuse | official interprofessions (CIVC, etc.) | AOC/AOP (INAO) | EU organic, Terra Vitis, HVE |
+Each origin's national body publishes a producer directory — that's the primary
+seed source. Access differs: some are searchable databases, some annual
+directories, and Italy/France are fragmented across regional bodies.
 
-Cross-origin certification registries (authoritative, verifiable):
-EU organic — TRACES / EU organic certificate database · Fairtrade — FLOCERT ·
-Biodynamic — Demeter.
+| Origin | Where to find producers | Access / note |
+|---|---|---|
+| **South Africa** | Wines of South Africa — `wosa.co.za` | producer directory; certs at `sawis.co.za` (IPW seal) + `wieta.org.za` |
+| **Austria** | Austrian Wine — `austrianwine.com/wines-wineries` | **searchable DB, ~4,000 self-bottling producers** (confirmed) |
+| **Germany** | Deutsches Weininstitut — `winesofgermany.com` | producer directory; VDP members at `vdp.de` |
+| **New Zealand** | NZ Winegrowers — `nzwine.com` | member directory; SWNZ-certified flagged there |
+| **Australia** | Wine Australia — `wineaustralia.com`; Winetitles Wine Industry Directory — `winetitles.com.au/industry-directory` | official body + a comprehensive directory (producers, varieties, GI) |
+| **Portugal** | Wines of Portugal — `winesofportugal.com`; IVV — `ivv.gov.pt` | body directory; IVV holds official registers |
+| **Spain** | Foods & Wines from Spain (ICEX) — `foodswinesfromspain.com`; each DO's Consejo Regulador | ICEX producer database + per-DO member lists |
+| **Italy** | fragmented — the **Consorzio** for each DOC/DOCG (e.g. Consorzio Barolo Barbaresco), Federdoc, ISMEA | no single feed — go per recurring appellation |
+| **France** | fragmented — regional **interprofessions** (CIVC Champagne, BIVB Burgundy, CIVB Bordeaux…); INAO — `inao.gouv.fr` (appellations) | go per recurring region |
+| **Chile** | Wines of Chile — `winesofchile.org` | body directory |
+| **USA** | Wine Institute (California) — `wineinstitute.org`; TTB COLA (labels) | body + label registry |
+
+Fragmentation isn't as bad as it looks: for Italy/France the demand map already
+tells you *which* appellations/regions recur (Champagne + Burgundy for FR;
+Barolo/Langhe + Verdicchio for IT), so you only chase those consorzi/interprofessions.
+
+## Certification registries — verifiable, any origin
+
+Add (and later verify) cert flags with a real source + date:
+
+| Cert | Registry | Access |
+|---|---|---|
+| EU organic | **TRACES** — official EU organic operators database | search operator by name/country |
+| Fairtrade | **FLOCERT** — `flocert.net/fairtrade-customer-search`; Fairtrade Finder — `fairtrade.net` | search by name / country / FLOID |
+| Biodynamic | **Demeter International** — `demeter.net` | certified producers, 65+ countries |
+| Sustainability | Terra Vitis (FR) `terravitis.com` · HVE (FR) · SWNZ (`nzwine.com`) · Nachhaltig Austria · Sustainable Winegrowing Australia · IPW/SWSA (`sawis.co.za`) | per-scheme registers |
 
 ## Enrichment sources (secondary — licensed, and NOT for core specs)
 
