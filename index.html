@@ -711,8 +711,7 @@ function setLang(lang) {
   // keep an active open-origin country filter valid when the sentinel label changes language
   if (typeof FILTERS !== 'undefined' && (FILTERS.country === I18N.no.openCountry || FILTERS.country === I18N.en.openCountry))
     FILTERS.country = L.openCountry;
-  // category/type facet labels are language-specific; drop stale selections on switch
-  if (typeof FILTERS !== 'undefined') { FILTERS.mainType = ''; FILTERS.group = ''; }
+  // category/type facets now hold language-neutral canonical keys, so they persist across a switch
   try { localStorage.setItem('ti_lang', LANG); } catch (e) {}
   const btn = $('langToggle'); if (btn) btn.textContent = LANG === 'no' ? 'English' : 'Norsk';
   applyStaticI18n();
@@ -1140,25 +1139,33 @@ const GRAPE_LEX = ['chardonnay','chenin blanc','pinot noir','pinotage','cabernet
   'petite sirah','durif','torrontes','sauvignon gris','muscat ottonel'];
 const PRICE_BUCKETS = [[0,100,'< 100'],[100,150,'100–150'],[150,200,'150–200'],
   [200,250,'200–250'],[250,350,'250–350'],[350,1e9,'350+']];
-// normalize the messy 'group' field: fix casing + merge punctuation/wording variants
-function normGroup(raw) {
+// 'group' field: derive a language-neutral canonical key (for filtering) + a translated
+// display label (for the UI). Dual naming so an active facet survives a language switch.
+function titleCase2(s) { return String(s || '').replace(/\b\w/g, c => c.toUpperCase()).replace(/\s+/g, ' ').trim(); }
+function groupCanon(raw) {
   const g = N(raw).replace(/\s+/g, ' ').trim();
   if (!g) return '';
-  if (/rose/.test(g) && /sparkling|semi-sparkling|musserende/.test(g)) return L.grpSparklingRose;
-  if (/white|hvit/.test(g) && /sparkling|semi-sparkling|musserende/.test(g)) return L.grpSparklingWhite;
-  if (/sparkling|musserende/.test(g)) return L.grpSparkling;
-  if (/fortified|sterkvin/.test(g)) return L.grpFortified;
-  if (/rose|rosé/.test(g) && /wine|vin/.test(g)) return L.grpRose;
-  if (/red|rodvin/.test(g) && /wine|vin/.test(g)) return L.grpRed;
-  if (/white|hvit/.test(g) && /wine|vin/.test(g)) return L.grpWhite;
-  return raw.replace(/\b\w/g, c => c.toUpperCase()).replace(/\s+/g, ' ').trim(); // title-case others (beer/spirits styles)
+  if (/rose/.test(g) && /sparkling|semi-sparkling|musserende/.test(g)) return 'sparkling_rose';
+  if (/white|hvit/.test(g) && /sparkling|semi-sparkling|musserende/.test(g)) return 'sparkling_white';
+  if (/sparkling|musserende/.test(g)) return 'sparkling';
+  if (/fortified|sterkvin/.test(g)) return 'fortified';
+  if (/rose/.test(g) && /wine|vin/.test(g)) return 'rose';
+  if (/red|rodvin/.test(g) && /wine|vin/.test(g)) return 'red';
+  if (/white|hvit/.test(g) && /wine|vin/.test(g)) return 'white';
+  return titleCase2(raw); // beer/spirits styles: title-cased raw is itself language-neutral
+}
+const GRP_LABEL = { red:'grpRed', white:'grpWhite', rose:'grpRose', sparkling:'grpSparkling',
+  sparkling_white:'grpSparklingWhite', sparkling_rose:'grpSparklingRose', fortified:'grpFortified' };
+function groupDisp(canon) {
+  if (!canon) return '';
+  return GRP_LABEL[canon] ? L[GRP_LABEL[canon]] : (L.mainTypes[canon] || canon);
 }
 const MAIN_MAP = { 'wine':'Wine', 'fortified wine':'Wine', 'beer':'Beer', 'spirits':'Spirits', 'cider':'Cider' };
-function mainTypeLabel(spec) {
+function mainCanon(spec) {
   const key = N(spec.main_type || '').trim();
-  const canon = MAIN_MAP[key] || (spec.main_type ? spec.main_type.replace(/\b\w/g, c => c.toUpperCase()) : '');
-  return canon ? (L.mainTypes[canon] || canon) : '';
+  return MAIN_MAP[key] || (spec.main_type ? titleCase2(spec.main_type) : '');
 }
+function mainDisp(canon) { return canon ? (L.mainTypes[canon] || canon) : ''; }
 // extract classification tiers (1er/grand cru, DOCG, villages, riserva …) from appellation + spec text
 const CLASS_TIERS = [
   ['Grand Cru', /grand cru/],
@@ -1203,8 +1210,8 @@ function specBucket(spec) {
 }
 function passes(spec, skip) {
   if (skip !== 'country' && FILTERS.country && (spec.country || openTerm()) !== FILTERS.country) return false;
-  if (skip !== 'mainType' && FILTERS.mainType && mainTypeLabel(spec) !== FILTERS.mainType) return false;
-  if (skip !== 'group' && FILTERS.group && (normGroup(spec.group) || mainTypeLabel(spec) || '?') !== FILTERS.group) return false;
+  if (skip !== 'mainType' && FILTERS.mainType && mainCanon(spec) !== FILTERS.mainType) return false;
+  if (skip !== 'group' && FILTERS.group && (groupCanon(spec.group) || mainCanon(spec) || '?') !== FILTERS.group) return false;
   if (skip !== 'grape' && FILTERS.grape && !specGrapes(spec).includes(FILTERS.grape)) return false;
   if (skip !== 'classification' && FILTERS.classification && !specClasses(spec).includes(FILTERS.classification)) return false;
   if (skip !== 'price' && FILTERS.price && specBucket(spec) !== FILTERS.price) return false;
@@ -1223,7 +1230,8 @@ function counts(dim, keyFn) {
   }
   return c;
 }
-function drawDimChart(svgId, dim, keyFn, activeVal, fixedOrder) {
+function drawDimChart(svgId, dim, keyFn, activeVal, fixedOrder, labelFn) {
+  const disp = labelFn || (k => k);
   const svg = $(svgId);
   const c = counts(dim, keyFn);
   let entries = [...c.entries()];
@@ -1245,7 +1253,8 @@ function drawDimChart(svgId, dim, keyFn, activeVal, fixedOrder) {
     lab.setAttribute('text-anchor', 'end'); lab.setAttribute('font-size', '11');
     lab.setAttribute('fill', css(active ? '--text-primary' : '--text-secondary'));
     if (active) lab.setAttribute('font-weight', '700');
-    lab.textContent = String(k).length > 15 ? String(k).slice(0, 14) + '…' : k;
+    const dlab = disp(k);
+    lab.textContent = String(dlab).length > 15 ? String(dlab).slice(0, 14) + '…' : dlab;
     g.appendChild(lab);
     const w = Math.max((W - labW - 30) * v / max, 2);
     const r = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
@@ -1262,7 +1271,7 @@ function drawDimChart(svgId, dim, keyFn, activeVal, fixedOrder) {
     g.addEventListener('click', () => { setFilter(dim, active ? '' : k, true); });
     g.addEventListener('mousemove', e => { tip.style.display = 'block';
       tip.style.left = e.clientX + 12 + 'px'; tip.style.top = e.clientY - 10 + 'px';
-      tip.innerHTML = L.tipFilter(esc(k), v); });
+      tip.innerHTML = L.tipFilter(esc(disp(k)), v); });
     g.addEventListener('mouseleave', () => tip.style.display = 'none');
     svg.appendChild(g);
   });
@@ -1394,12 +1403,14 @@ function fillSelValueLabel(id, opts, current) {
 function renderDims() {
   renderMap();
   drawDimChart('chCountry', 'country', s => s.country || openTerm(), FILTERS.country);
-  drawDimChart('chGroup', 'group', s => normGroup(s.group) || mainTypeLabel(s) || '?', FILTERS.group);
+  drawDimChart('chGroup', 'group', s => groupCanon(s.group) || mainCanon(s) || '?', FILTERS.group, null, groupDisp);
   drawDimChart('chGrape', 'grape', s => specGrapes(s), FILTERS.grape);
   drawDimChart('chPrice', 'price', s => specBucket(s), FILTERS.price, PRICE_BUCKETS.map(b => b[2]));
   fillSelect('fCountry', [...counts('country', s => s.country || openTerm()).keys()].sort(), FILTERS.country);
-  fillSelect('fMain', [...counts('mainType', s => mainTypeLabel(s)).keys()].sort(), FILTERS.mainType);
-  fillSelect('fGroup', [...counts('group', s => normGroup(s.group) || mainTypeLabel(s) || '?').keys()].sort(), FILTERS.group);
+  const mainOpts = [...counts('mainType', s => mainCanon(s)).keys()].map(c => [c, mainDisp(c)]).sort((a, b) => a[1].localeCompare(b[1]));
+  fillSelValueLabel('fMain', mainOpts, FILTERS.mainType);
+  const grpOpts = [...counts('group', s => groupCanon(s.group) || mainCanon(s) || '?').keys()].map(c => [c, groupDisp(c)]).sort((a, b) => a[1].localeCompare(b[1]));
+  fillSelValueLabel('fGroup', grpOpts, FILTERS.group);
   fillSelect('fGrape', [...counts('grape', s => specGrapes(s)).keys()].sort(), FILTERS.grape);
   fillSelect('fClass', [...counts('classification', s => specClasses(s)).keys()].sort(), FILTERS.classification);
   fillSelect('fPrice', PRICE_BUCKETS.map(b => b[2]), FILTERS.price);
@@ -1444,7 +1455,7 @@ function renderSpecs() {
     const gr = specGrapes(s).slice(0, 3).join(', ');
     return `<tr class="rowx" data-i="${i}">
       <td><b>${esc(s.ref)}</b></td><td>${esc(s.launch)}</td><td>${esc((s.selection || '').replace('utvalget',''))}</td>
-      <td>${esc(normGroup(s.group)) || esc(s.group)}${gr ? `<br><span style="color:var(--muted);font-size:11.5px">${esc(gr)}</span>` : ''}</td>
+      <td>${esc(groupDisp(groupCanon(s.group))) || esc(s.group)}${gr ? `<br><span style="color:var(--muted);font-size:11.5px">${esc(gr)}</span>` : ''}</td>
       <td>${esc(s.country) || openTerm()}${s.region ? `<br><span style="color:var(--muted);font-size:11.5px">${esc(s.region)}</span>` : ''}${s.appellation ? `<br><span style="color:var(--muted);font-size:11px" title="${esc(s.appellation)}">${esc(s.appellation.length > 42 ? s.appellation.slice(0, 40) + '…' : s.appellation)}</span>` : ''}${specClasses(s).length ? `<br>${specClasses(s).map(c => `<span class="chip lo" style="font-size:10.5px;padding:1px 6px;margin:2px 3px 0 0">${esc(c)}</span>`).join('')}` : ''}</td>
       <td>${esc((s.spec || '').slice(0, 110))}${(s.spec || '').length > 110 ? '…' : ''}</td>
       <td class="num">${esc(s.price_text)}${mini}</td>
