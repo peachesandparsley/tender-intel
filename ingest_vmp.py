@@ -20,6 +20,16 @@ Two ways to feed it (either works, pick what you have access to):
      workbooks (or any CSV/JSON carrying the documented product fields), then:
          python3 ingest_vmp.py --file assortment.json --out wines_verified.json
 
+Tier reality (confirmed against the live portal): the free "Open" subscription's
+products/v0 details-normal returns ONLY a lean index — productId, name,
+lastChanged — for all ~66k products. That is exactly enough for a real
+"is this wine already in the VMP catalog?" check:
+         python3 ingest_vmp.py --api --index --out vmp_catalog_index.json
+The rich master data (price, origin, producer, importer, ABV, classification,
+packaging, cert flags) is NOT in Open — it is wholesaler-gated in the
+"Restricted" tier. The full-record transform below runs on that Restricted feed,
+or on producer uploads, both of which carry the nested field groups.
+
 Records are keyed on the Vinmonopolet code (varenr): re-running refreshes each
 record and advances `checked_at`, so a ✓ that ages past your freshness window
 can fall back to ◦ in the app. This writes a separate file by default and does
@@ -42,8 +52,8 @@ TODAY = datetime.date.today().isoformat()
 
 def dig(obj, *names):
     """Find the first key in `names` anywhere in a nested dict/list, non-empty.
-    The products/v0 API nests fields in groups (basic, origins, prices, …), so
-    we search by field name rather than a fixed path."""
+    The products/v0 detail response nests fields in groups (basic, origins,
+    prices, classification, properties, logistics), so search by field name."""
     targets = [n.lower() for n in names]
     queue = [obj]
     while queue:
@@ -77,14 +87,6 @@ def map_color(product):
     else:
         color = ""
     return color, method
-
-
-def parse_litres(volume):
-    m = re.search(r"([\d.,]+)", str(volume or ""))
-    if not m:
-        return None
-    val = float(m.group(1).replace(",", "."))
-    return val / 100 if val > 10 else val  # API volume may be cl (75) or l (0.75)
 
 
 def to_wine(product, idx):
@@ -152,24 +154,36 @@ def to_wine(product, idx):
     }
 
 
-def fetch_api():
+def fetch_api(extra=""):
     if not API_KEY:
         sys.exit("Set VMP_API_KEY (free key from https://api.vinmonopolet.no), or use --file with a portal export.")
-    products, start, page = [], 0, 100
+    products, start, page = [], 0, int(os.environ.get("VMP_PAGE", "10000"))
     while True:
-        url = f"{API_BASE}{API_PATH}?start={start}&maxResults={page}"
+        url = f"{API_BASE}{API_PATH}?start={start}&maxResults={page}{extra}"
         req = urllib.request.Request(url, headers={"Ocp-Apim-Subscription-Key": API_KEY,
                                                    "Accept": "application/json"})
-        batch = json.load(urllib.request.urlopen(req, timeout=60))
+        with urllib.request.urlopen(req, timeout=180) as resp:
+            total = int(resp.headers.get("x-total-count") or 0)
+            batch = json.loads(resp.read().decode("utf-8"))
         items = batch if isinstance(batch, list) else (batch.get("products") or batch.get("results") or [])
-        if not items:
-            break
         products += items
         start += page
-        print(f"  fetched {len(products)}…", file=sys.stderr)
-        if len(items) < page:
+        print(f"  fetched {len(products)} / {total or '?'}…", file=sys.stderr)
+        if not items or len(items) < page or (total and start >= total):
             break
     return products
+
+
+def build_index(products):
+    """The Open tier's details-normal gives productId + name + lastChanged only.
+    That's exactly enough for a real 'is this wine already in the VMP catalog?' check."""
+    idx = []
+    for p in products:
+        pid = str(dig(p, "productId", "code") or "").strip()
+        name = str(dig(p, "productShortName", "productLongName", "name") or "").strip()
+        if pid and name:
+            idx.append({"productId": pid, "name": name})
+    return idx
 
 
 def load_file(path):
@@ -185,7 +199,10 @@ def main():
     ap = argparse.ArgumentParser(description="Populate the wine DB with verified Vinmonopolet catalog data.")
     ap.add_argument("--api", action="store_true", help="pull live from the VMP API (needs VMP_API_KEY)")
     ap.add_argument("--file", help="ingest a local export (JSON or CSV) from the portal instead")
-    ap.add_argument("--out", default="wines_verified.json", help="output file (default keeps demo wines.json intact)")
+    ap.add_argument("--index", action="store_true",
+                    help="build the catalog index (productId + name) — what the Open tier provides — "
+                         "for a real 'already in VMP' check")
+    ap.add_argument("--out", default=None, help="output file (defaults keep demo data intact)")
     args = ap.parse_args()
 
     if args.api:
@@ -195,16 +212,25 @@ def main():
     else:
         ap.error("pass --api or --file")
 
+    if args.index:
+        idx = build_index(products)
+        out_path = args.out or "vmp_catalog_index.json"
+        json.dump({"generated": TODAY, "count": len(idx), "products": idx},
+                  open(out_path, "w", encoding="utf-8"), ensure_ascii=False)
+        print(f"catalog index: {len(idx)} products -> {out_path}")
+        return
+
+    # full-record transform (works on the Restricted feed or producer uploads, which carry the rich fields)
     wines = [to_wine(p, i) for i, p in enumerate(products) if str(dig(p, "productId", "code", "varenummer") or "").strip()]
+    out_path = args.out or "wines_verified.json"
     merged = {}
-    if os.path.exists(args.out):
-        for w in json.load(open(args.out, encoding="utf-8")).get("wines", []):
+    if os.path.exists(out_path):
+        for w in json.load(open(out_path, encoding="utf-8")).get("wines", []):
             merged[(w.get("catalog_no") or {}).get("product_id")] = w
     for w in wines:
         merged[w["catalog_no"]["product_id"]] = w
-    out = {"wines": list(merged.values())}
-    json.dump(out, open(args.out, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
-    print(f"{len(wines)} verified records written/merged -> {args.out} ({len(out['wines'])} total)")
+    json.dump({"wines": list(merged.values())}, open(out_path, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+    print(f"{len(wines)} verified records written/merged -> {out_path} ({len(merged)} total)")
 
 
 if __name__ == "__main__":
