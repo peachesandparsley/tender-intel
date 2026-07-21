@@ -235,6 +235,7 @@
       <h2 data-i18n="h2Market">Marketplace — viner som møter anbudskravene</h2>
       <p class="note" style="margin:0 0 12px" data-i18n="noteMarket"><b>Slik leser du listen:</b> Hvert anbud viser først hva Vinmonopolet ber om, deretter vinene i databasen som oppfyller kravene. Fire statuser avgjør om det er verdt å gå videre: kravene, prisen, om vinen allerede står i sortimentet, og om produsenten er åpen for import. Klikk en vinrad for klausul-for-klausul-vurderingen.</p>
       <div class="samplebar" data-i18n="sampleBannerShort"><b>Prøvedata:</b> kandidatvinene er AI-seedede eksempler (FOB/volum er estimat). Ekte data kommer fra Vinmonopolet-katalogen og produsentopplasting.</div>
+      <p class="note" id="vmpIndexNote" style="margin:0 0 6px;color:var(--good-text);font-weight:600"></p>
       <div class="filters" id="marketFilters">
         <button data-mf="hide" class="on" data-i18n="mfHideListed">Skjul viner som alt er i VMP</button>
         <button data-mf="all" data-i18n="mfShowAll">Vis alle</button>
@@ -527,7 +528,8 @@ const I18N = {
     kravSome: (p, tot, u) => `Oppfyller ${p} av ${tot} krav — ${u} må bekreftes`,
     kravTitle: 'klikk raden for detaljer',
     priceIn: 'Pris innenfor båndet', priceHigh: 'FOB for høy for båndet', priceUnknown: 'Pris ukjent',
-    catListed: 'Allerede i VMP-sortimentet ⚠', catListedTitle: (id, date) => `varenr ${id}${date ? ' · sjekket ' + date + ' (statisk øyeblikksbilde, ikke sanntid)' : ''} — basis/parti = uaktuell; bestillingsutvalg kan være fordel`,
+    catListed: 'Allerede i VMP-sortimentet ⚠', catListedTitle: (id, date, live) => `varenr ${id}${date ? ' · ' + (live ? 'sjekket live mot VMP-katalogen ' : 'sjekket ') + date + (live ? '' : ' (statisk øyeblikksbilde, ikke sanntid)') : ''} — basis/parti = uaktuell; bestillingsutvalg kan være fordel`,
+    vmpIndexLive: (n, date) => `Katalogsjekk er live mot ${n} VMP-produkter${date ? ' (oppdatert ' + date + ')' : ''}.`,
     mfHideListed: 'Skjul viner som alt er i VMP', mfShowAll: 'Vis alle',
     marketHidden: n => `${n} vin${n === 1 ? '' : 'er'} skjult fordi de allerede er i VMP-sortimentet. Trykk «Vis alle» for å se dem.`,
     marketAllHidden: 'Alle kandidatene her er allerede i VMP-sortimentet. Trykk «Vis alle» for å se dem.',
@@ -672,7 +674,8 @@ const I18N = {
     kravSome: (p, tot, u) => `Meets ${p} of ${tot} requirements — ${u} to confirm`,
     kravTitle: 'click the row for details',
     priceIn: 'Price within band', priceHigh: 'FOB too high for band', priceUnknown: 'Price unknown',
-    catListed: 'Already in VMP range ⚠', catListedTitle: (id, date) => `item no. ${id}${date ? ' · checked ' + date + ' (static snapshot, not live)' : ''} — base/parti = not relevant; special-order range may be an advantage`,
+    catListed: 'Already in VMP range ⚠', catListedTitle: (id, date, live) => `item no. ${id}${date ? ' · ' + (live ? 'checked live against the VMP catalog ' : 'checked ') + date + (live ? '' : ' (static snapshot, not live)') : ''} — base/parti = not relevant; special-order range may be an advantage`,
+    vmpIndexLive: (n, date) => `Catalog check is live against ${n} VMP products${date ? ' (updated ' + date + ')' : ''}.`,
     mfHideListed: 'Hide wines already in VMP', mfShowAll: 'Show all',
     marketHidden: n => `${n} wine${n === 1 ? '' : 's'} hidden because they are already in the VMP range. Click "Show all" to see them.`,
     marketAllHidden: 'All candidates here are already in the VMP range. Click "Show all" to see them.',
@@ -934,6 +937,39 @@ function guessAbv(spec) {
   if (/riesling|kabinett/.test(t)) return 11;
   return 13.5;
 }
+/* ---- live Vinmonopolet catalog index: real "already in VMP?" check ----
+   Progressive: if vmp_catalog_index.json (produced by ingest_vmp.py / the
+   nightly workflow) is served alongside the app, the catalog status is matched
+   live against the real ~66k-product catalog; otherwise it falls back to the
+   seed catalog_no.status. Matches require a producer token AND a name token to
+   coincide, and the matched varenr is surfaced so it stays verifiable. */
+let VMP_INDEX = null, VMP_INDEX_META = null;
+function catalogFromIndex(w) {
+  if (!VMP_INDEX) return null;
+  const pTok = N(w.producer).split(/[^a-z0-9]+/).filter(t => t.length >= 4);
+  const nTok = N(w.name).split(/[^a-z0-9]+/).filter(t => t.length >= 4);
+  if (!pTok.length && !nTok.length) return null;
+  const hit = VMP_INDEX.find(e => {
+    const p = pTok.filter(t => e._n.includes(t)).length;
+    const n = nTok.filter(t => e._n.includes(t)).length;
+    return (p >= 1 && n >= 1) || (!pTok.length && n >= 2) || (!nTok.length && p >= 2);
+  });
+  return hit ? { status: 'listed', product_id: hit.productId, matched: hit.name, live: true }
+             : { status: 'not_found', live: true };
+}
+async function loadVmpIndex() {
+  try {
+    const r = await fetch('vmp_catalog_index.json', { cache: 'no-store' });
+    if (!r.ok) return;
+    const d = await r.json();
+    if (!Array.isArray(d.products) || !d.products.length) return;
+    VMP_INDEX = d.products.map(p => ({ productId: p.productId, name: p.name, _n: N(p.name) }));
+    VMP_INDEX_META = { generated: d.generated, count: d.count || VMP_INDEX.length };
+    recompute();
+    const note = $('vmpIndexNote');
+    if (note && L.vmpIndexLive) note.textContent = L.vmpIndexLive(VMP_INDEX_META.count, VMP_INDEX_META.generated);
+  } catch (e) { /* offline / not deployed yet -> keep seed behaviour */ }
+}
 function evaluateWine(spec, w, fobReq) {
   if (!originOk(spec, w) || !groupOk(spec, w)) return null;
   const verdicts = clausesForSpec(spec).map(cl => ({ clause: cl.text.slice(0, 90), verdict: checkClause(cl, w) }));
@@ -943,8 +979,9 @@ function evaluateWine(spec, w, fobReq) {
   const total = verdicts.filter(v => v.verdict !== 'info').length;
   let priceOk = null;
   if (fobReq && w.fob_eur != null) priceOk = w.fob_eur <= fobReq.eur;
-  const cat = (w.catalog_no && w.catalog_no.status) || 'unchecked';
-  return { wine: w, passes, unknowns, total, priceOk, catalog: cat, verdicts };
+  const idxCat = catalogFromIndex(w);
+  const cat = idxCat ? idxCat.status : ((w.catalog_no && w.catalog_no.status) || 'unchecked');
+  return { wine: w, passes, unknowns, total, priceOk, catalog: cat, catalogMatch: idxCat, verdicts };
 }
 function computeMarket() {
   const market = [];
@@ -1610,8 +1647,11 @@ function renderMarket() {
       const pris = x.priceOk === true ? `<span class="chip hi">${L.priceIn}</span>`
         : x.priceOk === false ? `<span class="chip mid">${L.priceHigh}</span>`
         : `<span class="chip lo">${L.priceUnknown}</span>`;
+      const catId = x.catalogMatch ? x.catalogMatch.product_id : w.catalog_no?.product_id;
+      const catDate = x.catalogMatch ? VMP_INDEX_META?.generated : w.catalog_no?.checked_at;
+      const catLive = !!(x.catalogMatch && x.catalogMatch.live);
       const cat = x.catalog === 'listed'
-        ? `<span class="chip mid" title="${esc(L.catListedTitle(w.catalog_no?.product_id || '?', w.catalog_no?.checked_at))}">${L.catListed}</span>`
+        ? `<span class="chip mid" title="${esc(L.catListedTitle(catId || '?', catDate, catLive))}">${L.catListed}</span>`
         : x.catalog === 'listed_producer'
         ? `<span class="chip mid" title="${esc(L.catProducerTitle)}">${L.catProducer}</span>`
         : (x.catalog === 'not_found' || x.catalog === 'not_found_search')
@@ -2267,7 +2307,7 @@ function toggleTheme() {
   const ws = wholesaleFromRetail(199.90, 13.0, 0.75, 'glass');
   console.log('SELFTEST wholesale =', ws.toFixed(2), '(expect 80.67)');
 })();
-renderPlanSelect(); initLang(); initOrientation();
+renderPlanSelect(); initLang(); initOrientation(); loadVmpIndex();
 </script>
 </body>
 </html>
