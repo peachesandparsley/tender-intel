@@ -122,6 +122,9 @@
   tr.rowx:hover td { background: color-mix(in oklab, var(--accent) 6%, transparent); }
   tr.detail td { background: color-mix(in oklab, var(--accent) 4%, transparent); }
   ::selection { background: color-mix(in oklab, var(--accent) 25%, transparent); }
+  th.sortable { cursor: pointer; user-select: none; white-space: nowrap; }
+  th.sortable:hover { color: var(--accent); }
+  th.sortable.active { color: var(--accent); font-weight: 600; }
   .tender-head td { background: color-mix(in oklab, var(--accent) 7%, transparent);
     font-size: 13.5px; border-top: 2px solid color-mix(in oklab, var(--accent) 30%, transparent); }
 </style>
@@ -183,8 +186,10 @@
         <button data-f="wine">Kun vin</button>
       </div>
       <table id="specTable"><thead><tr>
-        <th>Ref</th><th>Lansering</th><th>Utvalg</th><th>Gruppe</th><th>Opprinnelse</th>
-        <th>Spesifikasjon</th><th class="num">Prisbånd</th><th class="num">Trenger ≤ FOB</th><th class="num">Treff</th>
+        <th data-sort="ref">Ref</th><th data-sort="launch">Lansering</th><th data-sort="sel">Utvalg</th>
+        <th data-sort="group">Gruppe</th><th data-sort="country">Opprinnelse</th>
+        <th>Spesifikasjon</th><th class="num" data-sort="price">Prisbånd</th>
+        <th class="num" data-sort="fob">Trenger ≤ FOB</th><th class="num" data-sort="hits">Treff</th>
       </tr></thead><tbody></tbody></table>
       <p class="note">Klikk en rad for klausulene. «Trenger ≤ FOB» = maks produsentpris som treffer prisbåndets tak (kalkulatorens forutsetninger).</p>
     </div>
@@ -253,13 +258,14 @@
         <label class="btn ghost" style="cursor:pointer">Importer (JSON)<input type="file" id="wineJsonIn" accept=".json" style="display:none"></label>
       </p>
       <table id="wineTable"><thead><tr>
-        <th>Produsent</th><th>Vin</th><th>Land</th><th>Type</th><th>Druer</th>
-        <th class="num" title="sukker g/l">Sukker</th>
+        <th data-sort="producer">Produsent</th><th data-sort="name">Vin</th><th data-sort="country">Land</th>
+        <th data-sort="type">Type</th><th>Druer</th>
+        <th class="num" data-sort="sugar" title="sukker g/l">Sukker</th>
         <th class="num" title="Fylde / Friskhet / Garvestoffer (1–12, som Vinmonopolets smaksprofil)">Profil F/F/G</th>
         <th title="emballasje + kork">Emb./kork</th>
-        <th class="num">FOB €</th><th>Sert.</th><th>Rep. NO</th>
-        <th title="hvem som la inn/endret raden, og når">Oppdatert</th>
-        <th title="verifiseringsstatus per felt — klikk raden for detaljer">Datakvalitet</th>
+        <th class="num" data-sort="fob">FOB €</th><th>Sert.</th><th data-sort="rep">Rep. NO</th>
+        <th data-sort="updated" title="hvem som la inn/endret raden, og når">Oppdatert</th>
+        <th data-sort="quality" title="verifiseringsstatus per felt — klikk raden for detaljer">Datakvalitet</th>
       </tr></thead><tbody></tbody></table>
       <p class="note">✓ verifisert mot kilde · ◦ offentlig dokumentert (lenke ikke arkivert) · ~ estimat som venter bekreftelse · ? mangler. Klikk en rad for felt-for-felt-status. I produksjon fylles ✓ av katalogsync, registeroppslag, produsentens tech sheet/analysebevis og parts-bekreftelser med tidsstempel — og verifisering eldes: en ✓ eldre enn 12 mnd faller tilbake til ◦.</p>
     </div>
@@ -296,9 +302,13 @@
         <button data-k="openNO">Åpne i Norge</button>
         <button data-k="takenNO">Representert i Norge</button>
       </div>
+      <div class="dimbar">
+        <div><label>Land</label><select id="kfCountry"><option value="">Alle land</option></select></div>
+        <div style="flex:1.4"><label>Fritekst</label><input id="kfQ" placeholder="produsentnavn…"></div>
+      </div>
       <table id="katTable"><thead><tr>
-        <th>Produsent</th><th>Land</th><th class="num">Viner</th>
-        <th>Norge</th><th>Sverige</th><th>Finland</th>
+        <th data-sort="producer">Produsent</th><th data-sort="country">Land</th><th class="num" data-sort="wines">Viner</th>
+        <th data-sort="no">Norge</th><th data-sort="se">Sverige</th><th data-sort="fi">Finland</th>
       </tr></thead><tbody></tbody></table>
     </div>
   </section>
@@ -978,9 +988,10 @@ function renderSpecs() {
     if (specFilter === 'wine') return !/(fermented|beer|cider|spirit|aquavit|whisky)/i.test((m.spec.main_type || '') + (m.spec.group || ''));
     return true;
   });
+  const sorted = applySort(rows, SORTS.spec, SPEC_GET);
   const maxP = 400; // price minibar scale (kr)
   const mineRefs = MYPORT.length ? new Set(portfolioMatches().map(x => x.spec.ref)) : new Set();
-  tb.innerHTML = rows.map((m, i) => {
+  tb.innerHTML = sorted.map((m, i) => {
     const s = m.spec, n = m.matches.length;
     const star = mineRefs.has(s.ref) ? ' <span class="chip hi" title="matcher din portefølje">★ min</span>' : '';
     const chip = (n ? `<span class="chip ${n > 1 ? 'hi' : 'mid'}">${n}</span>` : '<span class="chip lo">0</span>') + star;
@@ -1118,7 +1129,7 @@ function resetWineFilters() {
   renderWineDims(); renderWines();
 }
 function renderWines() {
-  const shown = WINES.filter(w => winePass(w));
+  const shown = applySort(WINES.filter(w => winePass(w)), SORTS.wine, WINE_GET);
   $('wineCount').textContent = shown.length + ' av ' + WINES.length + ' viner';
   $('wineFilterCount') && ($('wineFilterCount').textContent = `Viser ${shown.length} av ${WINES.length} viner.`);
   $('wineTable').querySelector('tbody').innerHTML = shown.map(w => {
@@ -1569,12 +1580,20 @@ function renderKatalog() {
     if (r.k === 'unknown') return '<span style="color:var(--muted);font-size:12px">ukjent</span>';
     return `<span class="chip ${r.cls}" title="${esc(r.detail)}">${esc(r.label)}</span>`;
   };
-  const rows = [...byProd.entries()].filter(([, p]) => {
+  let rows = [...byProd.entries()].filter(([name, p]) => {
     const k = best(p.rep.NO).k;
-    if (katFilter === 'openNO') return k === 'open';
-    if (katFilter === 'takenNO') return k === 'taken';
+    if (katFilter === 'openNO' && k !== 'open') return false;
+    if (katFilter === 'takenNO' && k !== 'taken') return false;
+    if (KATF.country && p.country !== KATF.country) return false;
+    if (KATF.q && !N(name).includes(N(KATF.q))) return false;
     return true;
-  }).sort((a, b) => a[0].localeCompare(b[0]));
+  });
+  rows.forEach(([, p]) => { p._no = best(p.rep.NO).label; p._se = best(p.rep.SE).label; p._fi = best(p.rep.FI).label; });
+  rows = SORTS.kat.key ? applySort(rows, SORTS.kat, KAT_GET) : rows.sort((a, b) => a[0].localeCompare(b[0]));
+  const allCountries = [...new Set([...byProd.values()].map(p => p.country))].sort();
+  const sel = $('kfCountry'), cur = KATF.country;
+  sel.innerHTML = '<option value="">Alle land</option>' + allCountries.map(c =>
+    `<option value="${esc(c)}"${c === cur ? ' selected' : ''}>${esc(c)}</option>`).join('');
   $('katTable').querySelector('tbody').innerHTML = rows.length ? rows.map(([name, p]) =>
     `<tr><td><b>${esc(name)}</b></td><td>${esc(p.country)}</td><td class="num">${p.wines}</td>
      <td>${cell(p.rep.NO)}</td><td>${cell(p.rep.SE)}</td><td>${cell(p.rep.FI)}</td></tr>`).join('')
@@ -1585,6 +1604,53 @@ $('katFilters').querySelectorAll('button').forEach(b => b.addEventListener('clic
   $('katFilters').querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b));
   renderKatalog();
 }));
+
+/* ---- sortable tables ---- */
+const SORTS = { spec: { key: '', dir: 1 }, wine: { key: '', dir: 1 }, kat: { key: '', dir: 1 } };
+function cmpVals(a, b) {
+  if (a == null && b == null) return 0;
+  if (a == null) return 1;
+  if (b == null) return -1;
+  if (typeof a === 'number' && typeof b === 'number') return a - b;
+  return String(a).localeCompare(String(b), 'no');
+}
+function applySort(arr, state, getters) {
+  if (!state.key || !getters[state.key]) return arr;
+  const g = getters[state.key];
+  return [...arr].sort((x, y) => cmpVals(g(x), g(y)) * state.dir);
+}
+function wireSort(tableId, state, rerender) {
+  const thead = $(tableId).querySelector('thead');
+  thead.querySelectorAll('th[data-sort]').forEach(th => {
+    th.classList.add('sortable');
+    th.addEventListener('click', () => {
+      const k = th.getAttribute('data-sort');
+      if (state.key === k) state.dir *= -1; else { state.key = k; state.dir = 1; }
+      thead.querySelectorAll('th[data-sort]').forEach(x => {
+        x.classList.toggle('active', x === th);
+        x.textContent = x.textContent.replace(/ [▲▼]$/, '');
+      });
+      th.textContent = th.textContent.replace(/ [▲▼]$/, '') + (state.dir === 1 ? ' ▲' : ' ▼');
+      rerender();
+    });
+  });
+}
+const SPEC_GET = { ref: m => m.spec.ref, launch: m => m.spec.launch, sel: m => m.spec.selection,
+  group: m => m.spec.group, country: m => m.spec.country || 'Åpen',
+  price: m => m.spec.price_hi ?? m.spec.price_lo ?? null,
+  fob: m => m.fob ? m.fob.eur : null, hits: m => m.matches.length };
+const WINE_GET = { producer: w => w.producer, name: w => w.name, country: w => w.country,
+  type: w => w.color, sugar: w => w.sugar_g_l, fob: w => w.fob_eur,
+  rep: w => repInfo(w.representation?.NO).label, updated: w => w.audit?.updated_at,
+  quality: w => qualitySummary(w).verified };
+const KAT_GET = { producer: r => r[0], country: r => r[1].country, wines: r => r[1].wines,
+  no: r => r[1]._no, se: r => r[1]._se, fi: r => r[1]._fi };
+const KATF = { country: '', q: '' };
+$('kfCountry').addEventListener('change', () => { KATF.country = $('kfCountry').value; renderKatalog(); });
+$('kfQ').addEventListener('input', () => { KATF.q = $('kfQ').value; renderKatalog(); });
+wireSort('specTable', SORTS.spec, () => renderSpecs());
+wireSort('wineTable', SORTS.wine, () => renderWines());
+wireSort('katTable', SORTS.kat, () => renderKatalog());
 
 /* ---- nav & theme ---- */
 $('nav').querySelectorAll('button').forEach(b => b.addEventListener('click', () => {
