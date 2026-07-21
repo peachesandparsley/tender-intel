@@ -44,22 +44,96 @@
    "volume_bottles": 100000,
    "fob_eur": 5.5,
    "representation": {
-    "NO": "likely listed — verify",
+    "NO": "search inconclusive — verify via catalog API",
     "SE": "unknown — verify",
     "FI": "unknown — verify"
    },
    "audit": {
     "created_by": "Claude (systemfrø)",
     "created_at": "2026-07-20T14:10",
-    "updated_by": "Claude (systemfrø)",
-    "updated_at": "2026-07-20T14:10",
+    "updated_by": "Claude (websøk site:vinmonopolet.no)",
+    "updated_at": "2026-07-21T09:30",
     "note": "Frødata fra offentlige kilder (produsentens tech sheets, Vinmonopolet-katalog, sertifiseringsregistre). FOB, volum og profil er ESTIMAT — bekreftes av produsent/importør."
    },
    "catalog_no": {
-    "status": "unchecked",
+    "status": "inconclusive",
     "product_id": null,
-    "checked_by": null,
-    "checked_at": null
+    "checked_by": "Claude (websøk site:vinmonopolet.no)",
+    "checked_at": "2026-07-21"
+   },
+   "verify": {
+    "producer": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "name": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "country": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "region": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "appellation": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "grapes": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "abv": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "wood": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "method": {
+     "tier": "public",
+     "note": "offentlig dokumentert"
+    },
+    "certs": {
+     "tier": "public",
+     "note": "sertifiseringsregistre (WIETA/Fairtrade/OVP m.fl.) — registeroppslag ikke arkivert ennå"
+    },
+    "sugar_g_l": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "profile": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "vintages_available": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "volume_bottles": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "fob_eur": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "closure": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "packaging": {
+     "tier": "unknown",
+     "note": "flaskevekt mangler — kreves i stadig flere anbud"
+    },
+    "representation": {
+     "tier": "unknown",
+     "note": "websøk 2026-07-21 ga ikke sikkert svar (kjent merke, søkedekning upålitelig) — krever katalog-API"
+    }
    }
   },
   {
@@ -103,22 +177,97 @@
    "volume_bottles": 200000,
    "fob_eur": 4.5,
    "representation": {
-    "NO": "likely listed — verify",
+    "NO": "importer on file — listed in VMP catalog (verified 2026-07-21, varenr 5665201)",
     "SE": "unknown — verify",
     "FI": "unknown — verify"
    },
    "audit": {
     "created_by": "Claude (systemfrø)",
     "created_at": "2026-07-20T14:10",
-    "updated_by": "Claude (systemfrø)",
-    "updated_at": "2026-07-20T14:10",
+    "updated_by": "Claude (websøk site:vinmonopolet.no)",
+    "updated_at": "2026-07-21T09:30",
     "note": "Frødata fra offentlige kilder (produsentens tech sheets, Vinmonopolet-katalog, sertifiseringsregistre). FOB, volum og profil er ESTIMAT — bekreftes av produsent/importør."
    },
    "catalog_no": {
-    "status": "unchecked",
-    "product_id": null,
-    "checked_by": null,
-    "checked_at": null
+    "status": "listed",
+    "product_id": "5665201",
+    "checked_by": "Claude (websøk site:vinmonopolet.no)",
+    "checked_at": "2026-07-21",
+    "note": "Graham Beck Pinot Noir Chardonnay Brut = Brut NV"
+   },
+   "verify": {
+    "producer": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "name": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "country": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "region": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "appellation": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "grapes": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "abv": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "wood": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "method": {
+     "tier": "public",
+     "note": "offentlig dokumentert"
+    },
+    "certs": {
+     "tier": "public",
+     "note": "sertifiseringsregistre (WIETA/Fairtrade/OVP m.fl.) — registeroppslag ikke arkivert ennå"
+    },
+    "sugar_g_l": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "profile": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "vintages_available": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "volume_bottles": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "fob_eur": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "closure": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "packaging": {
+     "tier": "unknown",
+     "note": "flaskevekt mangler — kreves i stadig flere anbud"
+    },
+    "representation": {
+     "tier": "verified",
+     "note": "eksakt vin funnet i Vinmonopolets katalog 2026-07-21 (varenr 5665201)"
+    }
    }
   },
   {
@@ -161,22 +310,96 @@
    "volume_bottles": 15000,
    "fob_eur": 8.0,
    "representation": {
-    "NO": "unrepresented (unverified)",
+    "NO": "no VMP listing found (web search 2026-07-21) — confirm via catalog API",
     "SE": "unknown — verify",
     "FI": "unknown — verify"
    },
    "audit": {
     "created_by": "Claude (systemfrø)",
     "created_at": "2026-07-20T14:10",
-    "updated_by": "Claude (systemfrø)",
-    "updated_at": "2026-07-20T14:10",
+    "updated_by": "Claude (websøk site:vinmonopolet.no)",
+    "updated_at": "2026-07-21T09:30",
     "note": "Frødata fra offentlige kilder (produsentens tech sheets, Vinmonopolet-katalog, sertifiseringsregistre). FOB, volum og profil er ESTIMAT — bekreftes av produsent/importør."
    },
    "catalog_no": {
-    "status": "not_found",
+    "status": "not_found_search",
     "product_id": null,
-    "checked_by": "Claude (websøk vinmonopolet.no)",
-    "checked_at": "2026-07-20T19:05"
+    "checked_by": "Claude (websøk site:vinmonopolet.no)",
+    "checked_at": "2026-07-21"
+   },
+   "verify": {
+    "producer": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "name": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "country": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "region": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "appellation": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "grapes": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "abv": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "wood": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "method": {
+     "tier": "public",
+     "note": "offentlig dokumentert"
+    },
+    "certs": {
+     "tier": "public",
+     "note": "sertifiseringsregistre (WIETA/Fairtrade/OVP m.fl.) — registeroppslag ikke arkivert ennå"
+    },
+    "sugar_g_l": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "profile": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "vintages_available": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "volume_bottles": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "fob_eur": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "closure": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "packaging": {
+     "tier": "unknown",
+     "note": "flaskevekt mangler — kreves i stadig flere anbud"
+    },
+    "representation": {
+     "tier": "public",
+     "note": "websøk 2026-07-21 fant ingen listing — endelig bekreftelse krever katalog-API"
+    }
    }
   },
   {
@@ -220,22 +443,92 @@
    "volume_bottles": 150000,
    "fob_eur": 4.2,
    "representation": {
-    "NO": "likely listed — verify",
+    "NO": "search inconclusive — verify via catalog API",
     "SE": "unknown — verify",
     "FI": "unknown — verify"
    },
    "audit": {
     "created_by": "Claude (systemfrø)",
     "created_at": "2026-07-20T14:10",
-    "updated_by": "Claude (systemfrø)",
-    "updated_at": "2026-07-20T14:10",
+    "updated_by": "Claude (websøk site:vinmonopolet.no)",
+    "updated_at": "2026-07-21T09:30",
     "note": "Frødata fra offentlige kilder (produsentens tech sheets, Vinmonopolet-katalog, sertifiseringsregistre). FOB, volum og profil er ESTIMAT — bekreftes av produsent/importør."
    },
    "catalog_no": {
-    "status": "unchecked",
+    "status": "inconclusive",
     "product_id": null,
-    "checked_by": null,
-    "checked_at": null
+    "checked_by": "Claude (websøk site:vinmonopolet.no)",
+    "checked_at": "2026-07-21"
+   },
+   "verify": {
+    "producer": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "name": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "country": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "region": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "appellation": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "grapes": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "abv": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "wood": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "certs": {
+     "tier": "public",
+     "note": "sertifiseringsregistre (WIETA/Fairtrade/OVP m.fl.) — registeroppslag ikke arkivert ennå"
+    },
+    "sugar_g_l": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "profile": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "vintages_available": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "volume_bottles": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "fob_eur": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "closure": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "packaging": {
+     "tier": "unknown",
+     "note": "flaskevekt mangler — kreves i stadig flere anbud"
+    },
+    "representation": {
+     "tier": "unknown",
+     "note": "websøk 2026-07-21 ga ikke sikkert svar (kjent merke, søkedekning upålitelig) — krever katalog-API"
+    }
    }
   },
   {
@@ -279,22 +572,92 @@
    "volume_bottles": 40000,
    "fob_eur": 16.0,
    "representation": {
-    "NO": "likely listed — verify",
+    "NO": "search inconclusive — verify via catalog API",
     "SE": "unknown — verify",
     "FI": "unknown — verify"
    },
    "audit": {
     "created_by": "Claude (systemfrø)",
     "created_at": "2026-07-20T14:10",
-    "updated_by": "Claude (systemfrø)",
-    "updated_at": "2026-07-20T14:10",
+    "updated_by": "Claude (websøk site:vinmonopolet.no)",
+    "updated_at": "2026-07-21T09:30",
     "note": "Frødata fra offentlige kilder (produsentens tech sheets, Vinmonopolet-katalog, sertifiseringsregistre). FOB, volum og profil er ESTIMAT — bekreftes av produsent/importør."
    },
    "catalog_no": {
-    "status": "unchecked",
+    "status": "inconclusive",
     "product_id": null,
-    "checked_by": null,
-    "checked_at": null
+    "checked_by": "Claude (websøk site:vinmonopolet.no)",
+    "checked_at": "2026-07-21"
+   },
+   "verify": {
+    "producer": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "name": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "country": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "region": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "appellation": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "grapes": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "abv": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "wood": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "certs": {
+     "tier": "public",
+     "note": "sertifiseringsregistre (WIETA/Fairtrade/OVP m.fl.) — registeroppslag ikke arkivert ennå"
+    },
+    "sugar_g_l": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "profile": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "vintages_available": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "volume_bottles": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "fob_eur": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "closure": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "packaging": {
+     "tier": "unknown",
+     "note": "flaskevekt mangler — kreves i stadig flere anbud"
+    },
+    "representation": {
+     "tier": "unknown",
+     "note": "websøk 2026-07-21 ga ikke sikkert svar (kjent merke, søkedekning upålitelig) — krever katalog-API"
+    }
    }
   },
   {
@@ -339,22 +702,92 @@
    "volume_bottles": 8000,
    "fob_eur": 12.0,
    "representation": {
-    "NO": "unrepresented (unverified)",
+    "NO": "no VMP listing found (web search 2026-07-21) — confirm via catalog API",
     "SE": "unknown — verify",
     "FI": "unknown — verify"
    },
    "audit": {
     "created_by": "Claude (systemfrø)",
     "created_at": "2026-07-20T14:10",
-    "updated_by": "Claude (systemfrø)",
-    "updated_at": "2026-07-20T14:10",
+    "updated_by": "Claude (websøk site:vinmonopolet.no)",
+    "updated_at": "2026-07-21T09:30",
     "note": "Frødata fra offentlige kilder (produsentens tech sheets, Vinmonopolet-katalog, sertifiseringsregistre). FOB, volum og profil er ESTIMAT — bekreftes av produsent/importør."
    },
    "catalog_no": {
-    "status": "not_found",
+    "status": "not_found_search",
     "product_id": null,
-    "checked_by": "Claude (websøk vinmonopolet.no)",
-    "checked_at": "2026-07-20T19:05"
+    "checked_by": "Claude (websøk site:vinmonopolet.no)",
+    "checked_at": "2026-07-21"
+   },
+   "verify": {
+    "producer": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "name": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "country": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "region": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "appellation": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "grapes": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "abv": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "wood": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "certs": {
+     "tier": "public",
+     "note": "sertifiseringsregistre (WIETA/Fairtrade/OVP m.fl.) — registeroppslag ikke arkivert ennå"
+    },
+    "sugar_g_l": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "profile": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "vintages_available": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "volume_bottles": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "fob_eur": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "closure": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "packaging": {
+     "tier": "unknown",
+     "note": "flaskevekt mangler — kreves i stadig flere anbud"
+    },
+    "representation": {
+     "tier": "public",
+     "note": "websøk 2026-07-21 fant ingen listing — endelig bekreftelse krever katalog-API"
+    }
    }
   },
   {
@@ -398,22 +831,92 @@
    "volume_bottles": 12000,
    "fob_eur": 9.5,
    "representation": {
-    "NO": "unrepresented (unverified)",
+    "NO": "no VMP listing found (web search 2026-07-21) — confirm via catalog API",
     "SE": "unknown — verify",
     "FI": "unknown — verify"
    },
    "audit": {
     "created_by": "Claude (systemfrø)",
     "created_at": "2026-07-20T14:10",
-    "updated_by": "Claude (systemfrø)",
-    "updated_at": "2026-07-20T14:10",
+    "updated_by": "Claude (websøk site:vinmonopolet.no)",
+    "updated_at": "2026-07-21T09:30",
     "note": "Frødata fra offentlige kilder (produsentens tech sheets, Vinmonopolet-katalog, sertifiseringsregistre). FOB, volum og profil er ESTIMAT — bekreftes av produsent/importør."
    },
    "catalog_no": {
-    "status": "not_found",
+    "status": "not_found_search",
     "product_id": null,
-    "checked_by": "Claude (websøk vinmonopolet.no)",
-    "checked_at": "2026-07-20T19:05"
+    "checked_by": "Claude (websøk site:vinmonopolet.no)",
+    "checked_at": "2026-07-21"
+   },
+   "verify": {
+    "producer": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "name": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "country": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "region": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "appellation": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "grapes": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "abv": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "wood": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "certs": {
+     "tier": "public",
+     "note": "sertifiseringsregistre (WIETA/Fairtrade/OVP m.fl.) — registeroppslag ikke arkivert ennå"
+    },
+    "sugar_g_l": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "profile": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "vintages_available": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "volume_bottles": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "fob_eur": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "closure": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "packaging": {
+     "tier": "unknown",
+     "note": "flaskevekt mangler — kreves i stadig flere anbud"
+    },
+    "representation": {
+     "tier": "public",
+     "note": "websøk 2026-07-21 fant ingen listing — endelig bekreftelse krever katalog-API"
+    }
    }
   },
   {
@@ -456,22 +959,92 @@
    "volume_bottles": 15000,
    "fob_eur": 4.8,
    "representation": {
-    "NO": "unrepresented (unverified)",
+    "NO": "no VMP listing found (web search 2026-07-21) — confirm via catalog API",
     "SE": "unknown — verify",
     "FI": "unknown — verify"
    },
    "audit": {
     "created_by": "Claude (systemfrø)",
     "created_at": "2026-07-20T14:10",
-    "updated_by": "Claude (systemfrø)",
-    "updated_at": "2026-07-20T14:10",
+    "updated_by": "Claude (websøk site:vinmonopolet.no)",
+    "updated_at": "2026-07-21T09:30",
     "note": "Frødata fra offentlige kilder (produsentens tech sheets, Vinmonopolet-katalog, sertifiseringsregistre). FOB, volum og profil er ESTIMAT — bekreftes av produsent/importør."
    },
    "catalog_no": {
-    "status": "unchecked",
+    "status": "not_found_search",
     "product_id": null,
-    "checked_by": null,
-    "checked_at": null
+    "checked_by": "Claude (websøk site:vinmonopolet.no)",
+    "checked_at": "2026-07-21"
+   },
+   "verify": {
+    "producer": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "name": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "country": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "region": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "appellation": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "grapes": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "abv": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "wood": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "certs": {
+     "tier": "public",
+     "note": "sertifiseringsregistre (WIETA/Fairtrade/OVP m.fl.) — registeroppslag ikke arkivert ennå"
+    },
+    "sugar_g_l": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "profile": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "vintages_available": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "volume_bottles": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "fob_eur": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "closure": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "packaging": {
+     "tier": "unknown",
+     "note": "flaskevekt mangler — kreves i stadig flere anbud"
+    },
+    "representation": {
+     "tier": "public",
+     "note": "websøk 2026-07-21 fant ingen listing — endelig bekreftelse krever katalog-API"
+    }
    }
   },
   {
@@ -515,22 +1088,93 @@
    "volume_bottles": 120000,
    "fob_eur": 5.5,
    "representation": {
-    "NO": "listed in Vinmonopolet catalog — importer on file (verify)",
+    "NO": "importer on file — listed in VMP catalog (verified 2026-07-21, varenr 1695701)",
     "SE": "unknown — verify",
     "FI": "unknown — verify"
    },
    "audit": {
     "created_by": "Claude (systemfrø)",
     "created_at": "2026-07-20T14:10",
-    "updated_by": "Claude (systemfrø)",
-    "updated_at": "2026-07-20T14:10",
+    "updated_by": "Claude (websøk site:vinmonopolet.no)",
+    "updated_at": "2026-07-21T09:30",
     "note": "Frødata fra offentlige kilder (produsentens tech sheets, Vinmonopolet-katalog, sertifiseringsregistre). FOB, volum og profil er ESTIMAT — bekreftes av produsent/importør."
    },
    "catalog_no": {
     "status": "listed",
     "product_id": "1695701",
-    "checked_by": "Claude (websøk vinmonopolet.no)",
-    "checked_at": "2026-07-20T19:05"
+    "checked_by": "Claude (websøk site:vinmonopolet.no)",
+    "checked_at": "2026-07-21",
+    "note": "A.A. Badenhorst Secateurs Chenin"
+   },
+   "verify": {
+    "producer": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "name": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "country": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "region": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "appellation": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "grapes": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "abv": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "wood": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "certs": {
+     "tier": "public",
+     "note": "sertifiseringsregistre (WIETA/Fairtrade/OVP m.fl.) — registeroppslag ikke arkivert ennå"
+    },
+    "sugar_g_l": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "profile": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "vintages_available": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "volume_bottles": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "fob_eur": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "closure": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "packaging": {
+     "tier": "unknown",
+     "note": "flaskevekt mangler — kreves i stadig flere anbud"
+    },
+    "representation": {
+     "tier": "verified",
+     "note": "eksakt vin funnet i Vinmonopolets katalog 2026-07-21 (varenr 1695701)"
+    }
    }
   },
   {
@@ -574,22 +1218,93 @@
    "volume_bottles": 25000,
    "fob_eur": 15.0,
    "representation": {
-    "NO": "likely listed — verify",
+    "NO": "importer on file — listed in VMP catalog (verified 2026-07-21, varenr 342101)",
     "SE": "unknown — verify",
     "FI": "unknown — verify"
    },
    "audit": {
     "created_by": "Claude (systemfrø)",
     "created_at": "2026-07-20T14:10",
-    "updated_by": "Claude (systemfrø)",
-    "updated_at": "2026-07-20T14:10",
+    "updated_by": "Claude (websøk site:vinmonopolet.no)",
+    "updated_at": "2026-07-21T09:30",
     "note": "Frødata fra offentlige kilder (produsentens tech sheets, Vinmonopolet-katalog, sertifiseringsregistre). FOB, volum og profil er ESTIMAT — bekreftes av produsent/importør."
    },
    "catalog_no": {
-    "status": "unchecked",
-    "product_id": null,
-    "checked_by": null,
-    "checked_at": null
+    "status": "listed",
+    "product_id": "342101",
+    "checked_by": "Claude (websøk site:vinmonopolet.no)",
+    "checked_at": "2026-07-21",
+    "note": "Mullineux Syrah 2021"
+   },
+   "verify": {
+    "producer": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "name": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "country": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "region": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "appellation": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "grapes": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "abv": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "wood": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "certs": {
+     "tier": "public",
+     "note": "sertifiseringsregistre (WIETA/Fairtrade/OVP m.fl.) — registeroppslag ikke arkivert ennå"
+    },
+    "sugar_g_l": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "profile": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "vintages_available": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "volume_bottles": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "fob_eur": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "closure": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "packaging": {
+     "tier": "unknown",
+     "note": "flaskevekt mangler — kreves i stadig flere anbud"
+    },
+    "representation": {
+     "tier": "verified",
+     "note": "eksakt vin funnet i Vinmonopolets katalog 2026-07-21 (varenr 342101)"
+    }
    }
   },
   {
@@ -634,22 +1349,92 @@
    "volume_bottles": 40000,
    "fob_eur": 4.5,
    "representation": {
-    "NO": "likely listed — verify",
+    "NO": "no VMP listing found (web search 2026-07-21) — confirm via catalog API",
     "SE": "unknown — verify",
     "FI": "unknown — verify"
    },
    "audit": {
     "created_by": "Claude (systemfrø)",
     "created_at": "2026-07-20T14:10",
-    "updated_by": "Claude (systemfrø)",
-    "updated_at": "2026-07-20T14:10",
+    "updated_by": "Claude (websøk site:vinmonopolet.no)",
+    "updated_at": "2026-07-21T09:30",
     "note": "Frødata fra offentlige kilder (produsentens tech sheets, Vinmonopolet-katalog, sertifiseringsregistre). FOB, volum og profil er ESTIMAT — bekreftes av produsent/importør."
    },
    "catalog_no": {
-    "status": "not_found",
+    "status": "not_found_search",
     "product_id": null,
-    "checked_by": "Claude (websøk vinmonopolet.no)",
-    "checked_at": "2026-07-20T19:05"
+    "checked_by": "Claude (websøk site:vinmonopolet.no)",
+    "checked_at": "2026-07-21"
+   },
+   "verify": {
+    "producer": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "name": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "country": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "region": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "appellation": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "grapes": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "abv": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "wood": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "certs": {
+     "tier": "public",
+     "note": "sertifiseringsregistre (WIETA/Fairtrade/OVP m.fl.) — registeroppslag ikke arkivert ennå"
+    },
+    "sugar_g_l": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "profile": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "vintages_available": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "volume_bottles": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "fob_eur": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "closure": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "packaging": {
+     "tier": "unknown",
+     "note": "flaskevekt mangler — kreves i stadig flere anbud"
+    },
+    "representation": {
+     "tier": "public",
+     "note": "websøk 2026-07-21 fant ingen listing — endelig bekreftelse krever katalog-API"
+    }
    }
   },
   {
@@ -694,22 +1479,92 @@
    "volume_bottles": 60000,
    "fob_eur": 5.0,
    "representation": {
-    "NO": "likely listed — verify",
+    "NO": "no VMP listing found (web search 2026-07-21) — confirm via catalog API",
     "SE": "unknown — verify",
     "FI": "unknown — verify"
    },
    "audit": {
     "created_by": "Claude (systemfrø)",
     "created_at": "2026-07-20T14:10",
-    "updated_by": "Claude (systemfrø)",
-    "updated_at": "2026-07-20T14:10",
+    "updated_by": "Claude (websøk site:vinmonopolet.no)",
+    "updated_at": "2026-07-21T09:30",
     "note": "Frødata fra offentlige kilder (produsentens tech sheets, Vinmonopolet-katalog, sertifiseringsregistre). FOB, volum og profil er ESTIMAT — bekreftes av produsent/importør."
    },
    "catalog_no": {
-    "status": "unchecked",
+    "status": "not_found_search",
     "product_id": null,
-    "checked_by": null,
-    "checked_at": null
+    "checked_by": "Claude (websøk site:vinmonopolet.no)",
+    "checked_at": "2026-07-21"
+   },
+   "verify": {
+    "producer": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "name": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "country": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "region": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "appellation": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "grapes": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "abv": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "wood": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "certs": {
+     "tier": "public",
+     "note": "sertifiseringsregistre (WIETA/Fairtrade/OVP m.fl.) — registeroppslag ikke arkivert ennå"
+    },
+    "sugar_g_l": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "profile": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "vintages_available": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "volume_bottles": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "fob_eur": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "closure": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "packaging": {
+     "tier": "unknown",
+     "note": "flaskevekt mangler — kreves i stadig flere anbud"
+    },
+    "representation": {
+     "tier": "public",
+     "note": "websøk 2026-07-21 fant ingen listing — endelig bekreftelse krever katalog-API"
+    }
    }
   },
   {
@@ -754,22 +1609,92 @@
    "volume_bottles": 100000,
    "fob_eur": 3.2,
    "representation": {
-    "NO": "unrepresented (unverified)",
+    "NO": "no VMP listing found (web search 2026-07-21) — confirm via catalog API",
     "SE": "unknown — verify",
     "FI": "unknown — verify"
    },
    "audit": {
     "created_by": "Claude (systemfrø)",
     "created_at": "2026-07-20T14:10",
-    "updated_by": "Claude (systemfrø)",
-    "updated_at": "2026-07-20T14:10",
+    "updated_by": "Claude (websøk site:vinmonopolet.no)",
+    "updated_at": "2026-07-21T09:30",
     "note": "Frødata fra offentlige kilder (produsentens tech sheets, Vinmonopolet-katalog, sertifiseringsregistre). FOB, volum og profil er ESTIMAT — bekreftes av produsent/importør."
    },
    "catalog_no": {
-    "status": "unchecked",
+    "status": "not_found_search",
     "product_id": null,
-    "checked_by": null,
-    "checked_at": null
+    "checked_by": "Claude (websøk site:vinmonopolet.no)",
+    "checked_at": "2026-07-21"
+   },
+   "verify": {
+    "producer": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "name": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "country": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "region": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "appellation": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "grapes": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "abv": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "wood": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "certs": {
+     "tier": "public",
+     "note": "sertifiseringsregistre (WIETA/Fairtrade/OVP m.fl.) — registeroppslag ikke arkivert ennå"
+    },
+    "sugar_g_l": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "profile": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "vintages_available": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "volume_bottles": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "fob_eur": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "closure": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "packaging": {
+     "tier": "estimate",
+     "note": "estimat"
+    },
+    "representation": {
+     "tier": "public",
+     "note": "websøk 2026-07-21 fant ingen listing — endelig bekreftelse krever katalog-API"
+    }
    }
   },
   {
@@ -812,22 +1737,93 @@
    "volume_bottles": 30000,
    "fob_eur": 11.0,
    "representation": {
-    "NO": "likely listed — verify",
+    "NO": "importer on file — listed in VMP catalog (verified 2026-07-21, varenr 3915501)",
     "SE": "unknown — verify",
     "FI": "unknown — verify"
    },
    "audit": {
     "created_by": "Claude (systemfrø)",
     "created_at": "2026-07-20T14:10",
-    "updated_by": "Claude (systemfrø)",
-    "updated_at": "2026-07-20T14:10",
+    "updated_by": "Claude (websøk site:vinmonopolet.no)",
+    "updated_at": "2026-07-21T09:30",
     "note": "Frødata fra offentlige kilder (produsentens tech sheets, Vinmonopolet-katalog, sertifiseringsregistre). FOB, volum og profil er ESTIMAT — bekreftes av produsent/importør."
    },
    "catalog_no": {
-    "status": "unchecked",
-    "product_id": null,
-    "checked_by": null,
-    "checked_at": null
+    "status": "listed",
+    "product_id": "3915501",
+    "checked_by": "Claude (websøk site:vinmonopolet.no)",
+    "checked_at": "2026-07-21",
+    "note": "Crystallum Peter Max Pinot Noir"
+   },
+   "verify": {
+    "producer": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "name": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "country": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "region": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "appellation": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "grapes": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "abv": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "wood": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "certs": {
+     "tier": "public",
+     "note": "sertifiseringsregistre (WIETA/Fairtrade/OVP m.fl.) — registeroppslag ikke arkivert ennå"
+    },
+    "sugar_g_l": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "profile": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "vintages_available": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "volume_bottles": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "fob_eur": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "closure": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "packaging": {
+     "tier": "unknown",
+     "note": "flaskevekt mangler — kreves i stadig flere anbud"
+    },
+    "representation": {
+     "tier": "verified",
+     "note": "eksakt vin funnet i Vinmonopolets katalog 2026-07-21 (varenr 3915501)"
+    }
    }
   },
   {
@@ -870,22 +1866,92 @@
    "volume_bottles": 200000,
    "fob_eur": 5.5,
    "representation": {
-    "NO": "likely listed — verify",
+    "NO": "search inconclusive — verify via catalog API",
     "SE": "unknown — verify",
     "FI": "unknown — verify"
    },
    "audit": {
     "created_by": "Claude (systemfrø)",
     "created_at": "2026-07-20T14:10",
-    "updated_by": "Claude (systemfrø)",
-    "updated_at": "2026-07-20T14:10",
+    "updated_by": "Claude (websøk site:vinmonopolet.no)",
+    "updated_at": "2026-07-21T09:30",
     "note": "Frødata fra offentlige kilder (produsentens tech sheets, Vinmonopolet-katalog, sertifiseringsregistre). FOB, volum og profil er ESTIMAT — bekreftes av produsent/importør."
    },
    "catalog_no": {
-    "status": "unchecked",
+    "status": "inconclusive",
     "product_id": null,
-    "checked_by": null,
-    "checked_at": null
+    "checked_by": "Claude (websøk site:vinmonopolet.no)",
+    "checked_at": "2026-07-21"
+   },
+   "verify": {
+    "producer": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "name": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "country": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "region": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "appellation": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "grapes": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "abv": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "wood": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "certs": {
+     "tier": "public",
+     "note": "sertifiseringsregistre (WIETA/Fairtrade/OVP m.fl.) — registeroppslag ikke arkivert ennå"
+    },
+    "sugar_g_l": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "profile": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "vintages_available": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "volume_bottles": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "fob_eur": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "closure": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "packaging": {
+     "tier": "unknown",
+     "note": "flaskevekt mangler — kreves i stadig flere anbud"
+    },
+    "representation": {
+     "tier": "unknown",
+     "note": "websøk 2026-07-21 ga ikke sikkert svar (kjent merke, søkedekning upålitelig) — krever katalog-API"
+    }
    }
   },
   {
@@ -928,22 +1994,92 @@
    "volume_bottles": 80000,
    "fob_eur": 5.0,
    "representation": {
-    "NO": "likely listed — verify",
+    "NO": "producer listed in VMP catalog (verified 2026-07-21) — cuvée not confirmed",
     "SE": "unknown — verify",
     "FI": "unknown — verify"
    },
    "audit": {
     "created_by": "Claude (systemfrø)",
     "created_at": "2026-07-20T14:10",
-    "updated_by": "Claude (systemfrø)",
-    "updated_at": "2026-07-20T14:10",
+    "updated_by": "Claude (websøk site:vinmonopolet.no)",
+    "updated_at": "2026-07-21T09:30",
     "note": "Frødata fra offentlige kilder (produsentens tech sheets, Vinmonopolet-katalog, sertifiseringsregistre). FOB, volum og profil er ESTIMAT — bekreftes av produsent/importør."
    },
    "catalog_no": {
-    "status": "unchecked",
+    "status": "listed_producer",
     "product_id": null,
-    "checked_by": null,
-    "checked_at": null
+    "checked_by": "Claude (websøk site:vinmonopolet.no)",
+    "checked_at": "2026-07-21"
+   },
+   "verify": {
+    "producer": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "name": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "country": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "region": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "appellation": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "grapes": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "abv": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "wood": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "certs": {
+     "tier": "public",
+     "note": "sertifiseringsregistre (WIETA/Fairtrade/OVP m.fl.) — registeroppslag ikke arkivert ennå"
+    },
+    "sugar_g_l": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "profile": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "vintages_available": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "volume_bottles": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "fob_eur": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "closure": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "packaging": {
+     "tier": "unknown",
+     "note": "flaskevekt mangler — kreves i stadig flere anbud"
+    },
+    "representation": {
+     "tier": "verified",
+     "note": "produsenten har listinger i Vinmonopolets katalog (2026-07-21); denne cuvéen ikke bekreftet"
+    }
    }
   },
   {
@@ -984,22 +2120,88 @@
    "volume_bottles": 150000,
    "fob_eur": 4.5,
    "representation": {
-    "NO": "listed in Vinmonopolet catalog — importer on file (verify)",
+    "NO": "producer listed in VMP catalog (verified 2026-07-21) — cuvée not confirmed",
     "SE": "unknown — verify",
     "FI": "unknown — verify"
    },
    "audit": {
     "created_by": "Claude (systemfrø)",
     "created_at": "2026-07-20T14:10",
-    "updated_by": "Claude (systemfrø)",
-    "updated_at": "2026-07-20T14:10",
+    "updated_by": "Claude (websøk site:vinmonopolet.no)",
+    "updated_at": "2026-07-21T09:30",
     "note": "Frødata fra offentlige kilder (produsentens tech sheets, Vinmonopolet-katalog, sertifiseringsregistre). FOB, volum og profil er ESTIMAT — bekreftes av produsent/importør."
    },
    "catalog_no": {
-    "status": "unchecked",
+    "status": "listed_producer",
     "product_id": null,
-    "checked_by": null,
-    "checked_at": null
+    "checked_by": "Claude (websøk site:vinmonopolet.no)",
+    "checked_at": "2026-07-21"
+   },
+   "verify": {
+    "producer": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "name": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "country": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "region": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "appellation": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "grapes": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "abv": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "wood": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "sugar_g_l": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "profile": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "vintages_available": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "volume_bottles": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "fob_eur": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "closure": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "packaging": {
+     "tier": "unknown",
+     "note": "flaskevekt mangler — kreves i stadig flere anbud"
+    },
+    "representation": {
+     "tier": "verified",
+     "note": "produsenten har listinger i Vinmonopolets katalog (2026-07-21); denne cuvéen ikke bekreftet"
+    }
    }
   },
   {
@@ -1040,22 +2242,89 @@
    "volume_bottles": 200000,
    "fob_eur": 4.0,
    "representation": {
-    "NO": "likely listed — verify",
+    "NO": "importer on file — listed in VMP catalog (verified 2026-07-21, varenr 12073105)",
     "SE": "unknown — verify",
     "FI": "unknown — verify"
    },
    "audit": {
     "created_by": "Claude (systemfrø)",
     "created_at": "2026-07-20T14:10",
-    "updated_by": "Claude (systemfrø)",
-    "updated_at": "2026-07-20T14:10",
+    "updated_by": "Claude (websøk site:vinmonopolet.no)",
+    "updated_at": "2026-07-21T09:30",
     "note": "Frødata fra offentlige kilder (produsentens tech sheets, Vinmonopolet-katalog, sertifiseringsregistre). FOB, volum og profil er ESTIMAT — bekreftes av produsent/importør."
    },
    "catalog_no": {
-    "status": "unchecked",
-    "product_id": null,
-    "checked_by": null,
-    "checked_at": null
+    "status": "listed",
+    "product_id": "12073105",
+    "checked_by": "Claude (websøk site:vinmonopolet.no)",
+    "checked_at": "2026-07-21",
+    "note": "Dr. Loosen Estate Riesling 2023"
+   },
+   "verify": {
+    "producer": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "name": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "country": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "region": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "appellation": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "grapes": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "abv": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "wood": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "sugar_g_l": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "profile": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "vintages_available": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "volume_bottles": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "fob_eur": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "closure": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "packaging": {
+     "tier": "unknown",
+     "note": "flaskevekt mangler — kreves i stadig flere anbud"
+    },
+    "representation": {
+     "tier": "verified",
+     "note": "eksakt vin funnet i Vinmonopolets katalog 2026-07-21 (varenr 12073105)"
+    }
    }
   },
   {
@@ -1099,22 +2368,96 @@
    "volume_bottles": 100000,
    "fob_eur": 6.5,
    "representation": {
-    "NO": "likely listed — verify",
+    "NO": "no VMP listing found (web search 2026-07-21) — confirm via catalog API",
     "SE": "unknown — verify",
     "FI": "unknown — verify"
    },
    "audit": {
     "created_by": "Claude (systemfrø)",
     "created_at": "2026-07-20T14:10",
-    "updated_by": "Claude (systemfrø)",
-    "updated_at": "2026-07-20T14:10",
+    "updated_by": "Claude (websøk site:vinmonopolet.no)",
+    "updated_at": "2026-07-21T09:30",
     "note": "Frødata fra offentlige kilder (produsentens tech sheets, Vinmonopolet-katalog, sertifiseringsregistre). FOB, volum og profil er ESTIMAT — bekreftes av produsent/importør."
    },
    "catalog_no": {
-    "status": "unchecked",
+    "status": "not_found_search",
     "product_id": null,
-    "checked_by": null,
-    "checked_at": null
+    "checked_by": "Claude (websøk site:vinmonopolet.no)",
+    "checked_at": "2026-07-21"
+   },
+   "verify": {
+    "producer": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "name": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "country": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "region": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "appellation": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "grapes": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "abv": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "wood": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "method": {
+     "tier": "public",
+     "note": "offentlig dokumentert"
+    },
+    "certs": {
+     "tier": "public",
+     "note": "sertifiseringsregistre (WIETA/Fairtrade/OVP m.fl.) — registeroppslag ikke arkivert ennå"
+    },
+    "sugar_g_l": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "profile": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "vintages_available": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "volume_bottles": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "fob_eur": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "closure": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "packaging": {
+     "tier": "unknown",
+     "note": "flaskevekt mangler — kreves i stadig flere anbud"
+    },
+    "representation": {
+     "tier": "public",
+     "note": "websøk 2026-07-21 fant ingen listing — endelig bekreftelse krever katalog-API"
+    }
    }
   },
   {
@@ -1155,22 +2498,88 @@
    "volume_bottles": 250000,
    "fob_eur": 6.0,
    "representation": {
-    "NO": "likely listed — verify",
+    "NO": "producer listed in VMP catalog (verified 2026-07-21) — cuvée not confirmed",
     "SE": "unknown — verify",
     "FI": "unknown — verify"
    },
    "audit": {
     "created_by": "Claude (systemfrø)",
     "created_at": "2026-07-20T14:10",
-    "updated_by": "Claude (systemfrø)",
-    "updated_at": "2026-07-20T14:10",
+    "updated_by": "Claude (websøk site:vinmonopolet.no)",
+    "updated_at": "2026-07-21T09:30",
     "note": "Frødata fra offentlige kilder (produsentens tech sheets, Vinmonopolet-katalog, sertifiseringsregistre). FOB, volum og profil er ESTIMAT — bekreftes av produsent/importør."
    },
    "catalog_no": {
-    "status": "unchecked",
+    "status": "listed_producer",
     "product_id": null,
-    "checked_by": null,
-    "checked_at": null
+    "checked_by": "Claude (websøk site:vinmonopolet.no)",
+    "checked_at": "2026-07-21"
+   },
+   "verify": {
+    "producer": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "name": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "country": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "region": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "appellation": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "grapes": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "abv": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "wood": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "sugar_g_l": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "profile": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "vintages_available": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "volume_bottles": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "fob_eur": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "closure": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "packaging": {
+     "tier": "unknown",
+     "note": "flaskevekt mangler — kreves i stadig flere anbud"
+    },
+    "representation": {
+     "tier": "verified",
+     "note": "produsenten har listinger i Vinmonopolets katalog (2026-07-21); denne cuvéen ikke bekreftet"
+    }
    }
   },
   {
@@ -1212,22 +2621,92 @@
    "volume_bottles": 120000,
    "fob_eur": 3.5,
    "representation": {
-    "NO": "unrepresented (unverified)",
+    "NO": "no VMP listing found (web search 2026-07-21) — confirm via catalog API",
     "SE": "unknown — verify",
     "FI": "unknown — verify"
    },
    "audit": {
     "created_by": "Claude (systemfrø)",
     "created_at": "2026-07-20T14:10",
-    "updated_by": "Claude (systemfrø)",
-    "updated_at": "2026-07-20T14:10",
+    "updated_by": "Claude (websøk site:vinmonopolet.no)",
+    "updated_at": "2026-07-21T09:30",
     "note": "Frødata fra offentlige kilder (produsentens tech sheets, Vinmonopolet-katalog, sertifiseringsregistre). FOB, volum og profil er ESTIMAT — bekreftes av produsent/importør."
    },
    "catalog_no": {
-    "status": "unchecked",
+    "status": "not_found_search",
     "product_id": null,
-    "checked_by": null,
-    "checked_at": null
+    "checked_by": "Claude (websøk site:vinmonopolet.no)",
+    "checked_at": "2026-07-21"
+   },
+   "verify": {
+    "producer": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "name": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "country": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "region": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "appellation": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "grapes": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "abv": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "wood": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "certs": {
+     "tier": "public",
+     "note": "sertifiseringsregistre (WIETA/Fairtrade/OVP m.fl.) — registeroppslag ikke arkivert ennå"
+    },
+    "sugar_g_l": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "profile": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "vintages_available": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "volume_bottles": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "fob_eur": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "closure": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "packaging": {
+     "tier": "unknown",
+     "note": "flaskevekt mangler — kreves i stadig flere anbud"
+    },
+    "representation": {
+     "tier": "public",
+     "note": "websøk 2026-07-21 fant ingen listing — endelig bekreftelse krever katalog-API"
+    }
    }
   },
   {
@@ -1270,22 +2749,92 @@
    "volume_bottles": 180000,
    "fob_eur": 4.5,
    "representation": {
-    "NO": "likely listed — verify",
+    "NO": "search inconclusive — verify via catalog API",
     "SE": "unknown — verify",
     "FI": "unknown — verify"
    },
    "audit": {
     "created_by": "Claude (systemfrø)",
     "created_at": "2026-07-20T14:10",
-    "updated_by": "Claude (systemfrø)",
-    "updated_at": "2026-07-20T14:10",
+    "updated_by": "Claude (websøk site:vinmonopolet.no)",
+    "updated_at": "2026-07-21T09:30",
     "note": "Frødata fra offentlige kilder (produsentens tech sheets, Vinmonopolet-katalog, sertifiseringsregistre). FOB, volum og profil er ESTIMAT — bekreftes av produsent/importør."
    },
    "catalog_no": {
-    "status": "unchecked",
+    "status": "inconclusive",
     "product_id": null,
-    "checked_by": null,
-    "checked_at": null
+    "checked_by": "Claude (websøk site:vinmonopolet.no)",
+    "checked_at": "2026-07-21"
+   },
+   "verify": {
+    "producer": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "name": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "country": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "region": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "appellation": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "grapes": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "abv": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "wood": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "certs": {
+     "tier": "public",
+     "note": "sertifiseringsregistre (WIETA/Fairtrade/OVP m.fl.) — registeroppslag ikke arkivert ennå"
+    },
+    "sugar_g_l": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "profile": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "vintages_available": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "volume_bottles": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "fob_eur": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "closure": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "packaging": {
+     "tier": "unknown",
+     "note": "flaskevekt mangler — kreves i stadig flere anbud"
+    },
+    "representation": {
+     "tier": "unknown",
+     "note": "websøk 2026-07-21 ga ikke sikkert svar (kjent merke, søkedekning upålitelig) — krever katalog-API"
+    }
    }
   },
   {
@@ -1326,22 +2875,88 @@
    "volume_bottles": 60000,
    "fob_eur": 4.8,
    "representation": {
-    "NO": "unrepresented (unverified)",
+    "NO": "no VMP listing found (web search 2026-07-21) — confirm via catalog API",
     "SE": "unknown — verify",
     "FI": "unknown — verify"
    },
    "audit": {
     "created_by": "Claude (systemfrø)",
     "created_at": "2026-07-20T14:10",
-    "updated_by": "Claude (systemfrø)",
-    "updated_at": "2026-07-20T14:10",
+    "updated_by": "Claude (websøk site:vinmonopolet.no)",
+    "updated_at": "2026-07-21T09:30",
     "note": "Frødata fra offentlige kilder (produsentens tech sheets, Vinmonopolet-katalog, sertifiseringsregistre). FOB, volum og profil er ESTIMAT — bekreftes av produsent/importør."
    },
    "catalog_no": {
-    "status": "unchecked",
+    "status": "not_found_search",
     "product_id": null,
-    "checked_by": null,
-    "checked_at": null
+    "checked_by": "Claude (websøk site:vinmonopolet.no)",
+    "checked_at": "2026-07-21"
+   },
+   "verify": {
+    "producer": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "name": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "country": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "region": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "appellation": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "grapes": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "abv": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "wood": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "sugar_g_l": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "profile": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "vintages_available": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "volume_bottles": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "fob_eur": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "closure": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "packaging": {
+     "tier": "unknown",
+     "note": "flaskevekt mangler — kreves i stadig flere anbud"
+    },
+    "representation": {
+     "tier": "public",
+     "note": "websøk 2026-07-21 fant ingen listing — endelig bekreftelse krever katalog-API"
+    }
    }
   },
   {
@@ -1385,22 +3000,88 @@
    "volume_bottles": 150000,
    "fob_eur": 4.5,
    "representation": {
-    "NO": "likely listed — verify",
+    "NO": "search inconclusive — verify via catalog API",
     "SE": "unknown — verify",
     "FI": "unknown — verify"
    },
    "audit": {
     "created_by": "Claude (systemfrø)",
     "created_at": "2026-07-20T14:10",
-    "updated_by": "Claude (systemfrø)",
-    "updated_at": "2026-07-20T14:10",
+    "updated_by": "Claude (websøk site:vinmonopolet.no)",
+    "updated_at": "2026-07-21T09:30",
     "note": "Frødata fra offentlige kilder (produsentens tech sheets, Vinmonopolet-katalog, sertifiseringsregistre). FOB, volum og profil er ESTIMAT — bekreftes av produsent/importør."
    },
    "catalog_no": {
-    "status": "unchecked",
+    "status": "inconclusive",
     "product_id": null,
-    "checked_by": null,
-    "checked_at": null
+    "checked_by": "Claude (websøk site:vinmonopolet.no)",
+    "checked_at": "2026-07-21"
+   },
+   "verify": {
+    "producer": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "name": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "country": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "region": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "appellation": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "grapes": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "abv": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "wood": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "sugar_g_l": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "profile": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "vintages_available": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "volume_bottles": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "fob_eur": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "closure": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "packaging": {
+     "tier": "unknown",
+     "note": "flaskevekt mangler — kreves i stadig flere anbud"
+    },
+    "representation": {
+     "tier": "unknown",
+     "note": "websøk 2026-07-21 ga ikke sikkert svar (kjent merke, søkedekning upålitelig) — krever katalog-API"
+    }
    }
   },
   {
@@ -1443,22 +3124,92 @@
    "volume_bottles": 200000,
    "fob_eur": 3.0,
    "representation": {
-    "NO": "likely listed — verify",
+    "NO": "search inconclusive — verify via catalog API",
     "SE": "unknown — verify",
     "FI": "unknown — verify"
    },
    "audit": {
     "created_by": "Claude (systemfrø)",
     "created_at": "2026-07-20T14:10",
-    "updated_by": "Claude (systemfrø)",
-    "updated_at": "2026-07-20T14:10",
+    "updated_by": "Claude (websøk site:vinmonopolet.no)",
+    "updated_at": "2026-07-21T09:30",
     "note": "Frødata fra offentlige kilder (produsentens tech sheets, Vinmonopolet-katalog, sertifiseringsregistre). FOB, volum og profil er ESTIMAT — bekreftes av produsent/importør."
    },
    "catalog_no": {
-    "status": "unchecked",
+    "status": "inconclusive",
     "product_id": null,
-    "checked_by": null,
-    "checked_at": null
+    "checked_by": "Claude (websøk site:vinmonopolet.no)",
+    "checked_at": "2026-07-21"
+   },
+   "verify": {
+    "producer": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "name": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "country": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "region": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "appellation": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "grapes": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "abv": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "wood": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "certs": {
+     "tier": "public",
+     "note": "sertifiseringsregistre (WIETA/Fairtrade/OVP m.fl.) — registeroppslag ikke arkivert ennå"
+    },
+    "sugar_g_l": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "profile": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "vintages_available": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "volume_bottles": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "fob_eur": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "closure": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "packaging": {
+     "tier": "estimate",
+     "note": "estimat"
+    },
+    "representation": {
+     "tier": "unknown",
+     "note": "websøk 2026-07-21 ga ikke sikkert svar (kjent merke, søkedekning upålitelig) — krever katalog-API"
+    }
    }
   },
   {
@@ -1502,22 +3253,92 @@
    "volume_bottles": 250000,
    "fob_eur": 3.5,
    "representation": {
-    "NO": "likely listed — verify",
+    "NO": "search inconclusive — verify via catalog API",
     "SE": "unknown — verify",
     "FI": "unknown — verify"
    },
    "audit": {
     "created_by": "Claude (systemfrø)",
     "created_at": "2026-07-20T14:10",
-    "updated_by": "Claude (systemfrø)",
-    "updated_at": "2026-07-20T14:10",
+    "updated_by": "Claude (websøk site:vinmonopolet.no)",
+    "updated_at": "2026-07-21T09:30",
     "note": "Frødata fra offentlige kilder (produsentens tech sheets, Vinmonopolet-katalog, sertifiseringsregistre). FOB, volum og profil er ESTIMAT — bekreftes av produsent/importør."
    },
    "catalog_no": {
-    "status": "unchecked",
+    "status": "inconclusive",
     "product_id": null,
-    "checked_by": null,
-    "checked_at": null
+    "checked_by": "Claude (websøk site:vinmonopolet.no)",
+    "checked_at": "2026-07-21"
+   },
+   "verify": {
+    "producer": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "name": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "country": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "region": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "appellation": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "grapes": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "abv": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "wood": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "certs": {
+     "tier": "public",
+     "note": "sertifiseringsregistre (WIETA/Fairtrade/OVP m.fl.) — registeroppslag ikke arkivert ennå"
+    },
+    "sugar_g_l": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "profile": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "vintages_available": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "volume_bottles": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "fob_eur": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "closure": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "packaging": {
+     "tier": "unknown",
+     "note": "flaskevekt mangler — kreves i stadig flere anbud"
+    },
+    "representation": {
+     "tier": "unknown",
+     "note": "websøk 2026-07-21 ga ikke sikkert svar (kjent merke, søkedekning upålitelig) — krever katalog-API"
+    }
    }
   },
   {
@@ -1559,22 +3380,92 @@
    "volume_bottles": 150000,
    "fob_eur": 5.5,
    "representation": {
-    "NO": "likely listed — verify",
+    "NO": "search inconclusive — verify via catalog API",
     "SE": "unknown — verify",
     "FI": "unknown — verify"
    },
    "audit": {
     "created_by": "Claude (systemfrø)",
     "created_at": "2026-07-20T14:10",
-    "updated_by": "Claude (systemfrø)",
-    "updated_at": "2026-07-20T14:10",
+    "updated_by": "Claude (websøk site:vinmonopolet.no)",
+    "updated_at": "2026-07-21T09:30",
     "note": "Frødata fra offentlige kilder (produsentens tech sheets, Vinmonopolet-katalog, sertifiseringsregistre). FOB, volum og profil er ESTIMAT — bekreftes av produsent/importør."
    },
    "catalog_no": {
-    "status": "unchecked",
+    "status": "inconclusive",
     "product_id": null,
-    "checked_by": null,
-    "checked_at": null
+    "checked_by": "Claude (websøk site:vinmonopolet.no)",
+    "checked_at": "2026-07-21"
+   },
+   "verify": {
+    "producer": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "name": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "country": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "region": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "appellation": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "grapes": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "abv": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "wood": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "certs": {
+     "tier": "public",
+     "note": "sertifiseringsregistre (WIETA/Fairtrade/OVP m.fl.) — registeroppslag ikke arkivert ennå"
+    },
+    "sugar_g_l": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "profile": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "vintages_available": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "volume_bottles": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "fob_eur": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "closure": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "packaging": {
+     "tier": "unknown",
+     "note": "flaskevekt mangler — kreves i stadig flere anbud"
+    },
+    "representation": {
+     "tier": "unknown",
+     "note": "websøk 2026-07-21 ga ikke sikkert svar (kjent merke, søkedekning upålitelig) — krever katalog-API"
+    }
    }
   },
   {
@@ -1617,22 +3508,93 @@
    "volume_bottles": 60000,
    "fob_eur": 6.5,
    "representation": {
-    "NO": "likely listed — verify",
+    "NO": "importer on file — listed in VMP catalog (verified 2026-07-21, varenr 10425801)",
     "SE": "unknown — verify",
     "FI": "unknown — verify"
    },
    "audit": {
     "created_by": "Claude (systemfrø)",
     "created_at": "2026-07-20T14:10",
-    "updated_by": "Claude (systemfrø)",
-    "updated_at": "2026-07-20T14:10",
+    "updated_by": "Claude (websøk site:vinmonopolet.no)",
+    "updated_at": "2026-07-21T09:30",
     "note": "Frødata fra offentlige kilder (produsentens tech sheets, Vinmonopolet-katalog, sertifiseringsregistre). FOB, volum og profil er ESTIMAT — bekreftes av produsent/importør."
    },
    "catalog_no": {
     "status": "listed",
     "product_id": "10425801",
-    "checked_by": "Claude (websøk vinmonopolet.no)",
-    "checked_at": "2026-07-20T19:05"
+    "checked_by": "Claude (websøk site:vinmonopolet.no)",
+    "checked_at": "2026-07-21",
+    "note": "Yalumba Old Bush Vine Grenache"
+   },
+   "verify": {
+    "producer": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "name": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "country": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "region": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "appellation": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "grapes": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "abv": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "wood": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "certs": {
+     "tier": "public",
+     "note": "sertifiseringsregistre (WIETA/Fairtrade/OVP m.fl.) — registeroppslag ikke arkivert ennå"
+    },
+    "sugar_g_l": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "profile": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "vintages_available": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "volume_bottles": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "fob_eur": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "closure": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "packaging": {
+     "tier": "unknown",
+     "note": "flaskevekt mangler — kreves i stadig flere anbud"
+    },
+    "representation": {
+     "tier": "verified",
+     "note": "eksakt vin funnet i Vinmonopolets katalog 2026-07-21 (varenr 10425801)"
+    }
    }
   },
   {
@@ -1676,22 +3638,92 @@
    "volume_bottles": 400000,
    "fob_eur": 4.0,
    "representation": {
-    "NO": "listed in Vinmonopolet catalog — importer on file (verify)",
+    "NO": "search inconclusive — verify via catalog API",
     "SE": "unknown — verify",
     "FI": "unknown — verify"
    },
    "audit": {
     "created_by": "Claude (systemfrø)",
     "created_at": "2026-07-20T14:10",
-    "updated_by": "Claude (systemfrø)",
-    "updated_at": "2026-07-20T14:10",
+    "updated_by": "Claude (websøk site:vinmonopolet.no)",
+    "updated_at": "2026-07-21T09:30",
     "note": "Frødata fra offentlige kilder (produsentens tech sheets, Vinmonopolet-katalog, sertifiseringsregistre). FOB, volum og profil er ESTIMAT — bekreftes av produsent/importør."
    },
    "catalog_no": {
-    "status": "unchecked",
+    "status": "inconclusive",
     "product_id": null,
-    "checked_by": null,
-    "checked_at": null
+    "checked_by": "Claude (websøk site:vinmonopolet.no)",
+    "checked_at": "2026-07-21"
+   },
+   "verify": {
+    "producer": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "name": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "country": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "region": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "appellation": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "grapes": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "abv": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "wood": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "certs": {
+     "tier": "public",
+     "note": "sertifiseringsregistre (WIETA/Fairtrade/OVP m.fl.) — registeroppslag ikke arkivert ennå"
+    },
+    "sugar_g_l": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "profile": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "vintages_available": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "volume_bottles": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "fob_eur": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "closure": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "packaging": {
+     "tier": "estimate",
+     "note": "estimat"
+    },
+    "representation": {
+     "tier": "unknown",
+     "note": "websøk 2026-07-21 ga ikke sikkert svar (kjent merke, søkedekning upålitelig) — krever katalog-API"
+    }
    }
   },
   {
@@ -1734,22 +3766,93 @@
    "volume_bottles": 12000,
    "fob_eur": 14.0,
    "representation": {
-    "NO": "unrepresented (unverified)",
+    "NO": "importer on file — listed in VMP catalog (verified 2026-07-21, varenr 12214101)",
     "SE": "unknown — verify",
     "FI": "unknown — verify"
    },
    "audit": {
     "created_by": "Claude (systemfrø)",
     "created_at": "2026-07-20T14:10",
-    "updated_by": "Claude (systemfrø)",
-    "updated_at": "2026-07-20T14:10",
+    "updated_by": "Claude (websøk site:vinmonopolet.no)",
+    "updated_at": "2026-07-21T09:30",
     "note": "Frødata fra offentlige kilder (produsentens tech sheets, Vinmonopolet-katalog, sertifiseringsregistre). FOB, volum og profil er ESTIMAT — bekreftes av produsent/importør."
    },
    "catalog_no": {
     "status": "listed",
     "product_id": "12214101",
-    "checked_by": "Claude (websøk vinmonopolet.no)",
-    "checked_at": "2026-07-20T19:05"
+    "checked_by": "Claude (websøk site:vinmonopolet.no)",
+    "checked_at": "2026-07-21",
+    "note": "Gusbourne Guinevere Chardonnay"
+   },
+   "verify": {
+    "producer": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "name": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "country": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "region": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "appellation": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "grapes": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "abv": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "wood": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "certs": {
+     "tier": "public",
+     "note": "sertifiseringsregistre (WIETA/Fairtrade/OVP m.fl.) — registeroppslag ikke arkivert ennå"
+    },
+    "sugar_g_l": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "profile": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "vintages_available": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "volume_bottles": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "fob_eur": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "closure": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "packaging": {
+     "tier": "unknown",
+     "note": "flaskevekt mangler — kreves i stadig flere anbud"
+    },
+    "representation": {
+     "tier": "verified",
+     "note": "eksakt vin funnet i Vinmonopolets katalog 2026-07-21 (varenr 12214101)"
+    }
    }
   },
   {
@@ -1791,22 +3894,716 @@
    "volume_bottles": 80000,
    "fob_eur": 6.0,
    "representation": {
-    "NO": "unrepresented (unverified)",
+    "NO": "no VMP listing found (web search 2026-07-21) — confirm via catalog API",
     "SE": "unknown — verify",
     "FI": "unknown — verify"
    },
    "audit": {
     "created_by": "Claude (systemfrø)",
     "created_at": "2026-07-20T14:10",
-    "updated_by": "Claude (systemfrø)",
-    "updated_at": "2026-07-20T14:10",
+    "updated_by": "Claude (websøk site:vinmonopolet.no)",
+    "updated_at": "2026-07-21T09:30",
     "note": "Frødata fra offentlige kilder (produsentens tech sheets, Vinmonopolet-katalog, sertifiseringsregistre). FOB, volum og profil er ESTIMAT — bekreftes av produsent/importør."
    },
    "catalog_no": {
-    "status": "unchecked",
+    "status": "not_found_search",
     "product_id": null,
-    "checked_by": null,
-    "checked_at": null
+    "checked_by": "Claude (websøk site:vinmonopolet.no)",
+    "checked_at": "2026-07-21"
+   },
+   "verify": {
+    "producer": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "name": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "country": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "region": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "appellation": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "grapes": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "abv": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "wood": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "certs": {
+     "tier": "public",
+     "note": "sertifiseringsregistre (WIETA/Fairtrade/OVP m.fl.) — registeroppslag ikke arkivert ennå"
+    },
+    "sugar_g_l": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "profile": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "vintages_available": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "volume_bottles": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "fob_eur": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "closure": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "packaging": {
+     "tier": "unknown",
+     "note": "flaskevekt mangler — kreves i stadig flere anbud"
+    },
+    "representation": {
+     "tier": "public",
+     "note": "websøk 2026-07-21 fant ingen listing — endelig bekreftelse krever katalog-API"
+    }
+   }
+  },
+  {
+   "id": "w032",
+   "producer": "CVNE",
+   "name": "Cune Crianza",
+   "country": "Spain",
+   "region": "Rioja",
+   "appellation": "DOCa Rioja",
+   "grapes": {
+    "tempranillo": 85,
+    "garnacha": 10,
+    "mazuelo": 5
+   },
+   "color": "red",
+   "method": null,
+   "vintages_available": [
+    2021,
+    2022
+   ],
+   "abv": 13.5,
+   "sugar_g_l": 2.0,
+   "acid_g_l": null,
+   "wood": "American oak, 12 mnd (prominent)",
+   "certs": [],
+   "cert_on_label": false,
+   "vines_age": null,
+   "maceration_days": null,
+   "profile": {
+    "fylde": 7,
+    "friskhet": 6,
+    "garvestoffer": 6
+   },
+   "packaging": {
+    "type": "glass",
+    "weight_g": null
+   },
+   "closure": "natural cork",
+   "storable": "5-8 yrs",
+   "volume_bottles": 500000,
+   "fob_eur": 4.0,
+   "representation": {
+    "NO": "importer on file — listed in VMP catalog (verified 2026-07-21, varenr 5705701)",
+    "SE": "unknown — verify",
+    "FI": "unknown — verify"
+   },
+   "audit": {
+    "created_by": "Claude (systemfrø)",
+    "created_at": "2026-07-21T08:20",
+    "updated_by": "Claude (websøk site:vinmonopolet.no)",
+    "updated_at": "2026-07-21T09:30",
+    "note": "Frødata fra offentlige kilder. FOB, volum, årganger og profil er ESTIMAT — bekreftes av produsent/importør."
+   },
+   "catalog_no": {
+    "status": "listed",
+    "product_id": "5705701",
+    "checked_by": "Claude (websøk site:vinmonopolet.no)",
+    "checked_at": "2026-07-21",
+    "note": "Cune Crianza 2021"
+   },
+   "verify": {
+    "producer": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "name": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "country": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "region": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "appellation": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "grapes": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "abv": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "wood": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "sugar_g_l": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "profile": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "vintages_available": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "volume_bottles": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "fob_eur": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "closure": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "packaging": {
+     "tier": "unknown",
+     "note": "flaskevekt mangler — kreves i stadig flere anbud"
+    },
+    "representation": {
+     "tier": "verified",
+     "note": "eksakt vin funnet i Vinmonopolets katalog 2026-07-21 (varenr 5705701)"
+    }
+   }
+  },
+  {
+   "id": "w033",
+   "producer": "M. Chapoutier",
+   "name": "Belleruche Côtes-du-Rhône Rouge",
+   "country": "France",
+   "region": "Rhône",
+   "appellation": "AOC/AOP Côtes-du-Rhône",
+   "grapes": {
+    "grenache": 60,
+    "syrah": 40
+   },
+   "color": "red",
+   "method": null,
+   "vintages_available": [
+    2022,
+    2023
+   ],
+   "abv": 14.0,
+   "sugar_g_l": 2.5,
+   "acid_g_l": null,
+   "wood": "none",
+   "certs": [],
+   "cert_on_label": false,
+   "vines_age": null,
+   "maceration_days": null,
+   "profile": {
+    "fylde": 7,
+    "friskhet": 6,
+    "garvestoffer": 5
+   },
+   "packaging": {
+    "type": "glass",
+    "weight_g": null
+   },
+   "closure": "natural cork",
+   "storable": null,
+   "volume_bottles": 800000,
+   "fob_eur": 3.5,
+   "representation": {
+    "NO": "producer listed in VMP catalog (verified 2026-07-21) — cuvée not confirmed",
+    "SE": "unknown — verify",
+    "FI": "unknown — verify"
+   },
+   "audit": {
+    "created_by": "Claude (systemfrø)",
+    "created_at": "2026-07-21T08:20",
+    "updated_by": "Claude (websøk site:vinmonopolet.no)",
+    "updated_at": "2026-07-21T09:30",
+    "note": "Frødata fra offentlige kilder. FOB, volum, årganger og profil er ESTIMAT — bekreftes av produsent/importør."
+   },
+   "catalog_no": {
+    "status": "listed_producer",
+    "product_id": null,
+    "checked_by": "Claude (websøk site:vinmonopolet.no)",
+    "checked_at": "2026-07-21"
+   },
+   "verify": {
+    "producer": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "name": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "country": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "region": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "appellation": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "grapes": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "abv": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "wood": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "sugar_g_l": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "profile": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "vintages_available": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "volume_bottles": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "fob_eur": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "closure": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "packaging": {
+     "tier": "unknown",
+     "note": "flaskevekt mangler — kreves i stadig flere anbud"
+    },
+    "representation": {
+     "tier": "verified",
+     "note": "produsenten har listinger i Vinmonopolets katalog (2026-07-21); denne cuvéen ikke bekreftet"
+    }
+   }
+  },
+  {
+   "id": "w034",
+   "producer": "Masi",
+   "name": "Campofiorin",
+   "country": "Italy",
+   "region": "Veneto",
+   "appellation": "IGT Rosso Verona",
+   "grapes": {
+    "corvina": 70,
+    "rondinella": 25,
+    "molinara": 5
+   },
+   "color": "red",
+   "method": null,
+   "vintages_available": [
+    2021,
+    2022
+   ],
+   "abv": 13.0,
+   "sugar_g_l": 4.0,
+   "acid_g_l": null,
+   "wood": "partly oaked (discreet)",
+   "certs": [],
+   "cert_on_label": false,
+   "vines_age": null,
+   "maceration_days": null,
+   "profile": {
+    "fylde": 7,
+    "friskhet": 6,
+    "garvestoffer": 6
+   },
+   "packaging": {
+    "type": "glass",
+    "weight_g": null
+   },
+   "closure": "natural cork",
+   "storable": "5-10 yrs",
+   "volume_bottles": 600000,
+   "fob_eur": 5.5,
+   "representation": {
+    "NO": "importer on file — listed in VMP catalog (verified 2026-07-21, varenr 333901)",
+    "SE": "unknown — verify",
+    "FI": "unknown — verify"
+   },
+   "audit": {
+    "created_by": "Claude (systemfrø)",
+    "created_at": "2026-07-21T08:20",
+    "updated_by": "Claude (websøk site:vinmonopolet.no)",
+    "updated_at": "2026-07-21T09:30",
+    "note": "Frødata fra offentlige kilder. FOB, volum, årganger og profil er ESTIMAT — bekreftes av produsent/importør."
+   },
+   "catalog_no": {
+    "status": "listed",
+    "product_id": "333901",
+    "checked_by": "Claude (websøk site:vinmonopolet.no)",
+    "checked_at": "2026-07-21",
+    "note": "Masi Campofiorin"
+   },
+   "verify": {
+    "producer": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "name": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "country": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "region": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "appellation": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "grapes": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "abv": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "wood": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "sugar_g_l": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "profile": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "vintages_available": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "volume_bottles": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "fob_eur": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "closure": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "packaging": {
+     "tier": "unknown",
+     "note": "flaskevekt mangler — kreves i stadig flere anbud"
+    },
+    "representation": {
+     "tier": "verified",
+     "note": "eksakt vin funnet i Vinmonopolets katalog 2026-07-21 (varenr 333901)"
+    }
+   }
+  },
+  {
+   "id": "w035",
+   "producer": "Estate Argyros",
+   "name": "Assyrtiko",
+   "country": "Greece",
+   "region": "Santorini",
+   "appellation": "PDO Santorini",
+   "grapes": {
+    "assyrtiko": 100
+   },
+   "color": "white",
+   "method": null,
+   "vintages_available": [
+    2023,
+    2024
+   ],
+   "abv": 13.5,
+   "sugar_g_l": 2.0,
+   "acid_g_l": null,
+   "wood": "none",
+   "certs": [],
+   "cert_on_label": false,
+   "vines_age": 80,
+   "maceration_days": null,
+   "profile": {
+    "fylde": 6,
+    "friskhet": 10,
+    "garvestoffer": 0
+   },
+   "packaging": {
+    "type": "glass",
+    "weight_g": null
+   },
+   "closure": "screwcap",
+   "storable": "5-10 yrs",
+   "volume_bottles": 60000,
+   "fob_eur": 9.0,
+   "representation": {
+    "NO": "no VMP listing found (web search 2026-07-21) — confirm via catalog API",
+    "SE": "unknown — verify",
+    "FI": "unknown — verify"
+   },
+   "audit": {
+    "created_by": "Claude (systemfrø)",
+    "created_at": "2026-07-21T08:20",
+    "updated_by": "Claude (websøk site:vinmonopolet.no)",
+    "updated_at": "2026-07-21T09:30",
+    "note": "Frødata fra offentlige kilder. FOB, volum, årganger og profil er ESTIMAT — bekreftes av produsent/importør."
+   },
+   "catalog_no": {
+    "status": "not_found_search",
+    "product_id": null,
+    "checked_by": "Claude (websøk site:vinmonopolet.no)",
+    "checked_at": "2026-07-21"
+   },
+   "verify": {
+    "producer": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "name": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "country": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "region": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "appellation": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "grapes": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "abv": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "wood": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "sugar_g_l": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "profile": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "vintages_available": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "volume_bottles": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "fob_eur": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "closure": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "packaging": {
+     "tier": "unknown",
+     "note": "flaskevekt mangler — kreves i stadig flere anbud"
+    },
+    "representation": {
+     "tier": "public",
+     "note": "websøk 2026-07-21 fant ingen listing — endelig bekreftelse krever katalog-API"
+    }
+   }
+  },
+  {
+   "id": "w036",
+   "producer": "Aveleda",
+   "name": "Vinho Verde Fonte",
+   "country": "Portugal",
+   "region": "Vinho Verde",
+   "appellation": "DOC Vinho Verde",
+   "grapes": {
+    "loureiro": 40,
+    "trajadura": 30,
+    "arinto": 30
+   },
+   "color": "white",
+   "method": null,
+   "vintages_available": [
+    2024
+   ],
+   "abv": 9.5,
+   "sugar_g_l": 9.0,
+   "acid_g_l": null,
+   "wood": "none",
+   "certs": [
+    "Sustainability scheme"
+   ],
+   "cert_on_label": false,
+   "vines_age": null,
+   "maceration_days": null,
+   "profile": {
+    "fylde": 3,
+    "friskhet": 10,
+    "garvestoffer": 0
+   },
+   "packaging": {
+    "type": "glass (lightweight)",
+    "weight_g": 400
+   },
+   "closure": "screwcap",
+   "storable": null,
+   "volume_bottles": 1000000,
+   "fob_eur": 2.2,
+   "representation": {
+    "NO": "search inconclusive — verify via catalog API",
+    "SE": "unknown — verify",
+    "FI": "unknown — verify"
+   },
+   "audit": {
+    "created_by": "Claude (systemfrø)",
+    "created_at": "2026-07-21T08:20",
+    "updated_by": "Claude (websøk site:vinmonopolet.no)",
+    "updated_at": "2026-07-21T09:30",
+    "note": "Frødata fra offentlige kilder. FOB, volum, årganger og profil er ESTIMAT — bekreftes av produsent/importør."
+   },
+   "catalog_no": {
+    "status": "inconclusive",
+    "product_id": null,
+    "checked_by": "Claude (websøk site:vinmonopolet.no)",
+    "checked_at": "2026-07-21"
+   },
+   "verify": {
+    "producer": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "name": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "country": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "region": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "appellation": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "grapes": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "abv": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "wood": {
+     "tier": "public",
+     "note": "offentlig dokumentert (tech sheet/produsentside) — kildelenke ikke arkivert ennå"
+    },
+    "certs": {
+     "tier": "public",
+     "note": "sertifiseringsregistre — registeroppslag ikke arkivert ennå"
+    },
+    "sugar_g_l": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "profile": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "vintages_available": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "volume_bottles": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "fob_eur": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "closure": {
+     "tier": "estimate",
+     "note": "estimat — bekreftes av produsent (tech sheet/CoA) eller importør"
+    },
+    "packaging": {
+     "tier": "unknown",
+     "note": "flaskevekt mangler — kreves i stadig flere anbud"
+    },
+    "representation": {
+     "tier": "unknown",
+     "note": "websøk 2026-07-21 ga ikke sikkert svar (kjent merke, søkedekning upålitelig) — krever katalog-API"
+    }
    }
   }
  ]

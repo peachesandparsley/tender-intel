@@ -7,10 +7,11 @@
 <style>
   .viz-root {
     color-scheme: light;
-    --page: #f9f9f7; --surface-1: #fcfcfb;
-    --text-primary: #0b0b0b; --text-secondary: #52514e;
-    --muted: #898781; --grid: #e1e0d9; --baseline: #c3c2b7;
-    --border: rgba(11,11,11,0.10); --good-text: #006300;
+    --page: #f7f3ec; --surface-1: #fffdf8;
+    --text-primary: #211c15; --text-secondary: #5b5348;
+    --muted: #948a7c; --grid: #eae3d7; --baseline: #d6cdbd;
+    --border: rgba(60,45,30,0.12); --good-text: #2c6b3f;
+    --accent: #8c2f44; --accent-soft: #a8506400;
     --s1: #2a78d6; --s2: #008300; --s3: #e87ba4;
     --s4: #eda100; --s5: #1baf7a; --s6: #eb6834;
     --warn: #fab219; --crit: #d03b3b; --goodst: #0ca30c;
@@ -18,20 +19,22 @@
   @media (prefers-color-scheme: dark) {
     :root:where(:not([data-theme="light"])) .viz-root {
       color-scheme: dark;
-      --page: #0d0d0d; --surface-1: #1a1a19;
-      --text-primary: #ffffff; --text-secondary: #c3c2b7;
-      --muted: #898781; --grid: #2c2c2a; --baseline: #383835;
-      --border: rgba(255,255,255,0.10); --good-text: #0ca30c;
+      --page: #141110; --surface-1: #1e1a17;
+      --text-primary: #f4efe8; --text-secondary: #c6bcae;
+      --muted: #8f867a; --grid: #2e2924; --baseline: #3d362f;
+      --border: rgba(255,240,220,0.12); --good-text: #7fbf8a;
+      --accent: #c9556e;
       --s1: #3987e5; --s2: #008300; --s3: #d55181;
       --s4: #c98500; --s5: #199e70; --s6: #d95926;
     }
   }
   :root[data-theme="dark"] .viz-root {
     color-scheme: dark;
-    --page: #0d0d0d; --surface-1: #1a1a19;
-    --text-primary: #ffffff; --text-secondary: #c3c2b7;
-    --muted: #898781; --grid: #2c2c2a; --baseline: #383835;
-    --border: rgba(255,255,255,0.10); --good-text: #0ca30c;
+    --page: #141110; --surface-1: #1e1a17;
+    --text-primary: #f4efe8; --text-secondary: #c6bcae;
+    --muted: #8f867a; --grid: #2e2924; --baseline: #3d362f;
+    --border: rgba(255,240,220,0.12); --good-text: #7fbf8a;
+    --accent: #c9556e;
     --s1: #3987e5; --s2: #008300; --s3: #d55181;
     --s4: #c98500; --s5: #199e70; --s6: #d95926;
   }
@@ -102,6 +105,25 @@
   .minibar i { position: absolute; left: 0; top: 0; bottom: 0; background: var(--s1); border-radius: 2px; }
   .pill { font-size: 11.5px; color: var(--muted); border: 1px solid var(--grid); border-radius: 999px; padding: 2px 8px; margin-left: 8px; vertical-align: middle; }
   footer { color: var(--muted); font-size: 12px; margin-top: 8px; }
+  /* ---- visual identity: warm minimalism, serif display, burgundy accent ---- */
+  h1, h2, h3 { font-family: Georgia, 'Iowan Old Style', 'Palatino Linotype', serif; font-weight: 600; letter-spacing: .2px; }
+  header h1 { font-size: 27px; }
+  header p { font-size: 14.5px; }
+  .tile .v { font-family: Georgia, 'Iowan Old Style', serif; font-weight: 600; }
+  .card { border-radius: 14px; padding: 18px 20px;
+    box-shadow: 0 1px 2px rgba(45,28,12,.04), 0 12px 30px -22px rgba(70,45,25,.30); }
+  .tile { border-radius: 12px; }
+  nav { border-bottom: 1px solid var(--baseline); }
+  nav button { padding: 7px 16px; }
+  nav button.on, .filters button.on { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .btn { background: var(--accent); border-color: var(--accent); }
+  .btn.ghost { background: transparent; color: var(--accent); }
+  .drop.over { border-color: var(--accent); background: color-mix(in oklab, var(--accent) 6%, transparent); }
+  tr.rowx:hover td { background: color-mix(in oklab, var(--accent) 6%, transparent); }
+  tr.detail td { background: color-mix(in oklab, var(--accent) 4%, transparent); }
+  ::selection { background: color-mix(in oklab, var(--accent) 25%, transparent); }
+  .tender-head td { background: color-mix(in oklab, var(--accent) 7%, transparent);
+    font-size: 13.5px; border-top: 2px solid color-mix(in oklab, var(--accent) 30%, transparent); }
 </style>
 </head>
 <body class="viz-root">
@@ -172,12 +194,9 @@
   <section class="tab" id="tab-marked">
     <div class="card">
       <h2>Marketplace — viner som møter anbudskravene</h2>
-      <p class="note" style="margin:0 0 10px">«Åpen» = urepresentert i Norge — introduksjonsmulighet. Klikk en rad for klausulvurderingene (✓ oppfylt · ? trenger bekreftelse · ℹ info).</p>
+      <p class="note" style="margin:0 0 12px"><b>Slik leser du listen:</b> Hvert anbud viser først hva Vinmonopolet ber om, deretter vinene i databasen som oppfyller kravene. Fire statuser avgjør om det er verdt å gå videre: kravene, prisen, om vinen allerede står i sortimentet, og om produsenten er åpen for import. Klikk en vinrad for klausul-for-klausul-vurderingen.</p>
       <table id="marketTable"><thead><tr>
-        <th>Anbud</th><th>Vin</th><th>Produsent</th><th>Land</th>
-        <th class="num">Klausuler</th><th class="num">FOB €</th><th>Pris</th>
-        <th title="vasket mot Vinmonopolets katalog — basis/parti = uaktuell; kun bestillingsutvalget kan være en fordel">I sortiment?</th>
-        <th>Representasjon NO</th>
+        <th style="width:40%">Kandidatvin</th><th>Vurdering</th>
       </tr></thead><tbody></tbody></table>
     </div>
   </section>
@@ -195,14 +214,15 @@
           <option value="carton">Kartong (1,55 kr)</option><option value="metal">Metall (1,45 kr)</option></select></div>
         <div><label>Importørmargin (%)</label><input type="number" id="inMargin" value="25" step="1"></div>
         <div><label>Frakt+håndtering (kr/fl)</label><input type="number" id="inFreight" value="9" step="0.5"></div>
-        <div><label>NOK per ZAR</label><input type="number" id="inZar" value="0.58" step="0.01"></div>
         <div><label>NOK per EUR</label><input type="number" id="inEur" value="11.6" step="0.1"></div>
+        <div><label>Valuta 2</label><select id="inCur2"><option>USD</option><option>ZAR</option><option>GBP</option><option>AUD</option><option>CLP</option></select></div>
+        <div><label>NOK per valuta 2</label><input type="number" id="inCur2Rate" value="10.4" step="0.01"></div>
       </div>
       <svg id="stackbar" role="img" aria-label="Prisoppbygging per flaske"></svg>
       <div class="legend" id="legend"></div>
       <div class="fob-out">
         <div class="tile"><div class="v" id="outFobNok">–</div><div class="l">Påkrevd FOB, NOK</div></div>
-        <div class="tile"><div class="v" id="outFobZar">–</div><div class="l">FOB i rand (R)</div></div>
+        <div class="tile"><div class="v" id="outFobCur2">–</div><div class="l" id="outFobCur2Label">FOB i USD</div></div>
         <div class="tile"><div class="v" id="outFobEur">–</div><div class="l">FOB i euro (€)</div></div>
         <div class="tile"><div class="v" id="outVerdict">–</div><div class="l">Vurdering</div></div>
       </div>
@@ -216,9 +236,21 @@
     <div class="card">
       <h2>Vindatabase <span class="pill" id="wineCount"></span></h2>
       <p class="note" style="margin:0 0 10px">Kjører i minnet i denne økten. Eksporter for å lagre; importer JSON for å fortsette senere.</p>
+      <div class="dimbar">
+        <div><label>Geografi</label><select id="wfCountry"><option value="">Alle land</option></select></div>
+        <div><label>Type</label><select id="wfType"><option value="">Alle typer</option></select></div>
+        <div><label>Sertifisering</label><select id="wfCert"><option value="">Alle</option></select></div>
+        <div><label>Status Norge</label><select id="wfRep"><option value="">Alle</option><option value="open">Åpen for import</option><option value="taken">Representert/listet</option><option value="unknown">Ukjent</option></select></div>
+        <div style="flex:1.4"><label>Fritekst</label><input id="wfQ" placeholder="produsent, vin, drue…"></div>
+        <div style="min-width:90px;flex:0"><label>&nbsp;</label><button class="btn ghost" style="width:100%;padding:5px 8px" onclick="resetWineFilters()">Nullstill</button></div>
+      </div>
+      <svg id="wineMapSvg" style="width:100%;display:block;border-radius:10px;margin:6px 0 4px"></svg>
+      <p class="note" style="margin:0 0 8px">Klikk et land på kartet for å filtrere listen; klikk igjen for å oppheve. <span id="wineFilterCount"></span></p>
       <p>
-        <button class="btn ghost" onclick="exportWines()">Eksporter viner (JSON)</button>
-        <label class="btn ghost" style="cursor:pointer">Importer viner (JSON)<input type="file" id="wineJsonIn" accept=".json" style="display:none"></label>
+        <button class="btn ghost" onclick="exportWinesXlsx()">Eksporter (xlsx)</button>
+        <label class="btn ghost" style="cursor:pointer">Importer (xlsx)<input type="file" id="wineXlsxIn" accept=".xlsx,.xls" style="display:none"></label>
+        <button class="btn ghost" onclick="exportWines()">Eksporter (JSON)</button>
+        <label class="btn ghost" style="cursor:pointer">Importer (JSON)<input type="file" id="wineJsonIn" accept=".json" style="display:none"></label>
       </p>
       <table id="wineTable"><thead><tr>
         <th>Produsent</th><th>Vin</th><th>Land</th><th>Type</th><th>Druer</th>
@@ -227,7 +259,9 @@
         <th title="emballasje + kork">Emb./kork</th>
         <th class="num">FOB €</th><th>Sert.</th><th>Rep. NO</th>
         <th title="hvem som la inn/endret raden, og når">Oppdatert</th>
+        <th title="verifiseringsstatus per felt — klikk raden for detaljer">Datakvalitet</th>
       </tr></thead><tbody></tbody></table>
+      <p class="note">✓ verifisert mot kilde · ◦ offentlig dokumentert (lenke ikke arkivert) · ~ estimat som venter bekreftelse · ? mangler. Klikk en rad for felt-for-felt-status. I produksjon fylles ✓ av katalogsync, registeroppslag, produsentens tech sheet/analysebevis og parts-bekreftelser med tidsstempel — og verifisering eldes: en ✓ eldre enn 12 mnd faller tilbake til ◦.</p>
     </div>
   </section>
 
@@ -290,7 +324,7 @@
       <h2>1 · Produsent: last ned mal, fyll ut, last opp</h2>
       <p><a class="btn" id="dlTemplate" download="producer_upload_template.xlsx">Last ned produsentmal (.xlsx)</a></p>
       <div class="drop" id="dropProducer">Slipp utfylt produsentmal her, eller
-        <label style="color:var(--s1);cursor:pointer"><u>velg fil</u><input type="file" id="producerIn" accept=".xlsx" style="display:none"></label>
+        <label style="color:var(--accent);cursor:pointer"><u>velg fil</u><input type="file" id="producerIn" accept=".xlsx" style="display:none"></label>
       </div>
       <div class="report" id="producerReport" style="display:none"></div>
     </div>
@@ -298,7 +332,7 @@
       <h2>2 · Lanseringsplan: last opp Vinmonopolets Excel</h2>
       <p class="note" style="margin:0 0 8px">Hent filen fra <b>vinmonopolet.no → Lanseringer</b> (norsk eller engelsk utgave). Anbuds- og marketplace-fanene oppdateres umiddelbart.</p>
       <div class="drop" id="dropPlan">Slipp lanseringsplan-filen her, eller
-        <label style="color:var(--s1);cursor:pointer"><u>velg fil</u><input type="file" id="planIn" accept=".xlsx" style="display:none"></label>
+        <label style="color:var(--accent);cursor:pointer"><u>velg fil</u><input type="file" id="planIn" accept=".xlsx" style="display:none"></label>
       </div>
       <div class="report" id="planReport" style="display:none"></div>
     </div>
@@ -340,10 +374,10 @@ function wholesaleFromRetail(retail, abv, l, p) {
 }
 function fobFromRetail(retail, abv, l) {
   const margin = (+val('inMargin') || 25) / 100, freight = +val('inFreight') || 9;
-  const eur = +val('inEur') || 11.6, zar = +val('inZar') || 0.58;
+  const eur = +val('inEur') || 11.6;
   const ws = wholesaleFromRetail(retail, abv, l, 'glass');
   const fob = ws * (1 - margin) - freight;
-  return { nok: fob, eur: fob / eur, zar: fob / zar, viable: fob > 8 };
+  return { nok: fob, eur: fob / eur, viable: fob > 8 };
 }
 
 /* ============ clause engine (port of clauses.py) ============ */
@@ -518,7 +552,7 @@ function computeMarket() {
     const hi = spec.price_hi ?? spec.price_lo;
     const fob = hi ? fobFromRetail(+hi, guessAbv(spec), spec.litres || 0.75) : null;
     const matches = WINES.map(w => evaluateWine(spec, w, fob)).filter(Boolean)
-      .sort((a, b) => (a.catalog === 'listed') - (b.catalog === 'listed')
+      .sort((a, b) => (/^listed/.test(a.catalog)) - (/^listed/.test(b.catalog))
         || (b.priceOk === true) - (a.priceOk === true) || a.unknowns - b.unknowns || b.passes - a.passes);
     market.push({ spec, fob, matches });
   }
@@ -623,7 +657,9 @@ function importProducerWorkbook(wb) {
   const existing = new Set(WINES.map(w => (w.producer + '|' + w.name).toLowerCase()));
   let nextId = Math.max(0, ...WINES.map(w => parseInt((w.id || 'w0').slice(1)) || 0)) + 1;
   const report = []; let added = 0;
-  for (let i = 2; i < rows.length; i++) {
+  const ex1 = String((rows[1] || [])[0] || '').trim();
+  const startRow = (ex1 === 'Simonsig Estate' || ex1 === 'Kanonkop Estate') ? 2 : 1; // skip the grey example row in blank templates
+  for (let i = startRow; i < rows.length; i++) {
     const row = rows[i];
     if (!row || row.every(v => v == null || String(v).trim() === '')) continue;
     const [producer, wine, country, region, appellation, colour, method, grapesT,
@@ -824,14 +860,12 @@ function mapCountryName(label) {
   const t = String(label || '').trim();
   return CENTROID[t] ? t : (WORLD.find(w => N(w.n) === n) ? WORLD.find(w => N(w.n) === n).n : null);
 }
-function renderMap() {
-  const svg = $('mapSvg');
+function drawGeoMap(svgId, rawCounts, activeRaw, onToggle) {
+  const svg = $(svgId);
   svg.setAttribute('viewBox', `0 30 ${MAP_W} ${MAP_H - 60}`);
-  const c = counts('country', s => s.country || 'Åpen');
-  // aggregate per map-country (England+Scotland -> UK etc.)
-  const agg = new Map(); // mapName -> {count, labels:Set}
+  const agg = new Map();
   let openCount = 0;
-  for (const [label, v] of c.entries()) {
+  for (const [label, v] of rawCounts.entries()) {
     if (/apen|open|europe|all countries/.test(N(label)) || !label) { openCount += v; continue; }
     const mn = mapCountryName(label);
     if (!mn) { openCount += v; continue; }
@@ -839,8 +873,7 @@ function renderMap() {
     agg.get(mn).count += v;
     agg.get(mn).labels.add(label);
   }
-  const active = FILTERS.country;
-  const activeMap = active ? mapCountryName(active) : null;
+  const activeMap = activeRaw ? mapCountryName(activeRaw) : null;
   const tinted = new Set(agg.keys());
   const tip = $('tooltip');
   let html = '';
@@ -849,11 +882,10 @@ function renderMap() {
     html += `<path d="${w.d}" data-c="${esc(w.n)}" fill="${has ? 'color-mix(in oklab, var(--s1) 14%, var(--grid))' : 'var(--grid)'}" stroke="var(--surface-1)" stroke-width="0.6"${has ? ' style="cursor:pointer"' : ''}></path>`;
   }
   const maxC = Math.max(...[...agg.values()].map(a => a.count), 1);
-  const entries = [...agg.entries()].sort((a, b) => b[1].count - a[1].count);
-  for (const [mn, a] of entries) {
+  for (const [mn, a] of [...agg.entries()].sort((x, y) => y[1].count - x[1].count)) {
     const ll = CENTROID[mn]; if (!ll) continue;
     const r = 6 + 14 * Math.sqrt(a.count / maxC);
-    const isActive = activeMap === mn, dimmed = active && !isActive;
+    const isActive = activeMap === mn, dimmed = activeRaw && !isActive;
     html += `<g class="mapdot" data-c="${esc(mn)}" style="cursor:pointer">
       <circle cx="${mx(ll[0])}" cy="${my(ll[1])}" r="${r}" fill="${dimmed ? 'var(--baseline)' : 'var(--s1)'}"
         stroke="var(--surface-1)" stroke-width="2" opacity="${dimmed ? 0.55 : 0.92}"></circle>
@@ -867,14 +899,13 @@ function renderMap() {
     const a = agg.get(mn);
     if (!a) return;
     el.addEventListener('click', () => {
-      // toggle: filter on the plan's own label (first label for this map country)
       const label = [...a.labels][0];
-      setFilter('country', FILTERS.country && mapCountryName(FILTERS.country) === mn ? '' : label);
+      onToggle(activeRaw && mapCountryName(activeRaw) === mn ? '' : label);
     });
     el.addEventListener('mousemove', e => {
       tip.style.display = 'block';
       tip.style.left = e.clientX + 12 + 'px'; tip.style.top = e.clientY - 10 + 'px';
-      tip.innerHTML = `<b>${esc([...a.labels].join(', '))}</b><br>${a.count} anbud — klikk for å filtrere`;
+      tip.innerHTML = `<b>${esc([...a.labels].join(', '))}</b><br>${a.count} — klikk for å filtrere`;
     });
     el.addEventListener('mouseleave', () => tip.style.display = 'none');
   });
@@ -882,9 +913,13 @@ function renderMap() {
     const note = document.createElementNS('http://www.w3.org/2000/svg', 'text');
     note.setAttribute('x', 8); note.setAttribute('y', MAP_H - 36);
     note.setAttribute('font-size', '11'); note.setAttribute('fill', css('--muted'));
-    note.textContent = `+ ${openCount} anbud uten kartfestet opprinnelse (åpen/Europa)`;
+    note.textContent = `+ ${openCount} uten kartfestet opprinnelse (åpen/Europa)`;
     svg.appendChild(note);
   }
+}
+function renderMap() {
+  drawGeoMap('mapSvg', counts('country', s => s.country || 'Åpen'), FILTERS.country,
+    lab => setFilter('country', lab));
 }
 
 const DIM_SELECT = { country: 'fCountry', group: 'fGroup', grape: 'fGrape', price: 'fPrice', sel: 'fSel' };
@@ -922,7 +957,7 @@ function renderDims() {
 function recompute() {
   SPECS.forEach(s => delete s._grapes);
   MARKET = computeMarket();
-  renderTiles(); renderDims(); renderSpecs(); renderMarket(); renderWines();
+  renderTiles(); renderDims(); renderSpecs(); renderMarket(); renderWineDims(); renderWines();
 }
 function renderTiles() {
   const withM = MARKET.filter(m => m.matches.length);
@@ -965,35 +1000,128 @@ function renderSpecs() {
   }).join('');
   hookRows(tb);
 }
+function wantsLine(m) {
+  const s = m.spec;
+  const grapes = specGrapes(s).filter(g => g !== 'traditional method');
+  const bits = [];
+  if (grapes.length) bits.push('Druer: ' + grapes.join(', '));
+  if (s.appellation) bits.push(esc(s.appellation));
+  if (s.vintage) bits.push('Årgang ' + esc(s.vintage));
+  bits.push('Prisbånd ' + esc(s.price_text) + ' kr');
+  if (m.fob) bits.push(`→ produsentpris må være ≤ €${fmt(m.fob.eur, 1)} etter avgifter og marginer`);
+  if (s.deadline) bits.push('Frist ' + esc(s.deadline));
+  return bits.join(' · ');
+}
 function renderMarket() {
   const tb = $('marketTable').querySelector('tbody');
   const V = { pass: '✓', fail: '✗', unknown: '?', info: 'ℹ' };
   const withM = MARKET.filter(m => m.matches.length);
-  tb.innerHTML = withM.map(m => m.matches.map((x, wi) => {
-    const w = x.wine, first = wi === 0;
-    const rep = /unrepresented/.test(w.representation?.NO || '')
-      ? '<span class="chip hi">Åpen</span>'
-      : `<span class="chip lo" title="${esc(w.representation?.NO)}">Representert</span>`;
-    const price = x.priceOk === true ? '<span class="chip hi">innenfor</span>'
-      : x.priceOk === false ? '<span class="chip mid">for høy</span>' : '<span class="chip lo">ukjent</span>';
-    const cat = x.catalog === 'listed'
-      ? `<span class="chip mid" title="allerede i Vinmonopolets katalog (varenr ${esc(w.catalog_no?.product_id || '?')}) — sjekk hvilket utvalg før tilbud">i katalog ⚠</span>`
-      : x.catalog === 'not_found'
-      ? '<span class="chip hi" title="ikke funnet i katalogen ved stikkprøve — ren mulighet">ikke funnet</span>'
-      : '<span class="chip lo" title="ikke vasket mot katalogen ennå">usjekket</span>';
-    return `<tr class="rowx">
-      <td>${first ? `<b>${esc(m.spec.ref)}</b><br><span style="color:var(--muted)">${esc(m.spec.group)} · ${esc(m.spec.country) || 'Åpen'} · ${esc(m.spec.price_text)}${m.fob ? ' · trenger ≤€' + fmt(m.fob.eur, 1) : ''}</span>` : ''}</td>
-      <td>${esc(w.name)}</td><td>${esc(w.producer)}</td><td>${esc(w.country)}</td>
-      <td class="num">${x.passes}✓${x.unknowns ? ' ' + x.unknowns + '?' : ''} / ${x.total}</td>
-      <td class="num">${w.fob_eur != null ? fmt(w.fob_eur, 1) : '–'}</td>
-      <td>${price}</td><td>${cat}</td><td>${rep}</td></tr>
-    <tr class="detail" style="display:none"><td colspan="9">${x.verdicts.map(v => `${V[v.verdict] || '·'} ${esc(v.clause)}`).join('<br>')}</td></tr>`;
-  }).join('')).join('');
+  if (!withM.length) {
+    tb.innerHTML = '<tr><td colspan="2" style="color:var(--muted)">Ingen viner i databasen oppfyller kravene i denne planen ennå.</td></tr>';
+    return;
+  }
+  tb.innerHTML = withM.map(m => {
+    const head = `<tr class="tender-head"><td colspan="2">
+      <b>${esc(m.spec.ref)}</b> — Vinmonopolet søker: <b>${esc(GROUP_NO(m.spec.group))}</b> fra <b>${esc(m.spec.country) || 'åpen opprinnelse'}</b><br>
+      <span style="color:var(--text-secondary)">${wantsLine(m)}</span></td></tr>`;
+    return head + m.matches.map(x => {
+      const w = x.wine;
+      const krav = x.unknowns
+        ? `<span class="chip mid" title="klikk raden for detaljer">Oppfyller ${x.passes} av ${x.total} krav — ${x.unknowns} må bekreftes</span>`
+        : `<span class="chip hi">Oppfyller alle ${x.total} krav</span>`;
+      const pris = x.priceOk === true ? '<span class="chip hi">Pris innenfor båndet</span>'
+        : x.priceOk === false ? '<span class="chip mid">FOB for høy for båndet</span>'
+        : '<span class="chip lo">Pris ukjent</span>';
+      const cat = x.catalog === 'listed'
+        ? `<span class="chip mid" title="varenr ${esc(w.catalog_no?.product_id || '?')} — basis/parti = uaktuell; bestillingsutvalg kan være fordel">Allerede i VMP-sortimentet ⚠</span>`
+        : x.catalog === 'listed_producer'
+        ? '<span class="chip mid" title="produsenten er i katalogen; denne cuvéen ikke funnet — sjekk hvilket utvalg">Produsent i sortimentet ⚠</span>'
+        : (x.catalog === 'not_found' || x.catalog === 'not_found_search')
+        ? '<span class="chip hi" title="websøk mot katalogen fant ingen listing — endelig sjekk via API">Ikke funnet i sortimentet</span>'
+        : x.catalog === 'inconclusive'
+        ? '<span class="chip lo" title="websøk ga ikke sikkert svar for dette merket">Sortiment uavklart</span>'
+        : '<span class="chip lo">Sortiment usjekket</span>';
+      return `<tr class="rowx">
+        <td><b>${esc(w.producer)}</b> — ${esc(w.name)}<br>
+          <span style="color:var(--muted);font-size:12px">${esc(w.country)} · FOB €${w.fob_eur != null ? fmt(w.fob_eur, 1) : '?'}</span></td>
+        <td>${krav} ${pris} ${cat} ${repChip(w.representation?.NO)}</td></tr>
+      <tr class="detail" style="display:none"><td colspan="2">${x.verdicts.map(v => `${V[v.verdict] || '·'} ${esc(v.clause)}`).join('<br>')}</td></tr>`;
+    }).join('');
+  }).join('');
   hookRows(tb);
 }
+function repInfo(raw) {
+  const s = String(raw || ''), l = s.toLowerCase();
+  if (l.includes('unrepresented') || l.includes('no vmp listing found'))
+    return { k: 'open', label: 'Åpen', cls: 'hi', detail: 'ingen norsk listing funnet — introduksjonsmulighet' };
+  if (l.startsWith('importer:'))
+    return { k: 'taken', label: s.replace(/importer:\s*/i, ''), cls: 'lo', detail: 'har norsk importør' };
+  if (l.includes('producer listed'))
+    return { k: 'taken', label: 'Produsent i VMP-katalog', cls: 'mid', detail: 'produsenten er listet (verifisert) — denne cuvéen ikke bekreftet' };
+  if (l.includes('listed in vinmonopolet') || l.includes('listed in vmp'))
+    return { k: 'taken', label: 'I VMP-katalog ✓', cls: 'mid', detail: 'listet — verifisert mot katalogen' };
+  if (l.includes('search inconclusive'))
+    return { k: 'unknown', label: 'Uavklart — sjekk API', cls: 'lo', detail: 'websøk ga ikke sikkert svar' };
+  if (l.includes('likely listed'))
+    return { k: 'taken', label: 'Trolig representert', cls: 'lo', detail: 'ikke verifisert ennå' };
+  if (l.includes('not seeking'))
+    return { k: 'none', label: 'Søker ikke', cls: 'lo', detail: '' };
+  return { k: 'unknown', label: 'Ukjent', cls: 'lo', detail: 'ikke verifisert' };
+}
+const repChip = raw => { const r = repInfo(raw);
+  return `<span class="chip ${r.cls}" title="${esc(r.detail)}">${esc(r.label)}</span>`; };
+const GROUP_NO = g => ({ 'red wine':'Rødvin','white wine':'Hvitvin','rosé wine':'Rosé','rose wine':'Rosé',
+  'sparkling wine, white':'Musserende hvit','sparkling wine white':'Musserende hvit',
+  'sparkling wine, rosé':'Musserende rosé','fortified wine':'Sterkvin' }[N(g).trim()] || g);
+const TIER = { verified: ['✓','var(--good-text)'], public: ['◦','var(--text-secondary)'],
+               estimate: ['~','var(--warn)'], unknown: ['?','var(--muted)'] };
+const FIELD_NAMES = { producer:'Produsent', name:'Vin', country:'Land', region:'Region',
+  appellation:'Klassifisering', grapes:'Druer', method:'Metode', abv:'Alkohol', wood:'Fat/eik',
+  certs:'Sertifiseringer', sugar_g_l:'Sukker', profile:'Smaksprofil', vintages_available:'Årganger',
+  volume_bottles:'Volum', fob_eur:'FOB-pris', packaging:'Emballasje/vekt', closure:'Kork',
+  representation:'Representasjon' };
+function qualitySummary(w) {
+  const c = { verified: 0, public: 0, estimate: 0, unknown: 0 };
+  Object.values(w.verify || {}).forEach(f => c[f.tier] != null && c[f.tier]++);
+  return c;
+}
+const WFILTERS = { country: '', type: '', cert: '', rep: '', q: '' };
+function winePass(w, skip) {
+  if (skip !== 'country' && WFILTERS.country && w.country !== WFILTERS.country) return false;
+  if (WFILTERS.type && (w.color || '') !== WFILTERS.type) return false;
+  if (WFILTERS.cert && !(w.certs || []).some(c => c === WFILTERS.cert)) return false;
+  if (WFILTERS.rep && repInfo(w.representation?.NO).k !== (WFILTERS.rep === 'taken' ? repInfo(w.representation?.NO).k === 'taken' || repInfo(w.representation?.NO).k === 'none' ? repInfo(w.representation?.NO).k : 'taken' : WFILTERS.rep)) {
+    const k = repInfo(w.representation?.NO).k;
+    if (WFILTERS.rep === 'taken' ? !(k === 'taken' || k === 'none') : k !== WFILTERS.rep) return false;
+  }
+  if (WFILTERS.q && !N([w.producer, w.name, w.country, w.region, w.appellation,
+      Object.keys(w.grapes || {}).join(' ')].join(' ')).includes(N(WFILTERS.q))) return false;
+  return true;
+}
+function fillWineSelect(id, keys, current) {
+  const sel = $(id), first = sel.options[0].outerHTML;
+  sel.innerHTML = first + keys.map(k => `<option value="${esc(k)}"${k === current ? ' selected' : ''}>${esc(k)}</option>`).join('');
+  sel.value = current || '';
+}
+function renderWineDims() {
+  const c = new Map();
+  WINES.filter(w => winePass(w, 'country')).forEach(w => c.set(w.country, (c.get(w.country) || 0) + 1));
+  drawGeoMap('wineMapSvg', c, WFILTERS.country, lab => { WFILTERS.country = lab; renderWineDims(); renderWines(); });
+  fillWineSelect('wfCountry', [...new Set(WINES.map(w => w.country))].sort(), WFILTERS.country);
+  fillWineSelect('wfType', [...new Set(WINES.map(w => w.color).filter(Boolean))].sort(), WFILTERS.type);
+  fillWineSelect('wfCert', [...new Set(WINES.flatMap(w => w.certs || []))].sort(), WFILTERS.cert);
+}
+function resetWineFilters() {
+  Object.keys(WFILTERS).forEach(k => WFILTERS[k] = '');
+  ['wfCountry','wfType','wfCert','wfRep'].forEach(id => $(id).value = '');
+  $('wfQ').value = '';
+  renderWineDims(); renderWines();
+}
 function renderWines() {
-  $('wineCount').textContent = WINES.length + ' viner';
-  $('wineTable').querySelector('tbody').innerHTML = WINES.map(w => {
+  const shown = WINES.filter(w => winePass(w));
+  $('wineCount').textContent = shown.length + ' av ' + WINES.length + ' viner';
+  $('wineFilterCount') && ($('wineFilterCount').textContent = `Viser ${shown.length} av ${WINES.length} viner.`);
+  $('wineTable').querySelector('tbody').innerHTML = shown.map(w => {
     const pr = w.profile ? `${w.profile.fylde}/${w.profile.friskhet}/${w.profile.garvestoffer}` : '–';
     const emb = [w.packaging?.type ? esc(w.packaging.type) + (w.packaging.weight_g ? ` ${w.packaging.weight_g}g` : '') : null,
                  w.closure ? esc(w.closure) : null].filter(Boolean).join('<br>') || '–';
@@ -1001,16 +1129,27 @@ function renderWines() {
       ? `${esc(w.audit.updated_by)}<br><span style="color:var(--muted)">${esc((w.audit.updated_at || '').slice(0, 10))}</span>`
       : '–';
     const audTitle = w.audit ? `opprettet: ${w.audit.created_by} ${w.audit.created_at} · ${w.audit.note || ''}` : '';
-    return `<tr><td><b>${esc(w.producer)}</b></td><td>${esc(w.name)}</td><td>${esc(w.country)}</td>
+    const q = qualitySummary(w);
+    const qCell = w.verify
+      ? `<span style="color:${TIER.verified[1]}">${q.verified}✓</span> <span>${q.public}◦</span> <span style="color:${TIER.estimate[1]}">${q.estimate}~</span> <span style="color:${TIER.unknown[1]}">${q.unknown}?</span>`
+      : '<span class="chip lo">uvurdert</span>';
+    const detail = w.verify ? Object.entries(w.verify).map(([f, s]) => {
+      const [sym, col] = TIER[s.tier] || ['·','inherit'];
+      return `<span style="color:${col};font-weight:700">${sym}</span> <b>${FIELD_NAMES[f] || f}</b> — ${esc(s.note)}`;
+    }).join('<br>') : 'Ingen verifiseringsdata.';
+    return `<tr class="rowx"><td><b>${esc(w.producer)}</b></td><td>${esc(w.name)}</td><td>${esc(w.country)}</td>
      <td>${esc(w.color)}${w.method ? ' · trad.metode' : ''}</td>
      <td>${Object.entries(w.grapes || {}).map(([g, p]) => `${esc(g)} ${p}%`).join(', ')}</td>
      <td class="num">${w.sugar_g_l ?? '–'}</td>
      <td class="num">${pr}</td><td style="font-size:12px">${emb}</td>
      <td class="num">${w.fob_eur != null ? fmt(w.fob_eur, 1) : '–'}</td>
      <td style="font-size:12px">${(w.certs || []).join(', ') || '–'}</td>
-     <td style="font-size:12px">${esc(w.representation?.NO || '?')}</td>
-     <td style="font-size:12px" title="${esc(audTitle)}">${aud}</td></tr>`;
+     <td style="font-size:12px">${repChip(w.representation?.NO)}</td>
+     <td style="font-size:12px" title="${esc(audTitle)}">${aud}</td>
+     <td style="font-size:12px;white-space:nowrap">${qCell}</td></tr>
+    <tr class="detail" style="display:none"><td colspan="13">${detail}</td></tr>`;
   }).join('');
+  hookRows($('wineTable').querySelector('tbody'));
 }
 function stampAudit(w, action) {
   const who = ($('whoAmI').value || 'ukjent').trim();
@@ -1031,7 +1170,8 @@ const SLOTS = ['--s1','--s2','--s3','--s4','--s5','--s6'];
 function calc() {
   const retail = +val('inRetail'), abv = +val('inAbv'), l = +val('inVol');
   const pack = val('inPack'), margin = +val('inMargin') / 100;
-  const freight = +val('inFreight'), zar = +val('inZar'), eur = +val('inEur');
+  const freight = +val('inFreight'), eur = +val('inEur');
+  const cur2 = val('inCur2'), cur2rate = +val('inCur2Rate') || 1;
   if (!(retail > 0 && abv > 0 && l > 0)) return;
   const ws = wholesaleFromRetail(retail, abv, l, pack);
   const ex = excise(abv, l), av = avanse(ws, l), pk = RATES.pack[pack];
@@ -1046,9 +1186,10 @@ function calc() {
     { name: 'Mva (25 %)', v: vat, s: 5 },
   ];
   $('outFobNok').textContent = fob > 0 ? fmt(fob) + ' kr' : 'umulig';
-  $('outFobZar').textContent = fob > 0 ? 'R ' + fmt(fob / zar) : '–';
+  $('outFobCur2').textContent = fob > 0 ? cur2 + ' ' + fmt(fob / cur2rate) : '–';
+  $('outFobCur2Label').textContent = 'FOB i ' + cur2;
   $('outFobEur').textContent = fob > 0 ? '€ ' + fmt(fob / eur) : '–';
-  $('outVerdict').textContent = fob <= 0 ? '✗ Ikke gjennomførbart' : fob < 8 ? '⚠ Svært stramt' : fob / zar < 45 ? '⚠ Kun bulkkvalitet' : '✓ Realistisk';
+  $('outVerdict').textContent = fob <= 0 ? '✗ Ikke gjennomførbart' : fob < 8 ? '⚠ Svært stramt' : fob / eur < 2.2 ? '⚠ Kun bulknivå' : '✓ Realistisk';
   drawBar(parts, retail);
   $('breakdownTable').querySelector('tbody').innerHTML = parts.map(p =>
     `<tr><td>${p.name}</td><td class="num">${fmt(p.v)}</td><td class="num">${fmt(100 * p.v / retail, 1)} %</td></tr>`).join('') +
@@ -1181,10 +1322,9 @@ function drawGrouped(svgId, legendId, cats, seriesNames, matrix) {
 function renderAnalyse() {
   const names = Object.keys(PLANS);
   const wineSpecs = n => PLANS[n].filter(isWineSpec);
-  $('anaTiles').innerHTML = names.map(n => {
-    const sa = wineSpecs(n).filter(s => /south|sor-?afrika|sør-?\s?afrika/i.test(s.country || '')).length;
-    return `<div class="tile"><div class="v">${PLANS[n].length}</div><div class="l">${esc(n)}<br>${sa} Sør-Afrika</div></div>`;
-  }).join('');
+  $('anaTiles').innerHTML = names.map(n =>
+    `<div class="tile"><div class="v">${PLANS[n].length}</div><div class="l">${esc(n)}<br>${wineSpecs(n).length} vinanbud</div></div>`
+  ).join('');
   // top countries across all plans
   const cAll = new Map();
   names.forEach(n => wineSpecs(n).forEach(s => {
@@ -1254,6 +1394,50 @@ function exportWines() {
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob); a.download = 'wines.json'; a.click();
 }
+const XLSX_COLS = ['Producer name*','Wine name*','Country*','Region','Appellation / WO / AOC','Colour*',
+  'Sparkling method','Grapes & % (var:pct; ...)*','Vintages available*','ABV %*','Residual sugar g/l',
+  'Wood / oak*','Certifications','Certification on label?','Old-vine age (years)','Maceration days',
+  'Bottles available*','Ex-cellar price EUR*','Represented in Norway?','Norwegian importer (if any)',
+  'Represented in Sweden?','Swedish importer (if any)','— Updated by','— Updated at','— Catalog status'];
+function exportWinesXlsx() {
+  const rows = [XLSX_COLS];
+  const colWord = c => ({red:'Red',white:'White',rose:'Rosé','sparkling white':'Sparkling white',
+    'sparkling rose':'Sparkling rosé',fortified:'Fortified'}[c] || c);
+  const repCell = r => { const i = repInfo(r);
+    return i.k === 'open' ? 'No — open to offers' : i.k === 'taken' ? 'Yes' : ''; };
+  const impCell = r => String(r || '').toLowerCase().startsWith('importer:') ? String(r).replace(/importer:\s*/i,'') : '';
+  for (const w of WINES) {
+    rows.push([w.producer, w.name, w.country, w.region || '', w.appellation || '', colWord(w.color),
+      w.method || '', Object.entries(w.grapes || {}).map(([g,p]) => `${g}:${p}`).join('; '),
+      (w.vintages_available || []).map(v => v === 0 ? 'NV' : v).join('; '),
+      w.abv ?? '', w.sugar_g_l ?? '', w.wood || '', (w.certs || []).join('; '),
+      w.cert_on_label ? 'yes' : 'no', w.vines_age ?? '', w.maceration_days ?? '',
+      w.volume_bottles ?? '', w.fob_eur ?? '',
+      repCell(w.representation?.NO), impCell(w.representation?.NO),
+      repCell(w.representation?.SE), impCell(w.representation?.SE),
+      w.audit?.updated_by || '', w.audit?.updated_at || '', w.catalog_no?.status || '']);
+  }
+  const ws = XLSX.utils.aoa_to_sheet(rows);
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'Wines');
+  XLSX.writeFile(wb, 'vindatabase.xlsx');
+}
+$('wineXlsxIn').addEventListener('change', e => {
+  const f = e.target.files[0]; if (!f) return;
+  readXlsx(f, wb => {
+    const res = importProducerWorkbook(wb);
+    if (res.fatal) { alert(res.fatal); return; }
+    alert(res.added + ' viner importert, ' + res.report.filter(r => r.status === 'REJECTED').length + ' rader avvist (duplikater/feil).');
+    recompute();
+  });
+  e.target.value = '';
+});
+['wfType','wfCert','wfRep'].forEach(id => $(id).addEventListener('change', () => {
+  WFILTERS[{wfType:'type',wfCert:'cert',wfRep:'rep'}[id]] = $(id).value;
+  renderWineDims(); renderWines();
+}));
+$('wfCountry').addEventListener('change', () => { WFILTERS.country = $('wfCountry').value; renderWineDims(); renderWines(); });
+$('wfQ').addEventListener('input', () => { WFILTERS.q = $('wfQ').value; renderWines(); });
 $('wineJsonIn').addEventListener('change', e => {
   const f = e.target.files[0]; if (!f) return;
   const r = new FileReader();
@@ -1367,31 +1551,34 @@ function renderKatalog() {
   const byProd = new Map();
   for (const w of WINES) {
     const k = w.producer;
-    if (!byProd.has(k)) byProd.set(k, { country: w.country, wines: 0, rep: { NO: new Set(), SE: new Set(), FI: new Set() } });
+    if (!byProd.has(k)) byProd.set(k, { country: w.country, wines: 0, rep: { NO: [], SE: [], FI: [] } });
     const p = byProd.get(k);
     p.wines++;
     for (const mkt of ['NO', 'SE', 'FI']) {
       const r = (w.representation || {})[mkt];
-      if (r) p.rep[mkt].add(r);
+      if (r) p.rep[mkt].push(r);
     }
   }
-  const cell = set => {
-    const a = [...set];
-    if (!a.length) return '<span style="color:var(--muted)">ukjent</span>';
-    if (a.every(x => /unrepresented/.test(x))) return '<span class="chip hi">Åpen</span>';
-    if (a.every(x => /not seeking/.test(x))) return '<span class="chip lo">Søker ikke</span>';
-    const imp = a.find(x => /importer:/.test(x));
-    return imp ? esc(imp.replace('importer: ', '')) : esc(a[0]);
+  const best = arr => {
+    const infos = arr.map(repInfo);
+    return infos.find(i => i.k === 'taken') || infos.find(i => i.k === 'open')
+        || infos.find(i => i.k === 'none') || infos[0] || repInfo('');
+  };
+  const cell = arr => {
+    const r = best(arr);
+    if (r.k === 'unknown') return '<span style="color:var(--muted);font-size:12px">ukjent</span>';
+    return `<span class="chip ${r.cls}" title="${esc(r.detail)}">${esc(r.label)}</span>`;
   };
   const rows = [...byProd.entries()].filter(([, p]) => {
-    const no = [...p.rep.NO];
-    if (katFilter === 'openNO') return no.some(x => /unrepresented/.test(x));
-    if (katFilter === 'takenNO') return no.some(x => /importer:/.test(x));
+    const k = best(p.rep.NO).k;
+    if (katFilter === 'openNO') return k === 'open';
+    if (katFilter === 'takenNO') return k === 'taken';
     return true;
   }).sort((a, b) => a[0].localeCompare(b[0]));
-  $('katTable').querySelector('tbody').innerHTML = rows.map(([name, p]) =>
+  $('katTable').querySelector('tbody').innerHTML = rows.length ? rows.map(([name, p]) =>
     `<tr><td><b>${esc(name)}</b></td><td>${esc(p.country)}</td><td class="num">${p.wines}</td>
-     <td>${cell(p.rep.NO)}</td><td>${cell(p.rep.SE)}</td><td>${cell(p.rep.FI)}</td></tr>`).join('');
+     <td>${cell(p.rep.NO)}</td><td>${cell(p.rep.SE)}</td><td>${cell(p.rep.FI)}</td></tr>`).join('')
+    : '<tr><td colspan="6" style="color:var(--muted)">Ingen produsenter i dette utvalget.</td></tr>';
 }
 $('katFilters').querySelectorAll('button').forEach(b => b.addEventListener('click', () => {
   katFilter = b.dataset.k;
@@ -1414,7 +1601,7 @@ $('specFilters').querySelectorAll('button').forEach(b => b.addEventListener('cli
   $('specFilters').querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b));
   renderSpecs();
 }));
-['inRetail','inAbv','inVol','inPack','inMargin','inFreight','inZar','inEur']
+['inRetail','inAbv','inVol','inPack','inMargin','inFreight','inCur2','inCur2Rate','inEur']
   .forEach(id => $(id).addEventListener('input', () => { calc(); recompute(); }));
 Object.entries(DIM_SELECT).forEach(([dim, id]) =>
   $(id).addEventListener('change', () => setFilter(dim, $(id).value)));
