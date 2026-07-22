@@ -49,6 +49,10 @@
     border: 1px solid var(--border); background: transparent; color: var(--text-secondary); cursor: pointer; }
   nav button.on { background: var(--s1); border-color: var(--s1); color: #fff; }
   .tab { display: none; } .tab.on { display: block; }
+  .mapwrap { position: relative; overflow: hidden; border-radius: 10px; touch-action: none; }
+  .mapwrap svg { will-change: transform; }
+  .mapzoomhint { position: absolute; right: 8px; bottom: 6px; font-size: 10.5px; color: var(--muted);
+    background: color-mix(in oklab, var(--surface-1) 78%, transparent); padding: 2px 7px; border-radius: 6px; pointer-events: none; }
   h3.section-div { font-size: 15px; margin: 22px 0 10px; padding-top: 16px; border-top: 1px solid var(--baseline); color: var(--text-secondary); }
   tr.clk-row { cursor: pointer; }
   tr.clk-row:hover td { background: color-mix(in oklab, var(--accent, var(--s1)) 8%, transparent); }
@@ -579,6 +583,7 @@
       <h2 data-i18n="h2FilterDist">Filtre og fordeling</h2>
       <div class="dimbar">
         <div><label data-i18n="lblGeo">Geografi</label><select id="fCountry"><option value="" data-i18n="optAllCountries">Alle land</option></select></div>
+        <div><label data-i18n="lblRegion">Distrikt/region</label><select id="fRegion"><option value="" data-i18n="optAllRegions">Alle distrikter</option></select></div>
         <div><label data-i18n="lblCategory">Kategori</label><select id="fMain"><option value="" data-i18n="optAllCategories">Alle kategorier</option></select></div>
         <div><label data-i18n="lblSubType">Undertype</label><select id="fGroup"><option value="" data-i18n="optAllSubTypes">Alle undertyper</option></select></div>
         <div><label data-i18n="lblGrape">Drue</label><select id="fGrape"><option value="" data-i18n="optAllGrapes">Alle druer</option></select></div>
@@ -589,11 +594,13 @@
         <div style="min-width:90px;flex:0"><label>&nbsp;</label><button class="btn ghost" data-i18n="btnReset" style="width:100%;padding:5px 8px" onclick="resetFilters()">Nullstill</button></div>
       </div>
       <p class="note" style="margin:4px 0 2px"><span data-i18n="noteMapClick">Klikk en stolpe eller et land på kartet for å filtrere; klikk igjen for å oppheve. </span><span id="filterCount"></span></p>
-      <div style="margin:8px 0 4px">
+      <div class="mapwrap" id="mapWrap" style="margin:8px 0 4px">
         <svg id="mapSvg" style="width:100%;display:block;border-radius:10px"></svg>
+        <span class="mapzoomhint" data-i18n="mapZoomHint">klyp / rull for å zoome · dobbelttrykk nullstiller</span>
       </div>
       <div class="charts-grid">
         <div class="chart-box"><h3 data-i18n="chGeo">Geografi</h3><svg id="chCountry"></svg></div>
+        <div class="chart-box"><h3 data-i18n="chDistrict">Distrikt / region</h3><svg id="chRegion"></svg></div>
         <div class="chart-box"><h3 data-i18n="chType">Produkttype</h3><svg id="chGroup"></svg></div>
         <div class="chart-box"><h3 data-i18n="chGrape">Drue / metode</h3><svg id="chGrape"></svg></div>
         <div class="chart-box"><h3 data-i18n="chPrice">Prisbånd (kr)</h3><svg id="chPrice"></svg></div>
@@ -680,7 +687,10 @@
         <div style="min-width:90px;flex:0"><label>&nbsp;</label><button class="btn ghost" data-i18n="btnReset" style="width:100%;padding:5px 8px" onclick="resetWineFilters()">Nullstill</button></div>
       </div>
       <div id="wineSpot" style="margin:8px 0 2px"></div>
-      <svg id="wineMapSvg" style="width:100%;display:block;border-radius:10px;margin:6px 0 4px"></svg>
+      <div class="mapwrap" id="wineMapWrap" style="margin:6px 0 4px">
+        <svg id="wineMapSvg" style="width:100%;display:block;border-radius:10px"></svg>
+        <span class="mapzoomhint" data-i18n="mapZoomHint">klyp / rull for å zoome · dobbelttrykk nullstiller</span>
+      </div>
       <p class="note" style="margin:0 0 8px"><span data-i18n="noteWineMapClick">Klikk et land på kartet for å filtrere. Klikk en <b>produsent</b> eller <b>drue</b> i tabellen for å se opprinnelsen på kartet. </span><span id="wineFilterCount"></span></p>
       <p>
         <button class="btn ghost" data-i18n="btnExportXlsx" onclick="exportWinesXlsx()">Eksporter (xlsx)</button>
@@ -992,7 +1002,9 @@ const I18N = {
     optOpenImport: 'Åpen for import', optRepresented: 'Representert/listet', optUnknown: 'Ukjent',
     phSpecText: 'søk i spesifikasjonstekst…', btnReset: 'Nullstill',
     noteMapClick: 'Klikk en stolpe eller et land på kartet for å filtrere; klikk igjen for å oppheve. ',
-    chGeo: 'Geografi', chType: 'Produkttype', chGrape: 'Drue / metode', chPrice: 'Prisbånd (kr)',
+    chGeo: 'Geografi', chDistrict: 'Distrikt / region', chType: 'Produkttype', chGrape: 'Drue / metode', chPrice: 'Prisbånd (kr)',
+    lblRegion: 'Distrikt/region', optAllRegions: 'Alle distrikter',
+    mapZoomHint: 'klyp / rull for å zoome · dobbelttrykk nullstiller',
     h2Specs: 'Anbudsspesifikasjoner', fAll: 'Alle', fMatch: 'Med kvalifiserte viner', fWine: 'Kun vin',
     thRef: 'Ref', thLaunch: 'Lansering', thSel: 'Utvalg', thGroup: 'Gruppe', thOrigin: 'Opprinnelse',
     thSpec: 'Spesifikasjon', thPriceBand: 'Prisbånd', thNeedFob: 'Trenger ≤ FOB', thHits: 'Treff',
@@ -1291,7 +1303,9 @@ const I18N = {
     optOpenImport: 'Open to import', optRepresented: 'Represented/listed', optUnknown: 'Unknown',
     phSpecText: 'search specification text…', btnReset: 'Reset',
     noteMapClick: 'Click a bar or a country on the map to filter; click again to clear. ',
-    chGeo: 'Geography', chType: 'Product type', chGrape: 'Grape / method', chPrice: 'Price band (kr)',
+    chGeo: 'Geography', chDistrict: 'District / region', chType: 'Product type', chGrape: 'Grape / method', chPrice: 'Price band (kr)',
+    lblRegion: 'District/region', optAllRegions: 'All districts',
+    mapZoomHint: 'pinch / scroll to zoom · double-tap resets',
     h2Specs: 'Tender specifications', fAll: 'All', fMatch: 'With qualifying wines', fWine: 'Wine only',
     thRef: 'Ref', thLaunch: 'Launch', thSel: 'Range', thGroup: 'Group', thOrigin: 'Origin',
     thSpec: 'Specification', thPriceBand: 'Price band', thNeedFob: 'Needs ≤ FOB', thHits: 'Matches',
@@ -1990,7 +2004,7 @@ const fmt = (x, d = 2) => (+x).toLocaleString(LANG === 'en' ? 'en-GB' : 'no-NO',
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 let MARKET = [], specFilter = 'all', marketHideListed = true;
 const openTerm = () => L.openCountry;
-const FILTERS = { country: '', mainType: '', group: '', grape: '', classification: '', price: '', sel: '', q: '' };
+const FILTERS = { country: '', region: '', mainType: '', group: '', grape: '', classification: '', price: '', sel: '', q: '' };
 const GRAPE_LEX = ['chardonnay','chenin blanc','pinot noir','pinotage','cabernet franc',
   'cabernet sauvignon','merlot','syrah','shiraz','grenache','garnacha','cinsault','mourvedre','mataro',
   'tempranillo','sangiovese','nebbiolo','barbera','riesling','gruner veltliner','sauvignon blanc',
@@ -2150,6 +2164,7 @@ function specBucket(spec) {
 }
 function passes(spec, skip) {
   if (skip !== 'country' && FILTERS.country && (spec.country || openTerm()) !== FILTERS.country) return false;
+  if (skip !== 'region' && FILTERS.region && (spec.region || '').trim() !== FILTERS.region) return false;
   if (skip !== 'mainType' && FILTERS.mainType && mainCat(spec) !== FILTERS.mainType) return false;
   if (skip !== 'group' && FILTERS.group && subCat(spec) !== FILTERS.group) return false;
   if (skip !== 'grape' && FILTERS.grape && !specGrapes(spec).includes(FILTERS.grape)) return false;
@@ -2324,7 +2339,7 @@ function renderMap() {
     lab => setFilter('country', lab, true));
 }
 
-const DIM_SELECT = { country: 'fCountry', mainType: 'fMain', group: 'fGroup', grape: 'fGrape',
+const DIM_SELECT = { country: 'fCountry', region: 'fRegion', mainType: 'fMain', group: 'fGroup', grape: 'fGrape',
   classification: 'fClass', price: 'fPrice', sel: 'fSel' };
 function setFilter(dim, val, scroll) {
   FILTERS[dim] = val;
@@ -2359,10 +2374,12 @@ function fillSelValueLabel(id, opts, current) {
 function renderDims() {
   renderMap();
   drawDimChart('chCountry', 'country', s => s.country || openTerm(), FILTERS.country);
+  drawDimChart('chRegion', 'region', s => (s.region || '').trim(), FILTERS.region);
   drawDimChart('chGroup', 'mainType', s => mainCat(s), FILTERS.mainType, null, mainDisp);
   drawDimChart('chGrape', 'grape', s => specGrapes(s), FILTERS.grape, null, dispGrape);
   drawDimChart('chPrice', 'price', s => specBucket(s), FILTERS.price, PRICE_BUCKETS.map(b => b[2]));
   fillSelect('fCountry', [...counts('country', s => s.country || openTerm()).keys()].sort(), FILTERS.country, dispCountry);
+  fillSelect('fRegion', [...counts('region', s => (s.region || '').trim()).keys()].sort(), FILTERS.region);
   const mainOpts = [...counts('mainType', s => mainCat(s)).keys()].map(c => [c, mainDisp(c)]).sort((a, b) => a[1].localeCompare(b[1]));
   fillSelValueLabel('fMain', mainOpts, FILTERS.mainType);
   const grpOpts = [...counts('group', s => subCat(s)).keys()].map(c => [c, subDisp(c)]).sort((a, b) => a[1].localeCompare(b[1]));
@@ -3870,6 +3887,85 @@ function toggleTheme() {
   }
   const mk = $('tab-marked'); if (mk) mk.remove();
 })();
+// Pinch / scroll / drag to zoom a map without zooming the whole page. touch-action:none on
+// the wrapper (CSS) stops the browser from hijacking the gesture; we drive a CSS transform on
+// the inner <svg> (which survives its innerHTML re-renders). Panning suppresses the click that
+// would otherwise toggle a country filter, so a drag never doubles as a selection.
+function enableMapZoom(wrap) {
+  if (!wrap) return;
+  const svg = wrap.querySelector('svg');
+  if (!svg) return;
+  let scale = 1, tx = 0, ty = 0;
+  const pointers = new Map();
+  let pinchStart = 0, pinchScale = 1, pinchMid = null, moved = 0;
+  svg.style.transformOrigin = '0 0';
+  const apply = () => { svg.style.transform = `translate(${tx}px,${ty}px) scale(${scale})`; };
+  const clamp = () => {
+    const w = svg.clientWidth || wrap.clientWidth, h = svg.clientHeight || wrap.clientHeight;
+    tx = Math.min(0, Math.max(w * (1 - scale), tx));
+    ty = Math.min(0, Math.max(h * (1 - scale), ty));
+  };
+  const zoomAt = (cx, cy, factor) => {
+    const next = Math.min(6, Math.max(1, scale * factor));
+    if (next === scale) return;
+    // keep the point under the cursor fixed: solve for tx' so (cx-tx)/scale stays put
+    tx = cx - (cx - tx) * (next / scale);
+    ty = cy - (cy - ty) * (next / scale);
+    scale = next;
+    if (scale === 1) { tx = 0; ty = 0; }
+    clamp(); apply();
+  };
+  const reset = () => { scale = 1; tx = 0; ty = 0; apply(); };
+  wrap.addEventListener('wheel', e => {
+    e.preventDefault();
+    const r = wrap.getBoundingClientRect();
+    zoomAt(e.clientX - r.left, e.clientY - r.top, e.deltaY < 0 ? 1.15 : 1 / 1.15);
+  }, { passive: false });
+  wrap.addEventListener('dblclick', e => { e.preventDefault(); reset(); });
+  wrap.addEventListener('pointerdown', e => {
+    pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    moved = 0;
+    if (pointers.size === 2) {
+      const [a, b] = [...pointers.values()];
+      pinchStart = Math.hypot(a.x - b.x, a.y - b.y) || 1;
+      pinchScale = scale;
+      const r = wrap.getBoundingClientRect();
+      pinchMid = { x: (a.x + b.x) / 2 - r.left, y: (a.y + b.y) / 2 - r.top };
+    }
+    if (wrap.setPointerCapture) try { wrap.setPointerCapture(e.pointerId); } catch (_) {}
+  });
+  wrap.addEventListener('pointermove', e => {
+    const p = pointers.get(e.pointerId);
+    if (!p) return;
+    const dx = e.clientX - p.x, dy = e.clientY - p.y;
+    if (pointers.size === 2) {
+      pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      const [a, b] = [...pointers.values()];
+      const dist = Math.hypot(a.x - b.x, a.y - b.y) || 1;
+      if (pinchMid) { const target = pinchScale * (dist / pinchStart);
+        zoomAt(pinchMid.x, pinchMid.y, target / scale); }
+      e.preventDefault();
+    } else if (scale > 1) {
+      moved += Math.abs(dx) + Math.abs(dy);
+      tx += dx; ty += dy; clamp(); apply();
+      pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      e.preventDefault();
+    }
+  }, { passive: false });
+  const up = e => {
+    pointers.delete(e.pointerId);
+    if (pointers.size < 2) { pinchMid = null; }
+    if (moved > 6) {   // a drag, not a tap: swallow the click that follows
+      const stop = ev => { ev.stopPropagation(); ev.preventDefault(); wrap.removeEventListener('click', stop, true); };
+      wrap.addEventListener('click', stop, true);
+      setTimeout(() => wrap.removeEventListener('click', stop, true), 0);
+    }
+    moved = 0;
+  };
+  wrap.addEventListener('pointerup', up);
+  wrap.addEventListener('pointercancel', up);
+}
+enableMapZoom($('mapWrap')); enableMapZoom($('wineMapWrap'));
 renderPlanSelect(); initLang(); initOrientation(); initRole(); loadVmpIndex();
 </script>
 </body>
