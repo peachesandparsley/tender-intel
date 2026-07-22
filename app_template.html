@@ -264,6 +264,12 @@
   .howto-body li { margin: 3px 0; }
   .howto-body b { color: var(--text-primary); }
   .howto-body .k { display: inline-block; min-width: 118px; font-weight: 700; color: var(--text-primary); }
+  /* per-card "why" rationale inside an expanded opportunity */
+  .oppwhy { font-size: 12px; color: var(--text-secondary); line-height: 1.5;
+    background: color-mix(in oklab, var(--accent) 5%, transparent);
+    border-left: 3px solid color-mix(in oklab, var(--accent) 38%, var(--border));
+    border-radius: 0 8px 8px 0; padding: 8px 12px; margin: 8px 0 10px; }
+  .oppwhy b { color: var(--text-primary); }
   /* clickable producer / grape → map spotlight */
   .clk-prod { cursor: pointer; }
   .clk-prod:hover { color: var(--accent); text-decoration: underline; }
@@ -765,6 +771,17 @@ const I18N = {
     oppIntroTip: 'Matchende viner som ikke selges i Norge ennå — de beste mulighetene',
     oppCandTip: 'Viner i basen som oppfyller kravene totalt', oppDeadTip: 'Dager til tilbudsfristen',
     oppFobTip: 'Høyeste kjellerpris (fra produsent) som treffer prisbåndet',
+    whyOppTitle: 'Hvorfor en mulighet:',
+    whyOpp: (nIntro, nOther, fob, dtd) =>
+      `${nIntro ? nIntro + (nIntro === 1 ? ' vin som ennå ikke selges i Norge matcher kravene — en mulig introduksjon som kan vinne listeplass' : ' viner som ennå ikke selges i Norge matcher kravene — hver er en mulig introduksjon som kan vinne listeplass') : 'Ingen urepresenterte viner matcher ennå'}.` +
+      `${nOther ? ` ${nOther} representert${nOther === 1 ? '' : 'e'} vin${nOther === 1 ? '' : 'er'} matcher også.` : ''}` +
+      `${fob ? ` En produsent må treffe ≈ €${fmt(fob, 1)} FOB.` : ''}` +
+      `${dtd != null && dtd >= 0 ? ` Frist om ${dtd} dager.` : ''}` +
+      ` Rangeringen vekter introduksjoner tyngst, deretter marginrom og hvor nær fristen er.`,
+    whyEvidence: (sourced, total, confirmed, rep, level) =>
+      `${sourced} av ${total} kandidat${total === 1 ? '' : 'er'} har kildeførte data · ${confirmed}% av kravene bekreftet · ${rep}% med verifisert NO-status. ` +
+      (level === 'high' ? 'Solid grunnlag → «Sterk».' : level === 'med' ? 'Delvis bekreftet → «Middels».'
+        : 'Mest ubekreftede leads → «Tynn». Blir sterkere når produsenter fullfører profilene og VMP-katalogen bekrefter representasjon.'),
     oppScoreV: 'score', oppSeeks: 'søker', oppFrom: ' fra ',
     oppSummary: n => `${n} anbud med kvalifiserte viner i denne planen`,
     btnDeadlineIcs: 'Fristvarsler',
@@ -1006,6 +1023,17 @@ const I18N = {
     oppIntroTip: 'Matching wines not sold in Norway yet — the best openings',
     oppCandTip: 'Wines in the database that meet the requirements overall', oppDeadTip: 'Days until the offer deadline',
     oppFobTip: 'Highest ex-cellar price (from the producer) that fits the price band',
+    whyOppTitle: 'Why it\'s an opportunity:',
+    whyOpp: (nIntro, nOther, fob, dtd) =>
+      `${nIntro ? nIntro + (nIntro === 1 ? ' wine not yet sold in Norway matches the requirements — a possible introduction that could win a listing' : ' wines not yet sold in Norway match the requirements — each a possible introduction that could win a listing') : 'No unrepresented wines match yet'}.` +
+      `${nOther ? ` ${nOther} already-represented wine${nOther === 1 ? '' : 's'} also match${nOther === 1 ? 'es' : ''}.` : ''}` +
+      `${fob ? ` A producer must hit ≈ €${fmt(fob, 1)} FOB.` : ''}` +
+      `${dtd != null && dtd >= 0 ? ` Deadline in ${dtd} days.` : ''}` +
+      ` The ranking weights introductions most, then margin headroom and deadline proximity.`,
+    whyEvidence: (sourced, total, confirmed, rep, level) =>
+      `${sourced} of ${total} candidate${total === 1 ? '' : 's'} have sourced data · ${confirmed}% of requirements confirmed · ${rep}% with verified NO status. ` +
+      (level === 'high' ? 'Solid basis → "Strong".' : level === 'med' ? 'Partly confirmed → "Moderate".'
+        : 'Mostly unconfirmed leads → "Thin". It strengthens as producers complete profiles and the VMP catalog confirms representation.'),
     oppScoreV: 'score', oppSeeks: 'seeks', oppFrom: ' from ',
     oppSummary: n => `${n} tenders with qualified wines in this plan`,
     btnDeadlineIcs: 'Deadline alerts',
@@ -3130,6 +3158,10 @@ function renderOpportunities() {
           <td>${x.passes}✓${x.unknowns ? ' ' + x.unknowns + '?' : ''} / ${x.total} ${price}</td>
           <td>${statusCell(x)}</td></tr>`;
       }).join('')}</tbody></table>`;
+    const why = `<div class="oppwhy">
+      <div><b>${L.whyOppTitle}</b> ${L.whyOpp(r.nIntro, r.n - r.nIntro, r.fobEur, r.dtd)}</div>
+      <div style="margin-top:5px"><b>${L.evidence}: ${stLabel}</b> — ${L.whyEvidence(st.sourced, st.total, st.confirmed, st.rep, st.level)}</div>
+    </div>`;
     return `<div class="opp" data-i="${i}">
       <div class="opp-head" onclick="this.parentNode.classList.toggle('open')">
         <span class="opp-rank">${i + 1}</span>
@@ -3141,7 +3173,7 @@ function renderOpportunities() {
         <span class="opp-metric" title="${esc(L.evTip(st.sourced, st.total, st.confirmed, st.rep))}"><span class="v ev"><span class="ev-dot ev-${st.level}"></span>${stLabel}</span><span class="l">${L.evidence}</span></span>
         <span class="opp-metric" title="${L.oppScoreV}"><span class="scorebar" style="width:${Math.round(38*r.score/maxScore)}px"></span></span>
       </div>
-      <div class="opp-body">${body}</div></div>`;
+      <div class="opp-body">${why}${body}</div></div>`;
   }).join('');
 }
 function exportShortlist() {
