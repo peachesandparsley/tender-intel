@@ -197,19 +197,121 @@
   .ev-med { background: var(--warn, #d8922a); }
   .ev-low { background: var(--muted, #9aa0ab); }
   .opp-metric .v.ev { font-size: 12.5px; }
+
+  /* ======================= visual refresh + responsive ======================= */
+  body.viz-root { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+  .wrap { max-width: 1160px; }
+
+  /* --- header as a clean top bar --- */
+  header { margin-bottom: 10px; }
+  .topbar { display: flex; align-items: flex-start; justify-content: space-between; gap: 14px 18px; flex-wrap: wrap; }
+  .brand { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; min-width: 0; }
+  header h1 { font-size: 26px; margin: 0; line-height: 1.1; }
+  .plan-pick { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px 3px 12px;
+    border: 1px solid var(--border); border-radius: 999px; background: var(--surface-1); cursor: pointer; }
+  .plan-pick .plan-label { margin: 0; }
+  #planSelect { font: inherit; font-size: 12.5px; border: none; background: transparent; font-weight: 600;
+    color: var(--text-primary); cursor: pointer; padding: 2px 2px; max-width: 160px; }
+  .controls { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .ctl-btn { font: inherit; font-size: 12.5px; padding: 6px 13px; border-radius: 999px; cursor: pointer;
+    border: 1px solid var(--border); background: var(--surface-1); color: var(--text-secondary);
+    transition: border-color .12s, color .12s; }
+  .ctl-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .ctl-input { font: inherit; font-size: 12.5px; padding: 6px 13px; border-radius: 999px; width: 128px;
+    border: 1px solid var(--border); background: var(--surface-1); color: var(--text-secondary); }
+  header p { margin: 12px 0 0; max-width: 760px; }
+
+  /* --- nav --- */
+  nav { gap: 5px; margin: 16px 0 20px; padding-bottom: 0; border-bottom: none; }
+  nav button { font-size: 13px; padding: 7px 15px; transition: background .12s, color .12s, border-color .12s; }
+  nav button:hover:not(.on) { border-color: var(--accent); color: var(--accent); }
+  nav button.on { box-shadow: 0 2px 9px -3px color-mix(in oklab, var(--accent) 55%, transparent); }
+
+  /* --- unified focus ring --- */
+  input:focus-visible, select:focus-visible, textarea:focus-visible,
+  .btn:focus-visible, nav button:focus-visible, .ctl-btn:focus-visible, .filters button:focus-visible,
+  .ctl-input:focus, #planSelect:focus, #mwCountry:focus {
+    outline: none; border-color: var(--accent);
+    box-shadow: 0 0 0 3px color-mix(in oklab, var(--accent) 20%, transparent); }
+  input, select { transition: border-color .12s, box-shadow .12s; }
+
+  /* --- buttons --- */
+  .btn { transition: filter .12s, transform .05s; box-shadow: 0 1px 2px rgba(0,0,0,.06); white-space: nowrap; }
+  .btn:hover { filter: brightness(1.07); }
+  /* opportunity metrics: stack value over label (was running together) */
+  .opp-metric .v, .opp-metric .l { display: block; }
+  .opp-metric .v { line-height: 1.15; }
+  .opp-metric .l { margin-top: 1px; }
+  .btn:active { transform: translateY(1px); }
+  .btn.ghost { box-shadow: none; }
+  .btn.ghost:hover { background: color-mix(in oklab, var(--accent) 8%, transparent); }
+  .chip { line-height: 1.5; }
+
+  /* --- data tables: scroll container with edge-shadow affordance --- */
+  .twrap { overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: 8px;
+    background:
+      linear-gradient(to right, var(--surface-1), color-mix(in oklab, var(--surface-1) 0%, transparent) 24px),
+      linear-gradient(to left, var(--surface-1), color-mix(in oklab, var(--surface-1) 0%, transparent) 24px) 100% 0,
+      linear-gradient(to right, rgba(60,45,30,.10), transparent 14px),
+      linear-gradient(to left, rgba(60,45,30,.10), transparent 14px) 100% 0;
+    background-repeat: no-repeat; background-size: 26px 100%, 26px 100%, 14px 100%, 14px 100%;
+    background-attachment: local, local, scroll, scroll; }
+  .twrap table { min-width: 560px; }
+  #breakdownTable { min-width: 0; }
+  .tile { transition: border-color .12s; }
+  .tile .v { line-height: 1.1; }
+
+  /* ======================= responsive ======================= */
+  @media (max-width: 860px) {
+    .charts-grid { grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap: 12px; }
+  }
+  @media (max-width: 640px) {
+    .wrap { padding: 14px 12px 40px; }
+    header h1 { font-size: 22px; }
+    header p { font-size: 13px; margin-top: 10px; }
+    .controls { width: 100%; }
+    .ctl-input { flex: 1 1 auto; width: auto; min-width: 0; }
+    /* nav → single swipeable, edge-to-edge row */
+    nav { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; gap: 6px;
+      margin: 14px -12px 16px; padding: 0 12px 2px; scroll-snap-type: x proximity;
+      -webkit-overflow-scrolling: touch; }
+    nav::-webkit-scrollbar { display: none; }
+    nav button { flex: 0 0 auto; scroll-snap-align: start; }
+    .card { padding: 14px; border-radius: 12px; }
+    .card h2 { font-size: 15px; }
+    .tabhelp { margin: -4px 0 14px; }
+    .tiles { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+    .tile { padding: 11px 12px; }
+    .tile .v { font-size: 20px; }
+    table { font-size: 12px; }
+    th, td { padding: 6px 7px; }
+    .twrap table { min-width: 520px; }
+    .rolepick { flex-direction: column; align-items: stretch; }
+    .rp-btn { min-width: 0; }
+    .opp-head { gap: 8px 10px; }
+    .opp-title { flex-basis: 100%; }
+    .opp-metric { min-width: 44px; }
+    .fob-out .tile { min-width: calc(50% - 5px); }
+  }
 </style>
 </head>
 <body class="viz-root">
 <div class="wrap">
   <header>
-    <button class="theme-toggle" data-i18n="themeToggle" onclick="toggleTheme()">lys/mørk</button>
-    <button class="theme-toggle" id="langToggle" style="margin-right:8px" onclick="switchLang()">English</button>
-    <input id="whoAmI" value="Espen (demo)" data-i18n-title="whoTitle" title="Brukes til å stemple hvem som lastet opp/endret data"
-      style="float:right;margin-right:8px;font:inherit;font-size:12px;padding:4px 10px;border-radius:999px;border:1px solid var(--border);background:var(--surface-1);color:var(--text-secondary);width:130px">
-
-    <h1>Tender Intelligence
-      <span class="plan-label" data-i18n="planLabel">Plan:</span><select id="planSelect" class="pill" data-i18n-title="planTitle" title="Bytt lanseringsplan — hele appen viser data fra planen du velger her" style="font:inherit;font-size:12px;background:var(--surface-1);color:var(--text-secondary);cursor:pointer;margin-left:4px"></select>
-    </h1>
+    <div class="topbar">
+      <div class="brand">
+        <h1>Tender Intelligence</h1>
+        <label class="plan-pick" data-i18n-title="planTitle" title="Bytt lanseringsplan — hele appen viser data fra planen du velger her">
+          <span class="plan-label" data-i18n="planLabel">Plan:</span>
+          <select id="planSelect"></select>
+        </label>
+      </div>
+      <div class="controls">
+        <input id="whoAmI" value="Espen (demo)" class="ctl-input" data-i18n-title="whoTitle" title="Brukes til å stemple hvem som lastet opp/endret data">
+        <button class="ctl-btn" id="langToggle" onclick="switchLang()">English</button>
+        <button class="ctl-btn" data-i18n="themeToggle" onclick="toggleTheme()">lys/mørk</button>
+      </div>
+    </div>
     <p data-i18n="subtitle">Nordiske monopolanbud · klausulmatching · FOB-kalkulator · produsentopplasting — alt kjører i denne filen, ingen server.</p>
   </header>
 
@@ -355,12 +457,12 @@
         <button data-f="match" data-i18n="fMatch">Med kvalifiserte viner</button>
         <button data-f="wine" data-i18n="fWine">Kun vin</button>
       </div>
-      <table id="specTable"><thead><tr>
+      <div class="twrap"><table id="specTable"><thead><tr>
         <th data-sort="ref" data-i18n="thRef">Ref</th><th data-sort="launch" data-i18n="thLaunch">Lansering</th><th data-sort="sel" data-i18n="thSel">Utvalg</th>
         <th data-sort="group" data-i18n="thGroup">Gruppe</th><th data-sort="country" data-i18n="thOrigin">Opprinnelse</th>
         <th data-i18n="thSpec">Spesifikasjon</th><th class="num" data-sort="price" data-i18n="thPriceBand">Prisbånd</th>
         <th class="num" data-sort="fob" data-i18n="thNeedFob">Trenger ≤ FOB</th><th class="num" data-sort="hits" data-i18n="thHits">Treff</th>
-      </tr></thead><tbody></tbody></table>
+      </tr></thead><tbody></tbody></table></div>
       <p class="note" data-i18n="noteSpecTable">Klikk en rad for klausulene. «Trenger ≤ FOB» = høyeste produsentpris fra kjeller (før frakt, avgifter og margin) som fortsatt treffer prisbåndets tak, gitt kalkulatorens forutsetninger.</p>
     </div>
   </section>
@@ -377,9 +479,9 @@
         <button data-mf="all" data-i18n="mfShowAll">Vis alle</button>
       </div>
       <p class="note" id="marketHiddenNote" style="margin:0 0 6px"></p>
-      <table id="marketTable"><thead><tr>
+      <div class="twrap"><table id="marketTable"><thead><tr>
         <th style="width:40%" data-i18n="thCandidate">Kandidatvin</th><th data-i18n="thAssessment">Vurdering</th>
-      </tr></thead><tbody></tbody></table>
+      </tr></thead><tbody></tbody></table></div>
     </div>
   </section>
 
@@ -409,7 +511,7 @@
         <div class="tile"><div class="v" id="outFobEur">–</div><div class="l" data-i18n="outFobEurL">FOB i euro (€)</div></div>
         <div class="tile"><div class="v" id="outVerdict">–</div><div class="l" data-i18n="outVerdictL">Vurdering</div></div>
       </div>
-      <table id="breakdownTable"><thead><tr><th data-i18n="thComponent">Komponent</th><th class="num" data-i18n="thKr">kr</th><th class="num" data-i18n="thShare">Andel</th></tr></thead><tbody></tbody></table>
+      <div class="twrap"><table id="breakdownTable"><thead><tr><th data-i18n="thComponent">Komponent</th><th class="num" data-i18n="thKr">kr</th><th class="num" data-i18n="thShare">Andel</th></tr></thead><tbody></tbody></table></div>
       <footer data-i18n="calcFooter">Alkoholavgift 5,41 kr/vol%/l (4,7–22 %) · avanse 10,82 kr/l + 21 % (knekk 133,70, tak 250) · mva 25 %. Verifisert mot Vinmonopolets priseksempel (199,90 kr → grossist 80,67 kr).</footer>
     </div>
   </section>
@@ -436,7 +538,7 @@
         <button class="btn ghost" data-i18n="btnExportJson" onclick="exportWines()">Eksporter (JSON)</button>
         <label class="btn ghost" style="cursor:pointer"><span data-i18n="btnImportJson">Importer (JSON)</span><input type="file" id="wineJsonIn" accept=".json" style="display:none"></label>
       </p>
-      <table id="wineTable"><thead><tr>
+      <div class="twrap"><table id="wineTable"><thead><tr>
         <th data-sort="producer" data-i18n="thProducer">Produsent</th><th data-sort="name" data-i18n="thWine">Vin</th><th data-sort="country" data-i18n="thCountry">Land</th>
         <th data-sort="type" data-i18n="thTypeCol">Type</th><th data-i18n="thGrapes">Druer</th>
         <th class="num" data-sort="sugar" data-i18n-title="ttSugar" title="sukker g/l" data-i18n="thSugar">Sukker</th>
@@ -445,7 +547,7 @@
         <th class="num" data-sort="fob" data-i18n="thFob">FOB €</th><th data-i18n="thCert">Sert.</th><th data-sort="rep" data-i18n="thRepNo">Rep. NO</th>
         <th data-sort="updated" data-i18n-title="ttUpdated" title="hvem som la inn/endret raden, og når" data-i18n="thUpdated">Oppdatert</th>
         <th data-sort="quality" data-i18n-title="ttQuality" title="verifiseringsstatus per felt — klikk raden for detaljer" data-i18n="thQuality">Datakvalitet</th>
-      </tr></thead><tbody></tbody></table>
+      </tr></thead><tbody></tbody></table></div>
       <p class="note" data-i18n="noteWineLegend">✓ verifisert mot kilde · ◦ offentlig dokumentert (lenke ikke arkivert) · ~ estimat som venter bekreftelse · ? mangler. Klikk en rad for felt-for-felt-status. I produksjon fylles ✓ av katalogsync, registeroppslag, produsentens tech sheet/analysebevis og parts-bekreftelser med tidsstempel — og verifisering eldes: en ✓ eldre enn 12 mnd faller tilbake til ◦.</p>
     </div>
   </section>
@@ -463,10 +565,10 @@
     </div>
     <div class="card">
       <h2><span data-i18n="portMatchPre">Anbud i </span><span id="portPlanName"></span><span data-i18n="portMatchPost"> som porteføljen din kan vinne</span></h2>
-      <table id="portMatchTable"><thead><tr>
+      <div class="twrap"><table id="portMatchTable"><thead><tr>
         <th data-i18n="thTender">Anbud</th><th data-i18n="thDeadline">Frist</th><th class="num" data-i18n="thPriceBand">Prisbånd</th><th data-i18n="thYourWine">Din vin</th>
         <th class="num" data-i18n="thClauses">Klausuler</th><th data-i18n="thPrice">Pris</th>
-      </tr></thead><tbody></tbody></table>
+      </tr></thead><tbody></tbody></table></div>
       <p class="note" id="portMatchNote"></p>
     </div>
   </section>
@@ -485,10 +587,10 @@
         <div><label data-i18n="lblLand">Land</label><select id="kfCountry"><option value="" data-i18n="optAllCountries">Alle land</option></select></div>
         <div style="flex:1.4"><label data-i18n="lblText">Fritekst</label><input id="kfQ" data-i18n-ph="phProducerName" placeholder="produsentnavn…"></div>
       </div>
-      <table id="katTable"><thead><tr>
+      <div class="twrap"><table id="katTable"><thead><tr>
         <th data-sort="producer" data-i18n="thProducer">Produsent</th><th data-sort="country" data-i18n="thCountry">Land</th><th class="num" data-sort="wines" data-i18n="thWinesCount">Viner</th>
         <th data-sort="no" data-i18n="thNO">Norge</th><th data-sort="se" data-i18n="thSE">Sverige</th><th data-sort="fi" data-i18n="thFI">Finland</th>
-      </tr></thead><tbody></tbody></table>
+      </tr></thead><tbody></tbody></table></div>
     </div>
   </section>
 
@@ -584,7 +686,7 @@ const I18N = {
     oppCandV: 'kandidater', oppIntroV: 'introduksjoner', oppFobV: 'trenger ≤ FOB', oppDeadV: 'frist',
     oppScoreV: 'score', oppSeeks: 'søker', oppFrom: ' fra ',
     oppSummary: n => `${n} anbud med kvalifiserte viner i denne planen`,
-    btnDeadlineIcs: 'Fristvarsler (kalender)',
+    btnDeadlineIcs: 'Fristvarsler',
     digestTitle: n => `${n} anbud i shortlist — kommende frister:`,
     digestHint: 'Last ned kalendervarsler (.ics) med påminnelse 7 og 1 dag før frist. I produksjon sendes de samme varslene på e-post.',
     oppNoShortlist: 'Stjernemerk noen viner først (★) for å bygge en shortlist.',
@@ -792,7 +894,7 @@ const I18N = {
     oppCandV: 'candidates', oppIntroV: 'introductions', oppFobV: 'needs ≤ FOB', oppDeadV: 'deadline',
     oppScoreV: 'score', oppSeeks: 'seeks', oppFrom: ' from ',
     oppSummary: n => `${n} tenders with qualified wines in this plan`,
-    btnDeadlineIcs: 'Deadline reminders (calendar)',
+    btnDeadlineIcs: 'Deadline alerts',
     digestTitle: n => `${n} shortlisted tenders — upcoming deadlines:`,
     digestHint: 'Download calendar reminders (.ics) with alerts 7 and 1 day before the deadline. In production the same alerts are emailed.',
     oppNoShortlist: 'Star some wines first (★) to build a shortlist.',
