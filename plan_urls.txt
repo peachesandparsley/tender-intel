@@ -1,0 +1,16 @@
+# Direct download links to Vinmonopolet launch-plan Excel files — one URL per line.
+# This is the reliable way to add historical plans (the site is a SPA, so auto-scraping
+# a page's HTML may miss the link). On the archive pages below, right-click the Excel
+# download link → "Copy link", and paste it here. Prefer the ENGLISH edition.
+#
+# Archive:  https://www.vinmonopolet.no/lanseringer/arkiv
+#           https://www.vinmonopolet.no/content/lanseringer/tidligere-lanseringer
+#           https://www.vinmonopolet.no/english/product-launches-tender-plan
+#
+# Then locally:  python3 fetch_launch_plans.py && python3 build_app.py
+# Or just commit this file — the refresh-launch-plans workflow does the rest monthly.
+#
+# Lines starting with # are ignored. Example (replace with real .xlsx URLs):
+# https://www.vinmonopolet.no/.../lanseringsplan-2024-1-english.xlsx
+# https://www.vinmonopolet.no/.../lanseringsplan-2024-2-english.xlsx
+# https://www.vinmonopolet.no/.../lanseringsplan-2025-2-english.xlsx

@@ -38,6 +38,7 @@ works offline). Served via GitHub Pages at the repository's Pages URL.
 | `match.py` / `match_wines.py` | Portfolio scoring and wine↔spec eligibility engines |
 | `import_wines.py` | Producer bulk-upload validator |
 | `ingest_vmp.py` | Populates the wine DB with **verified** data from Vinmonopolet's own catalog (API key or portal export); producer-only fields stay flagged for confirmation |
+| `fetch_launch_plans.py` | Downloads Vinmonopolet launch-plan Excel files (from `plan_urls.txt` or the known pages) and parses them to `specs_*.json` → thickens the recurrence/gap data. Runs where vinmonopolet.no is reachable (your machine / the `refresh-launch-plans` workflow) |
 | `track_listings.py` | Diffs the daily Open-API catalog snapshots into a listing-date ledger (`vmp_listings.json`: first_seen / last_seen per product). Forward-looking evidence for a real fill-rate — cross-reference a new listing's date with a tender's launch month to see which lots actually got filled (see the fill-rate note below) |
 | `demand_map.py` | Ranks recurring tender demand (origin × grape × style × price × cert) → where to seed producers first (writes `demand_map.md`) |
 | `gap_analysis.py` | Cross-plan **gap directory**: which origin × style × grape clusters are chronically re-requested (a proxy for unfilled lots — VMP doesn't publish awards) vs. how few known wines qualify. Ranks by gap score → where to focus. Writes `gap_analysis.md` + `.json`. Also a live tab in the app (Analytics) |
@@ -79,6 +80,12 @@ To add a historical plan:
    (the parser handles both format generations).
 3. `python3 build_app.py` — it's picked up automatically. Commit the new
    `specs_*.json` + `index.html`.
+
+**Hands-off option:** `fetch_launch_plans.py` downloads + parses plans automatically (on
+a machine that can reach vinmonopolet.no). Paste the direct `.xlsx` links into
+`plan_urls.txt` (most reliable — the site is a SPA), or let it try the known plan pages;
+the `refresh-launch-plans` workflow runs it monthly and commits any new plans + rebuilt
+app. See `plan_urls.txt` for how to grab the links.
 
 ## From gap proxy to real fill-rate
 
