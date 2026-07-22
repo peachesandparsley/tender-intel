@@ -1043,6 +1043,8 @@ const I18N = {
     kravSome: (p, tot, u) => `Oppfyller ${p} av ${tot} krav — ${u} må bekreftes`,
     kravTitle: 'klikk raden for detaljer',
     priceIn: 'Pris innenfor båndet', priceHigh: 'FOB for høy for båndet', priceUnknown: 'Pris ukjent',
+    priceInEst: 'Trolig innenfor (est.)', priceHighEst: 'Trolig for dyr (est.)',
+    priceEstTip: (sek, no, cap) => `Estimert fra svensk hyllepris ${sek} kr ≈ ${no} kr i Norge (band-tak ${cap} kr). Grovt anslag — bekreftes av produsentens FOB.`,
     catListed: 'Allerede i VMP-sortimentet ⚠', catListedTitle: (id, date, live) => `varenr ${id}${date ? ' · ' + (live ? 'sjekket live mot VMP-katalogen ' : 'sjekket ') + date + (live ? '' : ' (statisk øyeblikksbilde, ikke sanntid)') : ''} — basis/parti = uaktuell; bestillingsutvalg kan være fordel`,
     vmpIndexLive: (n, date) => `Katalogsjekk er live mot ${n} VMP-produkter${date ? ' (oppdatert ' + date + ')' : ''}.`,
     mfHideListed: 'Skjul viner som alt er i VMP', mfShowAll: 'Vis alle',
@@ -1061,6 +1063,7 @@ const I18N = {
     candTip: 'Trykk for å se treff/bom på hvert krav',
     critTitle: 'Vinen mot hvert krav i anbudet', critOrigin: 'Opprinnelse', critType: 'Type', critPrice: 'Pris (FOB)',
     critFob: (need, have) => `maks €${need} — vinen oppgir €${have}`, critFobPending: need => `maks €${need} — produsenten har ikke oppgitt FOB`,
+    critFobEst: (sek, no, cap) => `est. fra svensk hyllepris ${sek} kr ≈ ${no} kr i Norge, band-tak ${cap} kr (grovt anslag — bekreftes av produsentens FOB)`,
     critShow: 'Se vinen mot hvert krav',
     repOpen: 'Åpen', repOpenDetail: 'ingen norsk listing funnet — introduksjonsmulighet',
     repHasImporter: 'har norsk importør',
@@ -1326,6 +1329,8 @@ const I18N = {
     kravSome: (p, tot, u) => `Meets ${p} of ${tot} requirements — ${u} to confirm`,
     kravTitle: 'click the row for details',
     priceIn: 'Price within band', priceHigh: 'FOB too high for band', priceUnknown: 'Price unknown',
+    priceInEst: 'Likely within (est.)', priceHighEst: 'Likely too dear (est.)',
+    priceEstTip: (sek, no, cap) => `Estimated from Swedish shelf price ${sek} kr ≈ ${no} kr in Norway (band cap ${cap} kr). Rough estimate — confirmed by the producer's FOB.`,
     catListed: 'Already in VMP range ⚠', catListedTitle: (id, date, live) => `item no. ${id}${date ? ' · ' + (live ? 'checked live against the VMP catalog ' : 'checked ') + date + (live ? '' : ' (static snapshot, not live)') : ''} — base/parti = not relevant; special-order range may be an advantage`,
     vmpIndexLive: (n, date) => `Catalog check is live against ${n} VMP products${date ? ' (updated ' + date + ')' : ''}.`,
     mfHideListed: 'Hide wines already in VMP', mfShowAll: 'Show all',
@@ -1344,6 +1349,7 @@ const I18N = {
     candTip: 'Tap to see hit/miss on each requirement',
     critTitle: 'The wine against each tender requirement', critOrigin: 'Origin', critType: 'Type', critPrice: 'Price (FOB)',
     critFob: (need, have) => `max €${need} — wine states €${have}`, critFobPending: need => `max €${need} — producer hasn't stated FOB`,
+    critFobEst: (sek, no, cap) => `est. from Swedish shelf price ${sek} kr ≈ ${no} kr in Norway, band cap ${cap} kr (rough estimate — confirmed by the producer's FOB)`,
     critShow: 'See the wine against each requirement',
     repOpen: 'Open', repOpenDetail: 'no Norwegian listing found — introduction opportunity',
     repHasImporter: 'has a Norwegian importer',
@@ -1696,6 +1702,13 @@ async function loadVmpIndex() {
     if (note && L.vmpIndexLive) note.textContent = L.vmpIndexLive(VMP_INDEX_META.count, VMP_INDEX_META.generated);
   } catch (e) { /* offline / not deployed yet -> keep seed behaviour */ }
 }
+// A wine's *proven* Systembolaget shelf price (retail_sek) is a real price signal when the
+// producer hasn't stated an ex-cellar FOB. Both SE and NO are monopoly shelf prices (excise +
+// margin + VAT); Norway runs ~15% dearer on wine, and SEK≈NOK. So an estimated NO shelf price
+// ≈ retail_sek × 1.15 — coarse, but enough to tell a budget wine from a premium one against a
+// tender's price band. Flagged as an estimate; only a producer-confirmed FOB is authoritative.
+const SE_TO_NO_RETAIL = 1.15;
+function noRetailEst(w) { return w.retail_sek != null ? w.retail_sek * SE_TO_NO_RETAIL : null; }
 function evaluateWine(spec, w, fobReq) {
   if (!originOk(spec, w) || !groupOk(spec, w)) return null;
   const verdicts = clausesForSpec(spec).map(cl => ({ clause: cl.text.slice(0, 90), verdict: checkClause(cl, w) }));
@@ -1703,11 +1716,13 @@ function evaluateWine(spec, w, fobReq) {
   const passes = verdicts.filter(v => v.verdict === 'pass').length;
   const unknowns = verdicts.filter(v => v.verdict === 'unknown').length;
   const total = verdicts.filter(v => v.verdict !== 'info').length;
-  let priceOk = null;
-  if (fobReq && w.fob_eur != null) priceOk = w.fob_eur <= fobReq.eur;
+  let priceOk = null, priceBasis = null;
+  const bandCap = spec.price_hi ?? spec.price_lo;
+  if (fobReq && w.fob_eur != null) { priceOk = w.fob_eur <= fobReq.eur; priceBasis = 'fob'; }
+  else if (bandCap) { const est = noRetailEst(w); if (est != null) { priceOk = est <= +bandCap * 1.05; priceBasis = 'est'; } }
   const idxCat = catalogFromIndex(w);
   const cat = idxCat ? idxCat.status : ((w.catalog_no && w.catalog_no.status) || 'unchecked');
-  return { wine: w, passes, unknowns, total, priceOk, catalog: cat, catalogMatch: idxCat, verdicts };
+  return { wine: w, passes, unknowns, total, priceOk, priceBasis, catalog: cat, catalogMatch: idxCat, verdicts };
 }
 // Full per-criterion breakdown of one wine against one tender line: origin, style, every
 // requirement clause, and price — each marked pass / fail / unknown. Unlike evaluateWine
@@ -1718,7 +1733,9 @@ function critList(spec, w, fob) {
   out.push({ label: L.critOrigin, val: originVal || L.openOrigin, v: originOk(spec, w) ? 'pass' : 'fail' });
   out.push({ label: L.critType, val: groupLabel(spec.group) + (spec.vintage ? ` · ${L.wlVintage}${spec.vintage}` : ''), v: groupOk(spec, w) ? 'pass' : 'fail' });
   for (const cl of clausesForSpec(spec)) out.push({ label: '', val: cl.text, v: checkClause(cl, w) });
+  const bandCap = spec.price_hi ?? spec.price_lo;
   if (fob && w.fob_eur != null) out.push({ label: L.critPrice, val: L.critFob(fmt(fob.eur, 1), fmt(w.fob_eur, 1)), v: w.fob_eur <= fob.eur ? 'pass' : 'fail' });
+  else if (bandCap && w.retail_sek != null) out.push({ label: L.critPrice, val: L.critFobEst(fmt(w.retail_sek, 0), fmt(noRetailEst(w), 0), fmt(bandCap, 0)), v: noRetailEst(w) <= +bandCap * 1.05 ? 'pass' : 'fail' });
   else if (fob) out.push({ label: L.critPrice, val: L.critFobPending(fmt(fob.eur, 1)), v: 'unknown' });
   return out;
 }
@@ -3340,6 +3357,15 @@ function datasetStrength(m) {
   if (!priced) level = 'low';
   return { level, pct, sourced, total: n, confirmed: Math.round(confirmed * 100), rep: Math.round(rep * 100), priced };
 }
+// Price-fit chip. A producer-confirmed FOB gives a firm verdict; a Swedish-shelf-price
+// estimate gives a "likely" verdict (amber), clearly labelled and never treated as confirmed.
+function priceChip(x, spec) {
+  if (x.priceOk == null) return '';
+  const est = x.priceBasis === 'est';
+  const tip = est ? esc(L.priceEstTip(fmt(x.wine.retail_sek, 0), fmt(noRetailEst(x.wine), 0), fmt(spec.price_hi ?? spec.price_lo, 0))) : '';
+  if (x.priceOk === true) return `<span class="chip ${est ? 'mid' : 'hi'}" title="${tip}">${est ? L.priceInEst : L.priceIn}</span>`;
+  return `<span class="chip ${est ? 'lo' : 'mid'}" title="${tip}">${est ? L.priceHighEst : L.priceHigh}</span>`;
+}
 function statusCell(x) {
   if (isIntroOpp(x)) return `<span class="chip hi" title="${esc(x.wine.representation?.NO || '')}">${L.oppIntroBadge}</span>`;
   if (isOnVMP(x)) return `<span class="chip mid">${L.oppRepBadge}</span>`;
@@ -3390,8 +3416,7 @@ function renderOpportunities() {
     const body = `<table><thead><tr><th>${L.thPick}</th><th>${L.thWineCol}</th><th title="${esc(L.thFitTip)}">${L.thFitCol}</th><th>${L.thStatusCol}</th></tr></thead><tbody>${
       cands.map(x => {
         const k = slKey(s.ref, x.wine.id), on = SHORTLIST.has(k) ? ' on' : '';
-        const price = x.priceOk === true ? `<span class="chip hi">${L.priceIn}</span>`
-          : x.priceOk === false ? `<span class="chip mid">${L.priceHigh}</span>` : '';
+        const price = priceChip(x, s);
         return `<tr class="cand" title="${esc(L.candTip)}"><td><button class="star${on}" title="shortlist" onclick="event.stopPropagation();toggleStar('${esc(s.ref)}','${esc(x.wine.id)}',this)">★</button></td>
           <td><b>${esc(x.wine.producer)}</b> — ${esc(x.wine.name)}${isSeed(x.wine) ? ` <span class="chip sample">${L.sampleBadge}</span>` : ''} <span class="rowgo">›</span></td>
           <td title="${esc(L.matchCellTip(x.passes, x.unknowns, x.total))}">${x.passes}✓${x.unknowns ? ' ' + x.unknowns + '?' : ''} / ${x.total} ${price}</td>
