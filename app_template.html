@@ -2793,7 +2793,10 @@ function computeGaps() {
     const style = specStyle(s);
     const grapes = specGrapes(s).filter(g => g !== 'traditional method');
     const price = s.price_hi ?? s.price_lo, cert = certRe.test(s.spec || '');
-    for (const g of (grapes.length ? grapes : [''])) {
+    // Only grape-specific clusters are targetable sourcing gaps. A tender that names no grape
+    // (e.g. "any French sparkling") would otherwise form a broad catch-all bucket that tops the
+    // list on recurrence alone — mainstream, well-covered categories masquerading as unmet demand.
+    for (const g of grapes) {
       const key = country + '|' + style + '|' + g;
       if (!clusters.has(key)) clusters.set(key, { country, style, grape: g, plans: new Set(), requests: 0, prices: [], cert: 0 });
       const c = clusters.get(key);
