@@ -48,7 +48,7 @@ works offline). Served via GitHub Pages at the repository's Pages URL.
 | `scrape_producers.py` | Seeds producers from a national body's **public directory** (Austrian Wine API-first, WoSA via Chromium) → same schema, representation derived from the VMP index. API-first, rate-limited, EU-database-right aware (see `SEED_SOURCES.md`) |
 | `make_seed_sample.py` | Curates a capped, origin-diverse, English-normalised sample of the (large) seed files for the app to inline |
 | `make_*_template.py` | Generators for the producer/importer Excel templates |
-| `seed_sample.json` | The embedded wine database — real records from monopoly open data (Systembolaget), each with a source URL. No invented values: fields are either publicly sourced or left null. (The old Claude-generated `wines.json`, which carried invented FOB/volume/profile, has been removed.) |
+| `seed_se.json` | Raw Systembolaget open-data export (kept as a real source artifact; **not embedded** in the app). |
 | `specs_*.json` | Parsed tender plans: 2020-1, 2026-1, 2026-2, 2027-1 |
 | `PRODUCT.md` / `DEPLOY.md` | Product blueprint and the Supabase production path |
 
@@ -58,12 +58,13 @@ works offline). Served via GitHub Pages at the repository's Pages URL.
 python3 build_app.py   # regenerates index.html; needs package/dist/xlsx.full.min.js (npm pack xlsx@0.18.5)
 ```
 
-`build_app.py` inlines `seed_sample.json` (curated cross-monopoly supply-side
-leads) into `WINES`, normalising each to the full schema. The leads are auto-badged
-(they carry `seed:` provenance) and shown as unverified, pending-claim. Regenerate the
-sample with `make_seed_sample.py`, or let the `refresh-seed-sample` workflow do it
-weekly. If a real, sourced `wines.json` is ever added it is embedded too; the previous
-Claude-generated one was removed because its FOB/volume/profile were invented.
+**The app ships with no seed wines.** The wine side is filled by users adding their own
+portfolios — the real ex-cellar price (FOB) and all — matched against the real tender data.
+Seed leads (Systembolaget open-data wines, Wikidata producers, the old Claude-generated
+`wines.json`) were removed: they were either invented, or cosmetic (already commercialised
+elsewhere, no FOB, not genuine introduction opportunities). If a real, sourced `wines.json`
+is ever added it is embedded; otherwise `WINES` starts empty and grows as producers and
+importers add their portfolios.
 
 Commit `index.html` and GitHub Pages redeploys automatically (~1 min).
 
