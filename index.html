@@ -250,6 +250,20 @@
   .chiptoggle:has(input:checked) { border-color: var(--accent); color: #fff;
     background: var(--accent); font-weight: 600; }
   .fieldlabel { display: block; font-size: 11.5px; color: var(--muted); margin-bottom: 3px; }
+  /* "how to read this" plain-language key */
+  .howto { background: color-mix(in oklab, var(--accent) 6%, var(--surface-1));
+    border: 1px solid color-mix(in oklab, var(--accent) 22%, var(--border)); border-radius: 10px;
+    padding: 9px 14px; margin: 0 0 12px; font-size: 12.5px; color: var(--text-secondary); }
+  .howto summary { cursor: pointer; font-weight: 700; color: var(--text-primary); list-style: none;
+    user-select: none; }
+  .howto summary::-webkit-details-marker { display: none; }
+  .howto summary::before { content: '▸'; display: inline-block; margin-right: 7px; transition: transform .12s; }
+  .howto[open] summary::before { transform: rotate(90deg); }
+  .howto-body { margin-top: 8px; line-height: 1.5; }
+  .howto-body ul { margin: 6px 0; padding-left: 18px; }
+  .howto-body li { margin: 3px 0; }
+  .howto-body b { color: var(--text-primary); }
+  .howto-body .k { display: inline-block; min-width: 118px; font-weight: 700; color: var(--text-primary); }
   /* clickable producer / grape → map spotlight */
   .clk-prod { cursor: pointer; }
   .clk-prod:hover { color: var(--accent); text-decoration: underline; }
@@ -373,7 +387,11 @@
     </div>
     <div class="card">
       <h2 data-i18n="h2Opp">Muligheter — anbud verdt å forfølge</h2>
-      <p class="note" style="margin:0 0 10px" data-i18n="noteOpp">Anbud rangert etter mulighet: urepresenterte kandidater (introduksjoner), marginrom og hvor nær fristen er. Åpne et anbud for de best matchede vinene og økonomien — stjernemerk dem du vil forfølge og eksporter lista.</p>
+      <p class="note" style="margin:0 0 8px" data-i18n="noteOpp">Anbud fra Vinmonopolet, rangert etter hvor lovende de er å forfølge.</p>
+      <details class="howto" id="oppHowto" open>
+        <summary data-i18n="howtoSummary">Slik leser du et kort</summary>
+        <div class="howto-body" data-i18n="howtoOpp"></div>
+      </details>
       <div class="filters" id="oppFilters">
         <button data-of="all" class="on" data-i18n="oppAll">Alle muligheter</button>
         <button data-of="intro" data-i18n="oppIntro">Kun introduksjoner</button>
@@ -752,12 +770,23 @@ const I18N = {
     roleImporterSub: 'Finn anbud å vinne og vinene som vinner dem',
     roleProducer: 'Jeg er produsent', roleProducerSub: 'Se hvilke norske anbud vinen din kan vinne',
     h2Opp: 'Muligheter — anbud verdt å forfølge',
-    noteOpp: 'Anbud rangert etter mulighet: urepresenterte kandidater (introduksjoner), marginrom og hvor nær fristen er. Åpne et anbud for de best matchede vinene og økonomien — stjernemerk dem du vil forfølge og eksporter lista.',
+    noteOpp: 'Anbud fra Vinmonopolet, rangert etter hvor lovende de er å forfølge.',
+    howtoSummary: 'Slik leser du et kort',
+    howtoOpp: '<b>Hvert kort = ett anbud</b> fra Vinmonopolet. Linja «søker … fra … · &lt;pris» sier hva de vil ha (drue, land, prisbånd). De fem tallene:<ul>' +
+      '<li><span class="k">Introduksjoner</span> matchende viner som <b>ikke selges i Norge ennå</b> — de beste mulighetene.</li>' +
+      '<li><span class="k">Kandidater</span> viner i basen som oppfyller kravene totalt.</li>' +
+      '<li><span class="k">Trenger ≤ FOB</span> høyeste <b>kjellerpris</b> (fra produsent, før frakt/avgift/margin) som treffer prisbåndet.</li>' +
+      '<li><span class="k">Frist</span> dager til tilbudsfristen.</li>' +
+      '<li><span class="k">Datastyrke</span> hvor sikre dataene er: <b>Sterk</b> / Middels / <b>Tynn</b> (mest ubekreftede leads).</li></ul>' +
+      'Trykk et kort for å se vinene: <b>★</b> legger i shortlist, <b>Match</b> (f.eks. 3✓/3) = oppfylte krav, <b>Status i NO</b> = «representert» (har alt en norsk importør) eller «åpen» (ledig). Filtrene øverst: alle · kun introduksjoner · frist snart · kun kildeført grunnlag (skjul tynt datagrunnlag).',
     oppAll: 'Alle muligheter', oppIntro: 'Kun introduksjoner', oppSoon: 'Frist snart',
     oppSourced: 'Kun kildeført grunnlag', oppSourcedTip: 'Skjul muligheter som bare hviler på ubekreftede leads (tynn datastyrke)',
     oppEmptySourced: 'Ingen muligheter har kildeført nok grunnlag ennå — de fleste kandidatene er ubekreftede leads. Datastyrken øker når produsenter fullfører profilene sine og Vinmonopolet-katalogen bekrefter representasjon.',
     btnShortlistExport: 'Eksporter shortlist',
     oppCandV: 'kandidater', oppIntroV: 'introduksjoner', oppFobV: 'trenger ≤ FOB', oppDeadV: 'frist',
+    oppIntroTip: 'Matchende viner som ikke selges i Norge ennå — de beste mulighetene',
+    oppCandTip: 'Viner i basen som oppfyller kravene totalt', oppDeadTip: 'Dager til tilbudsfristen',
+    oppFobTip: 'Høyeste kjellerpris (fra produsent) som treffer prisbåndet',
     oppScoreV: 'score', oppSeeks: 'søker', oppFrom: ' fra ',
     oppSummary: n => `${n} anbud med kvalifiserte viner i denne planen`,
     btnDeadlineIcs: 'Fristvarsler',
@@ -982,12 +1011,23 @@ const I18N = {
     roleImporterSub: 'Find tenders to win and the wines that win them',
     roleProducer: "I'm a producer", roleProducerSub: 'See which Norwegian tenders your wine can win',
     h2Opp: 'Opportunities — tenders worth chasing',
-    noteOpp: 'Tenders ranked by opportunity: unrepresented candidates (introductions), margin headroom and how near the deadline is. Open a tender for the best-matched wines and the economics — star the ones to chase and export the list.',
+    noteOpp: 'Tenders from Vinmonopolet, ranked by how promising they are to chase.',
+    howtoSummary: 'How to read a card',
+    howtoOpp: '<b>Each card = one tender</b> from Vinmonopolet. The "seeks … from … · &lt;price" line is what they want (grape, country, price band). The five numbers:<ul>' +
+      '<li><span class="k">Introductions</span> matching wines <b>not sold in Norway yet</b> — the best openings.</li>' +
+      '<li><span class="k">Candidates</span> wines in the database that meet the requirements overall.</li>' +
+      '<li><span class="k">Needs ≤ FOB</span> the highest <b>ex-cellar price</b> (from the producer, before freight/duty/margin) that still fits the price band.</li>' +
+      '<li><span class="k">Deadline</span> days until the offer deadline.</li>' +
+      '<li><span class="k">Evidence</span> how solid the data is: <b>Strong</b> / Moderate / <b>Thin</b> (mostly unconfirmed leads).</li></ul>' +
+      'Tap a card to see the wines: <b>★</b> adds to your shortlist, <b>Fit</b> (e.g. 3✓/3) = requirements met, <b>Status in NO</b> = "represented" (already has a Norwegian importer) or "open" (available). Filters up top: all · introductions only · deadline soon · sourced evidence only (hide thin data).',
     oppAll: 'All opportunities', oppIntro: 'Introductions only', oppSoon: 'Deadline soon',
     oppSourced: 'Sourced evidence only', oppSourcedTip: 'Hide opportunities resting only on unconfirmed leads (thin evidence)',
     oppEmptySourced: 'No opportunities have sourced-enough evidence yet — most candidates are unconfirmed leads. Evidence strengthens as producers complete their profiles and the Vinmonopolet catalog confirms representation.',
     btnShortlistExport: 'Export shortlist',
     oppCandV: 'candidates', oppIntroV: 'introductions', oppFobV: 'needs ≤ FOB', oppDeadV: 'deadline',
+    oppIntroTip: 'Matching wines not sold in Norway yet — the best openings',
+    oppCandTip: 'Wines in the database that meet the requirements overall', oppDeadTip: 'Days until the offer deadline',
+    oppFobTip: 'Highest ex-cellar price (from the producer) that fits the price band',
     oppScoreV: 'score', oppSeeks: 'seeks', oppFrom: ' from ',
     oppSummary: n => `${n} tenders with qualified wines in this plan`,
     btnDeadlineIcs: 'Deadline alerts',
@@ -3116,10 +3156,10 @@ function renderOpportunities() {
       <div class="opp-head" onclick="this.parentNode.classList.toggle('open')">
         <span class="opp-rank">${i + 1}</span>
         <span class="opp-title">${esc(s.ref)} — ${esc(groupLabel(s.group))}<small>${L.oppSeeks} ${esc(capGrapes(specGrapes(s).slice(0,3)) || mainDisp(mainCat(s)))}${L.oppFrom}${esc(s.country) || L.openOrigin} · ${esc(s.price_text)}</small></span>
-        <span class="opp-metric"><span class="v">${r.nIntro}</span><span class="l">${L.oppIntroV}</span></span>
-        <span class="opp-metric"><span class="v">${r.n}</span><span class="l">${L.oppCandV}</span></span>
-        <span class="opp-metric"><span class="v">${fob}</span><span class="l">${L.oppFobV}</span></span>
-        <span class="opp-metric"><span class="v">${dl}</span><span class="l">${L.oppDeadV}</span></span>
+        <span class="opp-metric" title="${esc(L.oppIntroTip)}"><span class="v">${r.nIntro}</span><span class="l">${L.oppIntroV}</span></span>
+        <span class="opp-metric" title="${esc(L.oppCandTip)}"><span class="v">${r.n}</span><span class="l">${L.oppCandV}</span></span>
+        <span class="opp-metric" title="${esc(L.oppFobTip)}"><span class="v">${fob}</span><span class="l">${L.oppFobV}</span></span>
+        <span class="opp-metric" title="${esc(L.oppDeadTip)}"><span class="v">${dl}</span><span class="l">${L.oppDeadV}</span></span>
         <span class="opp-metric" title="${esc(L.evTip(st.sourced, st.total, st.confirmed, st.rep))}"><span class="v ev"><span class="ev-dot ev-${st.level}"></span>${stLabel}</span><span class="l">${L.evidence}</span></span>
         <span class="opp-metric" title="${L.oppScoreV}"><span class="scorebar" style="width:${Math.round(38*r.score/maxScore)}px"></span></span>
       </div>
@@ -3426,6 +3466,12 @@ $('gapFilters').querySelectorAll('button').forEach(b => b.addEventListener('clic
 }));
 $('gfCountry').addEventListener('change', () => { GAPF.country = $('gfCountry').value; renderGapDirectory(); });
 $('gfStyle').addEventListener('change', () => { GAPF.style = $('gfStyle').value; renderGapDirectory(); });
+// remember whether the "how to read this" keys are collapsed
+document.querySelectorAll('details.howto').forEach(d => {
+  const k = 'ti_howto_' + d.id;
+  try { if (localStorage.getItem(k) === '0') d.open = false; } catch (e) {}
+  d.addEventListener('toggle', () => { try { localStorage.setItem(k, d.open ? '1' : '0'); } catch (e) {} });
+});
 ['mwCountry', 'mwColour', 'mwGrape', 'mwAbv', 'mwFob', 'mwName'].forEach(id =>
   $(id).addEventListener('keydown', e => { if (e.key === 'Enter') runMatchWine(); }));
 ['inRetail','inAbv','inVol','inPack','inMargin','inFreight','inCur2','inCur2Rate','inEur']
