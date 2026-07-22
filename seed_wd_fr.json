@@ -1,0 +1,759 @@
+{
+ "wines": [
+  {
+   "id": "wdFR00000",
+   "producer": "Château Durfort-Vivens",
+   "name": "Château Durfort-Vivens",
+   "country": "France",
+   "region": "Margaux-Cantenac",
+   "appellation": "Margaux-Cantenac",
+   "grapes": {},
+   "method": null,
+   "vintages_available": [],
+   "abv": null,
+   "sugar_g_l": null,
+   "wood": null,
+   "certs": [],
+   "cert_on_label": false,
+   "vines_age": null,
+   "maceration_days": null,
+   "volume_bottles": null,
+   "fob_eur": null,
+   "color": "",
+   "packaging": {
+    "type": null,
+    "weight_g": null
+   },
+   "representation": {
+    "NO": "candidate for import — VMP catalog check pending",
+    "SE": "unknown",
+    "FI": "unknown"
+   },
+   "no_gap": "open",
+   "pending_claim": true,
+   "source": "seed: Wikidata (CC0) (public directory) — https://www.wikidata.org",
+   "audit": {
+    "created_by": "seed:Wikidata (CC0) (scrape)",
+    "created_at": "2026-07-22T00:00",
+    "updated_by": "seed:Wikidata (CC0) (scrape)",
+    "updated_at": "2026-07-22T00:00",
+    "note": "Public directory listing, UNVERIFIED, pending producer claim. FOB, volume, exact grape % and analytical detail to be confirmed by the producer."
+   },
+   "verify": {
+    "producer": {
+     "tier": "public",
+     "note": "listed in the national body's producer directory — Wikidata (CC0)",
+     "source": "https://www.wikidata.org"
+    },
+    "region": {
+     "tier": "public",
+     "note": "stated in the directory — Wikidata (CC0)",
+     "source": "https://www.wikidata.org"
+    },
+    "grapes": {
+     "tier": "unknown",
+     "note": "varieties to be confirmed by producer"
+    },
+    "representation": {
+     "tier": "unknown",
+     "note": "derived from the Vinmonopolet catalog index"
+    },
+    "certs": {
+     "tier": "unknown",
+     "note": "no certification recorded"
+    },
+    "fob_eur": {
+     "tier": "unknown",
+     "note": "ex-cellar price to be supplied by the producer"
+    },
+    "volume_bottles": {
+     "tier": "unknown",
+     "note": "committed volume to be supplied by the producer"
+    },
+    "abv": {
+     "tier": "unknown",
+     "note": "to be confirmed by producer / tech sheet"
+    }
+   }
+  },
+  {
+   "id": "wdFR00001",
+   "producer": "Château Canon",
+   "name": "Château Canon",
+   "country": "France",
+   "region": "Saint-Émilion",
+   "appellation": "Saint-Émilion",
+   "grapes": {},
+   "method": null,
+   "vintages_available": [],
+   "abv": null,
+   "sugar_g_l": null,
+   "wood": null,
+   "certs": [],
+   "cert_on_label": false,
+   "vines_age": null,
+   "maceration_days": null,
+   "volume_bottles": null,
+   "fob_eur": null,
+   "color": "",
+   "packaging": {
+    "type": null,
+    "weight_g": null
+   },
+   "representation": {
+    "NO": "candidate for import — VMP catalog check pending",
+    "SE": "unknown",
+    "FI": "unknown"
+   },
+   "no_gap": "open",
+   "pending_claim": true,
+   "source": "seed: Wikidata (CC0) (public directory) — https://www.wikidata.org",
+   "audit": {
+    "created_by": "seed:Wikidata (CC0) (scrape)",
+    "created_at": "2026-07-22T00:00",
+    "updated_by": "seed:Wikidata (CC0) (scrape)",
+    "updated_at": "2026-07-22T00:00",
+    "note": "Public directory listing, UNVERIFIED, pending producer claim. FOB, volume, exact grape % and analytical detail to be confirmed by the producer."
+   },
+   "verify": {
+    "producer": {
+     "tier": "public",
+     "note": "listed in the national body's producer directory — Wikidata (CC0)",
+     "source": "https://www.wikidata.org"
+    },
+    "region": {
+     "tier": "public",
+     "note": "stated in the directory — Wikidata (CC0)",
+     "source": "https://www.wikidata.org"
+    },
+    "grapes": {
+     "tier": "unknown",
+     "note": "varieties to be confirmed by producer"
+    },
+    "representation": {
+     "tier": "unknown",
+     "note": "derived from the Vinmonopolet catalog index"
+    },
+    "certs": {
+     "tier": "unknown",
+     "note": "no certification recorded"
+    },
+    "fob_eur": {
+     "tier": "unknown",
+     "note": "ex-cellar price to be supplied by the producer"
+    },
+    "volume_bottles": {
+     "tier": "unknown",
+     "note": "committed volume to be supplied by the producer"
+    },
+    "abv": {
+     "tier": "unknown",
+     "note": "to be confirmed by producer / tech sheet"
+    }
+   }
+  },
+  {
+   "id": "wdFR00002",
+   "producer": "Clos de la Dioterie",
+   "name": "Clos de la Dioterie",
+   "country": "France",
+   "region": "",
+   "appellation": "",
+   "grapes": {},
+   "method": null,
+   "vintages_available": [],
+   "abv": null,
+   "sugar_g_l": null,
+   "wood": null,
+   "certs": [],
+   "cert_on_label": false,
+   "vines_age": null,
+   "maceration_days": null,
+   "volume_bottles": null,
+   "fob_eur": null,
+   "color": "",
+   "packaging": {
+    "type": null,
+    "weight_g": null
+   },
+   "representation": {
+    "NO": "candidate for import — VMP catalog check pending",
+    "SE": "unknown",
+    "FI": "unknown"
+   },
+   "no_gap": "open",
+   "pending_claim": true,
+   "source": "seed: Wikidata (CC0) (public directory) — https://www.wikidata.org",
+   "audit": {
+    "created_by": "seed:Wikidata (CC0) (scrape)",
+    "created_at": "2026-07-22T00:00",
+    "updated_by": "seed:Wikidata (CC0) (scrape)",
+    "updated_at": "2026-07-22T00:00",
+    "note": "Public directory listing, UNVERIFIED, pending producer claim. FOB, volume, exact grape % and analytical detail to be confirmed by the producer."
+   },
+   "verify": {
+    "producer": {
+     "tier": "public",
+     "note": "listed in the national body's producer directory — Wikidata (CC0)",
+     "source": "https://www.wikidata.org"
+    },
+    "region": {
+     "tier": "unknown",
+     "note": "region not listed"
+    },
+    "grapes": {
+     "tier": "unknown",
+     "note": "varieties to be confirmed by producer"
+    },
+    "representation": {
+     "tier": "unknown",
+     "note": "derived from the Vinmonopolet catalog index"
+    },
+    "certs": {
+     "tier": "unknown",
+     "note": "no certification recorded"
+    },
+    "fob_eur": {
+     "tier": "unknown",
+     "note": "ex-cellar price to be supplied by the producer"
+    },
+    "volume_bottles": {
+     "tier": "unknown",
+     "note": "committed volume to be supplied by the producer"
+    },
+    "abv": {
+     "tier": "unknown",
+     "note": "to be confirmed by producer / tech sheet"
+    }
+   }
+  },
+  {
+   "id": "wdFR00003",
+   "producer": "Clos du Chêne Vert",
+   "name": "Clos du Chêne Vert",
+   "country": "France",
+   "region": "",
+   "appellation": "",
+   "grapes": {},
+   "method": null,
+   "vintages_available": [],
+   "abv": null,
+   "sugar_g_l": null,
+   "wood": null,
+   "certs": [],
+   "cert_on_label": false,
+   "vines_age": null,
+   "maceration_days": null,
+   "volume_bottles": null,
+   "fob_eur": null,
+   "color": "",
+   "packaging": {
+    "type": null,
+    "weight_g": null
+   },
+   "representation": {
+    "NO": "candidate for import — VMP catalog check pending",
+    "SE": "unknown",
+    "FI": "unknown"
+   },
+   "no_gap": "open",
+   "pending_claim": true,
+   "source": "seed: Wikidata (CC0) (public directory) — https://www.wikidata.org",
+   "audit": {
+    "created_by": "seed:Wikidata (CC0) (scrape)",
+    "created_at": "2026-07-22T00:00",
+    "updated_by": "seed:Wikidata (CC0) (scrape)",
+    "updated_at": "2026-07-22T00:00",
+    "note": "Public directory listing, UNVERIFIED, pending producer claim. FOB, volume, exact grape % and analytical detail to be confirmed by the producer."
+   },
+   "verify": {
+    "producer": {
+     "tier": "public",
+     "note": "listed in the national body's producer directory — Wikidata (CC0)",
+     "source": "https://www.wikidata.org"
+    },
+    "region": {
+     "tier": "unknown",
+     "note": "region not listed"
+    },
+    "grapes": {
+     "tier": "unknown",
+     "note": "varieties to be confirmed by producer"
+    },
+    "representation": {
+     "tier": "unknown",
+     "note": "derived from the Vinmonopolet catalog index"
+    },
+    "certs": {
+     "tier": "unknown",
+     "note": "no certification recorded"
+    },
+    "fob_eur": {
+     "tier": "unknown",
+     "note": "ex-cellar price to be supplied by the producer"
+    },
+    "volume_bottles": {
+     "tier": "unknown",
+     "note": "committed volume to be supplied by the producer"
+    },
+    "abv": {
+     "tier": "unknown",
+     "note": "to be confirmed by producer / tech sheet"
+    }
+   }
+  },
+  {
+   "id": "wdFR00004",
+   "producer": "Cavavin",
+   "name": "Cavavin",
+   "country": "France",
+   "region": "",
+   "appellation": "",
+   "grapes": {},
+   "method": null,
+   "vintages_available": [],
+   "abv": null,
+   "sugar_g_l": null,
+   "wood": null,
+   "certs": [],
+   "cert_on_label": false,
+   "vines_age": null,
+   "maceration_days": null,
+   "volume_bottles": null,
+   "fob_eur": null,
+   "color": "",
+   "packaging": {
+    "type": null,
+    "weight_g": null
+   },
+   "representation": {
+    "NO": "candidate for import — VMP catalog check pending",
+    "SE": "unknown",
+    "FI": "unknown"
+   },
+   "no_gap": "open",
+   "pending_claim": true,
+   "source": "seed: Wikidata (CC0) (public directory) — http://www.cavavin.co",
+   "audit": {
+    "created_by": "seed:Wikidata (CC0) (scrape)",
+    "created_at": "2026-07-22T00:00",
+    "updated_by": "seed:Wikidata (CC0) (scrape)",
+    "updated_at": "2026-07-22T00:00",
+    "note": "Public directory listing, UNVERIFIED, pending producer claim. FOB, volume, exact grape % and analytical detail to be confirmed by the producer."
+   },
+   "verify": {
+    "producer": {
+     "tier": "public",
+     "note": "listed in the national body's producer directory — Wikidata (CC0)",
+     "source": "http://www.cavavin.co"
+    },
+    "region": {
+     "tier": "unknown",
+     "note": "region not listed"
+    },
+    "grapes": {
+     "tier": "unknown",
+     "note": "varieties to be confirmed by producer"
+    },
+    "representation": {
+     "tier": "unknown",
+     "note": "derived from the Vinmonopolet catalog index"
+    },
+    "certs": {
+     "tier": "unknown",
+     "note": "no certification recorded"
+    },
+    "fob_eur": {
+     "tier": "unknown",
+     "note": "ex-cellar price to be supplied by the producer"
+    },
+    "volume_bottles": {
+     "tier": "unknown",
+     "note": "committed volume to be supplied by the producer"
+    },
+    "abv": {
+     "tier": "unknown",
+     "note": "to be confirmed by producer / tech sheet"
+    }
+   }
+  },
+  {
+   "id": "wdFR00005",
+   "producer": "Château de Brague",
+   "name": "Château de Brague",
+   "country": "France",
+   "region": "",
+   "appellation": "",
+   "grapes": {},
+   "method": null,
+   "vintages_available": [],
+   "abv": null,
+   "sugar_g_l": null,
+   "wood": null,
+   "certs": [],
+   "cert_on_label": false,
+   "vines_age": null,
+   "maceration_days": null,
+   "volume_bottles": null,
+   "fob_eur": null,
+   "color": "",
+   "packaging": {
+    "type": null,
+    "weight_g": null
+   },
+   "representation": {
+    "NO": "candidate for import — VMP catalog check pending",
+    "SE": "unknown",
+    "FI": "unknown"
+   },
+   "no_gap": "open",
+   "pending_claim": true,
+   "source": "seed: Wikidata (CC0) (public directory) — https://www.chateaudebrague.com",
+   "audit": {
+    "created_by": "seed:Wikidata (CC0) (scrape)",
+    "created_at": "2026-07-22T00:00",
+    "updated_by": "seed:Wikidata (CC0) (scrape)",
+    "updated_at": "2026-07-22T00:00",
+    "note": "Public directory listing, UNVERIFIED, pending producer claim. FOB, volume, exact grape % and analytical detail to be confirmed by the producer."
+   },
+   "verify": {
+    "producer": {
+     "tier": "public",
+     "note": "listed in the national body's producer directory — Wikidata (CC0)",
+     "source": "https://www.chateaudebrague.com"
+    },
+    "region": {
+     "tier": "unknown",
+     "note": "region not listed"
+    },
+    "grapes": {
+     "tier": "unknown",
+     "note": "varieties to be confirmed by producer"
+    },
+    "representation": {
+     "tier": "unknown",
+     "note": "derived from the Vinmonopolet catalog index"
+    },
+    "certs": {
+     "tier": "unknown",
+     "note": "no certification recorded"
+    },
+    "fob_eur": {
+     "tier": "unknown",
+     "note": "ex-cellar price to be supplied by the producer"
+    },
+    "volume_bottles": {
+     "tier": "unknown",
+     "note": "committed volume to be supplied by the producer"
+    },
+    "abv": {
+     "tier": "unknown",
+     "note": "to be confirmed by producer / tech sheet"
+    }
+   }
+  },
+  {
+   "id": "wdFR00006",
+   "producer": "Cave de Tain",
+   "name": "Cave de Tain",
+   "country": "France",
+   "region": "Tain-l'Hermitage",
+   "appellation": "Tain-l'Hermitage",
+   "grapes": {},
+   "method": null,
+   "vintages_available": [],
+   "abv": null,
+   "sugar_g_l": null,
+   "wood": null,
+   "certs": [],
+   "cert_on_label": false,
+   "vines_age": null,
+   "maceration_days": null,
+   "volume_bottles": null,
+   "fob_eur": null,
+   "color": "",
+   "packaging": {
+    "type": null,
+    "weight_g": null
+   },
+   "representation": {
+    "NO": "candidate for import — VMP catalog check pending",
+    "SE": "unknown",
+    "FI": "unknown"
+   },
+   "no_gap": "open",
+   "pending_claim": true,
+   "source": "seed: Wikidata (CC0) (public directory) — https://www.cavedetain.com",
+   "audit": {
+    "created_by": "seed:Wikidata (CC0) (scrape)",
+    "created_at": "2026-07-22T00:00",
+    "updated_by": "seed:Wikidata (CC0) (scrape)",
+    "updated_at": "2026-07-22T00:00",
+    "note": "Public directory listing, UNVERIFIED, pending producer claim. FOB, volume, exact grape % and analytical detail to be confirmed by the producer."
+   },
+   "verify": {
+    "producer": {
+     "tier": "public",
+     "note": "listed in the national body's producer directory — Wikidata (CC0)",
+     "source": "https://www.cavedetain.com"
+    },
+    "region": {
+     "tier": "public",
+     "note": "stated in the directory — Wikidata (CC0)",
+     "source": "https://www.cavedetain.com"
+    },
+    "grapes": {
+     "tier": "unknown",
+     "note": "varieties to be confirmed by producer"
+    },
+    "representation": {
+     "tier": "unknown",
+     "note": "derived from the Vinmonopolet catalog index"
+    },
+    "certs": {
+     "tier": "unknown",
+     "note": "no certification recorded"
+    },
+    "fob_eur": {
+     "tier": "unknown",
+     "note": "ex-cellar price to be supplied by the producer"
+    },
+    "volume_bottles": {
+     "tier": "unknown",
+     "note": "committed volume to be supplied by the producer"
+    },
+    "abv": {
+     "tier": "unknown",
+     "note": "to be confirmed by producer / tech sheet"
+    }
+   }
+  },
+  {
+   "id": "wdFR00007",
+   "producer": "Domaine Jean-Luc Colombo",
+   "name": "Domaine Jean-Luc Colombo",
+   "country": "France",
+   "region": "Rhône",
+   "appellation": "Rhône",
+   "grapes": {},
+   "method": null,
+   "vintages_available": [],
+   "abv": null,
+   "sugar_g_l": null,
+   "wood": null,
+   "certs": [],
+   "cert_on_label": false,
+   "vines_age": null,
+   "maceration_days": null,
+   "volume_bottles": null,
+   "fob_eur": null,
+   "color": "",
+   "packaging": {
+    "type": null,
+    "weight_g": null
+   },
+   "representation": {
+    "NO": "candidate for import — VMP catalog check pending",
+    "SE": "unknown",
+    "FI": "unknown"
+   },
+   "no_gap": "open",
+   "pending_claim": true,
+   "source": "seed: Wikidata (CC0) (public directory) — http://www.vinscolombo.fr/uk/?PHPSESSID=0sdf15aha43gk4flfbrh48peh1",
+   "audit": {
+    "created_by": "seed:Wikidata (CC0) (scrape)",
+    "created_at": "2026-07-22T00:00",
+    "updated_by": "seed:Wikidata (CC0) (scrape)",
+    "updated_at": "2026-07-22T00:00",
+    "note": "Public directory listing, UNVERIFIED, pending producer claim. FOB, volume, exact grape % and analytical detail to be confirmed by the producer."
+   },
+   "verify": {
+    "producer": {
+     "tier": "public",
+     "note": "listed in the national body's producer directory — Wikidata (CC0)",
+     "source": "http://www.vinscolombo.fr/uk/?PHPSESSID=0sdf15aha43gk4flfbrh48peh1"
+    },
+    "region": {
+     "tier": "public",
+     "note": "stated in the directory — Wikidata (CC0)",
+     "source": "http://www.vinscolombo.fr/uk/?PHPSESSID=0sdf15aha43gk4flfbrh48peh1"
+    },
+    "grapes": {
+     "tier": "unknown",
+     "note": "varieties to be confirmed by producer"
+    },
+    "representation": {
+     "tier": "unknown",
+     "note": "derived from the Vinmonopolet catalog index"
+    },
+    "certs": {
+     "tier": "unknown",
+     "note": "no certification recorded"
+    },
+    "fob_eur": {
+     "tier": "unknown",
+     "note": "ex-cellar price to be supplied by the producer"
+    },
+    "volume_bottles": {
+     "tier": "unknown",
+     "note": "committed volume to be supplied by the producer"
+    },
+    "abv": {
+     "tier": "unknown",
+     "note": "to be confirmed by producer / tech sheet"
+    }
+   }
+  },
+  {
+   "id": "wdFR00008",
+   "producer": "Rémy Cointreau",
+   "name": "Rémy Cointreau",
+   "country": "France",
+   "region": "",
+   "appellation": "",
+   "grapes": {},
+   "method": null,
+   "vintages_available": [],
+   "abv": null,
+   "sugar_g_l": null,
+   "wood": null,
+   "certs": [],
+   "cert_on_label": false,
+   "vines_age": null,
+   "maceration_days": null,
+   "volume_bottles": null,
+   "fob_eur": null,
+   "color": "",
+   "packaging": {
+    "type": null,
+    "weight_g": null
+   },
+   "representation": {
+    "NO": "candidate for import — VMP catalog check pending",
+    "SE": "unknown",
+    "FI": "unknown"
+   },
+   "no_gap": "open",
+   "pending_claim": true,
+   "source": "seed: Wikidata (CC0) (public directory) — https://www.remy-cointreau.com/",
+   "audit": {
+    "created_by": "seed:Wikidata (CC0) (scrape)",
+    "created_at": "2026-07-22T00:00",
+    "updated_by": "seed:Wikidata (CC0) (scrape)",
+    "updated_at": "2026-07-22T00:00",
+    "note": "Public directory listing, UNVERIFIED, pending producer claim. FOB, volume, exact grape % and analytical detail to be confirmed by the producer."
+   },
+   "verify": {
+    "producer": {
+     "tier": "public",
+     "note": "listed in the national body's producer directory — Wikidata (CC0)",
+     "source": "https://www.remy-cointreau.com/"
+    },
+    "region": {
+     "tier": "unknown",
+     "note": "region not listed"
+    },
+    "grapes": {
+     "tier": "unknown",
+     "note": "varieties to be confirmed by producer"
+    },
+    "representation": {
+     "tier": "unknown",
+     "note": "derived from the Vinmonopolet catalog index"
+    },
+    "certs": {
+     "tier": "unknown",
+     "note": "no certification recorded"
+    },
+    "fob_eur": {
+     "tier": "unknown",
+     "note": "ex-cellar price to be supplied by the producer"
+    },
+    "volume_bottles": {
+     "tier": "unknown",
+     "note": "committed volume to be supplied by the producer"
+    },
+    "abv": {
+     "tier": "unknown",
+     "note": "to be confirmed by producer / tech sheet"
+    }
+   }
+  },
+  {
+   "id": "wdFR00009",
+   "producer": "Domaine de Labarthe",
+   "name": "Domaine de Labarthe",
+   "country": "France",
+   "region": "Castanet",
+   "appellation": "Castanet",
+   "grapes": {},
+   "method": null,
+   "vintages_available": [],
+   "abv": null,
+   "sugar_g_l": null,
+   "wood": null,
+   "certs": [],
+   "cert_on_label": false,
+   "vines_age": null,
+   "maceration_days": null,
+   "volume_bottles": null,
+   "fob_eur": null,
+   "color": "",
+   "packaging": {
+    "type": null,
+    "weight_g": null
+   },
+   "representation": {
+    "NO": "candidate for import — VMP catalog check pending",
+    "SE": "unknown",
+    "FI": "unknown"
+   },
+   "no_gap": "open",
+   "pending_claim": true,
+   "source": "seed: Wikidata (CC0) (public directory) — https://domaine-labarthe.com/",
+   "audit": {
+    "created_by": "seed:Wikidata (CC0) (scrape)",
+    "created_at": "2026-07-22T00:00",
+    "updated_by": "seed:Wikidata (CC0) (scrape)",
+    "updated_at": "2026-07-22T00:00",
+    "note": "Public directory listing, UNVERIFIED, pending producer claim. FOB, volume, exact grape % and analytical detail to be confirmed by the producer."
+   },
+   "verify": {
+    "producer": {
+     "tier": "public",
+     "note": "listed in the national body's producer directory — Wikidata (CC0)",
+     "source": "https://domaine-labarthe.com/"
+    },
+    "region": {
+     "tier": "public",
+     "note": "stated in the directory — Wikidata (CC0)",
+     "source": "https://domaine-labarthe.com/"
+    },
+    "grapes": {
+     "tier": "unknown",
+     "note": "varieties to be confirmed by producer"
+    },
+    "representation": {
+     "tier": "unknown",
+     "note": "derived from the Vinmonopolet catalog index"
+    },
+    "certs": {
+     "tier": "unknown",
+     "note": "no certification recorded"
+    },
+    "fob_eur": {
+     "tier": "unknown",
+     "note": "ex-cellar price to be supplied by the producer"
+    },
+    "volume_bottles": {
+     "tier": "unknown",
+     "note": "committed volume to be supplied by the producer"
+    },
+    "abv": {
+     "tier": "unknown",
+     "note": "to be confirmed by producer / tech sheet"
+    }
+   }
+  }
+ ]
+}
