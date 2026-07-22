@@ -826,8 +826,8 @@ const I18N = {
       '<li><span class="k">Gap-score</span> etterspørsel ÷ kjent tilbud. <b>Høy score = mye gjentatt etterspørsel, lite kjent tilbud</b> — der innsatsen lønner seg mest.</li></ul>' +
       'Merkelapper: <b>fortsatt åpne</b> = går igjen og står i nyeste plan (ikke dekket ennå), <b>udekket</b> = ingen kjent vin kvalifiserer, <b>dekket senere?</b> = gikk igjen før, men falt ut av nyeste plan (trolig løst). «Kjente viner» = vår base, ikke hele markedet.',
     oppAll: 'Alle muligheter', oppIntro: 'Kun introduksjoner', oppSoon: 'Frist snart',
-    oppSourced: 'Kun kildeført grunnlag', oppSourcedTip: 'Skjul muligheter som bare hviler på ubekreftede leads (tynn datastyrke)',
-    oppEmptySourced: 'Ingen muligheter har kildeført nok grunnlag ennå — de fleste kandidatene er ubekreftede leads. Datastyrken øker når produsenter fullfører profilene sine og Vinmonopolet-katalogen bekrefter representasjon.',
+    oppSourced: 'Klar til å handle', oppSourcedTip: 'Bare muligheter der minst én matchende vin både er urepresentert i Norge OG har oppgitt en reell kjellerpris (FOB) — det eneste du faktisk kan handle på',
+    oppEmptySourced: 'Ingen muligheter er «klare til å handle» ennå. Grunnen er ærlig: en vin er en reell mulighet bare hvis den (a) ikke selges i Norge og (b) har en bekreftet kjellerpris (FOB). FOB finnes ingen andre steder enn hos produsenten — den må legges inn under «Match min vin → List vinen». Til da er alle kandidatene urepresenterte leads uten pris.',
     btnShortlistExport: 'Eksporter shortlist',
     oppCandV: 'kandidater', oppIntroV: 'introduksjoner', oppFobV: 'trenger ≤ FOB', oppDeadV: 'frist',
     oppIntroTip: 'Matchende viner som ikke selges i Norge ennå — de beste mulighetene',
@@ -840,10 +840,10 @@ const I18N = {
       `${fob ? ` En produsent må treffe ≈ €${fmt(fob, 1)} FOB.` : ''}` +
       `${dtd != null && dtd >= 0 ? ` Frist om ${dtd} dager.` : ''}` +
       ` Rangeringen vekter introduksjoner tyngst, deretter marginrom og hvor nær fristen er.`,
-    whyEvidence: (sourced, total, confirmed, rep, level) =>
-      `${sourced} av ${total} kandidat${total === 1 ? '' : 'er'} har kildeførte data · ${confirmed}% av kravene bekreftet · ${rep}% med verifisert NO-status. ` +
+    whyEvidence: (sourced, total, confirmed, rep, level, priced) =>
+      `${priced} av ${total} kandidat${total === 1 ? '' : 'er'} har en oppgitt kjellerpris (FOB) — ${priced ? 'kan prisvurderes' : 'ingen kan prisvurderes ennå'}. ${sourced} har offentlig kildeførte felt · ${confirmed}% av kravene bekreftet · ${rep}% med verifisert NO-status. ` +
       (level === 'high' ? 'Solid grunnlag → «Sterk».' : level === 'med' ? 'Delvis bekreftet → «Middels».'
-        : 'Mest ubekreftede leads → «Tynn». Blir sterkere når produsenter fullfører profilene og VMP-katalogen bekrefter representasjon.'),
+        : (priced ? 'Tynt grunnlag → «Tynn».' : 'Uten pris kan ingen mulighet vurderes → «Tynn». Blir reell først når produsenten legger inn FOB.')),
     oppScoreV: 'score', oppSeeks: 'søker', oppFrom: ' fra ',
     oppSummary: n => `${n} anbud med kvalifiserte viner i denne planen`,
     btnDeadlineIcs: 'Fristvarsler',
@@ -853,7 +853,7 @@ const I18N = {
     oppNoDeadlines: 'Ingen av de shortlistede anbudene har en dato å varsle om.',
     evidence: 'Datastyrke', evStrong: 'Sterk', evModerate: 'Middels', evThin: 'Tynn',
     evNote: 'scoren måler attraktivitet; datastyrken viser hvor solid grunnlaget er (de fleste kandidatene er foreløpig ubekreftede leads).',
-    evTip: (s, t, c, r) => `Datastyrke bak scoren: ${s} av ${t} kandidater har kildeførte data · ${c}% av kravene bekreftet · ${r}% med verifisert NO-status. Frødata teller svakt til produsenten eller katalogen bekrefter dem.`,
+    evTip: (s, t, c, r, priced) => `Datastyrke bak scoren: ${priced} av ${t} kandidater har en kjellerpris (FOB) og kan prisvurderes · ${s} har offentlig kildeførte felt · ${c}% av kravene bekreftet · ${r}% med verifisert NO-status. Uten FOB kan ingen mulighet regnes som «Sterk».`,
     oppEmpty: 'Ingen anbud med kvalifiserte viner i valgt filter. Prøv «Alle muligheter», bytt plan, eller legg til flere viner.',
     thWineCol: 'Vin', thFitCol: 'Match', thStatusCol: 'Status i NO', thPick: '★',
     thFitTip: 'Hvor mange av anbudets krav vinen møter. ✓ = oppfylt · ? = kan ikke sjekkes før produsenten bekrefter detaljer (drue-%, årgang, sukker …).',
@@ -1109,8 +1109,8 @@ const I18N = {
       '<li><span class="k">Gap score</span> demand ÷ known supply. <b>High score = lots of repeated demand, little known supply</b> — where the effort pays off most.</li></ul>' +
       'Badges: <b>still-open</b> = recurs and sits in the newest plan (not covered yet), <b>unmet</b> = no known wine qualifies, <b>covered-later?</b> = recurred before but dropped out of the newest plan (probably filled). "Known wines" = our database, not the whole market.',
     oppAll: 'All opportunities', oppIntro: 'Introductions only', oppSoon: 'Deadline soon',
-    oppSourced: 'Sourced evidence only', oppSourcedTip: 'Hide opportunities resting only on unconfirmed leads (thin evidence)',
-    oppEmptySourced: 'No opportunities have sourced-enough evidence yet — most candidates are unconfirmed leads. Evidence strengthens as producers complete their profiles and the Vinmonopolet catalog confirms representation.',
+    oppSourced: 'Ready to act on', oppSourcedTip: 'Only opportunities where at least one matching wine is both unrepresented in Norway AND has stated a real ex-cellar price (FOB) — the only kind you can actually act on',
+    oppEmptySourced: 'No opportunities are "ready to act on" yet. The reason is honest: a wine is a real opportunity only if it (a) isn\'t sold in Norway and (b) has a confirmed ex-cellar price (FOB). FOB exists nowhere but with the producer — it must be entered under "Match my wine → List the wine". Until then every candidate is an unrepresented lead with no price.',
     btnShortlistExport: 'Export shortlist',
     oppCandV: 'candidates', oppIntroV: 'introductions', oppFobV: 'needs ≤ FOB', oppDeadV: 'deadline',
     oppIntroTip: 'Matching wines not sold in Norway yet — the best openings',
@@ -1123,10 +1123,10 @@ const I18N = {
       `${fob ? ` A producer must hit ≈ €${fmt(fob, 1)} FOB.` : ''}` +
       `${dtd != null && dtd >= 0 ? ` Deadline in ${dtd} days.` : ''}` +
       ` The ranking weights introductions most, then margin headroom and deadline proximity.`,
-    whyEvidence: (sourced, total, confirmed, rep, level) =>
-      `${sourced} of ${total} candidate${total === 1 ? '' : 's'} have sourced data · ${confirmed}% of requirements confirmed · ${rep}% with verified NO status. ` +
+    whyEvidence: (sourced, total, confirmed, rep, level, priced) =>
+      `${priced} of ${total} candidate${total === 1 ? '' : 's'} have a stated ex-cellar price (FOB) — ${priced ? 'can be price-checked' : 'none can be price-checked yet'}. ${sourced} have publicly sourced fields · ${confirmed}% of requirements confirmed · ${rep}% with verified NO status. ` +
       (level === 'high' ? 'Solid basis → "Strong".' : level === 'med' ? 'Partly confirmed → "Moderate".'
-        : 'Mostly unconfirmed leads → "Thin". It strengthens as producers complete profiles and the VMP catalog confirms representation.'),
+        : (priced ? 'Thin basis → "Thin".' : 'With no price, no opportunity can be assessed → "Thin". It becomes real only once the producer enters an FOB.')),
     oppScoreV: 'score', oppSeeks: 'seeks', oppFrom: ' from ',
     oppSummary: n => `${n} tenders with qualified wines in this plan`,
     btnDeadlineIcs: 'Deadline alerts',
@@ -1136,7 +1136,7 @@ const I18N = {
     oppNoDeadlines: 'None of the shortlisted tenders has a date to remind about.',
     evidence: 'Evidence', evStrong: 'Strong', evModerate: 'Moderate', evThin: 'Thin',
     evNote: 'the score measures attractiveness; evidence shows how solid the basis is (most candidates are still unconfirmed leads).',
-    evTip: (s, t, c, r) => `Evidence behind the score: ${s} of ${t} candidates have sourced data · ${c}% of requirements confirmed · ${r}% with verified NO status. Seeded leads count weakly until a producer or the catalog confirms them.`,
+    evTip: (s, t, c, r, priced) => `Evidence behind the score: ${priced} of ${t} candidates have an ex-cellar price (FOB) and can be price-checked · ${s} have publicly sourced fields · ${c}% of requirements confirmed · ${r}% with verified NO status. Without an FOB no opportunity can count as "Strong".`,
     oppEmpty: 'No tenders with qualified wines under this filter. Try "All opportunities", switch plan, or add more wines.',
     thWineCol: 'Wine', thFitCol: 'Fit', thStatusCol: 'Status in NO', thPick: '★',
     thFitTip: "How many of the tender's requirements the wine meets. ✓ = met · ? = can't be checked until the producer confirms details (grape %, vintage, sugar …).",
@@ -3272,16 +3272,23 @@ function daysToDeadline(spec) {
 // requirement — or the tender has no checkable clauses at all (pure origin/price). This
 // stops thin-data leads that meet 0 of N requirements ("0✓ 1?/1") from flooding every card.
 function oppCands(m) { return m.matches.filter(x => x.passes >= 1 || x.total === 0); }
+// An opportunity, for an importer, means a wine NOT yet in Norway that fits (an introduction).
+// A tender whose only matches are already represented is "covered", not an opportunity — so it
+// scores ~0 and sinks. Margin/urgency only matter when there's actually something to introduce.
 function opportunityScore(m) {
   const cands = oppCands(m);
   const n = cands.length;
-  const nIntro = cands.filter(isIntroOpp).length;
+  const intros = cands.filter(isIntroOpp);
+  const nIntro = intros.length;
+  const nPriced = intros.filter(x => x.wine.fob_eur != null).length;   // introductions with a real price
   const fobEur = m.fob ? m.fob.eur : 0;
   const dtd = daysToDeadline(m.spec);
-  const introPts = nIntro * 3, candPts = (n - nIntro);
-  const marginPts = Math.min(6, fobEur / 1.5);
-  const urgencyPts = (dtd != null && dtd >= 0) ? Math.max(0, 6 - dtd / 20) : 0;
-  return { score: introPts + candPts + marginPts + urgencyPts, n, nIntro, fobEur, dtd };
+  const hasIntro = nIntro > 0;
+  const introPts = nIntro * 3 + nPriced * 2;              // a priced introduction is worth far more
+  const candPts = hasIntro ? (n - nIntro) * 0.5 : 0;
+  const marginPts = hasIntro ? Math.min(6, fobEur / 1.5) : 0;
+  const urgencyPts = (hasIntro && dtd != null && dtd >= 0) ? Math.max(0, 6 - dtd / 20) : 0;
+  return { score: introPts + candPts + marginPts + urgencyPts, n, nIntro, nPriced, fobEur, dtd };
 }
 // How solid is the evidence UNDER the score? A score built on unverified seed leads is
 // worth less than one built on sourced/verified candidates. Three honest drivers:
@@ -3290,23 +3297,26 @@ function opportunityScore(m) {
 //   repKnown   — share of candidates whose NO representation is confirmed (live catalog / verified)
 function datasetStrength(m) {
   const cs = oppCands(m);
-  if (!cs.length) return { level: 'low', pct: 0, sourced: 0, total: 0, confirmed: 0, rep: 0 };
-  let prov = 0, passN = 0, denN = 0, repK = 0, sourced = 0;
+  if (!cs.length) return { level: 'low', pct: 0, sourced: 0, total: 0, confirmed: 0, rep: 0, priced: 0 };
+  let prov = 0, passN = 0, denN = 0, repK = 0, sourced = 0, priced = 0;
   for (const x of cs) {
     const q = qualitySummary(x.wine);
     const tot = (q.verified + q.public + q.estimate + q.unknown) || 1;
     const pv = (q.verified + 0.6 * q.public) / tot;
     prov += pv; if (pv >= 0.6) sourced++;
     passN += x.passes; denN += x.passes + x.unknowns;
+    if (x.wine.fob_eur != null) priced++;   // has the decision-critical ex-cellar price
     const repVer = !!(x.catalogMatch && x.catalogMatch.live) ||
       (x.wine.verify && x.wine.verify.representation && x.wine.verify.representation.tier === 'verified');
     if (repVer) repK++;
   }
   const n = cs.length;
-  const provenance = prov / n, confirmed = denN ? passN / denN : 0, rep = repK / n;
-  const pct = 0.4 * provenance + 0.35 * confirmed + 0.25 * rep;
-  const level = pct >= 0.66 ? 'high' : pct >= 0.4 ? 'med' : 'low';
-  return { level, pct, sourced, total: n, confirmed: Math.round(confirmed * 100), rep: Math.round(rep * 100) };
+  const provenance = prov / n, confirmed = denN ? passN / denN : 0, rep = repK / n, actionable = priced / n;
+  const pct = 0.28 * provenance + 0.24 * confirmed + 0.18 * rep + 0.30 * actionable;
+  let level = pct >= 0.66 ? 'high' : pct >= 0.4 ? 'med' : 'low';
+  // No confirmed price = you cannot judge whether the wine can win the tender = not "Strong".
+  if (!priced) level = 'low';
+  return { level, pct, sourced, total: n, confirmed: Math.round(confirmed * 100), rep: Math.round(rep * 100), priced };
 }
 function statusCell(x) {
   if (isIntroOpp(x)) return `<span class="chip hi" title="${esc(x.wine.representation?.NO || '')}">${L.oppIntroBadge}</span>`;
@@ -3335,7 +3345,9 @@ function renderOpportunities() {
       if (OPPFILT.main && mainCat(r.m.spec) !== OPPFILT.main) return false;
       if (OPPF === 'intro' && r.nIntro === 0) return false;
       if (OPPF === 'soon' && !(r.dtd != null && r.dtd >= 0 && r.dtd <= 60)) return false;
-      if (OPPF === 'sourced' && r.st.level === 'low') return false;   // hide thin-evidence opportunities
+      // "actionable": at least one introduction (unrepresented) that also has a real price (FOB)
+      // — the only kind you can actually act on. With today's data this is ~empty, honestly.
+      if (OPPF === 'sourced' && !r.nPriced) return false;
       return true;
     })
     // rank by attractiveness, then let evidence break ties (rounded score avoids float-noise ties)
@@ -3366,7 +3378,7 @@ function renderOpportunities() {
       }).join('')}</tbody></table>`;
     const why = `<div class="oppwhy">
       <div><b>${L.whyOppTitle}</b> ${L.whyOpp(r.nIntro, r.n - r.nIntro, r.fobEur, r.dtd)}</div>
-      <div style="margin-top:5px"><b>${L.evidence}: ${stLabel}</b> — ${L.whyEvidence(st.sourced, st.total, st.confirmed, st.rep, st.level)}</div>
+      <div style="margin-top:5px"><b>${L.evidence}: ${stLabel}</b> — ${L.whyEvidence(st.sourced, st.total, st.confirmed, st.rep, st.level, st.priced)}</div>
     </div>`;
     return `<div class="opp" data-i="${i}">
       <div class="opp-head" onclick="this.parentNode.classList.toggle('open')">
@@ -3376,7 +3388,7 @@ function renderOpportunities() {
         <span class="opp-metric" title="${esc(L.oppCandTip)}"><span class="v">${r.n}</span><span class="l">${L.oppCandV}</span></span>
         <span class="opp-metric" title="${esc(L.oppFobTip)}"><span class="v">${fob}</span><span class="l">${L.oppFobV}</span></span>
         <span class="opp-metric" title="${esc(L.oppDeadTip)}"><span class="v">${dl}</span><span class="l">${L.oppDeadV}</span></span>
-        <span class="opp-metric" title="${esc(L.evTip(st.sourced, st.total, st.confirmed, st.rep))}"><span class="v ev"><span class="ev-dot ev-${st.level}"></span>${stLabel}</span><span class="l">${L.evidence}</span></span>
+        <span class="opp-metric" title="${esc(L.evTip(st.sourced, st.total, st.confirmed, st.rep, st.priced))}"><span class="v ev"><span class="ev-dot ev-${st.level}"></span>${stLabel}</span><span class="l">${L.evidence}</span></span>
         <span class="opp-metric" title="${L.oppScoreV}"><span class="scorebar" style="width:${Math.round(38*r.score/maxScore)}px"></span></span>
       </div>
       <div class="opp-body"><div class="tdk2" style="margin-bottom:4px">${L.tdTitle}</div>${tenderDetail(s)}${why}${body}</div></div>`;
