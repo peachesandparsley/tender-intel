@@ -1,0 +1,53 @@
+name: Refresh Vinmonopolet catalog index
+
+# Keeps vmp_catalog_index.json (the real "already in VMP?" reference — productId + name
+# for the whole ~66k-product catalog) fresh from Vinmonopolet's Open API.
+#
+# Setup (once): add a repo secret VMP_API_KEY with your free key from
+# https://api.vinmonopolet.no (Open subscription). Without the secret this job
+# no-ops, so it's safe to merge before the key exists.
+
+on:
+  schedule:
+    - cron: "0 6 * * *"   # 06:00 UTC daily, after VMP's ~05:45 CET master-data refresh
+  workflow_dispatch: {}    # allow manual runs from the Actions tab
+
+permissions:
+  contents: write
+
+concurrency:
+  group: vmp-index
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Build catalog index from the Vinmonopolet Open API
+        env:
+          VMP_API_KEY: ${{ secrets.VMP_API_KEY }}
+        run: |
+          if [ -z "$VMP_API_KEY" ]; then
+            echo "::warning::VMP_API_KEY secret not set — skipping. Add it in Settings → Secrets and variables → Actions."
+            exit 0
+          fi
+          python3 ingest_vmp.py --api --index --out vmp_catalog_index.json
+          python3 -c "import json;d=json.load(open('vmp_catalog_index.json'));print('index size:',d['count'])"
+
+      - name: Commit the refreshed index if it changed
+        run: |
+          if [ -n "$(git status --porcelain vmp_catalog_index.json)" ]; then
+            git config user.name "vmp-index-bot"
+            git config user.email "actions@users.noreply.github.com"
+            git add vmp_catalog_index.json
+            git commit -m "Refresh Vinmonopolet catalog index ($(date -u +%Y-%m-%d))"
+            git push
+          else
+            echo "No change in catalog index."
+          fi
