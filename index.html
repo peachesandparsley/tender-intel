@@ -305,6 +305,12 @@
     border-left: 3px solid color-mix(in oklab, var(--accent) 38%, var(--border));
     border-radius: 0 8px 8px 0; padding: 8px 12px; margin: 8px 0 10px; }
   .oppwhy b { color: var(--text-primary); }
+  .pullbox { margin: 10px 0 14px; padding: 14px 16px; border-radius: 12px;
+    background: color-mix(in oklab, var(--accent, var(--s1)) 9%, transparent);
+    border: 1px solid color-mix(in oklab, var(--accent, var(--s1)) 34%, var(--border)); }
+  .pullbig { font-size: 15.5px; font-weight: 800; color: var(--text-primary); line-height: 1.3; }
+  .pullbody { font-size: 13px; color: var(--text-secondary); line-height: 1.55; margin: 5px 0 10px; }
+  .pullbtns { display: flex; gap: 8px; flex-wrap: wrap; }
   .tdetail { font-size: 12.5px; line-height: 1.5; margin: 8px 0 10px; padding: 10px 12px;
     background: color-mix(in oklab, var(--text-primary) 3%, transparent);
     border: 1px solid var(--border); border-radius: 8px; }
@@ -512,6 +518,14 @@
     <div class="card">
       <h2 data-i18n="h2Opp">Muligheter — anbud verdt å forfølge</h2>
       <p class="note" style="margin:0 0 8px" data-i18n="noteOpp">Anbud fra Vinmonopolet, rangert etter hvor lovende de er å forfølge.</p>
+      <div class="pullbox" id="impPull">
+        <div class="pullbig" data-i18n="impPullTitle">Representerer du viner?</div>
+        <div class="pullbody" data-i18n="impPullBody">Legg inn porteføljen din én gang, så matcher vi hver vin mot hvert anbud automatisk — med marginregnestykket, kjellerprisen hver vin må treffe, og fristene. Hver nye lanseringsplan sjekkes mot porteføljen din, så du aldri går glipp av et anbud du kan vinne.</div>
+        <div class="pullbtns">
+          <button class="btn" onclick="gotoTab('portefolje')" data-i18n="impPullBtn">Legg inn porteføljen</button>
+          <button class="btn ghost" onclick="gotoTab('opplasting')" data-i18n="impPullBtn2">Last opp Excel</button>
+        </div>
+      </div>
       <details class="howto" id="oppHowto" open>
         <summary data-i18n="howtoSummary">Slik leser du et kort</summary>
         <div class="howto-body" data-i18n="howtoOpp"></div>
@@ -912,6 +926,14 @@ const I18N = {
       `${fob ? ` Selg til <b>≤ €${fob} FOB</b> for å treffe prisbåndet.` : ''}` +
       ` ${L.mwListed(compet)}.`,
     mwCtaText: 'Ser du anbud du kan vinne? Legg vinen (og resten av porteføljen) inn så importører finner den automatisk.',
+    mwPullTitle: (now, total, nplans) => now === total
+      ? `Denne ene vinen kan vinne ${now} ${now === 1 ? 'anbud' : 'anbud'} akkurat nå.`
+      : `Denne ene vinen kan vinne ${now} anbud nå — og traff ${total} ganger over ${nplans} planer.`,
+    mwPullBody: 'Det er én vin. Legg inn hele porteføljen én gang, så fanger vi hvert anbud vinene dine kan vinne — hvert halvår, automatisk, med varsel før frist. Og legger du inn kjellerprisen (FOB), blir «trolig innenfor» et sikkert ja/nei på pris.',
+    mwPullPortfolio: 'Se «Min portefølje»',
+    impPullTitle: 'Representerer du viner?',
+    impPullBody: 'Legg inn porteføljen din én gang, så matcher vi hver vin mot hvert anbud automatisk — med marginregnestykket, kjellerprisen hver vin må treffe, og fristene. Hver nye lanseringsplan sjekkes mot porteføljen din, så du aldri går glipp av et anbud du kan vinne.',
+    impPullBtn: 'Legg inn porteføljen', impPullBtn2: 'Last opp Excel',
     mwCtaBtn: 'List vinen min →', mwWinnable: 'Vinnbart',
     mwlH: 'List vinen — fyll ut det bare du vet',
     mwlNote: 'Disse feltene avgjør om et anbud faktisk kan vinnes, og bare du som produsent kan bekrefte dem. Når du lagrer, teller vinen som <b>kildeført</b> (ikke lenger et ubekreftet lead), datastyrken øker, og importører kan finne den. Alt kjører lokalt — eksporter JSON for å ta det med videre.',
@@ -1198,6 +1220,14 @@ const I18N = {
       `${fob ? ` Sell at <b>≤ €${fob} FOB</b> to fit the price band.` : ''}` +
       ` ${L.mwListed(compet)}.`,
     mwCtaText: 'See tenders you can win? Add this wine (and the rest of your portfolio) so importers find it automatically.',
+    mwPullTitle: (now, total, nplans) => now === total
+      ? `This one wine can win ${now} ${now === 1 ? 'tender' : 'tenders'} right now.`
+      : `This one wine can win ${now} ${now === 1 ? 'tender' : 'tenders'} now — and matched ${total} times across ${nplans} plans.`,
+    mwPullBody: "That's one wine. Add your whole portfolio once and we'll catch every tender your wines can win — each launch plan, automatically, with an alert before the deadline. And once you enter your ex-cellar price (FOB), \"likely within\" becomes a firm yes/no on price.",
+    mwPullPortfolio: 'Open "My portfolio"',
+    impPullTitle: 'Do you represent wines?',
+    impPullBody: 'Add your portfolio once and we match every wine against every tender automatically — with the margin maths, the ex-cellar price each wine must hit, and the deadlines. Every new launch plan is checked against your portfolio, so you never miss a tender you could win.',
+    impPullBtn: 'Add your portfolio', impPullBtn2: 'Upload Excel',
     mwCtaBtn: 'List my wine →', mwWinnable: 'Winnable',
     mwlH: 'List the wine — fill in what only you know',
     mwlNote: 'These fields decide whether a tender can actually be won, and only you, the producer, can confirm them. When you save, the wine counts as <b>sourced</b> (no longer an unconfirmed lead), its evidence strength rises, and importers can find it. Everything runs locally — export the JSON to take it with you.',
@@ -3616,6 +3646,21 @@ function matchWineRecord() {
     representation: { NO: 'unrepresented — open for import' },
   };
 }
+// How many tenders across ALL loaded plans this wine would have matched — the recurring
+// demand a producer misses by not being in the system. The pull to add the whole portfolio.
+function crossPlanMatches(w) {
+  let total = 0, plansHit = 0;
+  for (const pn in PLANS) {
+    let any = 0;
+    for (const spec of PLANS[pn]) {
+      const hi = spec.price_hi ?? spec.price_lo;
+      const fob = hi ? fobFromRetail(+hi, w.abv, spec.litres || 0.75) : null;
+      if (evaluateWine(spec, w, fob)) any++;
+    }
+    total += any; if (any) plansHit++;
+  }
+  return { total, plansHit, nPlans: Object.keys(PLANS).length };
+}
 function runMatchWine() {
   const w = matchWineRecord();
   const hits = [];
@@ -3652,8 +3697,14 @@ function runMatchWine() {
       <details class="critdet"><summary>${L.critShow}</summary>${critHtml(s, w, h.fob)}</details>
       </div></div>`;
   }).join('') + `<p class="note" style="margin:10px 0 0;color:var(--muted)">${L.mwCoverage}</p>`;
-  $('mwCta').innerHTML = `<div class="samplebar" style="border-color:color-mix(in oklab,var(--accent,#4670e0) 40%,var(--border))">
-    ${L.mwCtaText} <button class="btn" style="margin-left:8px" onclick="openListForm()">${L.mwCtaBtn}</button></div>`;
+  const cross = crossPlanMatches(w);
+  $('mwCta').innerHTML = `<div class="pullbox">
+    <div class="pullbig">${L.mwPullTitle(hits.length, cross.total, cross.nPlans)}</div>
+    <div class="pullbody">${L.mwPullBody}</div>
+    <div class="pullbtns">
+      <button class="btn" onclick="openListForm()">${L.mwCtaBtn}</button>
+      <button class="btn ghost" onclick="gotoTab('portefolje')">${L.mwPullPortfolio}</button>
+    </div></div>`;
 }
 function openListForm() {
   const lead = window._mwLead;
