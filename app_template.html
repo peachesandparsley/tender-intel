@@ -1867,10 +1867,10 @@ function resetFilters() {
   $('fQ').value = '';
   renderDims(); renderSpecs();
 }
-function fillSelect(id, keys, current) {
+function fillSelect(id, keys, current, labelFn) {
   const sel = $(id); if (!sel) return;
   const first = sel.options[0].outerHTML;
-  sel.innerHTML = first + keys.map(k => `<option${k === current ? ' selected' : ''}>${esc(k)}</option>`).join('');
+  sel.innerHTML = first + keys.map(k => `<option value="${esc(k)}"${k === current ? ' selected' : ''}>${esc(labelFn ? labelFn(k) : k)}</option>`).join('');
   sel.value = current || '';
 }
 // selection facet uses value≠label (canonical key vs. human label)
@@ -1885,14 +1885,14 @@ function renderDims() {
   renderMap();
   drawDimChart('chCountry', 'country', s => s.country || openTerm(), FILTERS.country);
   drawDimChart('chGroup', 'mainType', s => mainCat(s), FILTERS.mainType, null, mainDisp);
-  drawDimChart('chGrape', 'grape', s => specGrapes(s), FILTERS.grape);
+  drawDimChart('chGrape', 'grape', s => specGrapes(s), FILTERS.grape, null, titleCase);
   drawDimChart('chPrice', 'price', s => specBucket(s), FILTERS.price, PRICE_BUCKETS.map(b => b[2]));
   fillSelect('fCountry', [...counts('country', s => s.country || openTerm()).keys()].sort(), FILTERS.country);
   const mainOpts = [...counts('mainType', s => mainCat(s)).keys()].map(c => [c, mainDisp(c)]).sort((a, b) => a[1].localeCompare(b[1]));
   fillSelValueLabel('fMain', mainOpts, FILTERS.mainType);
   const grpOpts = [...counts('group', s => subCat(s)).keys()].map(c => [c, subDisp(c)]).sort((a, b) => a[1].localeCompare(b[1]));
   fillSelValueLabel('fGroup', grpOpts, FILTERS.group);
-  fillSelect('fGrape', [...counts('grape', s => specGrapes(s)).keys()].sort(), FILTERS.grape);
+  fillSelect('fGrape', [...counts('grape', s => specGrapes(s)).keys()].sort(), FILTERS.grape, titleCase);
   fillSelect('fClass', [...counts('classification', s => specClasses(s)).keys()].sort(), FILTERS.classification);
   fillSelect('fPrice', PRICE_BUCKETS.map(b => b[2]), FILTERS.price);
   fillSelValueLabel('fSel', [['basis', L.selBasis], ['parti', L.selParti]], FILTERS.sel);
@@ -1939,7 +1939,7 @@ function renderSpecs() {
     const chip = (n ? `<span class="chip ${n > 1 ? 'hi' : 'mid'}">${n}</span>` : '<span class="chip lo">0</span>') + star;
     const p = s.price_hi ?? s.price_lo;
     const mini = p ? `<div class="minibar" title="${esc(L.ttPriceCap)} ${fmt(p,0)} kr"><i style="width:${Math.min(100, 100*p/maxP)}%"></i></div>` : '';
-    const gr = specGrapes(s).slice(0, 3).join(', ');
+    const gr = capGrapes(specGrapes(s).slice(0, 3));
     return `<tr class="rowx" data-i="${i}">
       <td><b>${esc(s.ref)}</b></td><td>${esc(s.launch)}</td><td>${esc((s.selection || '').replace('utvalget',''))}</td>
       <td>${esc(mainDisp(mainCat(s))) || esc(s.group)}${subCat(s) ? ` <span style="color:var(--muted)">(${esc(subDisp(subCat(s)))})</span>` : ''}${gr ? `<br><span style="color:var(--muted);font-size:11.5px">${esc(gr)}</span>` : ''}</td>
@@ -1957,7 +1957,7 @@ function wantsLine(m) {
   const s = m.spec;
   const grapes = specGrapes(s).filter(g => g !== 'traditional method');
   const bits = [];
-  if (grapes.length) bits.push(L.wlGrapes + grapes.join(', '));
+  if (grapes.length) bits.push(L.wlGrapes + capGrapes(grapes));
   if (s.appellation) bits.push(esc(s.appellation));
   if (s.vintage) bits.push(L.wlVintage + esc(s.vintage));
   bits.push(L.wlBand + esc(s.price_text) + L.wlKr);
@@ -2045,6 +2045,11 @@ function repInfo(raw) {
 const repChip = raw => { const r = repInfo(raw);
   return `<span class="chip ${r.cls}" title="${esc(r.detail)}">${esc(r.label)}</span>`; };
 const titleCase = s => String(s || '').replace(/\b\w/g, c => c.toUpperCase());
+// display helpers — data is stored lower-case for matching; capitalise only for display
+const capColor = c => ({ red: 'Red', white: 'White', rose: 'Rosé', fortified: 'Fortified',
+  'sparkling white': 'Sparkling white', 'sparkling rose': 'Sparkling rosé',
+  'sparkling rosé': 'Sparkling rosé' }[String(c || '').toLowerCase()] || titleCase(c));
+const capGrapes = arr => (arr || []).map(titleCase).join(', ');
 const groupLabel = g => LANG === 'en' ? titleCase(g) : (L.groupMap[N(g).trim()] || g);
 const TIER = { verified: ['✓','var(--good-text)'], public: ['◦','var(--text-secondary)'],
                estimate: ['~','var(--warn)'], unknown: ['?','var(--muted)'] };
@@ -2066,9 +2071,9 @@ function winePass(w, skip) {
       Object.keys(w.grapes || {}).join(' ')].join(' ')).includes(N(WFILTERS.q))) return false;
   return true;
 }
-function fillWineSelect(id, keys, current) {
+function fillWineSelect(id, keys, current, labelFn) {
   const sel = $(id), first = sel.options[0].outerHTML;
-  sel.innerHTML = first + keys.map(k => `<option value="${esc(k)}"${k === current ? ' selected' : ''}>${esc(k)}</option>`).join('');
+  sel.innerHTML = first + keys.map(k => `<option value="${esc(k)}"${k === current ? ' selected' : ''}>${esc(labelFn ? labelFn(k) : k)}</option>`).join('');
   sel.value = current || '';
 }
 function renderWineDims() {
@@ -2076,7 +2081,7 @@ function renderWineDims() {
   WINES.filter(w => winePass(w, 'country')).forEach(w => c.set(w.country, (c.get(w.country) || 0) + 1));
   drawGeoMap('wineMapSvg', c, WFILTERS.country, lab => { WFILTERS.country = lab; renderWineDims(); renderWines(); });
   fillWineSelect('wfCountry', [...new Set(WINES.map(w => w.country))].sort(), WFILTERS.country);
-  fillWineSelect('wfType', [...new Set(WINES.map(w => w.color).filter(Boolean))].sort(), WFILTERS.type);
+  fillWineSelect('wfType', [...new Set(WINES.map(w => w.color).filter(Boolean))].sort(), WFILTERS.type, capColor);
   fillWineSelect('wfCert', [...new Set(WINES.flatMap(w => w.certs || []))].sort(), WFILTERS.cert);
 }
 function resetWineFilters() {
@@ -2106,8 +2111,8 @@ function renderWines() {
       return `<span style="color:${col};font-weight:700">${sym}</span> <b>${L.fieldNames[f] || f}</b> — ${esc(s.note)}`;
     }).join('<br>') : L.qNoData;
     return `<tr class="rowx"><td><b>${esc(w.producer)}</b>${isSeed(w) ? ` <span class="chip sample" title="${esc(L.sampleBadgeTitle)}">${L.sampleBadge}</span>` : ''}</td><td>${esc(w.name)}</td><td>${esc(w.country)}</td>
-     <td>${esc(w.color)}${w.method ? L.tradMethod : ''}</td>
-     <td>${Object.entries(w.grapes || {}).map(([g, p]) => `${esc(g)} ${p}%`).join(', ')}</td>
+     <td>${esc(capColor(w.color))}${w.method ? L.tradMethod : ''}</td>
+     <td>${Object.entries(w.grapes || {}).map(([g, p]) => `${esc(titleCase(g))} ${p}%`).join(', ')}</td>
      <td class="num">${w.sugar_g_l ?? '–'}</td>
      <td class="num">${pr}</td><td style="font-size:12px">${emb}</td>
      <td class="num">${w.fob_eur != null ? fmt(w.fob_eur, 1) : '–'}</td>
@@ -2308,7 +2313,7 @@ function renderAnalyse() {
   names.forEach(n => wineSpecs(n).forEach(s => specGrapes(s).forEach(g =>
     gAll.set(g, (gAll.get(g) || 0) + 1))));
   const topG = [...gAll.entries()].sort((a, b) => b[1] - a[1]).slice(0, 8).map(e => e[0]);
-  drawGrouped('anaGrape', 'anaLegend2', topG, names,
+  drawGrouped('anaGrape', 'anaLegend2', topG.map(titleCase), names,
     names.map(n => topG.map(g => wineSpecs(n).filter(s => specGrapes(s).includes(g)).length)));
   // median price cap per plan — single series
   const med = n => {
@@ -2774,7 +2779,7 @@ function renderOpportunities() {
     return `<div class="opp" data-i="${i}">
       <div class="opp-head" onclick="this.parentNode.classList.toggle('open')">
         <span class="opp-rank">${i + 1}</span>
-        <span class="opp-title">${esc(s.ref)} — ${esc(groupLabel(s.group))}<small>${L.oppSeeks} ${esc(specGrapes(s).slice(0,3).join(', ') || mainDisp(mainCat(s)))}${L.oppFrom}${esc(s.country) || L.openOrigin} · ${esc(s.price_text)}</small></span>
+        <span class="opp-title">${esc(s.ref)} — ${esc(groupLabel(s.group))}<small>${L.oppSeeks} ${esc(capGrapes(specGrapes(s).slice(0,3)) || mainDisp(mainCat(s)))}${L.oppFrom}${esc(s.country) || L.openOrigin} · ${esc(s.price_text)}</small></span>
         <span class="opp-metric"><span class="v">${r.nIntro}</span><span class="l">${L.oppIntroV}</span></span>
         <span class="opp-metric"><span class="v">${r.n}</span><span class="l">${L.oppCandV}</span></span>
         <span class="opp-metric"><span class="v">${fob}</span><span class="l">${L.oppFobV}</span></span>
@@ -2880,7 +2885,7 @@ function initMatchWine() {
   if (!MW_INIT) {
     const cs = [...new Set([...SPECS.map(s => s.country), ...WINES.map(w => w.country)].filter(Boolean))].sort();
     $('mwCountry').innerHTML = cs.map(c => `<option>${esc(c)}</option>`).join('');
-    $('mwGrapeList').innerHTML = GRAPE_LEX.slice().sort().map(g => `<option value="${esc(g)}">`).join('');
+    $('mwGrapeList').innerHTML = GRAPE_LEX.slice().sort().map(g => `<option value="${esc(titleCase(g))}">`).join('');
     MW_INIT = true;
   }
   // pick real leads that actually win something in THIS plan, so the demo always lands
@@ -2890,7 +2895,7 @@ function initMatchWine() {
   const leads = good.length ? good : cand.slice(0, 4);
   window._mwLeads = leads;
   $('mwLeadPick').innerHTML = leads.length ? L.mwLeadPre + leads.map((w, i) =>
-    `<button class="btn ghost" style="padding:3px 9px;margin:2px 4px 0 0;font-size:12px" onclick="fillLead(${i})">${esc(w.country)} · ${esc(Object.keys(w.grapes)[0])}</button>`).join('') : '';
+    `<button class="btn ghost" style="padding:3px 9px;margin:2px 4px 0 0;font-size:12px" onclick="fillLead(${i})">${esc(w.country)} · ${esc(titleCase(Object.keys(w.grapes)[0]))}</button>`).join('') : '';
   // show a worked example on first open so the value is immediate; never overwrite the user's own input later
   if (!MW_DEMOED && leads.length) { MW_DEMOED = true; fillLead(0); }
 }
@@ -2951,7 +2956,7 @@ function runMatchWine() {
       <span class="opp-title">${esc(s.ref)} — ${esc(groupLabel(s.group))}<small>${esc(s.country) || L.openOrigin} · ${esc((s.spec || '').slice(0, 90))}</small></span>
       <span style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">${need} ${pf} ${clauses}</span>
       </div><div class="opp-body" style="display:block;padding-top:0">
-      <p class="note" style="margin:6px 0 0">${L.oppSeeks} <b>${esc(specGrapes(s).slice(0,4).join(', ') || mainDisp(mainCat(s)))}</b> · ${esc(s.price_text)} · ${L.mwListed(h.compet)}${h.compet <= 2 ? ` <span style="color:var(--good-text)">— ${L.mwFirstMover}</span>` : ''}</p>
+      <p class="note" style="margin:6px 0 0">${L.oppSeeks} <b>${esc(capGrapes(specGrapes(s).slice(0,4)) || mainDisp(mainCat(s)))}</b> · ${esc(s.price_text)} · ${L.mwListed(h.compet)}${h.compet <= 2 ? ` <span style="color:var(--good-text)">— ${L.mwFirstMover}</span>` : ''}</p>
       </div></div>`;
   }).join('') + `<p class="note" style="margin:10px 0 0;color:var(--muted)">${L.mwCoverage}</p>`;
   $('mwCta').innerHTML = `<div class="samplebar" style="border-color:color-mix(in oklab,var(--accent,#4670e0) 40%,var(--border))">
