@@ -121,7 +121,9 @@ def build():
                 continue
             country = canon_country((s.get("country") or "").strip()) or "Open"
             st = style(s)
-            grapes = spec_grapes(s) or {""}
+            # Only grape-specific clusters are targetable gaps; a tender naming no grape would
+            # otherwise form a broad catch-all bucket that tops the list on recurrence alone.
+            grapes = spec_grapes(s)
             price = s.get("price_hi") or s.get("price_lo")
             cert = bool(CERT_RE.search(s.get("spec") or ""))
             for g in grapes:
