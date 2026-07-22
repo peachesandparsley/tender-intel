@@ -11,3 +11,14 @@
 # Or just commit this file — the refresh-launch-plans workflow does the rest monthly.
 #
 # Lines starting with # are ignored. Paste real .xlsx URLs below:
+#
+# Vinmonopolet publishes these on its Sanity CDN with opaque hash filenames (no year in
+# the URL), so fetch_launch_plans.py derives each plan's period (YYYY-half) from the launch
+# months inside the file, and skips any period already present as a specs_*.json. Only the
+# .xlsx tender tables go here; the companion PDFs (submission info) aren't parseable plans.
+https://cdn.sanity.io/files/iv1p66d7/production/8d9a4039e8ded7ab15aaeb8d526f0f78968d29f1.xlsx
+https://cdn.sanity.io/files/iv1p66d7/production/7297b241ca1c45733e415a3097baec568eb145d2.xlsx
+https://cdn.sanity.io/files/iv1p66d7/production/72b89d98348cd03681b37851ce44433e9bb28f37.xlsx
+https://cdn.sanity.io/files/iv1p66d7/production/7894e0ad07e4f6b6c1c778dda037ef674b93ccf1.xlsx
+https://cdn.sanity.io/files/iv1p66d7/production/a9867247e268f3ebfde384bfe7f1c5870f205570.xlsx
+https://cdn.sanity.io/files/iv1p66d7/production/d360403fceac86c6c66a91554c50d516ecf75d8f.xlsx
