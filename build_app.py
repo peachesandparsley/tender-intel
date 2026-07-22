@@ -102,10 +102,13 @@ def load_seeds():
 
 html = open("app_template.html", encoding="utf-8").read()
 sheetjs = open("package/dist/xlsx.full.min.js", encoding="utf-8").read()
-wines = json.load(open("wines.json", encoding="utf-8"))["wines"]
+# Only genuinely-sourced records are embedded. wines.json (Claude-generated demo wines with
+# invented FOB/volume/profile) has been removed; if a real, sourced wines.json is added later
+# it is picked up here. The seed leads come from real monopoly open data (with source URLs).
+curated = json.load(open("wines.json", encoding="utf-8"))["wines"] if os.path.exists("wines.json") else []
 seeds = load_seeds()
-wines = wines + seeds
-print(f"wines: {len(wines) - len(seeds)} curated + {len(seeds)} seed leads = {len(wines)}")
+wines = [normalize(w) for w in curated] + seeds
+print(f"wines: {len(curated)} curated + {len(seeds)} seed leads = {len(wines)}")
 tpl_b64 = base64.b64encode(open("producer_upload_template.xlsx", "rb").read()).decode()
 imp_b64 = base64.b64encode(open("importer_portfolio_template.xlsx", "rb").read()).decode()
 
