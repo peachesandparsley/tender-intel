@@ -87,6 +87,14 @@
   tr.rowx { cursor: pointer; }
   tr.rowx:hover td { background: color-mix(in oklab, var(--s1) 6%, transparent); }
   tr.detail td { background: color-mix(in oklab, var(--s1) 4%, transparent); color: var(--text-secondary); font-size: 12.5px; }
+  /* Detail rows span the (wide, horizontally-scrolling) table, so pin their content to the
+     left of the viewport and cap it to the visible width so long lines wrap instead of
+     overflowing off-screen. */
+  tr.detail td { padding: 0; }
+  .detailbox { position: sticky; left: 0; box-sizing: border-box; display: block;
+    width: calc(100vw - 34px); max-width: 1088px; padding: 10px 12px;
+    white-space: normal; overflow-wrap: anywhere; line-height: 1.55; }
+  .detailbox b { color: var(--text-primary); }
   .chip { display: inline-block; min-width: 30px; text-align: center; border-radius: 999px; padding: 2px 8px; font-weight: 650; font-size: 12px; }
   .chip.hi  { background: color-mix(in oklab, var(--goodst) 18%, transparent); color: var(--good-text); }
   .chip.mid { background: color-mix(in oklab, var(--warn) 22%, transparent); color: var(--text-primary); }
@@ -2343,8 +2351,8 @@ function renderSpecs() {
       <td class="num">${esc(s.price_text)}${mini}</td>
       <td class="num">${m.fob && m.fob.nok > 0 ? '€ ' + fmt(m.fob.eur, 1) : '–'}</td>
       <td class="num">${chip}</td></tr>
-    <tr class="detail" style="display:none"><td colspan="9">${
-      clausesForSpec(s).map(c => `[${c.type}] ${esc(c.text)}`).join('<br>')}${s.deadline ? '<br><b>' + esc(L.detailDeadline) + '</b> ' + esc(s.deadline) : ''}</td></tr>`;
+    <tr class="detail" style="display:none"><td colspan="9"><div class="detailbox">${
+      clausesForSpec(s).map(c => `[${c.type}] ${esc(c.text)}`).join('<br>')}${s.deadline ? '<br><b>' + esc(L.detailDeadline) + '</b> ' + esc(s.deadline) : ''}</div></td></tr>`;
   }).join('');
   hookRows(tb);
 }
@@ -2446,7 +2454,7 @@ function renderMarket() {
         <td><b>${esc(w.producer)}</b> — ${esc(w.name)}<br>
           <span style="color:var(--muted);font-size:12px">${esc(w.country)} · FOB €${w.fob_eur != null ? fmt(w.fob_eur, 1) : '?'}</span></td>
         <td>${krav} ${pris} ${cat} ${repChip(w.representation?.NO)}</td></tr>
-      <tr class="detail" style="display:none"><td colspan="2">${x.verdicts.map(v => `${V[v.verdict] || '·'} ${esc(v.clause)}`).join('<br>')}</td></tr>`;
+      <tr class="detail" style="display:none"><td colspan="2"><div class="detailbox">${x.verdicts.map(v => `${V[v.verdict] || '·'} ${esc(v.clause)}`).join('<br>')}</div></td></tr>`;
     }).join('');
   }).join('');
   hookRows(tb);
@@ -2609,7 +2617,7 @@ function renderWines() {
      <td style="font-size:12px">${repChip(w.representation?.NO)}</td>
      <td style="font-size:12px" title="${esc(audTitle)}">${aud}</td>
      <td style="font-size:12px;white-space:nowrap">${qCell}</td></tr>
-    <tr class="detail" style="display:none"><td colspan="13">${detail}</td></tr>`;
+    <tr class="detail" style="display:none"><td colspan="13"><div class="detailbox">${detail}</div></td></tr>`;
   }).join('');
   const tb = $('wineTable').querySelector('tbody');
   tb.querySelectorAll('.clk-prod').forEach(el => el.addEventListener('click', e => { e.stopPropagation(); spotlightProducer(el.dataset.p); }));
@@ -3107,7 +3115,7 @@ function renderPortfolio() {
       <td><b>${esc(x.wine.producer)}</b> — ${esc(x.wine.name)}</td>
       <td class="num">${x.passes}✓${x.unknowns ? ' ' + x.unknowns + '?' : ''} / ${x.total}</td>
       <td>${price}</td></tr>
-    <tr class="detail" style="display:none"><td colspan="6">${x.verdicts.map(v => `${V[v.verdict] || '·'} ${esc(v.clause)}`).join('<br>')}</td></tr>`;
+    <tr class="detail" style="display:none"><td colspan="6"><div class="detailbox">${x.verdicts.map(v => `${V[v.verdict] || '·'} ${esc(v.clause)}`).join('<br>')}</div></td></tr>`;
   }).join('')).join('');
   hookRows($('portMatchTable').querySelector('tbody'));
   $('portMatchNote').textContent = MYPORT.length === 0
