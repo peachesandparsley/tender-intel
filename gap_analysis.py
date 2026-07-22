@@ -53,6 +53,24 @@ SYN = {"shiraz": "syrah", "syrah": "shiraz", "garnacha": "grenache", "grenache":
        "primitivo": "zinfandel", "zinfandel": "primitivo", "mataro": "mourvedre", "mourvedre": "mataro"}
 
 
+# Norwegian-edition plans name countries in Norwegian ("Italia"); canonicalise to English
+# (token-level, so compound origins map too) to match the English editions when clustering.
+COUNTRY_NO2EN = {
+    "frankrike": "France", "italia": "Italy", "spania": "Spain", "tyskland": "Germany",
+    "hellas": "Greece", "belgia": "Belgium", "nederland": "Netherlands", "norge": "Norway",
+    "sverige": "Sweden", "danmark": "Denmark", "storbritannia": "Great Britain",
+    "skottland": "Scotland", "tsjekkia": "Czech Republic", "østerrike": "Austria",
+    "europa": "Europe", "norden": "Nordics", "sør-afrika": "South Africa",
+    "sveits": "Switzerland", "ungarn": "Hungary", "kroatia": "Croatia", "libanon": "Lebanon",
+    "eller": "or", "og": "and",
+}
+_CTOKEN = re.compile(r"[A-Za-zÀ-ÿ]+(?:-[A-Za-zÀ-ÿ]+)?")
+
+
+def canon_country(s):
+    return _CTOKEN.sub(lambda m: COUNTRY_NO2EN.get(m.group(0).lower(), m.group(0)), s or "")
+
+
 def is_wine(s):
     t = N((s.get("main_type") or "") + " " + (s.get("group") or ""))
     return not re.search(r"beer|cider|spirit|whisky|aquavit|gin|vodka|rum|brandy|mead|sake", t)
@@ -101,7 +119,7 @@ def build():
         for s in specs:
             if not is_wine(s):
                 continue
-            country = (s.get("country") or "").strip() or "Open"
+            country = canon_country((s.get("country") or "").strip()) or "Open"
             st = style(s)
             grapes = spec_grapes(s) or {""}
             price = s.get("price_hi") or s.get("price_lo")
