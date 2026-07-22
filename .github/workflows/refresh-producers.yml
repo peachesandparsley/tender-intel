@@ -1,0 +1,59 @@
+name: Seed producers (one country)
+
+# Builds the producer spine for ONE country from Wikidata (CC0, structured), dedupes it
+# against the Vinmonopolet catalog index, and commits seed_wd_<cc>.json. Runs on the GitHub
+# runner because query.wikidata.org must be reachable (the repo's editing sandbox is offline).
+#
+# Run it from the Actions tab -> "Seed producers (one country)" -> Run workflow -> pick a
+# country code. Go one country at a time; re-run per country to refresh.
+
+on:
+  workflow_dispatch:
+    inputs:
+      country:
+        description: "ISO-2 code: ZA AT NZ DE FR IT ES AU PT CL US AR GR HU GE"
+        required: true
+        default: "ZA"
+      max:
+        description: "Max producers to pull"
+        required: false
+        default: "600"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: seed-producers
+  cancel-in-progress: false
+
+jobs:
+  seed:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Self-test the parser (offline, no network)
+        run: python3 ingest_wikidata.py --selftest
+
+      - name: Pull producers from Wikidata + dedupe against Vinmonopolet
+        run: |
+          IDX=""
+          [ -f vmp_catalog_index.json ] && IDX="--vmp-index vmp_catalog_index.json"
+          python3 ingest_wikidata.py --country "${{ github.event.inputs.country }}" \
+            --max "${{ github.event.inputs.max }}" $IDX
+
+      - name: Commit the country's producer file
+        run: |
+          CC=$(echo "${{ github.event.inputs.country }}" | tr '[:upper:]' '[:lower:]')
+          if git status --porcelain -- "seed_wd_${CC}.json" | grep -q .; then
+            git config user.name "producer-seed-bot"
+            git config user.email "actions@users.noreply.github.com"
+            git add "seed_wd_${CC}.json"
+            git commit -m "Seed producers: ${{ github.event.inputs.country }} from Wikidata ($(date -u +%Y-%m-%d))"
+            git push
+          else
+            echo "No producer file written (0 rows, or unchanged). Check the run log above."
+          fi
