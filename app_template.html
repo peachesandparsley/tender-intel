@@ -1549,10 +1549,14 @@ function originOk(spec, w) {
   if (sc.includes('europe')) return EURO.includes(wc);
   return sc.includes(wc) || wc.includes(sc);
 }
+// Non-wine categories, both English and Norwegian (matched after N() strips ø/æ/å).
+// Deliberately excludes "vin"/"sterkvin" so fortified wine still counts as wine.
+const NONWINE_RE = /\b(fermented|beer|ale|lager|ipa|stout|porter|pils|cider|sider|mead|mjod|spirit|brennevin|whisky|whiskey|bourbon|aquavit|akevitt|akvavit|gin|vodka|rum|rom|brandy|cognac|konjakk|tequila|liqueur|likor|sake|ol|surol|sterkol)\b/;
+function isNonWine(s) { return NONWINE_RE.test(N((s.group || '') + ' ' + (s.main_type || ''))); }
 function groupOk(spec, w) {
   const g = N(spec.group || '') || N(spec.main_type || ''), mt = N(spec.main_type || '');
-  if (/(fermented|beer|ale|lager|cider|mead|spirit|whisky|aquavit|gin|vodka|rum)/.test(g + ' ' + mt)) return false;
-  if (mt && !mt.includes('wine')) return false;
+  if (isNonWine(spec)) return false;
+  if (mt && !/wine|vin/.test(mt)) return false;
   const sparkling = /sparkling|musserende/.test(g);
   if (sparkling !== !!w.method) return false;
   const col = N(w.color || '');
@@ -2176,7 +2180,7 @@ function renderDims() {
   drawDimChart('chGroup', 'mainType', s => mainCat(s), FILTERS.mainType, null, mainDisp);
   drawDimChart('chGrape', 'grape', s => specGrapes(s), FILTERS.grape, null, dispGrape);
   drawDimChart('chPrice', 'price', s => specBucket(s), FILTERS.price, PRICE_BUCKETS.map(b => b[2]));
-  fillSelect('fCountry', [...counts('country', s => s.country || openTerm()).keys()].sort(), FILTERS.country);
+  fillSelect('fCountry', [...counts('country', s => s.country || openTerm()).keys()].sort(), FILTERS.country, dispCountry);
   const mainOpts = [...counts('mainType', s => mainCat(s)).keys()].map(c => [c, mainDisp(c)]).sort((a, b) => a[1].localeCompare(b[1]));
   fillSelValueLabel('fMain', mainOpts, FILTERS.mainType);
   const grpOpts = [...counts('group', s => subCat(s)).keys()].map(c => [c, subDisp(c)]).sort((a, b) => a[1].localeCompare(b[1]));
@@ -2201,9 +2205,9 @@ function recompute() {
   }
 }
 function renderTiles() {
-  const withM = MARKET.filter(m => m.matches.length);
+  const withM = MARKET.filter(m => oppCands(m).length);
   const openIntro = new Set();
-  withM.forEach(m => m.matches.forEach(x => { if (isIntroOpp(x)) openIntro.add(x.wine.id); }));
+  withM.forEach(m => oppCands(m).forEach(x => { if (isIntroOpp(x)) openIntro.add(x.wine.id); }));
   $('tiles').innerHTML = [
     [SPECS.length, L.tilesSpecs],
     [withM.length, L.tilesWithMatches],
@@ -2216,7 +2220,7 @@ function renderSpecs() {
   const rows = MARKET.filter(m => {
     if (!passes(m.spec)) return false;
     if (specFilter === 'match') return m.matches.length;
-    if (specFilter === 'wine') return !/(fermented|beer|cider|spirit|aquavit|whisky)/i.test((m.spec.main_type || '') + (m.spec.group || ''));
+    if (specFilter === 'wine') return isWineSpec(m.spec);
     return true;
   });
   const sorted = applySort(rows, SORTS.spec, SPEC_GET);
@@ -2232,7 +2236,7 @@ function renderSpecs() {
     return `<tr class="rowx" data-i="${i}">
       <td><b>${esc(s.ref)}</b></td><td>${esc(s.launch)}</td><td>${esc((s.selection || '').replace('utvalget',''))}</td>
       <td>${esc(mainDisp(mainCat(s))) || esc(s.group)}${subCat(s) ? ` <span style="color:var(--muted)">(${esc(subDisp(subCat(s)))})</span>` : ''}${gr ? `<br><span style="color:var(--muted);font-size:11.5px">${esc(gr)}</span>` : ''}</td>
-      <td>${esc(s.country) || openTerm()}${s.region ? `<br><span style="color:var(--muted);font-size:11.5px">${esc(s.region)}</span>` : ''}${s.appellation ? `<br><span style="color:var(--muted);font-size:11px" title="${esc(s.appellation)}">${esc(s.appellation.length > 42 ? s.appellation.slice(0, 40) + '…' : s.appellation)}</span>` : ''}${specClasses(s).length ? `<br>${specClasses(s).map(c => `<span class="chip lo" style="font-size:10.5px;padding:1px 6px;margin:2px 3px 0 0">${esc(c)}</span>`).join('')}` : ''}</td>
+      <td>${esc(dispCountry(s.country)) || openTerm()}${s.region ? `<br><span style="color:var(--muted);font-size:11.5px">${esc(s.region)}</span>` : ''}${s.appellation ? `<br><span style="color:var(--muted);font-size:11px" title="${esc(s.appellation)}">${esc(s.appellation.length > 42 ? s.appellation.slice(0, 40) + '…' : s.appellation)}</span>` : ''}${specClasses(s).length ? `<br>${specClasses(s).map(c => `<span class="chip lo" style="font-size:10.5px;padding:1px 6px;margin:2px 3px 0 0">${esc(c)}</span>`).join('')}` : ''}</td>
       <td>${esc((s.spec || '').slice(0, 110))}${(s.spec || '').length > 110 ? '…' : ''}</td>
       <td class="num">${esc(s.price_text)}${mini}</td>
       <td class="num">${m.fob && m.fob.nok > 0 ? '€ ' + fmt(m.fob.eur, 1) : '–'}</td>
@@ -2282,7 +2286,7 @@ function renderMarket() {
   }
   tb.innerHTML = rows.map(m => {
     const head = `<tr class="tender-head"><td colspan="2">
-      <b>${esc(m.spec.ref)}</b> — ${L.seeksPre}<b>${esc(groupLabel(m.spec.group))}</b>${L.seeksFrom}<b>${esc(m.spec.country) || L.openOrigin}</b><br>
+      <b>${esc(m.spec.ref)}</b> — ${L.seeksPre}<b>${esc(groupLabel(m.spec.group))}</b>${L.seeksFrom}<b>${esc(dispCountry(m.spec.country)) || L.openOrigin}</b><br>
       <span style="color:var(--text-secondary)">${wantsLine(m)}</span></td></tr>`;
     return head + m.matches.map(x => {
       const w = x.wine;
@@ -2353,6 +2357,22 @@ const GRAPE_DISP = {
 const dispGrape = g => GRAPE_DISP[String(g || '').toLowerCase()] || titleCase(g);
 const capGrapes = arr => (arr || []).map(dispGrape).join(', ');
 const groupLabel = g => LANG === 'en' ? titleCase(g) : (L.groupMap[N(g).trim()] || g);
+// Plans are stored with canonical English country names (so clustering/matching/the map
+// stay consistent across editions). Localise them for display so the Norwegian UI doesn't
+// read "søker fra Europe or Mexico". Phrase-level, longest-first, so "South Africa" maps
+// before "Africa" and connectors ("or"/"and") translate too.
+const COUNTRY_EN2NO = {
+  'France': 'Frankrike', 'Italy': 'Italia', 'Spain': 'Spania', 'Germany': 'Tyskland',
+  'Greece': 'Hellas', 'Belgium': 'Belgia', 'Netherlands': 'Nederland', 'Norway': 'Norge',
+  'Sweden': 'Sverige', 'Denmark': 'Danmark', 'Finland': 'Finland', 'Great Britain': 'Storbritannia',
+  'Scotland': 'Skottland', 'England': 'England', 'Czech Republic': 'Tsjekkia', 'Austria': 'Østerrike',
+  'Europe': 'Europa', 'Nordics': 'Norden', 'The Nordic countries': 'Norden', 'South Africa': 'Sør-Afrika',
+  'Switzerland': 'Sveits', 'Hungary': 'Ungarn', 'Croatia': 'Kroatia', 'Lebanon': 'Libanon',
+  'Moldova': 'Moldova', 'Romania': 'Romania', 'Mexico': 'Mexico', 'or': 'eller', 'and': 'og',
+};
+const _EN2NO_RE = new RegExp('\\b(' + Object.keys(COUNTRY_EN2NO)
+  .sort((a, b) => b.length - a.length).map(k => k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|') + ')\\b', 'g');
+const dispCountry = c => (!c || LANG === 'en') ? (c || '') : c.replace(_EN2NO_RE, m => COUNTRY_EN2NO[m] || m);
 const TIER = { verified: ['✓','var(--good-text)'], public: ['◦','var(--text-secondary)'],
                estimate: ['~','var(--warn)'], unknown: ['?','var(--muted)'] };
 function qualitySummary(w) {
@@ -2578,10 +2598,7 @@ $('planSelect').addEventListener('change', () => {
 });
 
 /* ---- cross-plan analytics ---- */
-function isWineSpec(s) {
-  return !/(fermented|beer|cider|mead|spirit|whisky|aquavit|gin|vodka|rum|brandy|sake)/i
-    .test((s.main_type || '') + ' ' + (s.group || ''));
-}
+function isWineSpec(s) { return !isNonWine(s); }
 function drawGrouped(svgId, legendId, cats, seriesNames, matrix) {
   // matrix[seriesIdx][catIdx] = value; horizontal grouped bars
   const svg = $(svgId), W = svg.parentElement.clientWidth || 330;
@@ -2699,7 +2716,7 @@ function renderGapDirectory() {
     [list.filter(c => c.persistent).length, L.gapTilePersistent],
     [list.filter(c => c.unmet).length, L.gapTileUnmet],
   ].map(([v, l]) => `<div class="tile"><div class="v">${v}</div><div class="l">${l}</div></div>`).join('');
-  fillSelect('gfCountry', [...new Set(list.map(c => c.country))].sort(), GAPF.country);
+  fillSelect('gfCountry', [...new Set(list.map(c => c.country))].sort(), GAPF.country, dispCountry);
   fillSelValueLabel('gfStyle', [...new Set(list.map(c => c.style))].map(st => [st, styleLabel(st)]), GAPF.style);
   let rows = list.filter(c => {
     if (GAPF.mode === 'open' && !c.persistent) return false;
@@ -2939,7 +2956,7 @@ function renderPortfolio() {
     const price = x.priceOk === true ? `<span class="chip hi">${L.pIn}</span>`
       : x.priceOk === false ? `<span class="chip mid">${L.pHigh}</span>` : `<span class="chip lo">${L.pUnknown}</span>`;
     return `<tr class="rowx">
-      <td>${wi === 0 ? `<b>${esc(m.spec.ref)}</b><br><span style="color:var(--muted)">${esc(m.spec.group)} · ${esc(m.spec.country)} · ${esc((m.spec.spec || '').slice(0, 70))}…</span>` : ''}</td>
+      <td>${wi === 0 ? `<b>${esc(m.spec.ref)}</b><br><span style="color:var(--muted)">${esc(m.spec.group)} · ${esc(dispCountry(m.spec.country))} · ${esc((m.spec.spec || '').slice(0, 70))}…</span>` : ''}</td>
       <td>${wi === 0 ? esc(m.spec.deadline || m.spec.launch) : ''}</td>
       <td class="num">${wi === 0 ? esc(m.spec.price_text) : ''}</td>
       <td><b>${esc(x.wine.producer)}</b> — ${esc(x.wine.name)}</td>
@@ -3118,9 +3135,14 @@ function daysToDeadline(spec) {
   const dt = new Date(Date.UTC(y, mo - 1, da));
   return isNaN(dt) ? null : Math.round((dt - Date.now()) / 86400000);
 }
+// A wine is a real candidate for a tender only if it concretely meets at least one
+// requirement — or the tender has no checkable clauses at all (pure origin/price). This
+// stops thin-data leads that meet 0 of N requirements ("0✓ 1?/1") from flooding every card.
+function oppCands(m) { return m.matches.filter(x => x.passes >= 1 || x.total === 0); }
 function opportunityScore(m) {
-  const n = m.matches.length;
-  const nIntro = m.matches.filter(isIntroOpp).length;
+  const cands = oppCands(m);
+  const n = cands.length;
+  const nIntro = cands.filter(isIntroOpp).length;
   const fobEur = m.fob ? m.fob.eur : 0;
   const dtd = daysToDeadline(m.spec);
   const introPts = nIntro * 3, candPts = (n - nIntro);
@@ -3134,7 +3156,7 @@ function opportunityScore(m) {
 //   confirmed  — share of tender requirements actually met (pass) vs still unknown for the candidates
 //   repKnown   — share of candidates whose NO representation is confirmed (live catalog / verified)
 function datasetStrength(m) {
-  const cs = m.matches;
+  const cs = oppCands(m);
   if (!cs.length) return { level: 'low', pct: 0, sourced: 0, total: 0, confirmed: 0, rep: 0 };
   let prov = 0, passN = 0, denN = 0, repK = 0, sourced = 0;
   for (const x of cs) {
@@ -3170,10 +3192,10 @@ function renderOpportunities() {
   const list = $('oppList'); if (!list) return;
   // facet selects
   const specC = [...new Set(SPECS.map(s => s.country).filter(Boolean))].sort();
-  fillSelect('ofCountry', specC, OPPFILT.country);
+  fillSelect('ofCountry', specC, OPPFILT.country, dispCountry);
   const mainOpts = [...new Set(SPECS.map(s => mainCat(s)).filter(Boolean))].map(c => [c, mainDisp(c)]).sort((a, b) => a[1].localeCompare(b[1]));
   fillSelValueLabel('ofMain', mainOpts, OPPFILT.main);
-  let rows = MARKET.filter(m => m.matches.length)
+  let rows = MARKET.filter(m => oppCands(m).length)
     .map(m => ({ m, st: datasetStrength(m), ...opportunityScore(m) }))
     .filter(r => {
       if (OPPFILT.country && r.m.spec.country !== OPPFILT.country) return false;
@@ -3192,7 +3214,7 @@ function renderOpportunities() {
   const maxScore = rows[0].score || 1;
   list.innerHTML = rows.map((r, i) => {
     const m = r.m, s = m.spec;
-    const cands = m.matches.slice().sort((a, b) =>
+    const cands = oppCands(m).sort((a, b) =>
       (isIntroOpp(b) - isIntroOpp(a)) || (b.passes - a.passes) || (a.unknowns - b.unknowns));
     const dl = r.dtd != null ? (r.dtd >= 0 ? `${r.dtd}d` : L.oppNoDeadline) : L.oppNoDeadline;
     const fob = r.fobEur ? '€' + fmt(r.fobEur, 1) : '–';
@@ -3215,7 +3237,7 @@ function renderOpportunities() {
     return `<div class="opp" data-i="${i}">
       <div class="opp-head" onclick="this.parentNode.classList.toggle('open')">
         <span class="opp-rank">${i + 1}</span>
-        <span class="opp-title">${esc(s.ref)} — ${esc(groupLabel(s.group))}<small>${L.oppSeeks} ${esc(capGrapes(specGrapes(s).slice(0,3)) || mainDisp(mainCat(s)))}${L.oppFrom}${esc(s.country) || L.openOrigin} · ${esc(s.price_text)}</small></span>
+        <span class="opp-title">${esc(s.ref)} — ${esc(groupLabel(s.group))}<small>${L.oppSeeks} ${esc(capGrapes(specGrapes(s).slice(0,3)) || mainDisp(mainCat(s)))}${L.oppFrom}${esc(dispCountry(s.country)) || L.openOrigin} · ${esc(s.price_text)}</small></span>
         <span class="opp-metric" title="${esc(L.oppIntroTip)}"><span class="v">${r.nIntro}</span><span class="l">${L.oppIntroV}</span></span>
         <span class="opp-metric" title="${esc(L.oppCandTip)}"><span class="v">${r.n}</span><span class="l">${L.oppCandV}</span></span>
         <span class="opp-metric" title="${esc(L.oppFobTip)}"><span class="v">${fob}</span><span class="l">${L.oppFobV}</span></span>
@@ -3421,7 +3443,7 @@ function runMatchWine() {
       : x.priceOk === false ? `<span class="chip mid">${L.mwPriceHigh}</span>` : '';
     const clauses = `<span class="chip ${x.unknowns ? 'mid' : 'hi'}">${L.mwClausePass(x.passes)}${x.unknowns ? ' · ' + L.mwUnknown(x.unknowns) : ''}</span>`;
     return `<div class="opp"><div class="opp-head" style="cursor:default">
-      <span class="opp-title">${esc(s.ref)} — ${esc(groupLabel(s.group))}<small>${L.oppSeeks} ${esc(capGrapes(specGrapes(s).slice(0,4)) || mainDisp(mainCat(s)))}${L.oppFrom}${esc(s.country) || L.openOrigin} · ${esc(s.price_text)}</small></span>
+      <span class="opp-title">${esc(s.ref)} — ${esc(groupLabel(s.group))}<small>${L.oppSeeks} ${esc(capGrapes(specGrapes(s).slice(0,4)) || mainDisp(mainCat(s)))}${L.oppFrom}${esc(dispCountry(s.country)) || L.openOrigin} · ${esc(s.price_text)}</small></span>
       <span style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">${need} ${pf} ${clauses}</span>
       </div><div class="opp-body" style="display:block;padding-top:0">
       <div class="oppwhy">${L.mwWhy(x.passes, x.unknowns, x.total, h.fob ? fmt(h.fob.eur, 1) : null, h.compet)}${h.compet <= 2 ? ` <b style="color:var(--good-text)">${L.mwFirstMover}.</b>` : ''}</div>

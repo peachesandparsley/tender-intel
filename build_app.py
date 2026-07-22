@@ -55,9 +55,15 @@ def load_plans():
             continue
         seen.add(yh)
         specs = json.load(open(f, encoding="utf-8"))
-        for sp in specs:
+        y, h = plan_year_half(f)
+        for i, sp in enumerate(specs):
             if sp.get("country"):
                 sp["country"] = canon_country(sp["country"])
+            # Some editions (e.g. the Norwegian 2027-2 sheet) leave the reference column
+            # blank. ref is the app's stable identity for a tender (shortlist keys, titles),
+            # so synthesise a deterministic one per row when it's missing.
+            if not str(sp.get("ref") or "").strip():
+                sp["ref"] = f"{y}-{h}#{i + 1:03d}"
         plans[plan_label(f) + (" (live)" if not plans else "")] = specs
     return plans
 
