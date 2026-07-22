@@ -1,0 +1,55 @@
+name: Fetch Vinmonopolet launch plans
+
+# Downloads Vinmonopolet's published launch plans (the tender documents) and parses them
+# into specs_*.json, which build_app.py auto-discovers. Runs on the GitHub runner, which
+# can reach vinmonopolet.no (the repo's editing sandbox cannot).
+#
+# The site is a SPA, so auto-extracting the .xlsx links from a page's HTML is best-effort.
+# The reliable path: paste the direct .xlsx download links (right-click → copy link on the
+# archive page) into plan_urls.txt, commit, and this job parses them.
+
+on:
+  schedule:
+    - cron: "0 5 1 * *"    # monthly, the 1st at 05:00 UTC
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: launch-plans
+  cancel-in-progress: false
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Fetch + parse launch plans (plan_urls.txt + known pages)
+        run: |
+          pip install --quiet openpyxl
+          python3 fetch_launch_plans.py || echo "::warning::fetch found no new plans (pages may be client-rendered — add direct .xlsx URLs to plan_urls.txt)"
+
+      - name: Rebuild the app if new plans landed
+        run: |
+          if git status --porcelain -- 'specs_*.json' | grep -q .; then
+            npm pack xlsx@0.18.5 >/dev/null 2>&1 && tar xzf xlsx-0.18.5.tgz
+            python3 build_app.py
+          fi
+
+      - name: Commit new plans + app if changed
+        run: |
+          if git status --porcelain -- 'specs_*.json' index.html | grep -q .; then
+            git config user.name "launch-plan-bot"
+            git config user.email "actions@users.noreply.github.com"
+            git add specs_*.json index.html
+            git commit -m "Add Vinmonopolet launch plans ($(date -u +%Y-%m-%d))"
+            git push
+          else
+            echo "No new launch plans."
+          fi

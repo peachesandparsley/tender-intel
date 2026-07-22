@@ -197,19 +197,153 @@
   .ev-med { background: var(--warn, #d8922a); }
   .ev-low { background: var(--muted, #9aa0ab); }
   .opp-metric .v.ev { font-size: 12.5px; }
+
+  /* ======================= visual refresh + responsive ======================= */
+  body.viz-root { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+  .wrap { max-width: 1160px; }
+
+  /* --- header as a clean top bar --- */
+  header { margin-bottom: 10px; }
+  .topbar { display: flex; align-items: flex-start; justify-content: space-between; gap: 14px 18px; flex-wrap: wrap; }
+  .brand { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; min-width: 0; }
+  header h1 { font-size: 26px; margin: 0; line-height: 1.1; }
+  .plan-pick { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px 3px 12px;
+    border: 1px solid var(--border); border-radius: 999px; background: var(--surface-1); cursor: pointer; }
+  .plan-pick .plan-label { margin: 0; }
+  #planSelect { font: inherit; font-size: 12.5px; border: none; background: transparent; font-weight: 600;
+    color: var(--text-primary); cursor: pointer; padding: 2px 2px; max-width: 160px; }
+  .controls { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .ctl-btn { font: inherit; font-size: 12.5px; padding: 6px 13px; border-radius: 999px; cursor: pointer;
+    border: 1px solid var(--border); background: var(--surface-1); color: var(--text-secondary);
+    transition: border-color .12s, color .12s; }
+  .ctl-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .ctl-input { font: inherit; font-size: 12.5px; padding: 6px 13px; border-radius: 999px; width: 128px;
+    border: 1px solid var(--border); background: var(--surface-1); color: var(--text-secondary); }
+  header p { margin: 12px 0 0; max-width: 760px; }
+
+  /* --- nav --- */
+  nav { gap: 5px; margin: 16px 0 20px; padding-bottom: 0; border-bottom: none; }
+  nav button { font-size: 13px; padding: 7px 15px; transition: background .12s, color .12s, border-color .12s; }
+  nav button:hover:not(.on) { border-color: var(--accent); color: var(--accent); }
+  nav button.on { box-shadow: 0 2px 9px -3px color-mix(in oklab, var(--accent) 55%, transparent); }
+
+  /* --- unified focus ring --- */
+  input:focus-visible, select:focus-visible, textarea:focus-visible,
+  .btn:focus-visible, nav button:focus-visible, .ctl-btn:focus-visible, .filters button:focus-visible,
+  .ctl-input:focus, #planSelect:focus, #mwCountry:focus {
+    outline: none; border-color: var(--accent);
+    box-shadow: 0 0 0 3px color-mix(in oklab, var(--accent) 20%, transparent); }
+  input, select { transition: border-color .12s, box-shadow .12s; }
+
+  /* --- buttons --- */
+  .btn { transition: filter .12s, transform .05s; box-shadow: 0 1px 2px rgba(0,0,0,.06); white-space: nowrap; }
+  .btn:hover { filter: brightness(1.07); }
+  /* structured form controls (replace free text) */
+  .checkrow { display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: center; padding-top: 3px; }
+  .checkrow label { display: inline-flex; align-items: center; gap: 5px; font-size: 13px;
+    color: var(--text-primary); cursor: pointer; }
+  .checkrow input[type=checkbox] { accent-color: var(--accent); width: 15px; height: 15px; }
+  .chiptoggle { display: inline-flex; align-items: center; gap: 5px; padding: 4px 11px; border-radius: 999px;
+    border: 1px solid var(--border); background: var(--surface-1); font-size: 12.5px; cursor: pointer;
+    color: var(--text-secondary); user-select: none; transition: border-color .12s, background .12s, color .12s; }
+  .chiptoggle input { position: absolute; opacity: 0; pointer-events: none; }
+  .chiptoggle:has(input:checked) { border-color: var(--accent); color: #fff;
+    background: var(--accent); font-weight: 600; }
+  .fieldlabel { display: block; font-size: 11.5px; color: var(--muted); margin-bottom: 3px; }
+  /* clickable producer / grape → map spotlight */
+  .clk-prod { cursor: pointer; }
+  .clk-prod:hover { color: var(--accent); text-decoration: underline; }
+  .gtok { cursor: pointer; display: inline-block; border-radius: 5px; padding: 0 3px; }
+  .gtok:hover { background: color-mix(in oklab, var(--accent) 12%, transparent); color: var(--accent); }
+  .spotbar { display: inline-flex; align-items: center; gap: 9px; flex-wrap: wrap;
+    background: color-mix(in oklab, var(--accent) 10%, var(--surface-1));
+    border: 1px solid color-mix(in oklab, var(--accent) 30%, var(--border));
+    border-radius: 999px; padding: 6px 8px 6px 14px; font-size: 12.5px; color: var(--text-secondary); }
+  .spotbar + .spotbar { margin-left: 8px; }
+  .spotbar b { color: var(--text-primary); }
+  .spotbar .x { cursor: pointer; border: none; background: none; color: var(--muted); font-size: 16px;
+    line-height: 1; padding: 0 4px; border-radius: 50%; }
+  .spotbar .x:hover { color: var(--accent); }
+  .graperows { display: flex; flex-direction: column; gap: 6px; padding-top: 3px; }
+  .graperow { display: flex; gap: 8px; }
+  .graperow select { flex: 1; min-width: 0; }
+  .graperow .mwlp { width: 76px; flex: 0 0 auto; }
+  .graperow select, .graperow input { font: inherit; font-size: 13px; padding: 6px 9px; border-radius: 8px;
+    border: 1px solid var(--border); background: var(--surface-1); color: var(--text-primary); }
+  /* opportunity metrics: stack value over label (was running together) */
+  .opp-metric .v, .opp-metric .l { display: block; }
+  .opp-metric .v { line-height: 1.15; }
+  .opp-metric .l { margin-top: 1px; }
+  .btn:active { transform: translateY(1px); }
+  .btn.ghost { box-shadow: none; }
+  .btn.ghost:hover { background: color-mix(in oklab, var(--accent) 8%, transparent); }
+  .chip { line-height: 1.5; }
+
+  /* --- data tables: scroll container with edge-shadow affordance --- */
+  .twrap { overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: 8px;
+    background:
+      linear-gradient(to right, var(--surface-1), color-mix(in oklab, var(--surface-1) 0%, transparent) 24px),
+      linear-gradient(to left, var(--surface-1), color-mix(in oklab, var(--surface-1) 0%, transparent) 24px) 100% 0,
+      linear-gradient(to right, rgba(60,45,30,.10), transparent 14px),
+      linear-gradient(to left, rgba(60,45,30,.10), transparent 14px) 100% 0;
+    background-repeat: no-repeat; background-size: 26px 100%, 26px 100%, 14px 100%, 14px 100%;
+    background-attachment: local, local, scroll, scroll; }
+  .twrap table { min-width: 560px; }
+  #breakdownTable { min-width: 0; }
+  .tile { transition: border-color .12s; }
+  .tile .v { line-height: 1.1; }
+
+  /* ======================= responsive ======================= */
+  @media (max-width: 860px) {
+    .charts-grid { grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap: 12px; }
+  }
+  @media (max-width: 640px) {
+    .wrap { padding: 14px 12px 40px; }
+    header h1 { font-size: 22px; }
+    header p { font-size: 13px; margin-top: 10px; }
+    .controls { width: 100%; }
+    .ctl-input { flex: 1 1 auto; width: auto; min-width: 0; }
+    /* nav → single swipeable, edge-to-edge row */
+    nav { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; gap: 6px;
+      margin: 14px -12px 16px; padding: 0 12px 2px; scroll-snap-type: x proximity;
+      -webkit-overflow-scrolling: touch; }
+    nav::-webkit-scrollbar { display: none; }
+    nav button { flex: 0 0 auto; scroll-snap-align: start; }
+    .card { padding: 14px; border-radius: 12px; }
+    .card h2 { font-size: 15px; }
+    .tabhelp { margin: -4px 0 14px; }
+    .tiles { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+    .tile { padding: 11px 12px; }
+    .tile .v { font-size: 20px; }
+    table { font-size: 12px; }
+    th, td { padding: 6px 7px; }
+    .twrap table { min-width: 520px; }
+    .rolepick { flex-direction: column; align-items: stretch; }
+    .rp-btn { min-width: 0; }
+    .opp-head { gap: 8px 10px; }
+    .opp-title { flex-basis: 100%; }
+    .opp-metric { min-width: 44px; }
+    .fob-out .tile { min-width: calc(50% - 5px); }
+  }
 </style>
 </head>
 <body class="viz-root">
 <div class="wrap">
   <header>
-    <button class="theme-toggle" data-i18n="themeToggle" onclick="toggleTheme()">lys/mørk</button>
-    <button class="theme-toggle" id="langToggle" style="margin-right:8px" onclick="switchLang()">English</button>
-    <input id="whoAmI" value="Espen (demo)" data-i18n-title="whoTitle" title="Brukes til å stemple hvem som lastet opp/endret data"
-      style="float:right;margin-right:8px;font:inherit;font-size:12px;padding:4px 10px;border-radius:999px;border:1px solid var(--border);background:var(--surface-1);color:var(--text-secondary);width:130px">
-
-    <h1>Tender Intelligence
-      <span class="plan-label" data-i18n="planLabel">Plan:</span><select id="planSelect" class="pill" data-i18n-title="planTitle" title="Bytt lanseringsplan — hele appen viser data fra planen du velger her" style="font:inherit;font-size:12px;background:var(--surface-1);color:var(--text-secondary);cursor:pointer;margin-left:4px"></select>
-    </h1>
+    <div class="topbar">
+      <div class="brand">
+        <h1>Tender Intelligence</h1>
+        <label class="plan-pick" data-i18n-title="planTitle" title="Bytt lanseringsplan — hele appen viser data fra planen du velger her">
+          <span class="plan-label" data-i18n="planLabel">Plan:</span>
+          <select id="planSelect"></select>
+        </label>
+      </div>
+      <div class="controls">
+        <input id="whoAmI" value="Espen (demo)" class="ctl-input" data-i18n-title="whoTitle" title="Brukes til å stemple hvem som lastet opp/endret data">
+        <button class="ctl-btn" id="langToggle" onclick="switchLang()">English</button>
+        <button class="ctl-btn" data-i18n="themeToggle" onclick="toggleTheme()">lys/mørk</button>
+      </div>
+    </div>
     <p data-i18n="subtitle">Nordiske monopolanbud · klausulmatching · FOB-kalkulator · produsentopplasting — alt kjører i denne filen, ingen server.</p>
   </header>
 
@@ -274,11 +408,20 @@
           <option value="rose" data-i18n="grpRose">Rosévin</option>
           <option value="sparkling white" data-i18n="grpSparklingWhite">Musserende, hvit</option>
           <option value="fortified" data-i18n="grpFortified">Sterkvin</option></select></div>
-        <div><label data-i18n="mwGrape">Hoveddrue</label><input id="mwGrape" list="mwGrapeList" data-i18n-ph="mwGrapePh" placeholder="f.eks. riesling"><datalist id="mwGrapeList"></datalist></div>
+        <div><label data-i18n="mwGrape">Hoveddrue</label><select id="mwGrape"></select></div>
         <div><label data-i18n="mwAbv">Alkohol (%)</label><input type="number" id="mwAbv" value="13" step="0.5"></div>
-        <div><label data-i18n="mwCert">Sertifisering</label><input id="mwCert" data-i18n-ph="mwCertPh" placeholder="organic, fairtrade…"></div>
         <div><label data-i18n="mwFob">Din FOB € (valgfritt)</label><input type="number" id="mwFob" step="0.5" data-i18n-ph="mwFobPh" placeholder="kjellerpris"></div>
         <div style="flex:0;min-width:150px"><label>&nbsp;</label><button class="btn" style="width:100%;padding:7px 10px" data-i18n="btnMatchRun" onclick="runMatchWine()">Finn anbud</button></div>
+        <div style="flex-basis:100%"><label data-i18n="mwCert">Sertifisering</label>
+          <div class="checkrow" id="mwCertRow">
+            <label class="chiptoggle"><input type="checkbox" class="mwcert" value="Organic"><span data-i18n="certOrganic">Økologisk</span></label>
+            <label class="chiptoggle"><input type="checkbox" class="mwcert" value="Biodynamic"><span data-i18n="certBiodynamic">Biodynamisk</span></label>
+            <label class="chiptoggle"><input type="checkbox" class="mwcert" value="Fairtrade"><span data-i18n="certFairtrade">Fairtrade</span></label>
+            <label class="chiptoggle"><input type="checkbox" class="mwcert" value="Vegan"><span data-i18n="certVegan">Vegansk</span></label>
+            <label class="chiptoggle"><input type="checkbox" class="mwcert" value="Sustainable"><span data-i18n="certSustainable">Bærekraftig</span></label>
+            <label class="chiptoggle"><input type="checkbox" class="mwcert" value="Kosher"><span data-i18n="certKosher">Kosher</span></label>
+          </div>
+        </div>
       </div>
       <p class="note" id="mwLeadPick" style="margin:8px 0 0"></p>
     </div>
@@ -296,8 +439,6 @@
         <div><label data-i18n="mwlWine">Vinnavn</label><input id="mwlName"></div>
         <div><label data-i18n="mwlFob">FOB € (fra kjeller) *</label><input type="number" id="mwlFob" step="0.5" data-i18n-ph="mwlFobPh" placeholder="f.eks. 4.20"></div>
         <div><label data-i18n="mwlVol">Volum (flasker tilgjengelig)</label><input type="number" id="mwlVol" step="1000" data-i18n-ph="mwlVolPh" placeholder="f.eks. 12000"></div>
-        <div><label data-i18n="mwlVintages">Årganger tilgjengelig</label><input id="mwlVintages" data-i18n-ph="mwlVintagesPh" placeholder="f.eks. 2023, 2024"></div>
-        <div><label data-i18n="mwlGrapes">Druesammensetning</label><input id="mwlGrapes" data-i18n-ph="mwlGrapesPh" placeholder="f.eks. riesling 100"></div>
         <div><label data-i18n="mwlSugar">Restsukker (g/l)</label><input type="number" id="mwlSugar" step="0.5"></div>
         <div><label data-i18n="mwlWood">Fatbruk</label><select id="mwlWood">
           <option value="" data-i18n="mwlWoodUnknown">—</option>
@@ -306,6 +447,16 @@
           <option value="barrel" data-i18n="mwlWoodBarrel">Fatgjæret / nytt eik</option></select></div>
         <div><label data-i18n="mwlWeight">Flaskevekt (g)</label><input type="number" id="mwlWeight" step="10" data-i18n-ph="mwlWeightPh" placeholder="tom flaske"></div>
         <div style="flex:0;min-width:160px"><label>&nbsp;</label><button class="btn" style="width:100%;padding:7px 10px" data-i18n="mwlSave" onclick="saveProducerProfile()">Lagre til databasen</button></div>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:14px 22px;margin-top:12px">
+        <div style="flex:1;min-width:230px">
+          <label class="fieldlabel" data-i18n="mwlVintages">Årganger tilgjengelig</label>
+          <div class="checkrow" id="mwlVintRow"></div>
+        </div>
+        <div style="flex:1;min-width:260px">
+          <label class="fieldlabel" data-i18n="mwlGrapes">Druesammensetning (drue + %)</label>
+          <div class="graperows" id="mwlGrapeRows"></div>
+        </div>
       </div>
       <div id="mwlResult" style="margin-top:12px"></div>
     </div>
@@ -355,12 +506,12 @@
         <button data-f="match" data-i18n="fMatch">Med kvalifiserte viner</button>
         <button data-f="wine" data-i18n="fWine">Kun vin</button>
       </div>
-      <table id="specTable"><thead><tr>
+      <div class="twrap"><table id="specTable"><thead><tr>
         <th data-sort="ref" data-i18n="thRef">Ref</th><th data-sort="launch" data-i18n="thLaunch">Lansering</th><th data-sort="sel" data-i18n="thSel">Utvalg</th>
         <th data-sort="group" data-i18n="thGroup">Gruppe</th><th data-sort="country" data-i18n="thOrigin">Opprinnelse</th>
         <th data-i18n="thSpec">Spesifikasjon</th><th class="num" data-sort="price" data-i18n="thPriceBand">Prisbånd</th>
         <th class="num" data-sort="fob" data-i18n="thNeedFob">Trenger ≤ FOB</th><th class="num" data-sort="hits" data-i18n="thHits">Treff</th>
-      </tr></thead><tbody></tbody></table>
+      </tr></thead><tbody></tbody></table></div>
       <p class="note" data-i18n="noteSpecTable">Klikk en rad for klausulene. «Trenger ≤ FOB» = høyeste produsentpris fra kjeller (før frakt, avgifter og margin) som fortsatt treffer prisbåndets tak, gitt kalkulatorens forutsetninger.</p>
     </div>
   </section>
@@ -377,9 +528,9 @@
         <button data-mf="all" data-i18n="mfShowAll">Vis alle</button>
       </div>
       <p class="note" id="marketHiddenNote" style="margin:0 0 6px"></p>
-      <table id="marketTable"><thead><tr>
+      <div class="twrap"><table id="marketTable"><thead><tr>
         <th style="width:40%" data-i18n="thCandidate">Kandidatvin</th><th data-i18n="thAssessment">Vurdering</th>
-      </tr></thead><tbody></tbody></table>
+      </tr></thead><tbody></tbody></table></div>
     </div>
   </section>
 
@@ -409,7 +560,7 @@
         <div class="tile"><div class="v" id="outFobEur">–</div><div class="l" data-i18n="outFobEurL">FOB i euro (€)</div></div>
         <div class="tile"><div class="v" id="outVerdict">–</div><div class="l" data-i18n="outVerdictL">Vurdering</div></div>
       </div>
-      <table id="breakdownTable"><thead><tr><th data-i18n="thComponent">Komponent</th><th class="num" data-i18n="thKr">kr</th><th class="num" data-i18n="thShare">Andel</th></tr></thead><tbody></tbody></table>
+      <div class="twrap"><table id="breakdownTable"><thead><tr><th data-i18n="thComponent">Komponent</th><th class="num" data-i18n="thKr">kr</th><th class="num" data-i18n="thShare">Andel</th></tr></thead><tbody></tbody></table></div>
       <footer data-i18n="calcFooter">Alkoholavgift 5,41 kr/vol%/l (4,7–22 %) · avanse 10,82 kr/l + 21 % (knekk 133,70, tak 250) · mva 25 %. Verifisert mot Vinmonopolets priseksempel (199,90 kr → grossist 80,67 kr).</footer>
     </div>
   </section>
@@ -428,15 +579,16 @@
         <div style="flex:1.4"><label data-i18n="lblText">Fritekst</label><input id="wfQ" data-i18n-ph="phWineText" placeholder="produsent, vin, drue…"></div>
         <div style="min-width:90px;flex:0"><label>&nbsp;</label><button class="btn ghost" data-i18n="btnReset" style="width:100%;padding:5px 8px" onclick="resetWineFilters()">Nullstill</button></div>
       </div>
+      <div id="wineSpot" style="margin:8px 0 2px"></div>
       <svg id="wineMapSvg" style="width:100%;display:block;border-radius:10px;margin:6px 0 4px"></svg>
-      <p class="note" style="margin:0 0 8px"><span data-i18n="noteWineMapClick">Klikk et land på kartet for å filtrere listen; klikk igjen for å oppheve. </span><span id="wineFilterCount"></span></p>
+      <p class="note" style="margin:0 0 8px"><span data-i18n="noteWineMapClick">Klikk et land på kartet for å filtrere. Klikk en <b>produsent</b> eller <b>drue</b> i tabellen for å se opprinnelsen på kartet. </span><span id="wineFilterCount"></span></p>
       <p>
         <button class="btn ghost" data-i18n="btnExportXlsx" onclick="exportWinesXlsx()">Eksporter (xlsx)</button>
         <label class="btn ghost" style="cursor:pointer"><span data-i18n="btnImportXlsx">Importer (xlsx)</span><input type="file" id="wineXlsxIn" accept=".xlsx,.xls" style="display:none"></label>
         <button class="btn ghost" data-i18n="btnExportJson" onclick="exportWines()">Eksporter (JSON)</button>
         <label class="btn ghost" style="cursor:pointer"><span data-i18n="btnImportJson">Importer (JSON)</span><input type="file" id="wineJsonIn" accept=".json" style="display:none"></label>
       </p>
-      <table id="wineTable"><thead><tr>
+      <div class="twrap"><table id="wineTable"><thead><tr>
         <th data-sort="producer" data-i18n="thProducer">Produsent</th><th data-sort="name" data-i18n="thWine">Vin</th><th data-sort="country" data-i18n="thCountry">Land</th>
         <th data-sort="type" data-i18n="thTypeCol">Type</th><th data-i18n="thGrapes">Druer</th>
         <th class="num" data-sort="sugar" data-i18n-title="ttSugar" title="sukker g/l" data-i18n="thSugar">Sukker</th>
@@ -445,7 +597,7 @@
         <th class="num" data-sort="fob" data-i18n="thFob">FOB €</th><th data-i18n="thCert">Sert.</th><th data-sort="rep" data-i18n="thRepNo">Rep. NO</th>
         <th data-sort="updated" data-i18n-title="ttUpdated" title="hvem som la inn/endret raden, og når" data-i18n="thUpdated">Oppdatert</th>
         <th data-sort="quality" data-i18n-title="ttQuality" title="verifiseringsstatus per felt — klikk raden for detaljer" data-i18n="thQuality">Datakvalitet</th>
-      </tr></thead><tbody></tbody></table>
+      </tr></thead><tbody></tbody></table></div>
       <p class="note" data-i18n="noteWineLegend">✓ verifisert mot kilde · ◦ offentlig dokumentert (lenke ikke arkivert) · ~ estimat som venter bekreftelse · ? mangler. Klikk en rad for felt-for-felt-status. I produksjon fylles ✓ av katalogsync, registeroppslag, produsentens tech sheet/analysebevis og parts-bekreftelser med tidsstempel — og verifisering eldes: en ✓ eldre enn 12 mnd faller tilbake til ◦.</p>
     </div>
   </section>
@@ -463,10 +615,10 @@
     </div>
     <div class="card">
       <h2><span data-i18n="portMatchPre">Anbud i </span><span id="portPlanName"></span><span data-i18n="portMatchPost"> som porteføljen din kan vinne</span></h2>
-      <table id="portMatchTable"><thead><tr>
+      <div class="twrap"><table id="portMatchTable"><thead><tr>
         <th data-i18n="thTender">Anbud</th><th data-i18n="thDeadline">Frist</th><th class="num" data-i18n="thPriceBand">Prisbånd</th><th data-i18n="thYourWine">Din vin</th>
         <th class="num" data-i18n="thClauses">Klausuler</th><th data-i18n="thPrice">Pris</th>
-      </tr></thead><tbody></tbody></table>
+      </tr></thead><tbody></tbody></table></div>
       <p class="note" id="portMatchNote"></p>
     </div>
   </section>
@@ -485,15 +637,39 @@
         <div><label data-i18n="lblLand">Land</label><select id="kfCountry"><option value="" data-i18n="optAllCountries">Alle land</option></select></div>
         <div style="flex:1.4"><label data-i18n="lblText">Fritekst</label><input id="kfQ" data-i18n-ph="phProducerName" placeholder="produsentnavn…"></div>
       </div>
-      <table id="katTable"><thead><tr>
+      <div class="twrap"><table id="katTable"><thead><tr>
         <th data-sort="producer" data-i18n="thProducer">Produsent</th><th data-sort="country" data-i18n="thCountry">Land</th><th class="num" data-sort="wines" data-i18n="thWinesCount">Viner</th>
         <th data-sort="no" data-i18n="thNO">Norge</th><th data-sort="se" data-i18n="thSE">Sverige</th><th data-sort="fi" data-i18n="thFI">Finland</th>
-      </tr></thead><tbody></tbody></table>
+      </tr></thead><tbody></tbody></table></div>
     </div>
   </section>
 
   <!-- ANALYSE -->
   <section class="tab" id="tab-analyse">
+    <div class="card">
+      <h2 data-i18n="h2Gap">Gap-analyse — udekket etterspørsel å målrette</h2>
+      <p class="note" style="margin:0 0 10px" data-i18n="noteGap">Vinmonopolet publiserer ikke hvilke anbud som ble fylt. Men når samme opprinnelse × drue × stil etterspørres <b>plan etter plan</b>, er det et sterkt tegn på kronisk underdekket etterspørsel — lot som ikke fikk gode nok tilbud og lyses ut på nytt. Denne tabellen rangerer slike gap: hvor ofte noe etterspørres, mot hvor få kjente viner som kvalifiserer. Høy gap-score = mye/gjentatt etterspørsel og lite kjent tilbud = der innsats gir størst potensial.</p>
+      <div class="tiles" id="gapTiles"></div>
+      <div class="filters" id="gapFilters" style="margin-top:12px">
+        <button data-gf="all" class="on" data-i18n="gapAll">Alle gap</button>
+        <button data-gf="open" data-i18n="gapStillOpen" data-i18n-title="gapStillOpenTip" title="Gjentatt OG fortsatt etterspurt i nyeste plan">Fortsatt åpne</button>
+        <button data-gf="unmet" data-i18n="gapUnmet">Udekket (ingen kjent vin)</button>
+      </div>
+      <div class="dimbar" style="margin-bottom:6px">
+        <div><label data-i18n="lblGeo">Geografi</label><select id="gfCountry"><option value="" data-i18n="optAllCountries">Alle land</option></select></div>
+        <div><label data-i18n="gapStyleLabel">Stil</label><select id="gfStyle"><option value="" data-i18n="gapAllStyles">Alle stiler</option></select></div>
+      </div>
+      <div class="twrap"><table id="gapTable"><thead><tr>
+        <th data-i18n="gthOrigin">Opprinnelse</th><th data-i18n="gthStyle">Stil</th><th data-i18n="gthGrape">Drue</th>
+        <th class="num" data-i18n="gthPlans" data-i18n-title="gthPlansTip" title="I hvor mange planer etterspurt">Planer</th>
+        <th class="num" data-i18n="gthLastAsked" data-i18n-title="gapLastAskedTip" title="Nyeste plan der dette ble etterspurt">Sist etterspurt</th>
+        <th class="num" data-i18n="gthReq">Forespørsler</th><th class="num" data-i18n="gthPrice">~kr</th><th class="num" data-i18n="gthCert">Sert.%</th>
+        <th class="num" data-i18n="gthSupply" data-i18n-title="gthSupplyTip" title="Kjente viner i basen som kvalifiserer">Kjente viner</th>
+        <th class="num" data-i18n="gthOpen" data-i18n-title="gthOpenTip" title="Av disse: urepresentert i Norge">Åpne</th>
+        <th class="num" data-i18n="gthScore">Gap-score</th>
+      </tr></thead><tbody></tbody></table></div>
+      <p class="note" id="gapNote" style="margin:6px 0 0"></p>
+    </div>
     <div class="card">
       <h2 data-i18n="h2Ana">Historisk analyse på tvers av lanseringsplaner</h2>
       <p class="note" style="margin:0 0 10px" data-i18n="noteAna">Gjentakelsesmønstre over alle innlastede planer — hvilke opprinnelser og druer Vinmonopolet ber om igjen og igjen, og hvor prisbåndene ligger. Dette er datagrunnlaget som vokser med hver plan.</p>
@@ -584,7 +760,7 @@ const I18N = {
     oppCandV: 'kandidater', oppIntroV: 'introduksjoner', oppFobV: 'trenger ≤ FOB', oppDeadV: 'frist',
     oppScoreV: 'score', oppSeeks: 'søker', oppFrom: ' fra ',
     oppSummary: n => `${n} anbud med kvalifiserte viner i denne planen`,
-    btnDeadlineIcs: 'Fristvarsler (kalender)',
+    btnDeadlineIcs: 'Fristvarsler',
     digestTitle: n => `${n} anbud i shortlist — kommende frister:`,
     digestHint: 'Last ned kalendervarsler (.ics) med påminnelse 7 og 1 dag før frist. I produksjon sendes de samme varslene på e-post.',
     oppNoShortlist: 'Stjernemerk noen viner først (★) for å bygge en shortlist.',
@@ -602,6 +778,9 @@ const I18N = {
     mwColour: 'Farge', mwGrape: 'Hoveddrue', mwGrapePh: 'f.eks. riesling',
     mwPrice: 'Målpris (hylle, kr)', mwAbv: 'Alkohol (%)', mwCert: 'Sertifisering', mwCertPh: 'organic, fairtrade…',
     mwFob: 'Din FOB € (valgfritt)', mwFobPh: 'kjellerpris', btnMatchRun: 'Finn anbud',
+    mwGrapePick: 'Velg drue…', mwlNV: 'Uten årgang (NV)',
+    certOrganic: 'Økologisk', certBiodynamic: 'Biodynamisk', certFairtrade: 'Fairtrade',
+    certVegan: 'Vegansk', certSustainable: 'Bærekraftig', certKosher: 'Kosher',
     mwLeadPre: 'Eller test en ekte lead fra databasen: ',
     mwResultH: n => n ? `Vinen din kvalifiserer til ${n} anbud` : 'Ingen anbud matcher ennå',
     mwTileMatches: 'anbud den kan vinne', mwTileIntro: 'der du er urepresentert', mwTileBest: 'beste marginrom €',
@@ -674,6 +853,11 @@ const I18N = {
     sampleBadge: 'lead', sampleBadgeTitle: 'Seedet lead — ekte offentlige data der de finnes, men uverifisert for NO og venter på produsentbekreftelse',
     lblCert: 'Sertifisering', lblStatusNO: 'Status Norge', phWineText: 'produsent, vin, drue…',
     noteWineMapClick: 'Klikk et land på kartet for å filtrere listen; klikk igjen for å oppheve. ',
+    spotProdTip: 'Klikk for å se hvor på kartet produsenten har viner fra',
+    spotGrapeTip: 'Klikk for å se hvor druen brukes på kartet',
+    spotClear: 'Fjern',
+    spotProd: (n, nc, cs) => `${n} vin${n === 1 ? '' : 'er'} fra ${nc} land: ${cs}`,
+    spotGrape: (n, nc, cs) => `brukt i ${n} vin${n === 1 ? '' : 'er'} fra ${nc} land: ${cs}`,
     btnExportXlsx: 'Eksporter (xlsx)', btnImportXlsx: 'Importer (xlsx)', btnExportJson: 'Eksporter (JSON)', btnImportJson: 'Importer (JSON)',
     thProducer: 'Produsent', thWine: 'Vin', thCountry: 'Land', thTypeCol: 'Type', thGrapes: 'Druer',
     thSugar: 'Sukker', ttSugar: 'sukker g/l', thProfile: 'Profil F/F/G',
@@ -692,6 +876,20 @@ const I18N = {
     katAll: 'Alle', katOpenNO: 'Åpne i Norge', katTakenNO: 'Representert i Norge',
     lblLand: 'Land', phProducerName: 'produsentnavn…',
     thWinesCount: 'Viner', thNO: 'Norge', thSE: 'Sverige', thFI: 'Finland',
+    h2Gap: 'Gap-analyse — udekket etterspørsel å målrette',
+    noteGap: 'Vinmonopolet publiserer ikke hvilke anbud som ble fylt — men planene selv skiller de virkelige gapene fra de løste: en klynge som etterspørres <b>gjentatte ganger OG fortsatt i den nyeste planen</b> er ennå ikke dekket (de spør fordi de ikke fikk gode nok tilbud); en som var gjentatt men <b>falt ut</b> av de siste planene ble trolig dekket til slutt. «Fortsatt åpne» er premien. Tabellen rangerer på gjentakelse + at det fremdeles etterspørres, mot hvor få kjente viner som kvalifiserer.',
+    gapAll: 'Alle gap', gapStillOpen: 'Fortsatt åpne', gapStillOpenTip: 'Gjentatt OG fortsatt etterspurt i nyeste plan — altså ennå ikke dekket', gapUnmet: 'Udekket (ingen kjent vin)',
+    gapStyleLabel: 'Stil', gapAllStyles: 'Alle stiler', gapAnyStyle: 'Vin', gapAnyGrape: 'drue uspesifisert',
+    gapTileClusters: 'etterspørselsklynger', gapTilePersistent: 'fortsatt åpne (gjentatt + nyeste plan)', gapTileUnmet: 'udekket i basen',
+    gthOrigin: 'Opprinnelse', gthStyle: 'Stil', gthGrape: 'Drue', gthPlans: 'Planer', gthPlansTip: 'I hvor mange planer etterspurt',
+    gthLastAsked: 'Sist etterspurt', gapLastAskedTip: 'Nyeste plan der dette ble etterspurt',
+    gthReq: 'Forespørsler', gthPrice: '~kr', gthCert: 'Sert.%', gthSupply: 'Kjente viner', gthSupplyTip: 'Kjente viner i basen som kvalifiserer',
+    gthOpen: 'Åpne', gthOpenTip: 'Av disse: urepresentert i Norge', gthScore: 'Gap-score',
+    gapUnmetBadge: 'udekket', gapUnmetTip: 'Ingen kjent vin i basen kvalifiserer — helt åpent',
+    gapOpenBadge: 'fortsatt åpen', gapOpenTip: 'Gjentatt OG fortsatt etterspurt i nyeste plan — ennå ikke dekket',
+    gapResolvedBadge: 'dekket senere?', gapResolvedTip: 'Gjentatt før, men falt ut av de nyeste planene — Vinmonopolet sluttet å be om det, trolig dekket. Rangeres lavere.',
+    gapEmpty: 'Ingen klynger i dette filteret.',
+    gapNote: (n, np, latest) => `${n} klynger · på tvers av ${np} planer (nyeste: ${latest}). «Fortsatt åpen» = gjentatt OG fremdeles etterspurt i nyeste plan; «dekket senere?» falt ut og telles lavere. Gap-score = forespørsler × antall planer ÷ (kjente viner + 1), nedvektet hvis ikke lenger etterspurt. «Kjente viner» = denne basen (delvis utvalg).`,
     h2Ana: 'Historisk analyse på tvers av lanseringsplaner',
     noteAna: 'Gjentakelsesmønstre over alle innlastede planer — hvilke opprinnelser og druer Vinmonopolet ber om igjen og igjen, og hvor prisbåndene ligger. Dette er datagrunnlaget som vokser med hver plan.',
     anaCh1: 'Anbud per land per plan', anaCh2: 'Mest etterspurte druer per plan',
@@ -792,7 +990,7 @@ const I18N = {
     oppCandV: 'candidates', oppIntroV: 'introductions', oppFobV: 'needs ≤ FOB', oppDeadV: 'deadline',
     oppScoreV: 'score', oppSeeks: 'seeks', oppFrom: ' from ',
     oppSummary: n => `${n} tenders with qualified wines in this plan`,
-    btnDeadlineIcs: 'Deadline reminders (calendar)',
+    btnDeadlineIcs: 'Deadline alerts',
     digestTitle: n => `${n} shortlisted tenders — upcoming deadlines:`,
     digestHint: 'Download calendar reminders (.ics) with alerts 7 and 1 day before the deadline. In production the same alerts are emailed.',
     oppNoShortlist: 'Star some wines first (★) to build a shortlist.',
@@ -810,6 +1008,9 @@ const I18N = {
     mwColour: 'Colour', mwGrape: 'Main grape', mwGrapePh: 'e.g. riesling',
     mwPrice: 'Target shelf price (kr)', mwAbv: 'Alcohol (%)', mwCert: 'Certification', mwCertPh: 'organic, fairtrade…',
     mwFob: 'Your FOB € (optional)', mwFobPh: 'ex-cellar', btnMatchRun: 'Find tenders',
+    mwGrapePick: 'Select grape…', mwlNV: 'Non-vintage (NV)',
+    certOrganic: 'Organic', certBiodynamic: 'Biodynamic', certFairtrade: 'Fairtrade',
+    certVegan: 'Vegan', certSustainable: 'Sustainable', certKosher: 'Kosher',
     mwLeadPre: 'Or test a real lead from the database: ',
     mwResultH: n => n ? `Your wine qualifies for ${n} tenders` : 'No tenders match yet',
     mwTileMatches: 'tenders it can win', mwTileIntro: 'where you are unrepresented', mwTileBest: 'best margin headroom €',
@@ -881,7 +1082,12 @@ const I18N = {
     sampleBannerShort: '<b>Sample/lead:</b> badged wines are AI examples or real-but-unverified leads from Nordic monopoly catalogs. FOB/volume left blank pending producer confirmation.',
     sampleBadge: 'lead', sampleBadgeTitle: 'Seeded lead — real public data where available, but unverified for NO and pending producer confirmation',
     lblCert: 'Certification', lblStatusNO: 'Status Norway', phWineText: 'producer, wine, grape…',
-    noteWineMapClick: 'Click a country on the map to filter the list; click again to clear. ',
+    noteWineMapClick: 'Click a country on the map to filter. Click a <b>producer</b> or <b>grape</b> in the table to spotlight its origins on the map. ',
+    spotProdTip: 'Click to spotlight where this producer sources from',
+    spotGrapeTip: 'Click to spotlight where this grape is used',
+    spotClear: 'Clear',
+    spotProd: (n, nc, cs) => `${n} wine${n === 1 ? '' : 's'} from ${nc} countr${nc === 1 ? 'y' : 'ies'}: ${cs}`,
+    spotGrape: (n, nc, cs) => `used in ${n} wine${n === 1 ? '' : 's'} from ${nc} countr${nc === 1 ? 'y' : 'ies'}: ${cs}`,
     btnExportXlsx: 'Export (xlsx)', btnImportXlsx: 'Import (xlsx)', btnExportJson: 'Export (JSON)', btnImportJson: 'Import (JSON)',
     thProducer: 'Producer', thWine: 'Wine', thCountry: 'Country', thTypeCol: 'Type', thGrapes: 'Grapes',
     thSugar: 'Sugar', ttSugar: 'sugar g/l', thProfile: 'Profile B/F/T',
@@ -900,6 +1106,20 @@ const I18N = {
     katAll: 'All', katOpenNO: 'Open in Norway', katTakenNO: 'Represented in Norway',
     lblLand: 'Country', phProducerName: 'producer name…',
     thWinesCount: 'Wines', thNO: 'Norway', thSE: 'Sweden', thFI: 'Finland',
+    h2Gap: 'Gap analysis — under-served demand to target',
+    noteGap: 'Vinmonopolet does not publish which tenders were filled — but the plans themselves separate the real gaps from the resolved ones: a cluster requested <b>repeatedly AND still in the latest plan</b> is not covered yet (they keep asking because they did not get good enough offers); one that recurred but <b>dropped out</b> of the recent plans was probably covered eventually. "Still open" is the prize. The table ranks on recurrence + still-being-asked, against how few known wines qualify.',
+    gapAll: 'All gaps', gapStillOpen: 'Still open', gapStillOpenTip: 'Recurring AND still requested in the latest plan — i.e. not covered yet', gapUnmet: 'Unmet (no known wine)',
+    gapStyleLabel: 'Style', gapAllStyles: 'All styles', gapAnyStyle: 'Wine', gapAnyGrape: 'grape unspecified',
+    gapTileClusters: 'demand clusters', gapTilePersistent: 'still open (recurring + latest plan)', gapTileUnmet: 'unmet in the database',
+    gthOrigin: 'Origin', gthStyle: 'Style', gthGrape: 'Grape', gthPlans: 'Plans', gthPlansTip: 'In how many plans requested',
+    gthLastAsked: 'Last asked', gapLastAskedTip: 'The most recent plan that requested this',
+    gthReq: 'Requests', gthPrice: '~kr', gthCert: 'Cert.%', gthSupply: 'Known wines', gthSupplyTip: 'Known wines in the database that qualify',
+    gthOpen: 'Open', gthOpenTip: 'Of those: unrepresented in Norway', gthScore: 'Gap score',
+    gapUnmetBadge: 'unmet', gapUnmetTip: 'No known wine in the database qualifies — wide open',
+    gapOpenBadge: 'still open', gapOpenTip: 'Recurring AND still requested in the latest plan — not covered yet',
+    gapResolvedBadge: 'covered later?', gapResolvedTip: 'Recurred before, but dropped out of the latest plans — Vinmonopolet stopped asking, so probably covered. Ranked lower.',
+    gapEmpty: 'No clusters under this filter.',
+    gapNote: (n, np, latest) => `${n} clusters · across ${np} plans (latest: ${latest}). "Still open" = recurring AND still requested in the latest plan; "covered later?" dropped out and is weighted down. Gap score = requests × number of plans ÷ (known wines + 1), discounted if no longer requested. "Known wines" = this database (a partial set).`,
     h2Ana: 'Historical analysis across launch plans',
     noteAna: 'Recurrence patterns across all loaded plans — which origins and grapes Vinmonopolet asks for again and again, and where the price bands sit. This is the dataset that grows with every plan.',
     anaCh1: 'Tenders per country per plan', anaCh2: 'Most requested grapes per plan',
@@ -1050,11 +1270,40 @@ const N = s => (s || '').toString()
 const splitClauses = t => (t || '').split(/\s*\d+\)\s*/).map(s => s.trim().replace(/\.$/,'')).filter(Boolean);
 const varieties = t => t.split(/,| and\/or | or | og |\//i).map(v => v.trim().toLowerCase()).filter(v => v.length > 2);
 
+// blend shorthands → the set of permitted varieties (so "based on a Bordeaux blend" matches)
+const BLEND_ALIASES = [
+  { re: /\bg\.?\s?s\.?\s?m\.?\b|grenache[,/ ]+syrah[,/ ]+mourv/, name: 'GSM',
+    v: ['grenache', 'syrah', 'mourvedre', 'cinsault', 'carignan'] },
+  { re: /ch(?:â|a)teauneuf/, name: 'Châteauneuf-du-Pape',
+    v: ['grenache', 'syrah', 'mourvedre', 'cinsault', 'counoise', 'vaccarese', 'terret noir', 'muscardin', 'clairette', 'bourboulenc', 'roussanne', 'picpoul'] },
+  { re: /rh(?:ô|o)ne(?:-style)? blend|southern rh(?:ô|o)ne/, name: 'Rhône blend',
+    v: ['grenache', 'syrah', 'mourvedre', 'cinsault', 'carignan', 'counoise'] },
+  { re: /white bordeaux|bordeaux blanc/, name: 'White Bordeaux blend',
+    v: ['sauvignon blanc', 'semillon', 'muscadelle', 'sauvignon gris'] },
+  { re: /bordeaux(?:-style)?(?:\s+(?:red|blend))|bordeaux blend|left bank|right bank|\bclaret\b|\bmeritage\b/, name: 'Bordeaux blend',
+    v: ['cabernet sauvignon', 'merlot', 'cabernet franc', 'petit verdot', 'malbec', 'carmenere'] },
+  { re: /cape blend/, name: 'Cape blend',
+    v: ['pinotage', 'cabernet sauvignon', 'merlot', 'cabernet franc', 'shiraz', 'syrah'] },
+  { re: /douro blend|port(?:uguese)?\s+blend/, name: 'Douro/Port blend',
+    v: ['touriga nacional', 'touriga franca', 'tinta roriz', 'tempranillo', 'tinta barroca', 'tinto cao', 'sousao'] },
+  { re: /super[- ]?tuscan/, name: 'Super Tuscan',
+    v: ['sangiovese', 'cabernet sauvignon', 'merlot', 'cabernet franc', 'syrah'] },
+  { re: /field blend|co-?planted|gemischter satz/, name: 'field blend', multi: true },
+];
+function detectBlend(c) {
+  for (const b of BLEND_ALIASES) if (b.re.test(c))
+    return b.multi ? { type: 'grape', mode: 'blend_multi', varieties: [], blend: b.name }
+                   : { type: 'grape', mode: 'any_of', varieties: b.v, blend: b.name };
+  return null;
+}
+
 function classify(cl) {
   const c = cl.toLowerCase();
   if (/cap classique|mcc\b/.test(c)) return { type:'method', method:'traditional (Cap Classique)' };
   if (/traditional method|methode traditionnelle|tradisjonell metode/.test(c)) return { type:'method', method:'traditional' };
   if (/charmat|tank method/.test(c)) return { type:'method', method:'charmat' };
+  const blend = detectBlend(c);
+  if (blend) return blend;               // GSM / Bordeaux / Cape / field blend … → permitted set
   let m = cl.match(/single grape variety ([A-Za-zàâäéèêëïîôöùûüç' -]+?)(?:$|[.,;(])/i);
   if (m) return { type:'grape', mode:'single', varieties: varieties(m[1]) };
   m = cl.match(/based on (?:min\.?|minimum)?\s*(\d+)\s*%\s*(.+)/i);
@@ -1115,24 +1364,48 @@ function clausesForSpec(spec) {
 }
 
 /* ============ wine ↔ spec eligibility (port of match_wines.py) ============ */
+const GRAPE_SYN = { mataro: 'mourvedre', mourvedre: 'mataro', shiraz: 'syrah', syrah: 'shiraz',
+  primitivo: 'zinfandel', zinfandel: 'primitivo', garnacha: 'grenache', grenache: 'garnacha',
+  'pinot gris': 'pinot grigio', 'pinot grigio': 'pinot gris', 'pinot noir': 'spatburgunder',
+  spatburgunder: 'pinot noir', grauburgunder: 'pinot gris', weissburgunder: 'pinot blanc' };
+// does grape name g refer to variety X (loose match, synonym-aware)?
+function grapeNameMatch(g, X) {
+  const a = N(g), b = N(X);
+  return a.includes(b) || b.includes(a) || (GRAPE_SYN[b] && a.includes(N(GRAPE_SYN[b]))) || (GRAPE_SYN[a] && b.includes(N(GRAPE_SYN[a])));
+}
 function grapePct(wine, variety) {
-  const v = N(variety), syn = { mataro:'mourvedre', mourvedre:'mataro', shiraz:'syrah', syrah:'shiraz' };
-  for (const [g, pct] of Object.entries(wine.grapes || {})) {
-    const gn = N(g);
-    if (gn.includes(v) || v.includes(gn)) return pct;
-  }
   for (const [g, pct] of Object.entries(wine.grapes || {}))
-    if (syn[v] && N(g).includes(syn[v])) return pct;
+    if (grapeNameMatch(g, variety)) return pct;
   return 0;
 }
 function checkClause(cl, w) {
   const t = cl.type;
   if (t === 'grape') {
     const vs = cl.varieties || [];
-    if (cl.mode === 'single') return grapePct(w, vs[0] || '') === 100 ? 'pass' : 'fail';
-    const total = vs.reduce((s, v) => s + grapePct(w, v), 0);
-    if (cl.mode === 'min_pct') return total >= cl.pct ? 'pass' : 'fail';
-    if (cl.mode === 'any_of') return total >= 99 ? 'pass' : 'fail';
+    const wg = Object.entries(w.grapes || {});
+    const known = wg.some(([, p]) => +p > 0);   // are the percentages filled in, or just the varieties?
+    const hasVar = X => wg.some(([g]) => grapeNameMatch(g, X));
+    if (cl.mode === 'single') {
+      const X = vs[0] || '';
+      if (!hasVar(X)) return 'fail';                       // wine doesn't contain the required variety
+      if (known) return grapePct(w, X) === 100 ? 'pass' : 'fail';
+      return wg.length === 1 ? 'unknown' : 'fail';         // sole variety, % unconfirmed → unknown; a blend can't be single
+    }
+    if (cl.mode === 'min_pct') {
+      if (!vs.some(hasVar)) return 'fail';
+      if (known) return vs.reduce((s, v) => s + grapePct(w, v), 0) >= cl.pct ? 'pass' : 'fail';
+      return 'unknown';                                    // variety present, exact % pending → unknown, not fail
+    }
+    if (cl.mode === 'any_of') {
+      const allPermitted = wg.length > 0 && wg.every(([g]) => vs.some(v => grapeNameMatch(g, v)));
+      if (allPermitted) return 'pass';                     // every grape is from the permitted set — knowable without %
+      if (known) return vs.reduce((s, v) => s + grapePct(w, v), 0) >= 99 ? 'pass' : 'fail';
+      return 'fail';                                       // contains a grape outside the permitted set
+    }
+    if (cl.mode === 'blend_multi') {                       // field blend: the wine must itself be a blend
+      if (wg.length >= 2) return 'pass';
+      return wg.length === 1 ? 'fail' : 'unknown';
+    }
   }
   if (t === 'method') return w.method && N(w.method).includes(N(cl.method).split(' ')[0]) ? 'pass' : 'fail';
   if (t === 'vintage') {
@@ -1787,10 +2060,10 @@ function resetFilters() {
   $('fQ').value = '';
   renderDims(); renderSpecs();
 }
-function fillSelect(id, keys, current) {
+function fillSelect(id, keys, current, labelFn) {
   const sel = $(id); if (!sel) return;
   const first = sel.options[0].outerHTML;
-  sel.innerHTML = first + keys.map(k => `<option${k === current ? ' selected' : ''}>${esc(k)}</option>`).join('');
+  sel.innerHTML = first + keys.map(k => `<option value="${esc(k)}"${k === current ? ' selected' : ''}>${esc(labelFn ? labelFn(k) : k)}</option>`).join('');
   sel.value = current || '';
 }
 // selection facet uses value≠label (canonical key vs. human label)
@@ -1805,14 +2078,14 @@ function renderDims() {
   renderMap();
   drawDimChart('chCountry', 'country', s => s.country || openTerm(), FILTERS.country);
   drawDimChart('chGroup', 'mainType', s => mainCat(s), FILTERS.mainType, null, mainDisp);
-  drawDimChart('chGrape', 'grape', s => specGrapes(s), FILTERS.grape);
+  drawDimChart('chGrape', 'grape', s => specGrapes(s), FILTERS.grape, null, dispGrape);
   drawDimChart('chPrice', 'price', s => specBucket(s), FILTERS.price, PRICE_BUCKETS.map(b => b[2]));
   fillSelect('fCountry', [...counts('country', s => s.country || openTerm()).keys()].sort(), FILTERS.country);
   const mainOpts = [...counts('mainType', s => mainCat(s)).keys()].map(c => [c, mainDisp(c)]).sort((a, b) => a[1].localeCompare(b[1]));
   fillSelValueLabel('fMain', mainOpts, FILTERS.mainType);
   const grpOpts = [...counts('group', s => subCat(s)).keys()].map(c => [c, subDisp(c)]).sort((a, b) => a[1].localeCompare(b[1]));
   fillSelValueLabel('fGroup', grpOpts, FILTERS.group);
-  fillSelect('fGrape', [...counts('grape', s => specGrapes(s)).keys()].sort(), FILTERS.grape);
+  fillSelect('fGrape', [...counts('grape', s => specGrapes(s)).keys()].sort(), FILTERS.grape, dispGrape);
   fillSelect('fClass', [...counts('classification', s => specClasses(s)).keys()].sort(), FILTERS.classification);
   fillSelect('fPrice', PRICE_BUCKETS.map(b => b[2]), FILTERS.price);
   fillSelValueLabel('fSel', [['basis', L.selBasis], ['parti', L.selParti]], FILTERS.sel);
@@ -1859,7 +2132,7 @@ function renderSpecs() {
     const chip = (n ? `<span class="chip ${n > 1 ? 'hi' : 'mid'}">${n}</span>` : '<span class="chip lo">0</span>') + star;
     const p = s.price_hi ?? s.price_lo;
     const mini = p ? `<div class="minibar" title="${esc(L.ttPriceCap)} ${fmt(p,0)} kr"><i style="width:${Math.min(100, 100*p/maxP)}%"></i></div>` : '';
-    const gr = specGrapes(s).slice(0, 3).join(', ');
+    const gr = capGrapes(specGrapes(s).slice(0, 3));
     return `<tr class="rowx" data-i="${i}">
       <td><b>${esc(s.ref)}</b></td><td>${esc(s.launch)}</td><td>${esc((s.selection || '').replace('utvalget',''))}</td>
       <td>${esc(mainDisp(mainCat(s))) || esc(s.group)}${subCat(s) ? ` <span style="color:var(--muted)">(${esc(subDisp(subCat(s)))})</span>` : ''}${gr ? `<br><span style="color:var(--muted);font-size:11.5px">${esc(gr)}</span>` : ''}</td>
@@ -1877,7 +2150,7 @@ function wantsLine(m) {
   const s = m.spec;
   const grapes = specGrapes(s).filter(g => g !== 'traditional method');
   const bits = [];
-  if (grapes.length) bits.push(L.wlGrapes + grapes.join(', '));
+  if (grapes.length) bits.push(L.wlGrapes + capGrapes(grapes));
   if (s.appellation) bits.push(esc(s.appellation));
   if (s.vintage) bits.push(L.wlVintage + esc(s.vintage));
   bits.push(L.wlBand + esc(s.price_text) + L.wlKr);
@@ -1965,6 +2238,24 @@ function repInfo(raw) {
 const repChip = raw => { const r = repInfo(raw);
   return `<span class="chip ${r.cls}" title="${esc(r.detail)}">${esc(r.label)}</span>`; };
 const titleCase = s => String(s || '').replace(/\b\w/g, c => c.toUpperCase());
+// display helpers — data is stored lower-case for matching; capitalise only for display
+const capColor = c => ({ red: 'Red', white: 'White', rose: 'Rosé', fortified: 'Fortified',
+  'sparkling white': 'Sparkling white', 'sparkling rose': 'Sparkling rosé',
+  'sparkling rosé': 'Sparkling rosé' }[String(c || '').toLowerCase()] || titleCase(c));
+// canonical grape display names (accents/special forms titleCase can't infer)
+const GRAPE_DISP = {
+  'aligote': 'Aligoté', 'carmenere': 'Carménère', 'gruner veltliner': 'Grüner Veltliner',
+  'gewurztraminer': 'Gewürztraminer', 'spatburgunder': 'Spätburgunder', 'grauburgunder': 'Grauburgunder',
+  'weissburgunder': 'Weißburgunder', 'xarel': 'Xarel·lo', 'xarel-lo': 'Xarel·lo', 'xarel lo': 'Xarel·lo',
+  'nero d': "Nero d'Avola", "nero d'avola": "Nero d'Avola", 'nero davola': "Nero d'Avola",
+  'cotes du rhone': 'Côtes du Rhône', 'macabeo': 'Macabeo', 'garnacha': 'Garnacha', 'touriga nacional': 'Touriga Nacional',
+  'assyrtiko': 'Assyrtiko', 'agiorgitiko': 'Agiorgitiko', 'xinomavro': 'Xinomavro', 'furmint': 'Furmint',
+  'blaufrankisch': 'Blaufränkisch', 'saperavi': 'Saperavi', 'verdejo': 'Verdejo', 'godello': 'Godello',
+  'mencia': 'Mencía', 'albarino': 'Albariño', 'alvarinho': 'Alvarinho', 'cortese': 'Cortese',
+  'primitivo': 'Primitivo', 'sangiovese': 'Sangiovese', 'montepulciano': 'Montepulciano',
+};
+const dispGrape = g => GRAPE_DISP[String(g || '').toLowerCase()] || titleCase(g);
+const capGrapes = arr => (arr || []).map(dispGrape).join(', ');
 const groupLabel = g => LANG === 'en' ? titleCase(g) : (L.groupMap[N(g).trim()] || g);
 const TIER = { verified: ['✓','var(--good-text)'], public: ['◦','var(--text-secondary)'],
                estimate: ['~','var(--warn)'], unknown: ['?','var(--muted)'] };
@@ -1973,9 +2264,11 @@ function qualitySummary(w) {
   Object.values(w.verify || {}).forEach(f => c[f.tier] != null && c[f.tier]++);
   return c;
 }
-const WFILTERS = { country: '', type: '', cert: '', rep: '', q: '' };
+const WFILTERS = { country: '', type: '', cert: '', rep: '', q: '', producer: '', grape: '' };
 function winePass(w, skip) {
   if (skip !== 'country' && WFILTERS.country && w.country !== WFILTERS.country) return false;
+  if (WFILTERS.producer && w.producer !== WFILTERS.producer) return false;
+  if (WFILTERS.grape && !Object.keys(w.grapes || {}).some(g => grapeNameMatch(g, WFILTERS.grape))) return false;
   if (WFILTERS.type && (w.color || '') !== WFILTERS.type) return false;
   if (WFILTERS.cert && !(w.certs || []).some(c => c === WFILTERS.cert)) return false;
   if (WFILTERS.rep && repInfo(w.representation?.NO).k !== (WFILTERS.rep === 'taken' ? repInfo(w.representation?.NO).k === 'taken' || repInfo(w.representation?.NO).k === 'none' ? repInfo(w.representation?.NO).k : 'taken' : WFILTERS.rep)) {
@@ -1986,9 +2279,9 @@ function winePass(w, skip) {
       Object.keys(w.grapes || {}).join(' ')].join(' ')).includes(N(WFILTERS.q))) return false;
   return true;
 }
-function fillWineSelect(id, keys, current) {
+function fillWineSelect(id, keys, current, labelFn) {
   const sel = $(id), first = sel.options[0].outerHTML;
-  sel.innerHTML = first + keys.map(k => `<option value="${esc(k)}"${k === current ? ' selected' : ''}>${esc(k)}</option>`).join('');
+  sel.innerHTML = first + keys.map(k => `<option value="${esc(k)}"${k === current ? ' selected' : ''}>${esc(labelFn ? labelFn(k) : k)}</option>`).join('');
   sel.value = current || '';
 }
 function renderWineDims() {
@@ -1996,8 +2289,30 @@ function renderWineDims() {
   WINES.filter(w => winePass(w, 'country')).forEach(w => c.set(w.country, (c.get(w.country) || 0) + 1));
   drawGeoMap('wineMapSvg', c, WFILTERS.country, lab => { WFILTERS.country = lab; renderWineDims(); renderWines(); });
   fillWineSelect('wfCountry', [...new Set(WINES.map(w => w.country))].sort(), WFILTERS.country);
-  fillWineSelect('wfType', [...new Set(WINES.map(w => w.color).filter(Boolean))].sort(), WFILTERS.type);
+  fillWineSelect('wfType', [...new Set(WINES.map(w => w.color).filter(Boolean))].sort(), WFILTERS.type, capColor);
   fillWineSelect('wfCert', [...new Set(WINES.flatMap(w => w.certs || []))].sort(), WFILTERS.cert);
+  renderWineSpot();
+}
+// spotlight a producer / grape on the wine map: highlight the countries their wines come from
+function spotlightProducer(p) { WFILTERS.producer = WFILTERS.producer === p ? '' : p; if (WFILTERS.producer) WFILTERS.grape = ''; afterSpotlight(); }
+function spotlightGrape(g) { WFILTERS.grape = WFILTERS.grape === g ? '' : g; if (WFILTERS.grape) WFILTERS.producer = ''; afterSpotlight(); }
+function clearSpot(which) { WFILTERS[which] = ''; afterSpotlight(); }
+function afterSpotlight() { renderWineDims(); renderWines(); const m = $('wineMapSvg'); if (m) m.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+function renderWineSpot() {
+  const el = $('wineSpot'); if (!el) return;
+  const bar = (icon, which, label, txt) => `<span class="spotbar">${icon} <b>${esc(label)}</b> — ${txt}<button class="x" title="${esc(L.spotClear)}" onclick="clearSpot('${which}')">×</button></span>`;
+  const parts = [];
+  if (WFILTERS.producer) {
+    const set = WINES.filter(w => w.producer === WFILTERS.producer);
+    const cs = [...new Set(set.map(w => w.country).filter(Boolean))];
+    parts.push(bar('📍', 'producer', WFILTERS.producer, L.spotProd(set.length, cs.length, cs.join(', '))));
+  }
+  if (WFILTERS.grape) {
+    const set = WINES.filter(w => Object.keys(w.grapes || {}).some(g => grapeNameMatch(g, WFILTERS.grape)));
+    const cs = [...new Set(set.map(w => w.country).filter(Boolean))];
+    parts.push(bar('🍇', 'grape', dispGrape(WFILTERS.grape), L.spotGrape(set.length, cs.length, cs.join(', '))));
+  }
+  el.innerHTML = parts.join('');
 }
 function resetWineFilters() {
   Object.keys(WFILTERS).forEach(k => WFILTERS[k] = '');
@@ -2005,6 +2320,7 @@ function resetWineFilters() {
   $('wfQ').value = '';
   renderWineDims(); renderWines();
 }
+window.spotlightProducer = spotlightProducer; window.spotlightGrape = spotlightGrape; window.clearSpot = clearSpot;
 function renderWines() {
   const shown = applySort(WINES.filter(w => winePass(w)), SORTS.wine, WINE_GET);
   $('wineCount').textContent = L.wineCountFn(shown.length, WINES.length);
@@ -2025,9 +2341,9 @@ function renderWines() {
       const [sym, col] = TIER[s.tier] || ['·','inherit'];
       return `<span style="color:${col};font-weight:700">${sym}</span> <b>${L.fieldNames[f] || f}</b> — ${esc(s.note)}`;
     }).join('<br>') : L.qNoData;
-    return `<tr class="rowx"><td><b>${esc(w.producer)}</b>${isSeed(w) ? ` <span class="chip sample" title="${esc(L.sampleBadgeTitle)}">${L.sampleBadge}</span>` : ''}</td><td>${esc(w.name)}</td><td>${esc(w.country)}</td>
-     <td>${esc(w.color)}${w.method ? L.tradMethod : ''}</td>
-     <td>${Object.entries(w.grapes || {}).map(([g, p]) => `${esc(g)} ${p}%`).join(', ')}</td>
+    return `<tr class="rowx"><td><b class="clk-prod" data-p="${esc(w.producer)}" title="${esc(L.spotProdTip)}">${esc(w.producer)}</b>${isSeed(w) ? ` <span class="chip sample" title="${esc(L.sampleBadgeTitle)}">${L.sampleBadge}</span>` : ''}</td><td>${esc(w.name)}</td><td>${esc(w.country)}</td>
+     <td>${esc(capColor(w.color))}${w.method ? L.tradMethod : ''}</td>
+     <td>${Object.entries(w.grapes || {}).map(([g, p]) => `<span class="clk-grape gtok" data-g="${esc(g)}" title="${esc(L.spotGrapeTip)}">${esc(dispGrape(g))}${p ? ` ${p}%` : ''}</span>`).join(' ')}</td>
      <td class="num">${w.sugar_g_l ?? '–'}</td>
      <td class="num">${pr}</td><td style="font-size:12px">${emb}</td>
      <td class="num">${w.fob_eur != null ? fmt(w.fob_eur, 1) : '–'}</td>
@@ -2037,7 +2353,10 @@ function renderWines() {
      <td style="font-size:12px;white-space:nowrap">${qCell}</td></tr>
     <tr class="detail" style="display:none"><td colspan="13">${detail}</td></tr>`;
   }).join('');
-  hookRows($('wineTable').querySelector('tbody'));
+  const tb = $('wineTable').querySelector('tbody');
+  tb.querySelectorAll('.clk-prod').forEach(el => el.addEventListener('click', e => { e.stopPropagation(); spotlightProducer(el.dataset.p); }));
+  tb.querySelectorAll('.clk-grape').forEach(el => el.addEventListener('click', e => { e.stopPropagation(); spotlightGrape(el.dataset.g); }));
+  hookRows(tb);
 }
 // seed/demo record? (AI-seeded illustrative data, not from a real source)
 const isSeed = w => /systemfr|seed/i.test((w.audit && w.audit.created_by) || '');
@@ -2209,7 +2528,109 @@ function drawGrouped(svgId, legendId, cats, seriesNames, matrix) {
   if (legendId) $(legendId).innerHTML = seriesNames.map((sn, si) =>
     `<span><i style="background:${css(SLOTS[si])}"></i>${esc(sn)}</span>`).join('');
 }
+// ---- gap analysis: chronically re-requested demand vs known qualifying supply ----
+function specStyle(s) {
+  const g = N(s.group || '') + ' ' + N(s.main_type || '');
+  if (/sparkling|musserende/.test(g)) return 'sparkling';
+  if (/rose/.test(g)) return 'rose';
+  if (/fortified|sterkvin/.test(g)) return 'fortified';
+  if (/white|hvit/.test(g)) return 'white';
+  if (/red|rodvin|rod\b/.test(g)) return 'red';
+  return 'wine';
+}
+function wineStyle(w) {
+  const c = N(w.color || '');
+  if (/sparkling|musserende/.test(c)) return 'sparkling';
+  if (/rose/.test(c)) return 'rose';
+  if (/fortified|sterk/.test(c)) return 'fortified';
+  if (/white|hvit/.test(c)) return 'white';
+  if (/red|rod/.test(c)) return 'red';
+  return 'wine';
+}
+function styleLabel(st) {
+  return { red: L.grpRed, white: L.grpWhite, rose: L.grpRose, sparkling: L.grpSparkling,
+    fortified: L.grpFortified, wine: L.gapAnyStyle }[st] || st;
+}
+function computeGaps() {
+  const plans = Object.keys(PLANS), nPlans = plans.length;
+  const clusters = new Map();
+  const certRe = /organic|fairtrade|biodynam|sustainab|\bipw\b|\bwsb\b|terra vitis|equalitas|vegan|demeter/i;
+  for (const pn of plans) for (const s of PLANS[pn].filter(isWineSpec)) {
+    const country = (s.country || '').trim() || openTerm();
+    const style = specStyle(s);
+    const grapes = specGrapes(s).filter(g => g !== 'traditional method');
+    const price = s.price_hi ?? s.price_lo, cert = certRe.test(s.spec || '');
+    for (const g of (grapes.length ? grapes : [''])) {
+      const key = country + '|' + style + '|' + g;
+      if (!clusters.has(key)) clusters.set(key, { country, style, grape: g, plans: new Set(), requests: 0, prices: [], cert: 0 });
+      const c = clusters.get(key);
+      c.plans.add(pn); c.requests++; if (price) c.prices.push(price); if (cert) c.cert++;
+    }
+  }
+  const isOpenRep = w => /unrepresented|open for import|candidate for import/i.test(w.representation?.NO || '');
+  const planRec = lbl => { const n = (String(lbl).match(/\d+/g) || []); return (+n[0] || 0) * 10 + (+n[1] || 0); };
+  const newest = plans.reduce((a, b) => planRec(b) > planRec(a) ? b : a, plans[0] || '');
+  for (const c of clusters.values()) {
+    const qual = WINES.filter(w => {
+      if (c.country !== openTerm() && N(w.country) !== N(c.country) && !N(w.country).includes(N(c.country)) && !N(c.country).includes(N(w.country))) return false;
+      if (c.style !== 'wine' && wineStyle(w) !== c.style) return false;
+      if (c.grape && !Object.keys(w.grapes || {}).some(g => grapeNameMatch(g, c.grape))) return false;
+      return true;
+    });
+    c.supply = qual.length;
+    c.open = qual.filter(isOpenRep).length;
+    c.medPrice = c.prices.length ? [...c.prices].sort((a, b) => a - b)[Math.floor(c.prices.length / 2)] : 0;
+    c.certPct = c.requests ? Math.round(100 * c.cert / c.requests) : 0;
+    c.nPlans = c.plans.size;
+    c.chronic = c.nPlans >= 2;
+    c.unmet = c.supply === 0;
+    // still open vs eventually covered: is it still being requested in the newest plan?
+    c.latestPlan = [...c.plans].reduce((a, b) => planRec(b) > planRec(a) ? b : a, '');
+    c.current = c.plans.has(newest);
+    c.persistent = c.chronic && c.current;         // recurred AND still asked = still uncovered
+    c.resolved = c.chronic && !c.current;          // recurred then dropped out = likely covered
+    // a resolved gap is worth far less than one that keeps coming back unanswered
+    c.gapScore = c.requests * c.nPlans / (c.supply + 1) * (c.current ? 1 : 0.3);
+  }
+  return { list: [...clusters.values()], nPlans, newest };
+}
+let GAPF = { mode: 'all', country: '', style: '' };
+function renderGapDirectory() {
+  const tb = $('gapTable') && $('gapTable').querySelector('tbody'); if (!tb) return;
+  const { list, nPlans, newest } = computeGaps();
+  $('gapTiles').innerHTML = [
+    [list.length, L.gapTileClusters],
+    [list.filter(c => c.persistent).length, L.gapTilePersistent],
+    [list.filter(c => c.unmet).length, L.gapTileUnmet],
+  ].map(([v, l]) => `<div class="tile"><div class="v">${v}</div><div class="l">${l}</div></div>`).join('');
+  fillSelect('gfCountry', [...new Set(list.map(c => c.country))].sort(), GAPF.country);
+  fillSelValueLabel('gfStyle', [...new Set(list.map(c => c.style))].map(st => [st, styleLabel(st)]), GAPF.style);
+  let rows = list.filter(c => {
+    if (GAPF.mode === 'open' && !c.persistent) return false;
+    if (GAPF.mode === 'unmet' && !c.unmet) return false;
+    if (GAPF.country && c.country !== GAPF.country) return false;
+    if (GAPF.style && c.style !== GAPF.style) return false;
+    return true;
+  }).sort((a, b) => b.gapScore - a.gapScore);
+  const maxG = rows.length ? rows[0].gapScore : 1;
+  tb.innerHTML = rows.slice(0, 200).map(c => {
+    const flags = (c.unmet ? `<span class="chip hi" title="${esc(L.gapUnmetTip)}">${L.gapUnmetBadge}</span> ` : '') +
+      (c.persistent ? `<span class="chip mid" title="${esc(L.gapOpenTip)}">${L.gapOpenBadge}</span>`
+        : c.resolved ? `<span class="chip lo" title="${esc(L.gapResolvedTip)}">${L.gapResolvedBadge}</span>` : '');
+    const cleanPlan = String(c.latestPlan).replace(/\s*\(live\)/, '');
+    return `<tr${c.resolved ? ' style="opacity:.62"' : ''}>
+      <td><b>${esc(c.country)}</b></td><td>${esc(styleLabel(c.style))}</td>
+      <td>${c.grape ? esc(dispGrape(c.grape)) : '<span style="color:var(--muted)">' + esc(L.gapAnyGrape) + '</span>'} ${flags}</td>
+      <td class="num">${c.nPlans}/${nPlans}</td><td class="num" title="${esc(L.gapLastAskedTip)}">${esc(cleanPlan)}</td><td class="num">${c.requests}</td>
+      <td class="num">${c.medPrice ? fmt(c.medPrice, 0) : '–'}</td><td class="num">${c.certPct ? c.certPct + '%' : '–'}</td>
+      <td class="num">${c.supply}</td><td class="num">${c.open || '–'}</td>
+      <td class="num"><b>${fmt(c.gapScore, 1)}</b> <span class="scorebar" style="width:${Math.round(30 * c.gapScore / maxG)}px"></span></td>
+    </tr>`;
+  }).join('') || `<tr><td colspan="11" style="color:var(--muted)">${L.gapEmpty}</td></tr>`;
+  $('gapNote').textContent = L.gapNote(rows.length, nPlans, newest.replace(/\s*\(live\)/, ''));
+}
 function renderAnalyse() {
+  renderGapDirectory();
   const names = Object.keys(PLANS);
   const wineSpecs = n => PLANS[n].filter(isWineSpec);
   $('anaTiles').innerHTML = names.map(n =>
@@ -2228,7 +2649,7 @@ function renderAnalyse() {
   names.forEach(n => wineSpecs(n).forEach(s => specGrapes(s).forEach(g =>
     gAll.set(g, (gAll.get(g) || 0) + 1))));
   const topG = [...gAll.entries()].sort((a, b) => b[1] - a[1]).slice(0, 8).map(e => e[0]);
-  drawGrouped('anaGrape', 'anaLegend2', topG, names,
+  drawGrouped('anaGrape', 'anaLegend2', topG.map(dispGrape), names,
     names.map(n => topG.map(g => wineSpecs(n).filter(s => specGrapes(s).includes(g)).length)));
   // median price cap per plan — single series
   const med = n => {
@@ -2694,7 +3115,7 @@ function renderOpportunities() {
     return `<div class="opp" data-i="${i}">
       <div class="opp-head" onclick="this.parentNode.classList.toggle('open')">
         <span class="opp-rank">${i + 1}</span>
-        <span class="opp-title">${esc(s.ref)} — ${esc(groupLabel(s.group))}<small>${L.oppSeeks} ${esc(specGrapes(s).slice(0,3).join(', ') || mainDisp(mainCat(s)))}${L.oppFrom}${esc(s.country) || L.openOrigin} · ${esc(s.price_text)}</small></span>
+        <span class="opp-title">${esc(s.ref)} — ${esc(groupLabel(s.group))}<small>${L.oppSeeks} ${esc(capGrapes(specGrapes(s).slice(0,3)) || mainDisp(mainCat(s)))}${L.oppFrom}${esc(s.country) || L.openOrigin} · ${esc(s.price_text)}</small></span>
         <span class="opp-metric"><span class="v">${r.nIntro}</span><span class="l">${L.oppIntroV}</span></span>
         <span class="opp-metric"><span class="v">${r.n}</span><span class="l">${L.oppCandV}</span></span>
         <span class="opp-metric"><span class="v">${fob}</span><span class="l">${L.oppFobV}</span></span>
@@ -2796,13 +3217,45 @@ function mwHits(w) {
   }
   return n;
 }
+// structured-input helpers — keep the stored value canonical (lower-case), show a nice label
+function grapeOptionsHTML() {
+  return `<option value="">${esc(L.mwGrapePick)}</option>` +
+    GRAPE_LEX.slice().sort().map(g => `<option value="${esc(g)}">${esc(dispGrape(g))}</option>`).join('');
+}
+function readCerts() { return [...document.querySelectorAll('.mwcert:checked')].map(c => c.value); }
+function setCerts(certs) {
+  const j = (certs || []).join(' ').toLowerCase();
+  const map = { Organic: /organic|økolog|ecolog|luomu|krav|debio/, Biodynamic: /biodynam|demeter/,
+    Fairtrade: /fairtrade|fair for life|fair trade/, Vegan: /vegan/,
+    Sustainable: /sustainab|wieta|\bipw\b|swsa|\bhve\b|terra vitis|nachhaltig/, Kosher: /kosher/ };
+  document.querySelectorAll('.mwcert').forEach(cb => { cb.checked = map[cb.value] ? map[cb.value].test(j) : false; });
+}
+function readVintages() { return [...document.querySelectorAll('.mwvint:checked')].map(c => +c.value); }
+function readGrapeRows() {
+  const out = {};
+  document.querySelectorAll('#mwlGrapeRows .graperow').forEach(r => {
+    const g = r.querySelector('.mwlg').value, p = parseFloat(r.querySelector('.mwlp').value);
+    if (g) out[g] = isNaN(p) ? 0 : p;
+  });
+  return Object.keys(out).length ? out : null;
+}
 function initMatchWine() {
   if (!MW_INIT) {
     const cs = [...new Set([...SPECS.map(s => s.country), ...WINES.map(w => w.country)].filter(Boolean))].sort();
     $('mwCountry').innerHTML = cs.map(c => `<option>${esc(c)}</option>`).join('');
-    $('mwGrapeList').innerHTML = GRAPE_LEX.slice().sort().map(g => `<option value="${esc(g)}">`).join('');
+    const gOpts = grapeOptionsHTML();
+    $('mwGrape').innerHTML = gOpts;
+    $('mwlVintRow').innerHTML = [2021, 2022, 2023, 2024, 2025, 2026, 2027, 2028].map(y =>
+      `<label class="chiptoggle"><input type="checkbox" class="mwvint" value="${y}">${y}</label>`).join('') +
+      `<label class="chiptoggle"><input type="checkbox" class="mwvint" value="0"><span class="nvlabel">${esc(L.mwlNV)}</span></label>`;
+    $('mwlGrapeRows').innerHTML = [0, 1, 2].map(() =>
+      `<div class="graperow"><select class="mwlg">${gOpts}</select><input type="number" class="mwlp" min="0" max="100" step="1" placeholder="%"></div>`).join('');
     MW_INIT = true;
   }
+  // keep language-sensitive labels current on a language switch (selections preserved)
+  if ($('mwGrape').options[0]) $('mwGrape').options[0].textContent = L.mwGrapePick;
+  document.querySelectorAll('#mwlGrapeRows select.mwlg').forEach(s => { if (s.options[0]) s.options[0].textContent = L.mwGrapePick; });
+  document.querySelectorAll('.nvlabel').forEach(e => e.textContent = L.mwlNV);
   // pick real leads that actually win something in THIS plan, so the demo always lands
   const cand = WINES.filter(w => isSeed(w) && Object.keys(w.grapes || {}).length && w.color);
   const good = [];
@@ -2810,7 +3263,7 @@ function initMatchWine() {
   const leads = good.length ? good : cand.slice(0, 4);
   window._mwLeads = leads;
   $('mwLeadPick').innerHTML = leads.length ? L.mwLeadPre + leads.map((w, i) =>
-    `<button class="btn ghost" style="padding:3px 9px;margin:2px 4px 0 0;font-size:12px" onclick="fillLead(${i})">${esc(w.country)} · ${esc(Object.keys(w.grapes)[0])}</button>`).join('') : '';
+    `<button class="btn ghost" style="padding:3px 9px;margin:2px 4px 0 0;font-size:12px" onclick="fillLead(${i})">${esc(w.country)} · ${esc(dispGrape(Object.keys(w.grapes)[0]))}</button>`).join('') : '';
   // show a worked example on first open so the value is immediate; never overwrite the user's own input later
   if (!MW_DEMOED && leads.length) { MW_DEMOED = true; fillLead(0); }
 }
@@ -2822,17 +3275,17 @@ function fillLead(i) {
   if (colOpt) $('mwColour').value = colOpt.value;
   $('mwGrape').value = Object.keys(w.grapes || {})[0] || '';
   if (w.abv) $('mwAbv').value = w.abv;
-  $('mwCert').value = (w.certs || []).join(', ');
+  setCerts(w.certs);
   runMatchWine();
 }
 function matchWineRecord() {
-  const colour = val('mwColour'), grape = val('mwGrape').trim().toLowerCase();
+  const colour = val('mwColour'), grape = val('mwGrape').toLowerCase();
   return {
     id: '_mw', producer: L.mwWinnable, name: val('mwName').trim() || '—',
     country: val('mwCountry'), color: colour,
     grapes: grape ? { [grape]: 100 } : {},
     abv: parseFloat(val('mwAbv')) || 13,
-    certs: val('mwCert').split(/[;,]/).map(s => s.trim()).filter(Boolean),
+    certs: readCerts(),
     vintages_available: [], sugar_g_l: null, wood: null,
     method: /sparkling/.test(colour) ? 'traditional' : null,
     fob_eur: val('mwFob') ? parseFloat(val('mwFob')) : null,
@@ -2871,7 +3324,7 @@ function runMatchWine() {
       <span class="opp-title">${esc(s.ref)} — ${esc(groupLabel(s.group))}<small>${esc(s.country) || L.openOrigin} · ${esc((s.spec || '').slice(0, 90))}</small></span>
       <span style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">${need} ${pf} ${clauses}</span>
       </div><div class="opp-body" style="display:block;padding-top:0">
-      <p class="note" style="margin:6px 0 0">${L.oppSeeks} <b>${esc(specGrapes(s).slice(0,4).join(', ') || mainDisp(mainCat(s)))}</b> · ${esc(s.price_text)} · ${L.mwListed(h.compet)}${h.compet <= 2 ? ` <span style="color:var(--good-text)">— ${L.mwFirstMover}</span>` : ''}</p>
+      <p class="note" style="margin:6px 0 0">${L.oppSeeks} <b>${esc(capGrapes(specGrapes(s).slice(0,4)) || mainDisp(mainCat(s)))}</b> · ${esc(s.price_text)} · ${L.mwListed(h.compet)}${h.compet <= 2 ? ` <span style="color:var(--good-text)">— ${L.mwFirstMover}</span>` : ''}</p>
       </div></div>`;
   }).join('') + `<p class="note" style="margin:10px 0 0;color:var(--muted)">${L.mwCoverage}</p>`;
   $('mwCta').innerHTML = `<div class="samplebar" style="border-color:color-mix(in oklab,var(--accent,#4670e0) 40%,var(--border))">
@@ -2882,8 +3335,12 @@ function openListForm() {
   $('mwlProducer').value = $('mwlProducer').value || (lead && lead.producer) || '';
   $('mwlName').value = $('mwlName').value || val('mwName') || (lead && lead.name) || '';
   $('mwlFob').value = $('mwlFob').value || val('mwFob') || '';
-  const g = val('mwGrape').trim();
-  if (!$('mwlGrapes').value && g) $('mwlGrapes').value = g + ' 100';
+  const g = val('mwGrape');
+  const r0 = document.querySelector('#mwlGrapeRows .graperow');
+  if (r0 && g && !r0.querySelector('.mwlg').value) {
+    r0.querySelector('.mwlg').value = g;
+    if (!r0.querySelector('.mwlp').value) r0.querySelector('.mwlp').value = 100;
+  }
   $('mwListCard').style.display = 'block';
   $('mwListCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
@@ -2904,9 +3361,9 @@ function saveProducerProfile() {
   if (!(fob > 0)) errs.push(L.mwlErrFob);
   if (errs.length) { $('mwlResult').innerHTML = `<p class="note" style="color:var(--warn)">${errs.join('<br>')}</p>`; return; }
   const colour = val('mwColour'), name = (val('mwlName').trim() || val('mwName').trim() || '—');
-  const grapes = parseGrapeInput(val('mwlGrapes')) || (val('mwGrape').trim() ? { [val('mwGrape').trim().toLowerCase()]: 100 } : {});
-  const vintages = (val('mwlVintages').match(/(?:19|20)\d\d/g) || []).map(Number);
-  const certs = val('mwCert').split(/[;,]/).map(s => s.trim()).filter(Boolean);
+  const grapes = readGrapeRows() || (val('mwGrape') ? { [val('mwGrape').toLowerCase()]: 100 } : {});
+  const vintages = readVintages();
+  const certs = readCerts();
   const num = v => { const x = parseFloat(v); return isNaN(x) ? null : x; };
   const conf = note => ({ tier: 'verified', note: (L.mwlConfirmed) + (note ? ' — ' + note : '') });
   const rec = {
@@ -2962,7 +3419,14 @@ $('oppFilters').querySelectorAll('button').forEach(b => b.addEventListener('clic
 }));
 $('ofCountry').addEventListener('change', () => { OPPFILT.country = $('ofCountry').value; renderOpportunities(); });
 $('ofMain').addEventListener('change', () => { OPPFILT.main = $('ofMain').value; renderOpportunities(); });
-['mwCountry', 'mwColour', 'mwGrape', 'mwAbv', 'mwCert', 'mwFob', 'mwName'].forEach(id =>
+$('gapFilters').querySelectorAll('button').forEach(b => b.addEventListener('click', () => {
+  GAPF.mode = b.dataset.gf;
+  $('gapFilters').querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b));
+  renderGapDirectory();
+}));
+$('gfCountry').addEventListener('change', () => { GAPF.country = $('gfCountry').value; renderGapDirectory(); });
+$('gfStyle').addEventListener('change', () => { GAPF.style = $('gfStyle').value; renderGapDirectory(); });
+['mwCountry', 'mwColour', 'mwGrape', 'mwAbv', 'mwFob', 'mwName'].forEach(id =>
   $(id).addEventListener('keydown', e => { if (e.key === 'Enter') runMatchWine(); }));
 ['inRetail','inAbv','inVol','inPack','inMargin','inFreight','inCur2','inCur2Rate','inEur']
   .forEach(id => $(id).addEventListener('input', () => { calc(); recompute(); }));

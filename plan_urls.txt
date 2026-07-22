@@ -1,0 +1,13 @@
+# Direct download links to Vinmonopolet launch-plan Excel files — one URL per line.
+# This is the reliable way to add historical plans (the site is a SPA, so auto-scraping
+# a page's HTML may miss the link).
+#
+# HOW: on vinmonopolet.no, open the "Lanseringer" section and its launch-plan archive,
+# right-click each Excel download link -> "Copy link", and paste the URL here. Prefer the
+# ENGLISH edition. (Exact archive paths aren't listed here on purpose — grab the real
+# links yourself so nothing is guessed.)
+#
+# Then locally:  python3 fetch_launch_plans.py && python3 build_app.py
+# Or just commit this file — the refresh-launch-plans workflow does the rest monthly.
+#
+# Lines starting with # are ignored. Paste real .xlsx URLs below:

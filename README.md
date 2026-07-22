@@ -38,7 +38,10 @@ works offline). Served via GitHub Pages at the repository's Pages URL.
 | `match.py` / `match_wines.py` | Portfolio scoring and wine↔spec eligibility engines |
 | `import_wines.py` | Producer bulk-upload validator |
 | `ingest_vmp.py` | Populates the wine DB with **verified** data from Vinmonopolet's own catalog (API key or portal export); producer-only fields stay flagged for confirmation |
+| `fetch_launch_plans.py` | Downloads Vinmonopolet launch-plan Excel files (from `plan_urls.txt` or the known pages) and parses them to `specs_*.json` → thickens the recurrence/gap data. Runs where vinmonopolet.no is reachable (your machine / the `refresh-launch-plans` workflow) |
+| `track_listings.py` | Diffs the daily Open-API catalog snapshots into a listing-date ledger (`vmp_listings.json`: first_seen / last_seen per product). Forward-looking evidence for a real fill-rate — cross-reference a new listing's date with a tender's launch month to see which lots actually got filled (see the fill-rate note below) |
 | `demand_map.py` | Ranks recurring tender demand (origin × grape × style × price × cert) → where to seed producers first (writes `demand_map.md`) |
+| `gap_analysis.py` | Cross-plan **gap directory**: which origin × style × grape clusters are chronically re-requested (a proxy for unfilled lots — VMP doesn't publish awards) vs. how few known wines qualify. Ranks by gap score → where to focus. Writes `gap_analysis.md` + `.json`. Also a live tab in the app (Analytics) |
 | `seed_producers.py` | Cold-starts the producer DB from **official** public sources (WoSA / WO scheme / IPW / WIETA), marked unverified-pending-claim; derives representation from the VMP index (see `SEED_SOURCES.md`) |
 | `ingest_systembolaget.py` | Cross-monopoly seed (Sweden): turns the open Systembolaget assortment into supply-side leads — a wine listed in SE but not in VMP is a monopoly-proven, NO-unrepresented producer. Scores the NO gap at the **importer** level (`represented` / `pan_nordic` via Anora et al. / `open`) against the VMP index. Extracts real public grapes/certs/sugar; FOB/volume left for the producer |
 | `ingest_alko.py` | Cross-monopoly seed (Finland): the Alko mirror of the above — joins Alko's price list with its supplier+importer list on product code, then scores the same NO gap (Anora/Altia is Finnish-origin, so `pan_nordic` matters most here) |
@@ -62,6 +65,46 @@ pending-claim. Regenerate the sample with `make_seed_sample.py`, or let the
 `refresh-seed-sample` workflow do it weekly.
 
 Commit `index.html` and GitHub Pages redeploys automatically (~1 min).
+
+## Thicken the database with more launch plans
+
+Launch plans are **auto-discovered** — every `specs_*.json` in the repo is embedded
+(newest tagged "(live)"), and each one deepens the gap analysis and recurrence stats.
+To add a historical plan:
+
+1. Download the Excel from Vinmonopolet's launch-plan archive (the **Lanseringer**
+   section on vinmonopolet.no; English editions are published alongside the Norwegian
+   ones, back through 2022, both halves). Grab the real download link from the site — the
+   exact archive path isn't hard-coded here so nothing is guessed.
+2. Parse it: `python3 parse_lanseringsplan.py <plan.xlsx> -o specs_YYYY_H.json`
+   (the parser handles both format generations).
+3. `python3 build_app.py` — it's picked up automatically. Commit the new
+   `specs_*.json` + `index.html`.
+
+**Hands-off option:** `fetch_launch_plans.py` downloads + parses plans automatically (on
+a machine that can reach vinmonopolet.no). Paste the direct `.xlsx` links into
+`plan_urls.txt` (most reliable — the site is a SPA), or let it try the known plan pages;
+the `refresh-launch-plans` workflow runs it monthly and commits any new plans + rebuilt
+app. See `plan_urls.txt` for how to grab the links.
+
+## From gap proxy to real fill-rate
+
+`gap_analysis.py` currently proxies "unfilled" with **re-request recurrence** because
+Vinmonopolet publishes what it asks for, not which lots were awarded. The Open API
+(`products-v0`, no application needed — see `vinmonopolet.no/om-oss/presse/datadeling`)
+closes the loop with **listing dates**:
+
+1. `track_listings.py` records when each product first appears in the catalog (via daily
+   snapshot diffs; the monthly sales-per-article feed is an alternative first-sale-month
+   signal). Runs in the `refresh-vmp-index` workflow once `VMP_API_KEY` is set.
+2. Cross-reference a new listing's date with a tender's **launch month**: a product
+   appearing in the launch window ⇒ that lot was filled; a lot whose category gets no
+   matching new listing ⇒ unfilled.
+
+Two honest limits: it is **forward-only** (no historical snapshots for past plans), and
+attributing a listing to a specific *lot* needs the product's origin/grape/price — the
+**Restricted** tier (or the public product page). Category-level fill (origin × style
+counts vs. demand) is computable from Open data alone.
 
 ## Working on this repo with Claude
 
