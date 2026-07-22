@@ -48,7 +48,6 @@ works offline). Served via GitHub Pages at the repository's Pages URL.
 | `scrape_producers.py` | Seeds producers from a national body's **public directory** (Austrian Wine API-first, WoSA via Chromium) → same schema, representation derived from the VMP index. API-first, rate-limited, EU-database-right aware (see `SEED_SOURCES.md`) |
 | `make_seed_sample.py` | Curates a capped, origin-diverse, English-normalised sample of the (large) seed files for the app to inline |
 | `make_*_template.py` | Generators for the producer/importer Excel templates |
-| `seed_se.json` | Raw Systembolaget open-data export (kept as a real source artifact; **not embedded** in the app). |
 | `specs_*.json` | Parsed tender plans: 2020-1, 2026-1, 2026-2, 2027-1 |
 | `PRODUCT.md` / `DEPLOY.md` | Product blueprint and the Supabase production path |
 
