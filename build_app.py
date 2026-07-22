@@ -1,6 +1,36 @@
 """Assembles the self-contained app: inlines SheetJS, embeds specs + wines +
-the producer template (base64). Output: index.html (the file GitHub Pages serves)."""
-import base64, json, os
+the producer template (base64). Output: index.html (the file GitHub Pages serves).
+
+Launch plans are auto-discovered: every specs_*.json in this folder is embedded, newest
+first (the newest is tagged "(live)"). Drop in more historical plans — parse the Excel
+from vinmonopolet.no with parse_lanseringsplan.py to specs_YYYY_H.json — and they flow
+into the app, the gap analysis and the recurrence stats with no code change."""
+import base64, json, os, glob, re
+
+
+def plan_label(fname):
+    lab = re.sub(r"^specs_(plan_)?", "", os.path.basename(fname))
+    lab = re.sub(r"(_en)?\.json$", "", lab)
+    return lab.replace("_", "-")            # "2026_1" -> "2026-1"
+
+
+def plan_year_half(fname):
+    nums = re.findall(r"\d+", os.path.basename(fname))
+    return (nums[0] if nums else "0", nums[1] if len(nums) > 1 else "0")
+
+
+def load_plans():
+    # newest first; within the same year/half prefer the English edition
+    files = sorted(glob.glob("specs_*.json"),
+                   key=lambda f: (plan_year_half(f), "_en" in f), reverse=True)
+    plans, seen = {}, set()
+    for f in files:
+        yh = plan_year_half(f)
+        if yh in seen:
+            continue
+        seen.add(yh)
+        plans[plan_label(f) + (" (live)" if not plans else "")] = json.load(open(f, encoding="utf-8"))
+    return plans
 
 # Baseline wine schema — seed records (from the cross-monopoly / directory seeders)
 # carry a leaner shape; fill any missing keys so the app renders/matches them safely.
@@ -32,7 +62,6 @@ def load_seeds():
 
 html = open("app_template.html", encoding="utf-8").read()
 sheetjs = open("package/dist/xlsx.full.min.js", encoding="utf-8").read()
-specs = json.load(open("specs_2020_1.json", encoding="utf-8"))
 wines = json.load(open("wines.json", encoding="utf-8"))["wines"]
 seeds = load_seeds()
 wines = wines + seeds
@@ -40,12 +69,8 @@ print(f"wines: {len(wines) - len(seeds)} curated + {len(seeds)} seed leads = {le
 tpl_b64 = base64.b64encode(open("producer_upload_template.xlsx", "rb").read()).decode()
 imp_b64 = base64.b64encode(open("importer_portfolio_template.xlsx", "rb").read()).decode()
 
-plans = {
-    "2027-1 (live)": json.load(open("specs_plan_2027_1_en.json", encoding="utf-8")),
-    "2026-2": json.load(open("specs_plan_2026_2_en.json", encoding="utf-8")),
-    "2026-1": json.load(open("specs_plan_2026_1_en.json", encoding="utf-8")),
-    "2020-1": specs,
-}
+plans = load_plans()
+print(f"plans: {len(plans)} — {', '.join(plans)}")
 world = open("world_paths.json", encoding="utf-8").read()
 html = html.replace("/*WORLD*/[]", world)
 html = html.replace("/*SHEETJS*/", sheetjs.replace("</script>", "<\\/script>"))

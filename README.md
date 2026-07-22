@@ -65,6 +65,21 @@ pending-claim. Regenerate the sample with `make_seed_sample.py`, or let the
 
 Commit `index.html` and GitHub Pages redeploys automatically (~1 min).
 
+## Thicken the database with more launch plans
+
+Launch plans are **auto-discovered** — every `specs_*.json` in the repo is embedded
+(newest tagged "(live)"), and each one deepens the gap analysis and recurrence stats.
+To add a historical plan:
+
+1. Download the Excel from Vinmonopolet's archive —
+   `vinmonopolet.no/lanseringer/arkiv` and `…/content/lanseringer/tidligere-lanseringer`
+   (English editions are published alongside the Norwegian ones; 2022–2026 both halves
+   are available).
+2. Parse it: `python3 parse_lanseringsplan.py <plan.xlsx> -o specs_YYYY_H.json`
+   (the parser handles both format generations).
+3. `python3 build_app.py` — it's picked up automatically. Commit the new
+   `specs_*.json` + `index.html`.
+
 ## From gap proxy to real fill-rate
 
 `gap_analysis.py` currently proxies "unfilled" with **re-request recurrence** because
