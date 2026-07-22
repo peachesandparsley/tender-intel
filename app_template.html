@@ -270,6 +270,18 @@
     border-left: 3px solid color-mix(in oklab, var(--accent) 38%, var(--border));
     border-radius: 0 8px 8px 0; padding: 8px 12px; margin: 8px 0 10px; }
   .oppwhy b { color: var(--text-primary); }
+  .tdetail { font-size: 12.5px; line-height: 1.5; margin: 8px 0 10px; padding: 10px 12px;
+    background: color-mix(in oklab, var(--text-primary) 3%, transparent);
+    border: 1px solid var(--border); border-radius: 8px; }
+  .tdgrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 3px 16px; }
+  .tdrow { display: flex; gap: 6px; }
+  .tdk { color: var(--muted); font-weight: 600; min-width: 84px; flex-shrink: 0; }
+  .tdrow span:last-child { color: var(--text-primary); }
+  .tdblock { margin-top: 9px; }
+  .tdk2 { color: var(--muted); font-weight: 700; font-size: 10.5px; letter-spacing: .03em; text-transform: uppercase; margin-bottom: 3px; }
+  .tdblock ul { margin: 0; padding-left: 17px; }
+  .tdblock li { margin: 2px 0; color: var(--text-primary); }
+  .tdblock p { margin: 0; color: var(--text-primary); }
   /* clickable producer / grape → map spotlight */
   .clk-prod { cursor: pointer; }
   .clk-prod:hover { color: var(--accent); text-decoration: underline; }
@@ -988,6 +1000,10 @@ const I18N = {
     catUnchecked: 'Sortiment usjekket',
     wlGrapes: 'Druer: ', wlVintage: 'Årgang ', wlBand: 'Prisbånd ', wlKr: ' kr',
     wlFob: e => `→ produsentpris må være ≤ €${e} etter avgifter og marginer`, wlDeadline: 'Frist ',
+    tdTitle: 'Hele anbudslinjen', tdReq: 'Krav i anbudet', tdCriteria: 'Vurderingskriterier (sensorikk)',
+    tdRegion: 'Land', tdRegion2: 'Region', tdAppellation: 'Appellasjon', tdGrapes: 'Druer',
+    tdVintage: 'Årgang', tdBand: 'Prisbånd', tdBottle: 'Flaskestørrelse', tdPackaging: 'Emballasje',
+    tdSelection: 'Utvalg', tdOffer: 'Tilbudstype', tdLaunch: 'Lansering', tdDeadline: 'Tilbudsfrist',
     repOpen: 'Åpen', repOpenDetail: 'ingen norsk listing funnet — introduksjonsmulighet',
     repHasImporter: 'har norsk importør',
     repProducerListed: 'Produsent i VMP-katalog', repProducerListedDetail: 'produsenten er listet (verifisert) — denne cuvéen ikke bekreftet',
@@ -1261,6 +1277,10 @@ const I18N = {
     catUnchecked: 'Range unchecked',
     wlGrapes: 'Grapes: ', wlVintage: 'Vintage ', wlBand: 'Price band ', wlKr: ' kr',
     wlFob: e => `→ producer price must be ≤ €${e} after duties and margins`, wlDeadline: 'Deadline ',
+    tdTitle: 'The full tender line', tdReq: 'Tender requirements', tdCriteria: 'Assessment criteria (sensory)',
+    tdRegion: 'Country', tdRegion2: 'Region', tdAppellation: 'Appellation', tdGrapes: 'Grapes',
+    tdVintage: 'Vintage', tdBand: 'Price band', tdBottle: 'Bottle size', tdPackaging: 'Packaging',
+    tdSelection: 'Range', tdOffer: 'Offer type', tdLaunch: 'Launch', tdDeadline: 'Offer deadline',
     repOpen: 'Open', repOpenDetail: 'no Norwegian listing found — introduction opportunity',
     repHasImporter: 'has a Norwegian importer',
     repProducerListed: 'Producer in VMP catalog', repProducerListedDetail: 'the producer is listed (verified) — this cuvée not confirmed',
@@ -1444,9 +1464,15 @@ function parseVintageText(t) {
   if (/more recent|or younger/i.test(t)) return { type:'vintage', min_year: Math.min(...years) };
   return { type:'vintage', years };
 }
+// The numbered requirement text normally lives in `spec`; Norwegian-edition sheets shift it
+// into `quality` (with the article number in `spec`), so use whichever holds the real text.
+function specReqText(s) {
+  const sp = String(s.spec || '');
+  return /[a-zA-Z]/.test(sp) ? sp : String(s.quality || '');
+}
 function clausesForSpec(spec) {
   const out = [];
-  for (const cl of splitClauses(spec.spec)) {
+  for (const cl of splitClauses(specReqText(spec))) {
     const rec = classify(cl); rec.text = cl;
     if (rec.type === 'other' && /certification.*label/i.test(cl) && out.length && out[out.length-1].type === 'cert') {
       out[out.length-1].on_label = true; continue;
@@ -2257,6 +2283,37 @@ function wantsLine(m) {
   if (m.fob) bits.push(L.wlFob(fmt(m.fob.eur, 1)));
   if (s.deadline) bits.push(L.wlDeadline + esc(s.deadline));
   return bits.join(' · ');
+}
+function selLabel(sel) {
+  const s = N(sel);
+  if (/basis|basic|base/.test(s)) return L.selBasis;
+  if (/parti|lot|engangs|single/.test(s)) return L.selParti;
+  return sel;
+}
+function bottleLabel(l) { return l ? (+(l * 100).toFixed(l * 100 % 1 ? 1 : 0)) + ' cl' : ''; }
+// The full tender line from the launch plan: every field Vinmonopolet publishes for the
+// lot, so a buyer/producer can judge it without opening the spreadsheet.
+function tenderDetail(s) {
+  const rows = [];
+  const kv = (k, v) => { if (v != null && String(v).trim()) rows.push(`<div class="tdrow"><span class="tdk">${k}</span><span>${v}</span></div>`); };
+  kv(L.tdRegion, esc(dispCountry(s.country)));
+  kv(L.tdRegion2, esc(s.region));
+  kv(L.tdAppellation, esc(s.appellation));
+  kv(L.tdGrapes, esc(capGrapes(specGrapes(s).filter(g => g !== 'traditional method'))));
+  kv(L.tdVintage, esc(s.vintage));
+  kv(L.tdBand, esc(s.price_text) + ' kr');
+  kv(L.tdBottle, esc(bottleLabel(s.litres)));
+  kv(L.tdPackaging, esc(s.packaging));
+  kv(L.tdSelection, esc(selLabel(s.selection)));
+  kv(L.tdOffer, esc(s.offer));
+  kv(L.tdLaunch, esc(s.launch));
+  kv(L.tdDeadline, esc(s.deadline));
+  let html = `<div class="tdetail"><div class="tdgrid">${rows.join('')}</div>`;
+  const req = specReqText(s), reqList = splitClauses(req);
+  if (reqList.length) html += `<div class="tdblock"><div class="tdk2">${L.tdReq}</div><ul>${reqList.map(c => `<li>${esc(c)}</li>`).join('')}</ul></div>`;
+  else if (/[a-z]/i.test(req)) html += `<div class="tdblock"><div class="tdk2">${L.tdReq}</div><p>${esc(req)}</p></div>`;
+  if (s.quality && N(s.quality) !== N(req)) html += `<div class="tdblock"><div class="tdk2">${L.tdCriteria}</div><p>${esc(s.quality)}</p></div>`;
+  return html + '</div>';
 }
 // a wine counts as "already on Vinmonopolet" if this exact cuvée is listed in the catalog
 function isOnVMP(x) {
@@ -3245,7 +3302,7 @@ function renderOpportunities() {
         <span class="opp-metric" title="${esc(L.evTip(st.sourced, st.total, st.confirmed, st.rep))}"><span class="v ev"><span class="ev-dot ev-${st.level}"></span>${stLabel}</span><span class="l">${L.evidence}</span></span>
         <span class="opp-metric" title="${L.oppScoreV}"><span class="scorebar" style="width:${Math.round(38*r.score/maxScore)}px"></span></span>
       </div>
-      <div class="opp-body">${why}${body}</div></div>`;
+      <div class="opp-body"><div class="tdk2" style="margin-bottom:4px">${L.tdTitle}</div>${tenderDetail(s)}${why}${body}</div></div>`;
   }).join('');
 }
 function exportShortlist() {
