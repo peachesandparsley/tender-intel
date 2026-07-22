@@ -11,6 +11,10 @@ alko_*.xlsx
 alko_*.tsv
 alko_*.csv
 
+# Generated analysis reports (regenerate with the scripts)
+gap_analysis.md
+gap_analysis.json
+
 # Local scratch
 *.pyc
 __pycache__/

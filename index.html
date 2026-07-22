@@ -647,6 +647,29 @@
   <!-- ANALYSE -->
   <section class="tab" id="tab-analyse">
     <div class="card">
+      <h2 data-i18n="h2Gap">Gap-analyse — udekket etterspørsel å målrette</h2>
+      <p class="note" style="margin:0 0 10px" data-i18n="noteGap">Vinmonopolet publiserer ikke hvilke anbud som ble fylt. Men når samme opprinnelse × drue × stil etterspørres <b>plan etter plan</b>, er det et sterkt tegn på kronisk underdekket etterspørsel — lot som ikke fikk gode nok tilbud og lyses ut på nytt. Denne tabellen rangerer slike gap: hvor ofte noe etterspørres, mot hvor få kjente viner som kvalifiserer. Høy gap-score = mye/gjentatt etterspørsel og lite kjent tilbud = der innsats gir størst potensial.</p>
+      <div class="tiles" id="gapTiles"></div>
+      <div class="filters" id="gapFilters" style="margin-top:12px">
+        <button data-gf="all" class="on" data-i18n="gapAll">Alle gap</button>
+        <button data-gf="chronic" data-i18n="gapChronic">Gjentakende (≥2 planer)</button>
+        <button data-gf="unmet" data-i18n="gapUnmet">Udekket (ingen kjent vin)</button>
+      </div>
+      <div class="dimbar" style="margin-bottom:6px">
+        <div><label data-i18n="lblGeo">Geografi</label><select id="gfCountry"><option value="" data-i18n="optAllCountries">Alle land</option></select></div>
+        <div><label data-i18n="gapStyleLabel">Stil</label><select id="gfStyle"><option value="" data-i18n="gapAllStyles">Alle stiler</option></select></div>
+      </div>
+      <div class="twrap"><table id="gapTable"><thead><tr>
+        <th data-i18n="gthOrigin">Opprinnelse</th><th data-i18n="gthStyle">Stil</th><th data-i18n="gthGrape">Drue</th>
+        <th class="num" data-i18n="gthPlans" data-i18n-title="gthPlansTip" title="I hvor mange planer etterspurt">Planer</th>
+        <th class="num" data-i18n="gthReq">Forespørsler</th><th class="num" data-i18n="gthPrice">~kr</th><th class="num" data-i18n="gthCert">Sert.%</th>
+        <th class="num" data-i18n="gthSupply" data-i18n-title="gthSupplyTip" title="Kjente viner i basen som kvalifiserer">Kjente viner</th>
+        <th class="num" data-i18n="gthOpen" data-i18n-title="gthOpenTip" title="Av disse: urepresentert i Norge">Åpne</th>
+        <th class="num" data-i18n="gthScore">Gap-score</th>
+      </tr></thead><tbody></tbody></table></div>
+      <p class="note" id="gapNote" style="margin:6px 0 0"></p>
+    </div>
+    <div class="card">
       <h2 data-i18n="h2Ana">Historisk analyse på tvers av lanseringsplaner</h2>
       <p class="note" style="margin:0 0 10px" data-i18n="noteAna">Gjentakelsesmønstre over alle innlastede planer — hvilke opprinnelser og druer Vinmonopolet ber om igjen og igjen, og hvor prisbåndene ligger. Dette er datagrunnlaget som vokser med hver plan.</p>
       <div class="tiles" id="anaTiles"></div>
@@ -852,6 +875,18 @@ const I18N = {
     katAll: 'Alle', katOpenNO: 'Åpne i Norge', katTakenNO: 'Representert i Norge',
     lblLand: 'Land', phProducerName: 'produsentnavn…',
     thWinesCount: 'Viner', thNO: 'Norge', thSE: 'Sverige', thFI: 'Finland',
+    h2Gap: 'Gap-analyse — udekket etterspørsel å målrette',
+    noteGap: 'Vinmonopolet publiserer ikke hvilke anbud som ble fylt. Men når samme opprinnelse × drue × stil etterspørres <b>plan etter plan</b>, er det et sterkt tegn på kronisk underdekket etterspørsel — lot som ikke fikk gode nok tilbud og lyses ut på nytt. Denne tabellen rangerer slike gap: hvor ofte noe etterspørres, mot hvor få kjente viner som kvalifiserer. Høy gap-score = mye/gjentatt etterspørsel og lite kjent tilbud = der innsats gir størst potensial.',
+    gapAll: 'Alle gap', gapChronic: 'Gjentakende (≥2 planer)', gapUnmet: 'Udekket (ingen kjent vin)',
+    gapStyleLabel: 'Stil', gapAllStyles: 'Alle stiler', gapAnyStyle: 'Vin', gapAnyGrape: 'drue uspesifisert',
+    gapTileClusters: 'etterspørselsklynger', gapTileChronic: 'gjentakende (≥2 planer)', gapTileUnmet: 'udekket i basen',
+    gthOrigin: 'Opprinnelse', gthStyle: 'Stil', gthGrape: 'Drue', gthPlans: 'Planer', gthPlansTip: 'I hvor mange planer etterspurt',
+    gthReq: 'Forespørsler', gthPrice: '~kr', gthCert: 'Sert.%', gthSupply: 'Kjente viner', gthSupplyTip: 'Kjente viner i basen som kvalifiserer',
+    gthOpen: 'Åpne', gthOpenTip: 'Av disse: urepresentert i Norge', gthScore: 'Gap-score',
+    gapUnmetBadge: 'udekket', gapUnmetTip: 'Ingen kjent vin i basen kvalifiserer — helt åpent',
+    gapChronicBadge: 'gjentakende', gapChronicTip: 'Etterspurt i minst to lanseringsplaner',
+    gapEmpty: 'Ingen klynger i dette filteret.',
+    gapNote: (n, np) => `${n} klynger · på tvers av ${np} planer. Gap-score = forespørsler × antall planer ÷ (kjente kvalifiserende viner + 1). NB: «kjente viner» er de i denne basen (et delvis utvalg) — ikke hele verdensmarkedet.`,
     h2Ana: 'Historisk analyse på tvers av lanseringsplaner',
     noteAna: 'Gjentakelsesmønstre over alle innlastede planer — hvilke opprinnelser og druer Vinmonopolet ber om igjen og igjen, og hvor prisbåndene ligger. Dette er datagrunnlaget som vokser med hver plan.',
     anaCh1: 'Anbud per land per plan', anaCh2: 'Mest etterspurte druer per plan',
@@ -1068,6 +1103,18 @@ const I18N = {
     katAll: 'All', katOpenNO: 'Open in Norway', katTakenNO: 'Represented in Norway',
     lblLand: 'Country', phProducerName: 'producer name…',
     thWinesCount: 'Wines', thNO: 'Norway', thSE: 'Sweden', thFI: 'Finland',
+    h2Gap: 'Gap analysis — under-served demand to target',
+    noteGap: 'Vinmonopolet does not publish which tenders were filled. But when the same origin × grape × style is requested <b>plan after plan</b>, that is a strong signal of chronically under-served demand — lots that did not attract good enough offers and get re-issued. This table ranks those gaps: how often something is requested, against how few known wines qualify. A high gap score = frequent/repeated demand and little known supply = where effort has the most potential.',
+    gapAll: 'All gaps', gapChronic: 'Recurring (≥2 plans)', gapUnmet: 'Unmet (no known wine)',
+    gapStyleLabel: 'Style', gapAllStyles: 'All styles', gapAnyStyle: 'Wine', gapAnyGrape: 'grape unspecified',
+    gapTileClusters: 'demand clusters', gapTileChronic: 'recurring (≥2 plans)', gapTileUnmet: 'unmet in the database',
+    gthOrigin: 'Origin', gthStyle: 'Style', gthGrape: 'Grape', gthPlans: 'Plans', gthPlansTip: 'In how many plans requested',
+    gthReq: 'Requests', gthPrice: '~kr', gthCert: 'Cert.%', gthSupply: 'Known wines', gthSupplyTip: 'Known wines in the database that qualify',
+    gthOpen: 'Open', gthOpenTip: 'Of those: unrepresented in Norway', gthScore: 'Gap score',
+    gapUnmetBadge: 'unmet', gapUnmetTip: 'No known wine in the database qualifies — wide open',
+    gapChronicBadge: 'recurring', gapChronicTip: 'Requested in at least two launch plans',
+    gapEmpty: 'No clusters under this filter.',
+    gapNote: (n, np) => `${n} clusters · across ${np} plans. Gap score = requests × number of plans ÷ (known qualifying wines + 1). Note: "known wines" are those in this database (a partial set) — not the whole world market.`,
     h2Ana: 'Historical analysis across launch plans',
     noteAna: 'Recurrence patterns across all loaded plans — which origins and grapes Vinmonopolet asks for again and again, and where the price bands sit. This is the dataset that grows with every plan.',
     anaCh1: 'Tenders per country per plan', anaCh2: 'Most requested grapes per plan',
@@ -2476,7 +2523,99 @@ function drawGrouped(svgId, legendId, cats, seriesNames, matrix) {
   if (legendId) $(legendId).innerHTML = seriesNames.map((sn, si) =>
     `<span><i style="background:${css(SLOTS[si])}"></i>${esc(sn)}</span>`).join('');
 }
+// ---- gap analysis: chronically re-requested demand vs known qualifying supply ----
+function specStyle(s) {
+  const g = N(s.group || '') + ' ' + N(s.main_type || '');
+  if (/sparkling|musserende/.test(g)) return 'sparkling';
+  if (/rose/.test(g)) return 'rose';
+  if (/fortified|sterkvin/.test(g)) return 'fortified';
+  if (/white|hvit/.test(g)) return 'white';
+  if (/red|rodvin|rod\b/.test(g)) return 'red';
+  return 'wine';
+}
+function wineStyle(w) {
+  const c = N(w.color || '');
+  if (/sparkling|musserende/.test(c)) return 'sparkling';
+  if (/rose/.test(c)) return 'rose';
+  if (/fortified|sterk/.test(c)) return 'fortified';
+  if (/white|hvit/.test(c)) return 'white';
+  if (/red|rod/.test(c)) return 'red';
+  return 'wine';
+}
+function styleLabel(st) {
+  return { red: L.grpRed, white: L.grpWhite, rose: L.grpRose, sparkling: L.grpSparkling,
+    fortified: L.grpFortified, wine: L.gapAnyStyle }[st] || st;
+}
+function computeGaps() {
+  const plans = Object.keys(PLANS), nPlans = plans.length;
+  const clusters = new Map();
+  const certRe = /organic|fairtrade|biodynam|sustainab|\bipw\b|\bwsb\b|terra vitis|equalitas|vegan|demeter/i;
+  for (const pn of plans) for (const s of PLANS[pn].filter(isWineSpec)) {
+    const country = (s.country || '').trim() || openTerm();
+    const style = specStyle(s);
+    const grapes = specGrapes(s).filter(g => g !== 'traditional method');
+    const price = s.price_hi ?? s.price_lo, cert = certRe.test(s.spec || '');
+    for (const g of (grapes.length ? grapes : [''])) {
+      const key = country + '|' + style + '|' + g;
+      if (!clusters.has(key)) clusters.set(key, { country, style, grape: g, plans: new Set(), requests: 0, prices: [], cert: 0 });
+      const c = clusters.get(key);
+      c.plans.add(pn); c.requests++; if (price) c.prices.push(price); if (cert) c.cert++;
+    }
+  }
+  const isOpenRep = w => /unrepresented|open for import|candidate for import/i.test(w.representation?.NO || '');
+  for (const c of clusters.values()) {
+    const qual = WINES.filter(w => {
+      if (c.country !== openTerm() && N(w.country) !== N(c.country) && !N(w.country).includes(N(c.country)) && !N(c.country).includes(N(w.country))) return false;
+      if (c.style !== 'wine' && wineStyle(w) !== c.style) return false;
+      if (c.grape && !Object.keys(w.grapes || {}).some(g => grapeNameMatch(g, c.grape))) return false;
+      return true;
+    });
+    c.supply = qual.length;
+    c.open = qual.filter(isOpenRep).length;
+    c.medPrice = c.prices.length ? [...c.prices].sort((a, b) => a - b)[Math.floor(c.prices.length / 2)] : 0;
+    c.certPct = c.requests ? Math.round(100 * c.cert / c.requests) : 0;
+    c.nPlans = c.plans.size;
+    c.gapScore = c.requests * c.nPlans / (c.supply + 1);
+    c.chronic = c.nPlans >= 2;
+    c.unmet = c.supply === 0;
+  }
+  return { list: [...clusters.values()], nPlans };
+}
+let GAPF = { mode: 'all', country: '', style: '' };
+function renderGapDirectory() {
+  const tb = $('gapTable') && $('gapTable').querySelector('tbody'); if (!tb) return;
+  const { list, nPlans } = computeGaps();
+  $('gapTiles').innerHTML = [
+    [list.length, L.gapTileClusters],
+    [list.filter(c => c.chronic).length, L.gapTileChronic],
+    [list.filter(c => c.unmet).length, L.gapTileUnmet],
+  ].map(([v, l]) => `<div class="tile"><div class="v">${v}</div><div class="l">${l}</div></div>`).join('');
+  fillSelect('gfCountry', [...new Set(list.map(c => c.country))].sort(), GAPF.country);
+  fillSelValueLabel('gfStyle', [...new Set(list.map(c => c.style))].map(st => [st, styleLabel(st)]), GAPF.style);
+  let rows = list.filter(c => {
+    if (GAPF.mode === 'chronic' && !c.chronic) return false;
+    if (GAPF.mode === 'unmet' && !c.unmet) return false;
+    if (GAPF.country && c.country !== GAPF.country) return false;
+    if (GAPF.style && c.style !== GAPF.style) return false;
+    return true;
+  }).sort((a, b) => b.gapScore - a.gapScore);
+  const maxG = rows.length ? rows[0].gapScore : 1;
+  tb.innerHTML = rows.slice(0, 200).map(c => {
+    const flags = (c.unmet ? `<span class="chip hi" title="${esc(L.gapUnmetTip)}">${L.gapUnmetBadge}</span> ` : '') +
+      (c.chronic ? `<span class="chip mid" title="${esc(L.gapChronicTip)}">${L.gapChronicBadge}</span>` : '');
+    return `<tr>
+      <td><b>${esc(c.country)}</b></td><td>${esc(styleLabel(c.style))}</td>
+      <td>${c.grape ? esc(dispGrape(c.grape)) : '<span style="color:var(--muted)">' + esc(L.gapAnyGrape) + '</span>'} ${flags}</td>
+      <td class="num">${c.nPlans}/${nPlans}</td><td class="num">${c.requests}</td>
+      <td class="num">${c.medPrice ? fmt(c.medPrice, 0) : '–'}</td><td class="num">${c.certPct ? c.certPct + '%' : '–'}</td>
+      <td class="num">${c.supply}</td><td class="num">${c.open || '–'}</td>
+      <td class="num"><b>${fmt(c.gapScore, 1)}</b> <span class="scorebar" style="width:${Math.round(30 * c.gapScore / maxG)}px"></span></td>
+    </tr>`;
+  }).join('') || `<tr><td colspan="10" style="color:var(--muted)">${L.gapEmpty}</td></tr>`;
+  $('gapNote').textContent = L.gapNote(rows.length, nPlans);
+}
 function renderAnalyse() {
+  renderGapDirectory();
   const names = Object.keys(PLANS);
   const wineSpecs = n => PLANS[n].filter(isWineSpec);
   $('anaTiles').innerHTML = names.map(n =>
@@ -3265,6 +3404,13 @@ $('oppFilters').querySelectorAll('button').forEach(b => b.addEventListener('clic
 }));
 $('ofCountry').addEventListener('change', () => { OPPFILT.country = $('ofCountry').value; renderOpportunities(); });
 $('ofMain').addEventListener('change', () => { OPPFILT.main = $('ofMain').value; renderOpportunities(); });
+$('gapFilters').querySelectorAll('button').forEach(b => b.addEventListener('click', () => {
+  GAPF.mode = b.dataset.gf;
+  $('gapFilters').querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b));
+  renderGapDirectory();
+}));
+$('gfCountry').addEventListener('change', () => { GAPF.country = $('gfCountry').value; renderGapDirectory(); });
+$('gfStyle').addEventListener('change', () => { GAPF.style = $('gfStyle').value; renderGapDirectory(); });
 ['mwCountry', 'mwColour', 'mwGrape', 'mwAbv', 'mwFob', 'mwName'].forEach(id =>
   $(id).addEventListener('keydown', e => { if (e.key === 'Enter') runMatchWine(); }));
 ['inRetail','inAbv','inVol','inPack','inMargin','inFreight','inCur2','inCur2Rate','inEur']
