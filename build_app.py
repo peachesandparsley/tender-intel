@@ -19,6 +19,31 @@ def plan_year_half(fname):
     return (nums[0] if nums else "0", nums[1] if len(nums) > 1 else "0")
 
 
+# Vinmonopolet publishes each plan in Norwegian and English. When only the Norwegian
+# edition is available, its country names ("Italia", "Frankrike", "Sør-Afrika") would
+# otherwise sit apart from the English plans — splitting the country filter, the gap
+# clusters, and the map (whose geometry is English). Canonicalise country to English at
+# embed time so every plan speaks one language. Token-level so compound origins
+# ("Belgia eller Norge") map cleanly too. Style words (Rødvin/Hvitvin/Musserende) already
+# survive via the app's ø→o normaliser, so only country needs translating here.
+COUNTRY_NO2EN = {
+    "frankrike": "France", "italia": "Italy", "spania": "Spain", "tyskland": "Germany",
+    "hellas": "Greece", "belgia": "Belgium", "nederland": "Netherlands", "norge": "Norway",
+    "sverige": "Sweden", "danmark": "Denmark", "storbritannia": "Great Britain",
+    "skottland": "Scotland", "tsjekkia": "Czech Republic", "østerrike": "Austria",
+    "europa": "Europe", "norden": "Nordics", "sør-afrika": "South Africa",
+    "sveits": "Switzerland", "ungarn": "Hungary", "kroatia": "Croatia", "libanon": "Lebanon",
+    "eller": "or", "og": "and",
+}
+_CTOKEN = re.compile(r"[A-Za-zÀ-ÿ]+(?:-[A-Za-zÀ-ÿ]+)?")
+
+
+def canon_country(s):
+    if not s:
+        return s
+    return _CTOKEN.sub(lambda m: COUNTRY_NO2EN.get(m.group(0).lower(), m.group(0)), s)
+
+
 def load_plans():
     # newest first; within the same year/half prefer the English edition
     files = sorted(glob.glob("specs_*.json"),
@@ -29,7 +54,11 @@ def load_plans():
         if yh in seen:
             continue
         seen.add(yh)
-        plans[plan_label(f) + (" (live)" if not plans else "")] = json.load(open(f, encoding="utf-8"))
+        specs = json.load(open(f, encoding="utf-8"))
+        for sp in specs:
+            if sp.get("country"):
+                sp["country"] = canon_country(sp["country"])
+        plans[plan_label(f) + (" (live)" if not plans else "")] = specs
     return plans
 
 # Baseline wine schema — seed records (from the cross-monopoly / directory seeders)
