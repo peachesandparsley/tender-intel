@@ -90,25 +90,16 @@ def normalize(w):
     return out
 
 
-def load_seeds():
-    """Merge every curated seed sample present. Seeds already carry seed: provenance
-    (so the app auto-badges them as sample leads); we only backfill the schema."""
-    seeds = []
-    for path in ("seed_sample.json",):
-        if os.path.exists(path):
-            seeds += json.load(open(path, encoding="utf-8")).get("wines", [])
-    return [normalize(w) for w in seeds]
-
-
 html = open("app_template.html", encoding="utf-8").read()
 sheetjs = open("package/dist/xlsx.full.min.js", encoding="utf-8").read()
-# Only genuinely-sourced records are embedded. wines.json (Claude-generated demo wines with
-# invented FOB/volume/profile) has been removed; if a real, sourced wines.json is added later
-# it is picked up here. The seed leads come from real monopoly open data (with source URLs).
+# The app ships with NO seed wines. The wine side is filled by users adding their own
+# portfolios (real FOB and all) — the whole point of the tool — matched against the real
+# tender data. Seed leads (Systembolaget open-data wines, Wikidata producers) were cosmetic:
+# already commercialised, no ex-cellar price, not genuine introduction opportunities — so they
+# are no longer embedded. A real, sourced wines.json, if ever added, is still picked up.
 curated = json.load(open("wines.json", encoding="utf-8"))["wines"] if os.path.exists("wines.json") else []
-seeds = load_seeds()
-wines = [normalize(w) for w in curated] + seeds
-print(f"wines: {len(curated)} curated + {len(seeds)} seed leads = {len(wines)}")
+wines = [normalize(w) for w in curated]
+print(f"wines embedded: {len(wines)} (seed leads removed — users add their own portfolios)")
 tpl_b64 = base64.b64encode(open("producer_upload_template.xlsx", "rb").read()).decode()
 imp_b64 = base64.b64encode(open("importer_portfolio_template.xlsx", "rb").read()).decode()
 

@@ -40,15 +40,17 @@ COUNTRIES = {
     "GR": ("Q41", "Greece"), "HU": ("Q28", "Hungary"), "GE": ("Q230", "Georgia"),
 }
 
-# A winery is `instance of / subclass of winery (Q1414722)`, OR any entity whose product is
-# wine (P1056 = wine, Q282) — the UNION hedges against items typed only one way. Region via
-# "located in the administrative territorial entity" (P131); website via P856.
+# A winery is `instance of / subclass of` one of the winery-ish classes, OR any entity whose
+# product is wine (P1056 = wine, Q282). The country link is matched directly (P17) OR via the
+# located-in chain (P131+ -> P17): many wineries state only their region (e.g. Stellenbosch),
+# not the country, so a plain P17 filter misses them entirely (South Africa returned 0).
+WINERY_TYPES = "wd:Q1414722 wd:Q22687913 wd:Q204194"   # winery; wine estate; vineyard (subclasses via P279*)
 QUERY = """
 SELECT DISTINCT ?item ?itemLabel ?regionLabel ?website WHERE {
-  { ?item wdt:P31/wdt:P279* wd:Q1414722 . }
+  { ?item wdt:P31/wdt:P279* ?wtype . VALUES ?wtype { %(types)s } }
   UNION
   { ?item wdt:P1056 wd:Q282 . }
-  ?item wdt:P17 wd:%(country)s .
+  ?item (wdt:P17 | wdt:P131+/wdt:P17) wd:%(country)s .
   OPTIONAL { ?item wdt:P131 ?region . }
   OPTIONAL { ?item wdt:P856 ?website . }
   SERVICE wikibase:label { bd:serviceParam wikibase:language "en,%(lang)s". }
@@ -62,7 +64,7 @@ LANG = {"FR": "fr", "IT": "it", "DE": "de", "ES": "es", "AT": "de", "PT": "pt",
 
 
 def fetch(country_qid, lang, limit):
-    q = QUERY % {"country": country_qid, "lang": lang, "limit": limit}
+    q = QUERY % {"country": country_qid, "lang": lang, "limit": limit, "types": WINERY_TYPES}
     url = ENDPOINT + "?" + urllib.parse.urlencode({"query": q, "format": "json"})
     req = urllib.request.Request(url, headers={"User-Agent": UA, "Accept": "application/sparql-results+json"})
     with urllib.request.urlopen(req, timeout=90) as r:
@@ -142,14 +144,21 @@ def main():
     qid, name = COUNTRIES[cc]
     print(f"querying Wikidata for wineries in {name} ({qid})…")
     data = fetch(qid, LANG.get(cc, "en"), args.max)
+    n_rows = len(data.get("results", {}).get("bindings", []))
     vmp = load_vmp_index(args.vmp_index)
     recs = build(cc, data, vmp)
     rep = sum(1 for r in recs if r["no_gap"] == "represented")
+    with_web = sum(1 for r in recs if not r["source"].endswith("wikidata.org"))
     out = args.out or f"seed_wd_{cc.lower()}.json"
     json.dump({"wines": recs}, open(out, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
-    print(f"  {len(recs)} producers -> {out}  ({rep} already in VMP, {len(recs) - rep} open/pending)")
+    print(f"  {n_rows} raw rows -> {len(recs)} producers -> {out}")
+    print(f"  {rep} already in VMP · {len(recs) - rep} open/pending · {with_web} with a website"
+          + ("" if vmp else "  (no vmp_catalog_index.json — dedup pending; run refresh-vmp-index first)"))
+    for r in recs[:10]:
+        print(f"     · {r['producer']} — {r['region'] or '(no region)'}")
     if not recs:
-        print("  (0 rows — the winery QID/UNION may need adjusting for this country; check the query.)")
+        print("  (0 producers — Wikidata's winery coverage for this country may be too thin; "
+              "if so, the national directory is the real source.)")
 
 
 if __name__ == "__main__":
