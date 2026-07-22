@@ -104,22 +104,21 @@ MONTHS = {"january": 1, "february": 2, "march": 3, "april": 4, "may": 5, "june":
 def period_from_specs(specs):
     """Derive (year, half) from a parsed plan, URL-independent.
 
-    Every row's `ref` is YYYY + MM(launch month) + sequence (e.g. 202607001 = 2026,
-    July → 2nd half). That's the most reliable signal; fall back to the launch month
-    name paired with the deadline year (deadlines run the year before the launch)."""
+    Every tender's article number is YYYY + MM(launch month) + sequence (e.g. 202607001
+    = 2026, July → 2nd half) — the authoritative period signal. It normally sits in `ref`,
+    but Norwegian-edition sheets shift columns and it lands in `spec`, so check both.
+    (An earlier launch-month + deadline-year heuristic misdated a Norwegian 2026-2 sheet as
+    2027-2 — the deadline runs months *before* the launch — so we no longer guess from
+    dates; if no article number is present we return None rather than mislabel the plan.)"""
     yh = Counter()
     for s in specs:
-        ref = re.sub(r"\D", "", str(s.get("ref") or ""))
-        m = re.match(r"(20\d\d)(\d{2})\d", ref)
-        if m and 1 <= int(m.group(2)) <= 12:
-            y, mo = int(m.group(1)), int(m.group(2))
-            yh[(y, 1 if mo <= 6 else 2)] += 1
-            continue
-        mo = MONTHS.get(str(s.get("launch") or "").strip().lower())
-        dy = re.search(r"(20\d\d)", str(s.get("deadline") or ""))
-        if mo and dy:
-            y = int(dy.group(1)) + 1   # launch year = deadline year + 1
-            yh[(y, 1 if mo <= 6 else 2)] += 1
+        for fld in ("ref", "spec"):
+            v = re.sub(r"\D", "", str(s.get(fld) or ""))
+            m = re.match(r"(20\d\d)(\d{2})\d", v)   # YYYYMM + at least one sequence digit
+            if m and 1 <= int(m.group(2)) <= 12:
+                y, mo = int(m.group(1)), int(m.group(2))
+                yh[(y, 1 if mo <= 6 else 2)] += 1
+                break
     if not yh:
         return None
     return yh.most_common(1)[0][0]

@@ -59,11 +59,16 @@ def load_plans():
         for i, sp in enumerate(specs):
             if sp.get("country"):
                 sp["country"] = canon_country(sp["country"])
-            # Some editions (e.g. the Norwegian 2027-2 sheet) leave the reference column
-            # blank. ref is the app's stable identity for a tender (shortlist keys, titles),
-            # so synthesise a deterministic one per row when it's missing.
+            # Some editions (Norwegian sheets) leave `ref` blank and put the article number
+            # in `spec` instead. ref is the app's stable tender identity (shortlist keys,
+            # titles), so recover the real number from spec when it's a bare varenr (and clear
+            # the junk out of spec); otherwise synthesise a deterministic per-row id.
             if not str(sp.get("ref") or "").strip():
-                sp["ref"] = f"{y}-{h}#{i + 1:03d}"
+                sv = str(sp.get("spec") or "").strip()
+                if re.fullmatch(r"\d{6,10}", sv):
+                    sp["ref"], sp["spec"] = sv, ""
+                else:
+                    sp["ref"] = f"{y}-{h}#{i + 1:03d}"
         plans[plan_label(f) + (" (live)" if not plans else "")] = specs
     return plans
 
