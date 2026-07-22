@@ -1196,11 +1196,40 @@ const N = s => (s || '').toString()
 const splitClauses = t => (t || '').split(/\s*\d+\)\s*/).map(s => s.trim().replace(/\.$/,'')).filter(Boolean);
 const varieties = t => t.split(/,| and\/or | or | og |\//i).map(v => v.trim().toLowerCase()).filter(v => v.length > 2);
 
+// blend shorthands → the set of permitted varieties (so "based on a Bordeaux blend" matches)
+const BLEND_ALIASES = [
+  { re: /\bg\.?\s?s\.?\s?m\.?\b|grenache[,/ ]+syrah[,/ ]+mourv/, name: 'GSM',
+    v: ['grenache', 'syrah', 'mourvedre', 'cinsault', 'carignan'] },
+  { re: /ch(?:â|a)teauneuf/, name: 'Châteauneuf-du-Pape',
+    v: ['grenache', 'syrah', 'mourvedre', 'cinsault', 'counoise', 'vaccarese', 'terret noir', 'muscardin', 'clairette', 'bourboulenc', 'roussanne', 'picpoul'] },
+  { re: /rh(?:ô|o)ne(?:-style)? blend|southern rh(?:ô|o)ne/, name: 'Rhône blend',
+    v: ['grenache', 'syrah', 'mourvedre', 'cinsault', 'carignan', 'counoise'] },
+  { re: /white bordeaux|bordeaux blanc/, name: 'White Bordeaux blend',
+    v: ['sauvignon blanc', 'semillon', 'muscadelle', 'sauvignon gris'] },
+  { re: /bordeaux(?:-style)?(?:\s+(?:red|blend))|bordeaux blend|left bank|right bank|\bclaret\b|\bmeritage\b/, name: 'Bordeaux blend',
+    v: ['cabernet sauvignon', 'merlot', 'cabernet franc', 'petit verdot', 'malbec', 'carmenere'] },
+  { re: /cape blend/, name: 'Cape blend',
+    v: ['pinotage', 'cabernet sauvignon', 'merlot', 'cabernet franc', 'shiraz', 'syrah'] },
+  { re: /douro blend|port(?:uguese)?\s+blend/, name: 'Douro/Port blend',
+    v: ['touriga nacional', 'touriga franca', 'tinta roriz', 'tempranillo', 'tinta barroca', 'tinto cao', 'sousao'] },
+  { re: /super[- ]?tuscan/, name: 'Super Tuscan',
+    v: ['sangiovese', 'cabernet sauvignon', 'merlot', 'cabernet franc', 'syrah'] },
+  { re: /field blend|co-?planted|gemischter satz/, name: 'field blend', multi: true },
+];
+function detectBlend(c) {
+  for (const b of BLEND_ALIASES) if (b.re.test(c))
+    return b.multi ? { type: 'grape', mode: 'blend_multi', varieties: [], blend: b.name }
+                   : { type: 'grape', mode: 'any_of', varieties: b.v, blend: b.name };
+  return null;
+}
+
 function classify(cl) {
   const c = cl.toLowerCase();
   if (/cap classique|mcc\b/.test(c)) return { type:'method', method:'traditional (Cap Classique)' };
   if (/traditional method|methode traditionnelle|tradisjonell metode/.test(c)) return { type:'method', method:'traditional' };
   if (/charmat|tank method/.test(c)) return { type:'method', method:'charmat' };
+  const blend = detectBlend(c);
+  if (blend) return blend;               // GSM / Bordeaux / Cape / field blend … → permitted set
   let m = cl.match(/single grape variety ([A-Za-zàâäéèêëïîôöùûüç' -]+?)(?:$|[.,;(])/i);
   if (m) return { type:'grape', mode:'single', varieties: varieties(m[1]) };
   m = cl.match(/based on (?:min\.?|minimum)?\s*(\d+)\s*%\s*(.+)/i);
@@ -1298,6 +1327,10 @@ function checkClause(cl, w) {
       if (allPermitted) return 'pass';                     // every grape is from the permitted set — knowable without %
       if (known) return vs.reduce((s, v) => s + grapePct(w, v), 0) >= 99 ? 'pass' : 'fail';
       return 'fail';                                       // contains a grape outside the permitted set
+    }
+    if (cl.mode === 'blend_multi') {                       // field blend: the wine must itself be a blend
+      if (wg.length >= 2) return 'pass';
+      return wg.length === 1 ? 'fail' : 'unknown';
     }
   }
   if (t === 'method') return w.method && N(w.method).includes(N(cl.method).split(' ')[0]) ? 'pass' : 'fail';
