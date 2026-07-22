@@ -1258,24 +1258,44 @@ function clausesForSpec(spec) {
 }
 
 /* ============ wine ↔ spec eligibility (port of match_wines.py) ============ */
+const GRAPE_SYN = { mataro: 'mourvedre', mourvedre: 'mataro', shiraz: 'syrah', syrah: 'shiraz',
+  primitivo: 'zinfandel', zinfandel: 'primitivo', garnacha: 'grenache', grenache: 'garnacha',
+  'pinot gris': 'pinot grigio', 'pinot grigio': 'pinot gris', 'pinot noir': 'spatburgunder',
+  spatburgunder: 'pinot noir', grauburgunder: 'pinot gris', weissburgunder: 'pinot blanc' };
+// does grape name g refer to variety X (loose match, synonym-aware)?
+function grapeNameMatch(g, X) {
+  const a = N(g), b = N(X);
+  return a.includes(b) || b.includes(a) || (GRAPE_SYN[b] && a.includes(N(GRAPE_SYN[b]))) || (GRAPE_SYN[a] && b.includes(N(GRAPE_SYN[a])));
+}
 function grapePct(wine, variety) {
-  const v = N(variety), syn = { mataro:'mourvedre', mourvedre:'mataro', shiraz:'syrah', syrah:'shiraz' };
-  for (const [g, pct] of Object.entries(wine.grapes || {})) {
-    const gn = N(g);
-    if (gn.includes(v) || v.includes(gn)) return pct;
-  }
   for (const [g, pct] of Object.entries(wine.grapes || {}))
-    if (syn[v] && N(g).includes(syn[v])) return pct;
+    if (grapeNameMatch(g, variety)) return pct;
   return 0;
 }
 function checkClause(cl, w) {
   const t = cl.type;
   if (t === 'grape') {
     const vs = cl.varieties || [];
-    if (cl.mode === 'single') return grapePct(w, vs[0] || '') === 100 ? 'pass' : 'fail';
-    const total = vs.reduce((s, v) => s + grapePct(w, v), 0);
-    if (cl.mode === 'min_pct') return total >= cl.pct ? 'pass' : 'fail';
-    if (cl.mode === 'any_of') return total >= 99 ? 'pass' : 'fail';
+    const wg = Object.entries(w.grapes || {});
+    const known = wg.some(([, p]) => +p > 0);   // are the percentages filled in, or just the varieties?
+    const hasVar = X => wg.some(([g]) => grapeNameMatch(g, X));
+    if (cl.mode === 'single') {
+      const X = vs[0] || '';
+      if (!hasVar(X)) return 'fail';                       // wine doesn't contain the required variety
+      if (known) return grapePct(w, X) === 100 ? 'pass' : 'fail';
+      return wg.length === 1 ? 'unknown' : 'fail';         // sole variety, % unconfirmed → unknown; a blend can't be single
+    }
+    if (cl.mode === 'min_pct') {
+      if (!vs.some(hasVar)) return 'fail';
+      if (known) return vs.reduce((s, v) => s + grapePct(w, v), 0) >= cl.pct ? 'pass' : 'fail';
+      return 'unknown';                                    // variety present, exact % pending → unknown, not fail
+    }
+    if (cl.mode === 'any_of') {
+      const allPermitted = wg.length > 0 && wg.every(([g]) => vs.some(v => grapeNameMatch(g, v)));
+      if (allPermitted) return 'pass';                     // every grape is from the permitted set — knowable without %
+      if (known) return vs.reduce((s, v) => s + grapePct(w, v), 0) >= 99 ? 'pass' : 'fail';
+      return 'fail';                                       // contains a grape outside the permitted set
+    }
   }
   if (t === 'method') return w.method && N(w.method).includes(N(cl.method).split(' ')[0]) ? 'pass' : 'fail';
   if (t === 'vintage') {
