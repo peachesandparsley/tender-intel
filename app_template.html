@@ -250,6 +250,20 @@
   .chiptoggle:has(input:checked) { border-color: var(--accent); color: #fff;
     background: var(--accent); font-weight: 600; }
   .fieldlabel { display: block; font-size: 11.5px; color: var(--muted); margin-bottom: 3px; }
+  /* clickable producer / grape → map spotlight */
+  .clk-prod { cursor: pointer; }
+  .clk-prod:hover { color: var(--accent); text-decoration: underline; }
+  .gtok { cursor: pointer; display: inline-block; border-radius: 5px; padding: 0 3px; }
+  .gtok:hover { background: color-mix(in oklab, var(--accent) 12%, transparent); color: var(--accent); }
+  .spotbar { display: inline-flex; align-items: center; gap: 9px; flex-wrap: wrap;
+    background: color-mix(in oklab, var(--accent) 10%, var(--surface-1));
+    border: 1px solid color-mix(in oklab, var(--accent) 30%, var(--border));
+    border-radius: 999px; padding: 6px 8px 6px 14px; font-size: 12.5px; color: var(--text-secondary); }
+  .spotbar + .spotbar { margin-left: 8px; }
+  .spotbar b { color: var(--text-primary); }
+  .spotbar .x { cursor: pointer; border: none; background: none; color: var(--muted); font-size: 16px;
+    line-height: 1; padding: 0 4px; border-radius: 50%; }
+  .spotbar .x:hover { color: var(--accent); }
   .graperows { display: flex; flex-direction: column; gap: 6px; padding-top: 3px; }
   .graperow { display: flex; gap: 8px; }
   .graperow select { flex: 1; min-width: 0; }
@@ -565,8 +579,9 @@
         <div style="flex:1.4"><label data-i18n="lblText">Fritekst</label><input id="wfQ" data-i18n-ph="phWineText" placeholder="produsent, vin, drue…"></div>
         <div style="min-width:90px;flex:0"><label>&nbsp;</label><button class="btn ghost" data-i18n="btnReset" style="width:100%;padding:5px 8px" onclick="resetWineFilters()">Nullstill</button></div>
       </div>
+      <div id="wineSpot" style="margin:8px 0 2px"></div>
       <svg id="wineMapSvg" style="width:100%;display:block;border-radius:10px;margin:6px 0 4px"></svg>
-      <p class="note" style="margin:0 0 8px"><span data-i18n="noteWineMapClick">Klikk et land på kartet for å filtrere listen; klikk igjen for å oppheve. </span><span id="wineFilterCount"></span></p>
+      <p class="note" style="margin:0 0 8px"><span data-i18n="noteWineMapClick">Klikk et land på kartet for å filtrere. Klikk en <b>produsent</b> eller <b>drue</b> i tabellen for å se opprinnelsen på kartet. </span><span id="wineFilterCount"></span></p>
       <p>
         <button class="btn ghost" data-i18n="btnExportXlsx" onclick="exportWinesXlsx()">Eksporter (xlsx)</button>
         <label class="btn ghost" style="cursor:pointer"><span data-i18n="btnImportXlsx">Importer (xlsx)</span><input type="file" id="wineXlsxIn" accept=".xlsx,.xls" style="display:none"></label>
@@ -792,6 +807,11 @@ const I18N = {
     sampleBadge: 'lead', sampleBadgeTitle: 'Seedet lead — ekte offentlige data der de finnes, men uverifisert for NO og venter på produsentbekreftelse',
     lblCert: 'Sertifisering', lblStatusNO: 'Status Norge', phWineText: 'produsent, vin, drue…',
     noteWineMapClick: 'Klikk et land på kartet for å filtrere listen; klikk igjen for å oppheve. ',
+    spotProdTip: 'Klikk for å se hvor på kartet produsenten har viner fra',
+    spotGrapeTip: 'Klikk for å se hvor druen brukes på kartet',
+    spotClear: 'Fjern',
+    spotProd: (n, nc, cs) => `${n} vin${n === 1 ? '' : 'er'} fra ${nc} land: ${cs}`,
+    spotGrape: (n, nc, cs) => `brukt i ${n} vin${n === 1 ? '' : 'er'} fra ${nc} land: ${cs}`,
     btnExportXlsx: 'Eksporter (xlsx)', btnImportXlsx: 'Importer (xlsx)', btnExportJson: 'Eksporter (JSON)', btnImportJson: 'Importer (JSON)',
     thProducer: 'Produsent', thWine: 'Vin', thCountry: 'Land', thTypeCol: 'Type', thGrapes: 'Druer',
     thSugar: 'Sukker', ttSugar: 'sukker g/l', thProfile: 'Profil F/F/G',
@@ -1002,7 +1022,12 @@ const I18N = {
     sampleBannerShort: '<b>Sample/lead:</b> badged wines are AI examples or real-but-unverified leads from Nordic monopoly catalogs. FOB/volume left blank pending producer confirmation.',
     sampleBadge: 'lead', sampleBadgeTitle: 'Seeded lead — real public data where available, but unverified for NO and pending producer confirmation',
     lblCert: 'Certification', lblStatusNO: 'Status Norway', phWineText: 'producer, wine, grape…',
-    noteWineMapClick: 'Click a country on the map to filter the list; click again to clear. ',
+    noteWineMapClick: 'Click a country on the map to filter. Click a <b>producer</b> or <b>grape</b> in the table to spotlight its origins on the map. ',
+    spotProdTip: 'Click to spotlight where this producer sources from',
+    spotGrapeTip: 'Click to spotlight where this grape is used',
+    spotClear: 'Clear',
+    spotProd: (n, nc, cs) => `${n} wine${n === 1 ? '' : 's'} from ${nc} countr${nc === 1 ? 'y' : 'ies'}: ${cs}`,
+    spotGrape: (n, nc, cs) => `used in ${n} wine${n === 1 ? '' : 's'} from ${nc} countr${nc === 1 ? 'y' : 'ies'}: ${cs}`,
     btnExportXlsx: 'Export (xlsx)', btnImportXlsx: 'Import (xlsx)', btnExportJson: 'Export (JSON)', btnImportJson: 'Import (JSON)',
     thProducer: 'Producer', thWine: 'Wine', thCountry: 'Country', thTypeCol: 'Type', thGrapes: 'Grapes',
     thSugar: 'Sugar', ttSugar: 'sugar g/l', thProfile: 'Profile B/F/T',
@@ -2132,9 +2157,11 @@ function qualitySummary(w) {
   Object.values(w.verify || {}).forEach(f => c[f.tier] != null && c[f.tier]++);
   return c;
 }
-const WFILTERS = { country: '', type: '', cert: '', rep: '', q: '' };
+const WFILTERS = { country: '', type: '', cert: '', rep: '', q: '', producer: '', grape: '' };
 function winePass(w, skip) {
   if (skip !== 'country' && WFILTERS.country && w.country !== WFILTERS.country) return false;
+  if (WFILTERS.producer && w.producer !== WFILTERS.producer) return false;
+  if (WFILTERS.grape && !Object.keys(w.grapes || {}).some(g => grapeNameMatch(g, WFILTERS.grape))) return false;
   if (WFILTERS.type && (w.color || '') !== WFILTERS.type) return false;
   if (WFILTERS.cert && !(w.certs || []).some(c => c === WFILTERS.cert)) return false;
   if (WFILTERS.rep && repInfo(w.representation?.NO).k !== (WFILTERS.rep === 'taken' ? repInfo(w.representation?.NO).k === 'taken' || repInfo(w.representation?.NO).k === 'none' ? repInfo(w.representation?.NO).k : 'taken' : WFILTERS.rep)) {
@@ -2157,6 +2184,28 @@ function renderWineDims() {
   fillWineSelect('wfCountry', [...new Set(WINES.map(w => w.country))].sort(), WFILTERS.country);
   fillWineSelect('wfType', [...new Set(WINES.map(w => w.color).filter(Boolean))].sort(), WFILTERS.type, capColor);
   fillWineSelect('wfCert', [...new Set(WINES.flatMap(w => w.certs || []))].sort(), WFILTERS.cert);
+  renderWineSpot();
+}
+// spotlight a producer / grape on the wine map: highlight the countries their wines come from
+function spotlightProducer(p) { WFILTERS.producer = WFILTERS.producer === p ? '' : p; if (WFILTERS.producer) WFILTERS.grape = ''; afterSpotlight(); }
+function spotlightGrape(g) { WFILTERS.grape = WFILTERS.grape === g ? '' : g; if (WFILTERS.grape) WFILTERS.producer = ''; afterSpotlight(); }
+function clearSpot(which) { WFILTERS[which] = ''; afterSpotlight(); }
+function afterSpotlight() { renderWineDims(); renderWines(); const m = $('wineMapSvg'); if (m) m.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+function renderWineSpot() {
+  const el = $('wineSpot'); if (!el) return;
+  const bar = (icon, which, label, txt) => `<span class="spotbar">${icon} <b>${esc(label)}</b> — ${txt}<button class="x" title="${esc(L.spotClear)}" onclick="clearSpot('${which}')">×</button></span>`;
+  const parts = [];
+  if (WFILTERS.producer) {
+    const set = WINES.filter(w => w.producer === WFILTERS.producer);
+    const cs = [...new Set(set.map(w => w.country).filter(Boolean))];
+    parts.push(bar('📍', 'producer', WFILTERS.producer, L.spotProd(set.length, cs.length, cs.join(', '))));
+  }
+  if (WFILTERS.grape) {
+    const set = WINES.filter(w => Object.keys(w.grapes || {}).some(g => grapeNameMatch(g, WFILTERS.grape)));
+    const cs = [...new Set(set.map(w => w.country).filter(Boolean))];
+    parts.push(bar('🍇', 'grape', dispGrape(WFILTERS.grape), L.spotGrape(set.length, cs.length, cs.join(', '))));
+  }
+  el.innerHTML = parts.join('');
 }
 function resetWineFilters() {
   Object.keys(WFILTERS).forEach(k => WFILTERS[k] = '');
@@ -2164,6 +2213,7 @@ function resetWineFilters() {
   $('wfQ').value = '';
   renderWineDims(); renderWines();
 }
+window.spotlightProducer = spotlightProducer; window.spotlightGrape = spotlightGrape; window.clearSpot = clearSpot;
 function renderWines() {
   const shown = applySort(WINES.filter(w => winePass(w)), SORTS.wine, WINE_GET);
   $('wineCount').textContent = L.wineCountFn(shown.length, WINES.length);
@@ -2184,9 +2234,9 @@ function renderWines() {
       const [sym, col] = TIER[s.tier] || ['·','inherit'];
       return `<span style="color:${col};font-weight:700">${sym}</span> <b>${L.fieldNames[f] || f}</b> — ${esc(s.note)}`;
     }).join('<br>') : L.qNoData;
-    return `<tr class="rowx"><td><b>${esc(w.producer)}</b>${isSeed(w) ? ` <span class="chip sample" title="${esc(L.sampleBadgeTitle)}">${L.sampleBadge}</span>` : ''}</td><td>${esc(w.name)}</td><td>${esc(w.country)}</td>
+    return `<tr class="rowx"><td><b class="clk-prod" data-p="${esc(w.producer)}" title="${esc(L.spotProdTip)}">${esc(w.producer)}</b>${isSeed(w) ? ` <span class="chip sample" title="${esc(L.sampleBadgeTitle)}">${L.sampleBadge}</span>` : ''}</td><td>${esc(w.name)}</td><td>${esc(w.country)}</td>
      <td>${esc(capColor(w.color))}${w.method ? L.tradMethod : ''}</td>
-     <td>${Object.entries(w.grapes || {}).map(([g, p]) => `${esc(dispGrape(g))} ${p}%`).join(', ')}</td>
+     <td>${Object.entries(w.grapes || {}).map(([g, p]) => `<span class="clk-grape gtok" data-g="${esc(g)}" title="${esc(L.spotGrapeTip)}">${esc(dispGrape(g))}${p ? ` ${p}%` : ''}</span>`).join(' ')}</td>
      <td class="num">${w.sugar_g_l ?? '–'}</td>
      <td class="num">${pr}</td><td style="font-size:12px">${emb}</td>
      <td class="num">${w.fob_eur != null ? fmt(w.fob_eur, 1) : '–'}</td>
@@ -2196,7 +2246,10 @@ function renderWines() {
      <td style="font-size:12px;white-space:nowrap">${qCell}</td></tr>
     <tr class="detail" style="display:none"><td colspan="13">${detail}</td></tr>`;
   }).join('');
-  hookRows($('wineTable').querySelector('tbody'));
+  const tb = $('wineTable').querySelector('tbody');
+  tb.querySelectorAll('.clk-prod').forEach(el => el.addEventListener('click', e => { e.stopPropagation(); spotlightProducer(el.dataset.p); }));
+  tb.querySelectorAll('.clk-grape').forEach(el => el.addEventListener('click', e => { e.stopPropagation(); spotlightGrape(el.dataset.g); }));
+  hookRows(tb);
 }
 // seed/demo record? (AI-seeded illustrative data, not from a real source)
 const isSeed = w => /systemfr|seed/i.test((w.audit && w.audit.created_by) || '');
