@@ -652,7 +652,7 @@
       <div class="tiles" id="gapTiles"></div>
       <div class="filters" id="gapFilters" style="margin-top:12px">
         <button data-gf="all" class="on" data-i18n="gapAll">Alle gap</button>
-        <button data-gf="chronic" data-i18n="gapChronic">Gjentakende (≥2 planer)</button>
+        <button data-gf="open" data-i18n="gapStillOpen" data-i18n-title="gapStillOpenTip" title="Gjentatt OG fortsatt etterspurt i nyeste plan">Fortsatt åpne</button>
         <button data-gf="unmet" data-i18n="gapUnmet">Udekket (ingen kjent vin)</button>
       </div>
       <div class="dimbar" style="margin-bottom:6px">
@@ -662,6 +662,7 @@
       <div class="twrap"><table id="gapTable"><thead><tr>
         <th data-i18n="gthOrigin">Opprinnelse</th><th data-i18n="gthStyle">Stil</th><th data-i18n="gthGrape">Drue</th>
         <th class="num" data-i18n="gthPlans" data-i18n-title="gthPlansTip" title="I hvor mange planer etterspurt">Planer</th>
+        <th class="num" data-i18n="gthLastAsked" data-i18n-title="gapLastAskedTip" title="Nyeste plan der dette ble etterspurt">Sist etterspurt</th>
         <th class="num" data-i18n="gthReq">Forespørsler</th><th class="num" data-i18n="gthPrice">~kr</th><th class="num" data-i18n="gthCert">Sert.%</th>
         <th class="num" data-i18n="gthSupply" data-i18n-title="gthSupplyTip" title="Kjente viner i basen som kvalifiserer">Kjente viner</th>
         <th class="num" data-i18n="gthOpen" data-i18n-title="gthOpenTip" title="Av disse: urepresentert i Norge">Åpne</th>
@@ -876,17 +877,19 @@ const I18N = {
     lblLand: 'Land', phProducerName: 'produsentnavn…',
     thWinesCount: 'Viner', thNO: 'Norge', thSE: 'Sverige', thFI: 'Finland',
     h2Gap: 'Gap-analyse — udekket etterspørsel å målrette',
-    noteGap: 'Vinmonopolet publiserer ikke hvilke anbud som ble fylt. Men når samme opprinnelse × drue × stil etterspørres <b>plan etter plan</b>, er det et sterkt tegn på kronisk underdekket etterspørsel — lot som ikke fikk gode nok tilbud og lyses ut på nytt. Denne tabellen rangerer slike gap: hvor ofte noe etterspørres, mot hvor få kjente viner som kvalifiserer. Høy gap-score = mye/gjentatt etterspørsel og lite kjent tilbud = der innsats gir størst potensial.',
-    gapAll: 'Alle gap', gapChronic: 'Gjentakende (≥2 planer)', gapUnmet: 'Udekket (ingen kjent vin)',
+    noteGap: 'Vinmonopolet publiserer ikke hvilke anbud som ble fylt — men planene selv skiller de virkelige gapene fra de løste: en klynge som etterspørres <b>gjentatte ganger OG fortsatt i den nyeste planen</b> er ennå ikke dekket (de spør fordi de ikke fikk gode nok tilbud); en som var gjentatt men <b>falt ut</b> av de siste planene ble trolig dekket til slutt. «Fortsatt åpne» er premien. Tabellen rangerer på gjentakelse + at det fremdeles etterspørres, mot hvor få kjente viner som kvalifiserer.',
+    gapAll: 'Alle gap', gapStillOpen: 'Fortsatt åpne', gapStillOpenTip: 'Gjentatt OG fortsatt etterspurt i nyeste plan — altså ennå ikke dekket', gapUnmet: 'Udekket (ingen kjent vin)',
     gapStyleLabel: 'Stil', gapAllStyles: 'Alle stiler', gapAnyStyle: 'Vin', gapAnyGrape: 'drue uspesifisert',
-    gapTileClusters: 'etterspørselsklynger', gapTileChronic: 'gjentakende (≥2 planer)', gapTileUnmet: 'udekket i basen',
+    gapTileClusters: 'etterspørselsklynger', gapTilePersistent: 'fortsatt åpne (gjentatt + nyeste plan)', gapTileUnmet: 'udekket i basen',
     gthOrigin: 'Opprinnelse', gthStyle: 'Stil', gthGrape: 'Drue', gthPlans: 'Planer', gthPlansTip: 'I hvor mange planer etterspurt',
+    gthLastAsked: 'Sist etterspurt', gapLastAskedTip: 'Nyeste plan der dette ble etterspurt',
     gthReq: 'Forespørsler', gthPrice: '~kr', gthCert: 'Sert.%', gthSupply: 'Kjente viner', gthSupplyTip: 'Kjente viner i basen som kvalifiserer',
     gthOpen: 'Åpne', gthOpenTip: 'Av disse: urepresentert i Norge', gthScore: 'Gap-score',
     gapUnmetBadge: 'udekket', gapUnmetTip: 'Ingen kjent vin i basen kvalifiserer — helt åpent',
-    gapChronicBadge: 'gjentakende', gapChronicTip: 'Etterspurt i minst to lanseringsplaner',
+    gapOpenBadge: 'fortsatt åpen', gapOpenTip: 'Gjentatt OG fortsatt etterspurt i nyeste plan — ennå ikke dekket',
+    gapResolvedBadge: 'dekket senere?', gapResolvedTip: 'Gjentatt før, men falt ut av de nyeste planene — Vinmonopolet sluttet å be om det, trolig dekket. Rangeres lavere.',
     gapEmpty: 'Ingen klynger i dette filteret.',
-    gapNote: (n, np) => `${n} klynger · på tvers av ${np} planer. Gap-score = forespørsler × antall planer ÷ (kjente kvalifiserende viner + 1). NB: «kjente viner» er de i denne basen (et delvis utvalg) — ikke hele verdensmarkedet.`,
+    gapNote: (n, np, latest) => `${n} klynger · på tvers av ${np} planer (nyeste: ${latest}). «Fortsatt åpen» = gjentatt OG fremdeles etterspurt i nyeste plan; «dekket senere?» falt ut og telles lavere. Gap-score = forespørsler × antall planer ÷ (kjente viner + 1), nedvektet hvis ikke lenger etterspurt. «Kjente viner» = denne basen (delvis utvalg).`,
     h2Ana: 'Historisk analyse på tvers av lanseringsplaner',
     noteAna: 'Gjentakelsesmønstre over alle innlastede planer — hvilke opprinnelser og druer Vinmonopolet ber om igjen og igjen, og hvor prisbåndene ligger. Dette er datagrunnlaget som vokser med hver plan.',
     anaCh1: 'Anbud per land per plan', anaCh2: 'Mest etterspurte druer per plan',
@@ -1104,17 +1107,19 @@ const I18N = {
     lblLand: 'Country', phProducerName: 'producer name…',
     thWinesCount: 'Wines', thNO: 'Norway', thSE: 'Sweden', thFI: 'Finland',
     h2Gap: 'Gap analysis — under-served demand to target',
-    noteGap: 'Vinmonopolet does not publish which tenders were filled. But when the same origin × grape × style is requested <b>plan after plan</b>, that is a strong signal of chronically under-served demand — lots that did not attract good enough offers and get re-issued. This table ranks those gaps: how often something is requested, against how few known wines qualify. A high gap score = frequent/repeated demand and little known supply = where effort has the most potential.',
-    gapAll: 'All gaps', gapChronic: 'Recurring (≥2 plans)', gapUnmet: 'Unmet (no known wine)',
+    noteGap: 'Vinmonopolet does not publish which tenders were filled — but the plans themselves separate the real gaps from the resolved ones: a cluster requested <b>repeatedly AND still in the latest plan</b> is not covered yet (they keep asking because they did not get good enough offers); one that recurred but <b>dropped out</b> of the recent plans was probably covered eventually. "Still open" is the prize. The table ranks on recurrence + still-being-asked, against how few known wines qualify.',
+    gapAll: 'All gaps', gapStillOpen: 'Still open', gapStillOpenTip: 'Recurring AND still requested in the latest plan — i.e. not covered yet', gapUnmet: 'Unmet (no known wine)',
     gapStyleLabel: 'Style', gapAllStyles: 'All styles', gapAnyStyle: 'Wine', gapAnyGrape: 'grape unspecified',
-    gapTileClusters: 'demand clusters', gapTileChronic: 'recurring (≥2 plans)', gapTileUnmet: 'unmet in the database',
+    gapTileClusters: 'demand clusters', gapTilePersistent: 'still open (recurring + latest plan)', gapTileUnmet: 'unmet in the database',
     gthOrigin: 'Origin', gthStyle: 'Style', gthGrape: 'Grape', gthPlans: 'Plans', gthPlansTip: 'In how many plans requested',
+    gthLastAsked: 'Last asked', gapLastAskedTip: 'The most recent plan that requested this',
     gthReq: 'Requests', gthPrice: '~kr', gthCert: 'Cert.%', gthSupply: 'Known wines', gthSupplyTip: 'Known wines in the database that qualify',
     gthOpen: 'Open', gthOpenTip: 'Of those: unrepresented in Norway', gthScore: 'Gap score',
     gapUnmetBadge: 'unmet', gapUnmetTip: 'No known wine in the database qualifies — wide open',
-    gapChronicBadge: 'recurring', gapChronicTip: 'Requested in at least two launch plans',
+    gapOpenBadge: 'still open', gapOpenTip: 'Recurring AND still requested in the latest plan — not covered yet',
+    gapResolvedBadge: 'covered later?', gapResolvedTip: 'Recurred before, but dropped out of the latest plans — Vinmonopolet stopped asking, so probably covered. Ranked lower.',
     gapEmpty: 'No clusters under this filter.',
-    gapNote: (n, np) => `${n} clusters · across ${np} plans. Gap score = requests × number of plans ÷ (known qualifying wines + 1). Note: "known wines" are those in this database (a partial set) — not the whole world market.`,
+    gapNote: (n, np, latest) => `${n} clusters · across ${np} plans (latest: ${latest}). "Still open" = recurring AND still requested in the latest plan; "covered later?" dropped out and is weighted down. Gap score = requests × number of plans ÷ (known wines + 1), discounted if no longer requested. "Known wines" = this database (a partial set).`,
     h2Ana: 'Historical analysis across launch plans',
     noteAna: 'Recurrence patterns across all loaded plans — which origins and grapes Vinmonopolet asks for again and again, and where the price bands sit. This is the dataset that grows with every plan.',
     anaCh1: 'Tenders per country per plan', anaCh2: 'Most requested grapes per plan',
@@ -2563,6 +2568,8 @@ function computeGaps() {
     }
   }
   const isOpenRep = w => /unrepresented|open for import|candidate for import/i.test(w.representation?.NO || '');
+  const planRec = lbl => { const n = (String(lbl).match(/\d+/g) || []); return (+n[0] || 0) * 10 + (+n[1] || 0); };
+  const newest = plans.reduce((a, b) => planRec(b) > planRec(a) ? b : a, plans[0] || '');
   for (const c of clusters.values()) {
     const qual = WINES.filter(w => {
       if (c.country !== openTerm() && N(w.country) !== N(c.country) && !N(w.country).includes(N(c.country)) && !N(c.country).includes(N(w.country))) return false;
@@ -2575,25 +2582,31 @@ function computeGaps() {
     c.medPrice = c.prices.length ? [...c.prices].sort((a, b) => a - b)[Math.floor(c.prices.length / 2)] : 0;
     c.certPct = c.requests ? Math.round(100 * c.cert / c.requests) : 0;
     c.nPlans = c.plans.size;
-    c.gapScore = c.requests * c.nPlans / (c.supply + 1);
     c.chronic = c.nPlans >= 2;
     c.unmet = c.supply === 0;
+    // still open vs eventually covered: is it still being requested in the newest plan?
+    c.latestPlan = [...c.plans].reduce((a, b) => planRec(b) > planRec(a) ? b : a, '');
+    c.current = c.plans.has(newest);
+    c.persistent = c.chronic && c.current;         // recurred AND still asked = still uncovered
+    c.resolved = c.chronic && !c.current;          // recurred then dropped out = likely covered
+    // a resolved gap is worth far less than one that keeps coming back unanswered
+    c.gapScore = c.requests * c.nPlans / (c.supply + 1) * (c.current ? 1 : 0.3);
   }
-  return { list: [...clusters.values()], nPlans };
+  return { list: [...clusters.values()], nPlans, newest };
 }
 let GAPF = { mode: 'all', country: '', style: '' };
 function renderGapDirectory() {
   const tb = $('gapTable') && $('gapTable').querySelector('tbody'); if (!tb) return;
-  const { list, nPlans } = computeGaps();
+  const { list, nPlans, newest } = computeGaps();
   $('gapTiles').innerHTML = [
     [list.length, L.gapTileClusters],
-    [list.filter(c => c.chronic).length, L.gapTileChronic],
+    [list.filter(c => c.persistent).length, L.gapTilePersistent],
     [list.filter(c => c.unmet).length, L.gapTileUnmet],
   ].map(([v, l]) => `<div class="tile"><div class="v">${v}</div><div class="l">${l}</div></div>`).join('');
   fillSelect('gfCountry', [...new Set(list.map(c => c.country))].sort(), GAPF.country);
   fillSelValueLabel('gfStyle', [...new Set(list.map(c => c.style))].map(st => [st, styleLabel(st)]), GAPF.style);
   let rows = list.filter(c => {
-    if (GAPF.mode === 'chronic' && !c.chronic) return false;
+    if (GAPF.mode === 'open' && !c.persistent) return false;
     if (GAPF.mode === 'unmet' && !c.unmet) return false;
     if (GAPF.country && c.country !== GAPF.country) return false;
     if (GAPF.style && c.style !== GAPF.style) return false;
@@ -2602,17 +2615,19 @@ function renderGapDirectory() {
   const maxG = rows.length ? rows[0].gapScore : 1;
   tb.innerHTML = rows.slice(0, 200).map(c => {
     const flags = (c.unmet ? `<span class="chip hi" title="${esc(L.gapUnmetTip)}">${L.gapUnmetBadge}</span> ` : '') +
-      (c.chronic ? `<span class="chip mid" title="${esc(L.gapChronicTip)}">${L.gapChronicBadge}</span>` : '');
-    return `<tr>
+      (c.persistent ? `<span class="chip mid" title="${esc(L.gapOpenTip)}">${L.gapOpenBadge}</span>`
+        : c.resolved ? `<span class="chip lo" title="${esc(L.gapResolvedTip)}">${L.gapResolvedBadge}</span>` : '');
+    const cleanPlan = String(c.latestPlan).replace(/\s*\(live\)/, '');
+    return `<tr${c.resolved ? ' style="opacity:.62"' : ''}>
       <td><b>${esc(c.country)}</b></td><td>${esc(styleLabel(c.style))}</td>
       <td>${c.grape ? esc(dispGrape(c.grape)) : '<span style="color:var(--muted)">' + esc(L.gapAnyGrape) + '</span>'} ${flags}</td>
-      <td class="num">${c.nPlans}/${nPlans}</td><td class="num">${c.requests}</td>
+      <td class="num">${c.nPlans}/${nPlans}</td><td class="num" title="${esc(L.gapLastAskedTip)}">${esc(cleanPlan)}</td><td class="num">${c.requests}</td>
       <td class="num">${c.medPrice ? fmt(c.medPrice, 0) : '–'}</td><td class="num">${c.certPct ? c.certPct + '%' : '–'}</td>
       <td class="num">${c.supply}</td><td class="num">${c.open || '–'}</td>
       <td class="num"><b>${fmt(c.gapScore, 1)}</b> <span class="scorebar" style="width:${Math.round(30 * c.gapScore / maxG)}px"></span></td>
     </tr>`;
-  }).join('') || `<tr><td colspan="10" style="color:var(--muted)">${L.gapEmpty}</td></tr>`;
-  $('gapNote').textContent = L.gapNote(rows.length, nPlans);
+  }).join('') || `<tr><td colspan="11" style="color:var(--muted)">${L.gapEmpty}</td></tr>`;
+  $('gapNote').textContent = L.gapNote(rows.length, nPlans, newest.replace(/\s*\(live\)/, ''));
 }
 function renderAnalyse() {
   renderGapDirectory();

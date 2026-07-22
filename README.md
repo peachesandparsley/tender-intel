@@ -72,10 +72,10 @@ Launch plans are **auto-discovered** — every `specs_*.json` in the repo is emb
 (newest tagged "(live)"), and each one deepens the gap analysis and recurrence stats.
 To add a historical plan:
 
-1. Download the Excel from Vinmonopolet's archive —
-   `vinmonopolet.no/lanseringer/arkiv` and `…/content/lanseringer/tidligere-lanseringer`
-   (English editions are published alongside the Norwegian ones; 2022–2026 both halves
-   are available).
+1. Download the Excel from Vinmonopolet's launch-plan archive (the **Lanseringer**
+   section on vinmonopolet.no; English editions are published alongside the Norwegian
+   ones, back through 2022, both halves). Grab the real download link from the site — the
+   exact archive path isn't hard-coded here so nothing is guessed.
 2. Parse it: `python3 parse_lanseringsplan.py <plan.xlsx> -o specs_YYYY_H.json`
    (the parser handles both format generations).
 3. `python3 build_app.py` — it's picked up automatically. Commit the new

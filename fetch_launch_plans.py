@@ -7,14 +7,15 @@ auto-discovers every specs_*.json, so the only missing link is getting the Excel
 This does that on a machine that can reach vinmonopolet.no (your laptop, or the GitHub
 Actions runner — the sandbox this repo is edited in cannot).
 
-Three ways to point it at plans, most reliable first:
-  1. Direct .xlsx URLs         — copy the download links off the archive page into
-                                  plan_urls.txt (one per line) or pass with --url.
-  2. Plan / archive page URLs  — it fetches the HTML and extracts the .xlsx links
-                                  (best-effort; the site is a SPA, so if a page is fully
-                                  client-rendered the link may not be in the HTML — then
-                                  fall back to method 1).
-  3. Built-in default pages    — the known plan/archive pages, tried automatically.
+Point it at plans two ways (most reliable first):
+  1. Direct .xlsx URLs         — copy the download links off vinmonopolet.no's Lanseringer
+                                  section into plan_urls.txt (one per line) or pass --url.
+  2. Plan / archive page URLs  — pass a page URL and it extracts the .xlsx links from the
+                                  HTML (best-effort; the site is a SPA, so if a page is
+                                  fully client-rendered the link may not be there — then
+                                  use method 1).
+(No page URLs are hard-coded: the exact archive paths aren't verified, and guessed URLs
+would mislead more than help. You supply the real links.)
 
 For each Excel it derives YYYY_H, prefers the English edition, parses via
 parse_lanseringsplan.parse_workbook, and writes specs_YYYY_H.json (skips ones that
@@ -29,16 +30,11 @@ from urllib.parse import urljoin
 
 UA = "Mozilla/5.0 (compatible; tender-intel launch-plan fetcher; respectful, low-volume)"
 
-# Known landing pages (English where available). The archive links out to older plans.
-DEFAULT_PAGES = [
-    "https://www.vinmonopolet.no/english/product-launches-tender-plan",
-    "https://www.vinmonopolet.no/lanseringer/arkiv",
-    "https://www.vinmonopolet.no/content/lanseringer/tidligere-lanseringer",
-    "https://www.vinmonopolet.no/lanseringer/lanseringsplan-2026-1",
-    "https://www.vinmonopolet.no/lanseringer/lanseringsplan-2026-2",
-    "https://www.vinmonopolet.no/lanseringer/lanseringsplan-2025-1",
-    "https://www.vinmonopolet.no/lanseringer/lanseringsplan-2023",
-]
+# No hard-coded page URLs: the exact archive/plan paths on vinmonopolet.no are not
+# verified from here, and shipping guessed URLs would be worse than none. Put the REAL
+# .xlsx download links (or plan-page URLs) in plan_urls.txt — grab them from the
+# "Lanseringer" section on vinmonopolet.no.
+DEFAULT_PAGES = []
 
 
 def get(url, binary=False):
