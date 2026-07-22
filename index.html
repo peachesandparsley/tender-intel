@@ -49,6 +49,10 @@
     border: 1px solid var(--border); background: transparent; color: var(--text-secondary); cursor: pointer; }
   nav button.on { background: var(--s1); border-color: var(--s1); color: #fff; }
   .tab { display: none; } .tab.on { display: block; }
+  tr.clk-row { cursor: pointer; }
+  tr.clk-row:hover td { background: color-mix(in oklab, var(--accent, var(--s1)) 8%, transparent); }
+  tr.clk-row .rowgo { color: var(--accent, var(--s1)); font-weight: 700; opacity: .55; }
+  tr.clk-row:hover .rowgo { opacity: 1; }
   .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px,1fr)); gap: 10px; margin: 0 0 16px; }
   .tile { background: var(--surface-1); border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; }
   .tile .v { font-size: 24px; font-weight: 650; }
@@ -147,9 +151,15 @@
     padding: 10px 14px; margin: 0 0 14px; font-size: 12.5px; color: var(--text-secondary); }
   .samplebar b { color: var(--text-primary); }
   .chip.sample { background: color-mix(in oklab, var(--warn) 24%, transparent); color: var(--text-primary); }
-  /* --- role picker --- */
-  nav button.lead-tab { font-weight: 700; }
-  nav button.lead-tab.on { background: var(--accent, var(--s1)); border-color: var(--accent, var(--s1)); }
+  /* --- nav hierarchy: primary entry points vs. secondary tools --- */
+  nav { align-items: center; }
+  nav button.lead-tab { font-weight: 700; font-size: 14.5px; padding: 8px 18px;
+    border-color: color-mix(in oklab, var(--accent, var(--s1)) 45%, var(--border)); color: var(--accent, var(--s1)); }
+  nav button.lead-tab.on { background: var(--accent, var(--s1)); border-color: var(--accent, var(--s1)); color: #fff; }
+  nav button.tool-tab { font-size: 12.5px; padding: 5px 12px; color: var(--muted); }
+  nav .nav-lbl { align-self: center; font-size: 10px; font-weight: 700; letter-spacing: .06em;
+    text-transform: uppercase; color: var(--muted); user-select: none; }
+  nav .nav-sep { margin-left: 6px; padding-left: 12px; border-left: 1px solid var(--border); }
   .rolepick { position: relative; display: flex; flex-wrap: wrap; align-items: stretch; gap: 10px;
     background: color-mix(in oklab, var(--accent, #4670e0) 8%, var(--surface-1));
     border: 1px solid color-mix(in oklab, var(--accent, #4670e0) 30%, var(--border));
@@ -380,16 +390,18 @@
   </header>
 
   <nav id="nav">
+    <span class="nav-lbl" data-i18n="navStartLabel">Start her</span>
     <button data-t="muligheter" class="on lead-tab" data-i18n="navOpp2">Muligheter</button>
     <button data-t="minvin" class="lead-tab" data-i18n="navMatch">Match min vin</button>
-    <button data-t="anbud" data-i18n="navAnbud">Anbud</button>
-    <button data-t="marked" data-i18n="navMarked">Marketplace</button>
-    <button data-t="kalk" data-i18n="navKalk">Kalkulator</button>
-    <button data-t="viner" data-i18n="navViner">Viner</button>
-    <button data-t="portefolje" data-i18n="navPort">Min portefølje</button>
-    <button data-t="katalog" data-i18n="navKat">Katalog</button>
-    <button data-t="analyse" data-i18n="navAnalyse">Analyse</button>
-    <button data-t="opplasting" data-i18n="navOpp">Last opp</button>
+    <span class="nav-lbl nav-sep" data-i18n="navToolsLabel">Verktøy</span>
+    <button data-t="anbud" class="tool-tab" data-i18n="navAnbud">Anbud</button>
+    <button data-t="marked" class="tool-tab" data-i18n="navMarked">Marketplace</button>
+    <button data-t="kalk" class="tool-tab" data-i18n="navKalk">Kalkulator</button>
+    <button data-t="viner" class="tool-tab" data-i18n="navViner">Viner</button>
+    <button data-t="portefolje" class="tool-tab" data-i18n="navPort">Min portefølje</button>
+    <button data-t="katalog" class="tool-tab" data-i18n="navKat">Katalog</button>
+    <button data-t="analyse" class="tool-tab" data-i18n="navAnalyse">Analyse</button>
+    <button data-t="opplasting" class="tool-tab" data-i18n="navOpp">Last opp</button>
   </nav>
   <p class="tabhelp" id="tabHelp"></p>
 
@@ -792,6 +804,7 @@ const I18N = {
     navAnbud: 'Anbud', navMarked: 'Marketplace', navKalk: 'Kalkulator', navViner: 'Viner',
     navPort: 'Min portefølje', navKat: 'Katalog', navAnalyse: 'Analyse', navOpp: 'Last opp',
     navOpp2: 'Muligheter', navMatch: 'Match min vin',
+    navStartLabel: 'Start her', navToolsLabel: 'Verktøy',
     roleQ: 'Hva jobber du med?', roleImporter: 'Jeg er importør',
     roleImporterSub: 'Finn anbud å vinne og vinene som vinner dem',
     roleProducer: 'Jeg er produsent', roleProducerSub: 'Se hvilke norske anbud vinen din kan vinne',
@@ -1051,6 +1064,7 @@ const I18N = {
     portNoteSome: n => `${n} anbud matcher. Klikk en rad for klausulvurderingene.`,
     pIn: 'innenfor', pHigh: 'for høy', pUnknown: 'ukjent',
     katUnknown: 'ukjent', katEmpty: 'Ingen produsenter i dette utvalget.',
+    katRowTip: 'Åpne produsenten — se vinene og hvor de kommer fra på kartet',
     rpImported: (a, r) => `${a} viner importert, ${r} avvist`, rowWord: 'rad', errWord: 'FEIL:', warnWord: 'advarsel:',
     planNoSpecs: 'Fant ingen spesifikasjoner — er dette en lanseringsplan-fil?',
     planLoaded: (n, f) => `${n} spesifikasjoner lastet fra ${f}.\nAnbuds-, marketplace- og analysefanene er oppdatert.`,
@@ -1069,6 +1083,7 @@ const I18N = {
     navAnbud: 'Tenders', navMarked: 'Marketplace', navKalk: 'Calculator', navViner: 'Wines',
     navPort: 'My portfolio', navKat: 'Directory', navAnalyse: 'Analytics', navOpp: 'Upload',
     navOpp2: 'Opportunities', navMatch: 'Match my wine',
+    navStartLabel: 'Start here', navToolsLabel: 'Tools',
     roleQ: 'What do you do?', roleImporter: "I'm an importer",
     roleImporterSub: 'Find tenders to win and the wines that win them',
     roleProducer: "I'm a producer", roleProducerSub: 'See which Norwegian tenders your wine can win',
@@ -1328,6 +1343,7 @@ const I18N = {
     portNoteSome: n => `${n} tenders match. Click a row for the clause assessments.`,
     pIn: 'within', pHigh: 'too high', pUnknown: 'unknown',
     katUnknown: 'unknown', katEmpty: 'No producers in this selection.',
+    katRowTip: 'Open the producer — see their wines and where they come from on the map',
     rpImported: (a, r) => `${a} wines imported, ${r} rejected`, rowWord: 'row', errWord: 'ERROR:', warnWord: 'warning:',
     planNoSpecs: 'Found no specifications — is this a launch-plan file?',
     planLoaded: (n, f) => `${n} specifications loaded from ${f}.\nThe Tenders, Marketplace and Analytics tabs have been updated.`,
@@ -2516,6 +2532,14 @@ function resetWineFilters() {
   renderWineDims(); renderWines();
 }
 window.spotlightProducer = spotlightProducer; window.spotlightGrape = spotlightGrape; window.clearSpot = clearSpot;
+// Open a producer from the catalog: jump to the wine directory + map, spotlighting their wines.
+function openProducer(name) {
+  WFILTERS.producer = name; WFILTERS.grape = '';
+  gotoTab('viner');
+  renderWineDims(); renderWines(); renderWineSpot();
+  requestAnimationFrame(() => { const m = $('wineMapSvg'); if (m) m.scrollIntoView({ behavior: 'smooth', block: 'center' }); });
+}
+window.openProducer = openProducer;
 function renderWines() {
   const shown = applySort(WINES.filter(w => winePass(w)), SORTS.wine, WINE_GET);
   $('wineCount').textContent = L.wineCountFn(shown.length, WINES.length);
@@ -3088,10 +3112,12 @@ function renderKatalog() {
   const sel = $('kfCountry'), cur = KATF.country;
   sel.innerHTML = `<option value="">${esc(L.optAllCountries)}</option>` + allCountries.map(c =>
     `<option value="${esc(c)}"${c === cur ? ' selected' : ''}>${esc(c)}</option>`).join('');
-  $('katTable').querySelector('tbody').innerHTML = rows.length ? rows.map(([name, p]) =>
-    `<tr><td><b>${esc(name)}</b></td><td>${esc(p.country)}</td><td class="num">${p.wines}</td>
+  const tb = $('katTable').querySelector('tbody');
+  tb.innerHTML = rows.length ? rows.map(([name, p]) =>
+    `<tr class="clk-row" data-prod="${esc(name)}" title="${esc(L.katRowTip)}"><td><b>${esc(name)}</b> <span class="rowgo">›</span></td><td>${esc(dispCountry(p.country))}</td><td class="num">${p.wines}</td>
      <td>${cell(p.rep.NO)}</td><td>${cell(p.rep.SE)}</td><td>${cell(p.rep.FI)}</td></tr>`).join('')
     : `<tr><td colspan="6" style="color:var(--muted)">${L.katEmpty}</td></tr>`;
+  tb.querySelectorAll('.clk-row').forEach(r => r.addEventListener('click', () => openProducer(r.dataset.prod)));
 }
 $('katFilters').querySelectorAll('button').forEach(b => b.addEventListener('click', () => {
   katFilter = b.dataset.k;
