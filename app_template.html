@@ -53,6 +53,22 @@
   tr.clk-row:hover td { background: color-mix(in oklab, var(--accent, var(--s1)) 8%, transparent); }
   tr.clk-row .rowgo { color: var(--accent, var(--s1)); font-weight: 700; opacity: .55; }
   tr.clk-row:hover .rowgo { opacity: 1; }
+  tr.cand { cursor: pointer; }
+  tr.cand .rowgo { color: var(--accent, var(--s1)); font-weight: 700; opacity: .5; }
+  tr.cand:hover td, tr.cand.open td { background: color-mix(in oklab, var(--accent, var(--s1)) 7%, transparent); }
+  tr.cand.open .rowgo { opacity: 1; transform: rotate(90deg); display: inline-block; }
+  .critwrap { padding: 4px 2px 6px; }
+  .critttl { font-size: 10.5px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); margin-bottom: 5px; }
+  .critline { display: flex; gap: 8px; align-items: baseline; padding: 3px 0; font-size: 12.5px; line-height: 1.45; }
+  .cv { flex-shrink: 0; width: 17px; height: 17px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; }
+  .cv-p { background: color-mix(in oklab, var(--good-text, #1a7f37) 18%, transparent); color: var(--good-text, #1a7f37); }
+  .cv-f { background: color-mix(in oklab, #c0392b 18%, transparent); color: #c0392b; }
+  .cv-u { background: color-mix(in oklab, #b7791f 20%, transparent); color: #b7791f; }
+  .cv-i { background: color-mix(in oklab, var(--muted) 22%, transparent); color: var(--muted); }
+  .critdet > summary { cursor: pointer; font-size: 12px; font-weight: 600; color: var(--accent, var(--s1)); padding: 4px 0; list-style: none; }
+  .critdet > summary::-webkit-details-marker { display: none; }
+  .critdet > summary::before { content: '▸ '; }
+  .critdet[open] > summary::before { content: '▾ '; }
   .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px,1fr)); gap: 10px; margin: 0 0 16px; }
   .tile { background: var(--surface-1); border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; }
   .tile .v { font-size: 24px; font-weight: 650; }
@@ -1017,6 +1033,10 @@ const I18N = {
     tdRegion: 'Land', tdRegion2: 'Region', tdAppellation: 'Appellasjon', tdGrapes: 'Druer',
     tdVintage: 'Årgang', tdBand: 'Prisbånd', tdBottle: 'Flaskestørrelse', tdPackaging: 'Emballasje',
     tdSelection: 'Utvalg', tdOffer: 'Tilbudstype', tdLaunch: 'Lansering', tdDeadline: 'Tilbudsfrist',
+    candTip: 'Trykk for å se treff/bom på hvert krav',
+    critTitle: 'Vinen mot hvert krav i anbudet', critOrigin: 'Opprinnelse', critType: 'Type', critPrice: 'Pris (FOB)',
+    critFob: (need, have) => `maks €${need} — vinen oppgir €${have}`, critFobPending: need => `maks €${need} — produsenten har ikke oppgitt FOB`,
+    critShow: 'Se vinen mot hvert krav',
     repOpen: 'Åpen', repOpenDetail: 'ingen norsk listing funnet — introduksjonsmulighet',
     repHasImporter: 'har norsk importør',
     repProducerListed: 'Produsent i VMP-katalog', repProducerListedDetail: 'produsenten er listet (verifisert) — denne cuvéen ikke bekreftet',
@@ -1296,6 +1316,10 @@ const I18N = {
     tdRegion: 'Country', tdRegion2: 'Region', tdAppellation: 'Appellation', tdGrapes: 'Grapes',
     tdVintage: 'Vintage', tdBand: 'Price band', tdBottle: 'Bottle size', tdPackaging: 'Packaging',
     tdSelection: 'Range', tdOffer: 'Offer type', tdLaunch: 'Launch', tdDeadline: 'Offer deadline',
+    candTip: 'Tap to see hit/miss on each requirement',
+    critTitle: 'The wine against each tender requirement', critOrigin: 'Origin', critType: 'Type', critPrice: 'Price (FOB)',
+    critFob: (need, have) => `max €${need} — wine states €${have}`, critFobPending: need => `max €${need} — producer hasn't stated FOB`,
+    critShow: 'See the wine against each requirement',
     repOpen: 'Open', repOpenDetail: 'no Norwegian listing found — introduction opportunity',
     repHasImporter: 'has a Norwegian importer',
     repProducerListed: 'Producer in VMP catalog', repProducerListedDetail: 'the producer is listed (verified) — this cuvée not confirmed',
@@ -1659,6 +1683,25 @@ function evaluateWine(spec, w, fobReq) {
   const idxCat = catalogFromIndex(w);
   const cat = idxCat ? idxCat.status : ((w.catalog_no && w.catalog_no.status) || 'unchecked');
   return { wine: w, passes, unknowns, total, priceOk, catalog: cat, catalogMatch: idxCat, verdicts };
+}
+// Full per-criterion breakdown of one wine against one tender line: origin, style, every
+// requirement clause, and price — each marked pass / fail / unknown. Unlike evaluateWine
+// (which drops a wine on the first miss), this keeps and shows the misses.
+function critList(spec, w, fob) {
+  const out = [];
+  const originVal = [dispCountry(spec.country), spec.region, spec.appellation].filter(Boolean).join(' · ');
+  out.push({ label: L.critOrigin, val: originVal || L.openOrigin, v: originOk(spec, w) ? 'pass' : 'fail' });
+  out.push({ label: L.critType, val: groupLabel(spec.group) + (spec.vintage ? ` · ${L.wlVintage}${spec.vintage}` : ''), v: groupOk(spec, w) ? 'pass' : 'fail' });
+  for (const cl of clausesForSpec(spec)) out.push({ label: '', val: cl.text, v: checkClause(cl, w) });
+  if (fob && w.fob_eur != null) out.push({ label: L.critPrice, val: L.critFob(fmt(fob.eur, 1), fmt(w.fob_eur, 1)), v: w.fob_eur <= fob.eur ? 'pass' : 'fail' });
+  else if (fob) out.push({ label: L.critPrice, val: L.critFobPending(fmt(fob.eur, 1)), v: 'unknown' });
+  return out;
+}
+function critHtml(spec, w, fob) {
+  const ic = { pass: '<span class="cv cv-p">✓</span>', fail: '<span class="cv cv-f">✗</span>',
+    unknown: '<span class="cv cv-u">?</span>', info: '<span class="cv cv-i">ℹ</span>' };
+  return `<div class="critwrap"><div class="critttl">${L.critTitle}</div>` + critList(spec, w, fob).map(c =>
+    `<div class="critline">${ic[c.v] || ic.unknown}<span>${c.label ? `<b>${esc(c.label)}:</b> ` : ''}${esc(c.val)}</span></div>`).join('') + '</div>';
 }
 function computeMarket() {
   const market = [];
@@ -3308,10 +3351,11 @@ function renderOpportunities() {
         const k = slKey(s.ref, x.wine.id), on = SHORTLIST.has(k) ? ' on' : '';
         const price = x.priceOk === true ? `<span class="chip hi">${L.priceIn}</span>`
           : x.priceOk === false ? `<span class="chip mid">${L.priceHigh}</span>` : '';
-        return `<tr><td><button class="star${on}" title="shortlist" onclick="toggleStar('${esc(s.ref)}','${esc(x.wine.id)}',this)">★</button></td>
-          <td><b>${esc(x.wine.producer)}</b> — ${esc(x.wine.name)}${isSeed(x.wine) ? ` <span class="chip sample">${L.sampleBadge}</span>` : ''}</td>
+        return `<tr class="cand" title="${esc(L.candTip)}"><td><button class="star${on}" title="shortlist" onclick="event.stopPropagation();toggleStar('${esc(s.ref)}','${esc(x.wine.id)}',this)">★</button></td>
+          <td><b>${esc(x.wine.producer)}</b> — ${esc(x.wine.name)}${isSeed(x.wine) ? ` <span class="chip sample">${L.sampleBadge}</span>` : ''} <span class="rowgo">›</span></td>
           <td title="${esc(L.matchCellTip(x.passes, x.unknowns, x.total))}">${x.passes}✓${x.unknowns ? ' ' + x.unknowns + '?' : ''} / ${x.total} ${price}</td>
-          <td>${statusCell(x)}</td></tr>`;
+          <td>${statusCell(x)}</td></tr>
+          <tr class="cand-det" style="display:none"><td colspan="4">${critHtml(s, x.wine, m.fob)}</td></tr>`;
       }).join('')}</tbody></table>`;
     const why = `<div class="oppwhy">
       <div><b>${L.whyOppTitle}</b> ${L.whyOpp(r.nIntro, r.n - r.nIntro, r.fobEur, r.dtd)}</div>
@@ -3330,6 +3374,15 @@ function renderOpportunities() {
       </div>
       <div class="opp-body"><div class="tdk2" style="margin-bottom:4px">${L.tdTitle}</div>${tenderDetail(s)}${why}${body}</div></div>`;
   }).join('');
+  // expand a candidate row to reveal its per-criterion hit/miss breakdown
+  list.querySelectorAll('tr.cand').forEach(row => row.addEventListener('click', () => {
+    const det = row.nextElementSibling;
+    if (det && det.classList.contains('cand-det')) {
+      const open = det.style.display !== 'none';
+      det.style.display = open ? 'none' : '';
+      row.classList.toggle('open', !open);
+    }
+  }));
 }
 function exportShortlist() {
   if (!SHORTLIST.size) { alert(L.oppEmpty); return; }
@@ -3530,6 +3583,7 @@ function runMatchWine() {
       <span style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">${need} ${pf} ${clauses}</span>
       </div><div class="opp-body" style="display:block;padding-top:0">
       <div class="oppwhy">${L.mwWhy(x.passes, x.unknowns, x.total, h.fob ? fmt(h.fob.eur, 1) : null, h.compet)}${h.compet <= 2 ? ` <b style="color:var(--good-text)">${L.mwFirstMover}.</b>` : ''}</div>
+      <details class="critdet"><summary>${L.critShow}</summary>${critHtml(s, w, h.fob)}</details>
       </div></div>`;
   }).join('') + `<p class="note" style="margin:10px 0 0;color:var(--muted)">${L.mwCoverage}</p>`;
   $('mwCta').innerHTML = `<div class="samplebar" style="border-color:color-mix(in oklab,var(--accent,#4670e0) 40%,var(--border))">
