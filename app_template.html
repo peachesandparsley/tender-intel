@@ -476,6 +476,7 @@
           <div><label data-i18n="mwWeightL">Flaskevekt (g)</label><input type="number" id="mwWeight" step="10" data-i18n-ph="mwWeightPh" placeholder="tom flaske, f.eks. 420"></div>
         </div>
       </details>
+      <p class="note" style="margin:9px 0 0"><span data-i18n="mwBulkPre">Har du mange viner?</span> <a href="#" onclick="gotoTab('opplasting');return false" data-i18n="mwBulkLink">Importer hele porteføljen fra Excel →</a></p>
       <p class="note" id="mwLeadPick" style="margin:8px 0 0"></p>
     </div>
     <div class="card" id="mwResultCard" style="display:none">
@@ -892,6 +893,7 @@ const I18N = {
     noteMatch: 'Ingen opplasting nødvendig. Beskriv vinen din, så ser du umiddelbart hvilke av Vinmonopolets anbud den kvalifiserer til, hvilken FOB (kjellerpris) du må treffe, og hvor mange andre viner som konkurrerer. Fyll ut hele porteføljen din senere under <b>Last opp</b> for å bli funnet automatisk.',
     mwName: 'Vinnavn (valgfritt)', mwNamePh: 'f.eks. Estate Grüner Veltliner',
     mwMoreSummary: 'Flere detaljer — for et skarpere svar (drue-%, sukker, fat, årgang, flaskevekt)',
+    mwBulkPre: 'Har du mange viner?', mwBulkLink: 'Importer hele porteføljen fra Excel →',
     mwGrapesFull: 'Druesammensetning (blend) — overstyrer hoveddruen', mwGrapesFullPh: 'f.eks. grenache 60, syrah 30, mourvèdre 10',
     mwSugarL: 'Restsukker (g/l)', mwSugarPh: 'f.eks. 2', mwVintagesL: 'Årganger tilgjengelig', mwVintagesPh: 'f.eks. 2022, 2023',
     mwWeightL: 'Flaskevekt (g)', mwWeightPh: 'tom flaske, f.eks. 420',
@@ -1190,6 +1192,7 @@ const I18N = {
     noteMatch: 'No upload needed. Describe your wine and instantly see which Vinmonopolet tenders it qualifies for, the FOB (ex-cellar price) you must hit, and how many other wines compete. Fill in your full portfolio later under <b>Upload</b> to be found automatically.',
     mwName: 'Wine name (optional)', mwNamePh: 'e.g. Estate Grüner Veltliner',
     mwMoreSummary: 'More detail — for a sharper answer (grape %, sugar, oak, vintage, bottle weight)',
+    mwBulkPre: 'Have many wines?', mwBulkLink: 'Import your whole portfolio from Excel →',
     mwGrapesFull: 'Grape composition (blend) — overrides the main grape', mwGrapesFullPh: 'e.g. grenache 60, syrah 30, mourvèdre 10',
     mwSugarL: 'Residual sugar (g/l)', mwSugarPh: 'e.g. 2', mwVintagesL: 'Vintages available', mwVintagesPh: 'e.g. 2022, 2023',
     mwWeightL: 'Bottle weight (g)', mwWeightPh: 'empty bottle, e.g. 420',
@@ -2152,7 +2155,7 @@ function drawDimChart(svgId, dim, keyFn, activeVal, fixedOrder, labelFn) {
   let entries = [...c.entries()];
   entries = fixedOrder
     ? fixedOrder.filter(k => c.has(k)).map(k => [k, c.get(k)])
-    : entries.sort((a, b) => b[1] - a[1]).slice(0, 8);
+    : entries.sort((a, b) => b[1] - a[1]);   // show every category, not just the top 8
   const W = svg.parentElement.clientWidth || 250, rowH = 21, barH = 13, labW = 104;
   const H = Math.max(entries.length * rowH, rowH);
   svg.setAttribute('viewBox', `0 0 ${W} ${H}`); svg.style.height = H + 'px';
