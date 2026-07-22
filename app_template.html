@@ -462,6 +462,20 @@
           </div>
         </div>
       </div>
+      <details class="howto" id="mwMore" style="margin:8px 0 0">
+        <summary data-i18n="mwMoreSummary">Flere detaljer — for et skarpere svar (drue-%, sukker, fat, årgang, flaskevekt)</summary>
+        <div class="mw-grid" style="margin-top:10px">
+          <div style="flex-basis:100%"><label data-i18n="mwGrapesFull">Druesammensetning (blend) — overstyrer hoveddruen</label><input id="mwGrapesFull" data-i18n-ph="mwGrapesFullPh" placeholder="f.eks. grenache 60, syrah 30, mourvèdre 10"></div>
+          <div><label data-i18n="mwSugarL">Restsukker (g/l)</label><input type="number" id="mwSugar" step="0.5" data-i18n-ph="mwSugarPh" placeholder="f.eks. 2"></div>
+          <div><label data-i18n="mwlWood">Fatbruk</label><select id="mwWood">
+            <option value="" data-i18n="mwlWoodUnknown">—</option>
+            <option value="none" data-i18n="mwlWoodNone">Ingen / ståltank</option>
+            <option value="discreet" data-i18n="mwlWoodDiscreet">Diskret / brukt fat</option>
+            <option value="barrel" data-i18n="mwlWoodBarrel">Fatgjæret / nytt eik</option></select></div>
+          <div><label data-i18n="mwVintagesL">Årganger tilgjengelig</label><input id="mwVintages" data-i18n-ph="mwVintagesPh" placeholder="f.eks. 2022, 2023"></div>
+          <div><label data-i18n="mwWeightL">Flaskevekt (g)</label><input type="number" id="mwWeight" step="10" data-i18n-ph="mwWeightPh" placeholder="tom flaske, f.eks. 420"></div>
+        </div>
+      </details>
       <p class="note" id="mwLeadPick" style="margin:8px 0 0"></p>
     </div>
     <div class="card" id="mwResultCard" style="display:none">
@@ -877,6 +891,10 @@ const I18N = {
     h2Match: 'Match min vin — hvilke anbud kan den vinne?',
     noteMatch: 'Ingen opplasting nødvendig. Beskriv vinen din, så ser du umiddelbart hvilke av Vinmonopolets anbud den kvalifiserer til, hvilken FOB (kjellerpris) du må treffe, og hvor mange andre viner som konkurrerer. Fyll ut hele porteføljen din senere under <b>Last opp</b> for å bli funnet automatisk.',
     mwName: 'Vinnavn (valgfritt)', mwNamePh: 'f.eks. Estate Grüner Veltliner',
+    mwMoreSummary: 'Flere detaljer — for et skarpere svar (drue-%, sukker, fat, årgang, flaskevekt)',
+    mwGrapesFull: 'Druesammensetning (blend) — overstyrer hoveddruen', mwGrapesFullPh: 'f.eks. grenache 60, syrah 30, mourvèdre 10',
+    mwSugarL: 'Restsukker (g/l)', mwSugarPh: 'f.eks. 2', mwVintagesL: 'Årganger tilgjengelig', mwVintagesPh: 'f.eks. 2022, 2023',
+    mwWeightL: 'Flaskevekt (g)', mwWeightPh: 'tom flaske, f.eks. 420',
     mwColour: 'Farge', mwGrape: 'Hoveddrue', mwGrapePh: 'f.eks. riesling',
     mwPrice: 'Målpris (hylle, kr)', mwAbv: 'Alkohol (%)', mwCert: 'Sertifisering', mwCertPh: 'organic, fairtrade…',
     mwFob: 'Din FOB € (valgfritt)', mwFobPh: 'kjellerpris', btnMatchRun: 'Finn anbud',
@@ -1171,6 +1189,10 @@ const I18N = {
     h2Match: 'Match my wine — which tenders can it win?',
     noteMatch: 'No upload needed. Describe your wine and instantly see which Vinmonopolet tenders it qualifies for, the FOB (ex-cellar price) you must hit, and how many other wines compete. Fill in your full portfolio later under <b>Upload</b> to be found automatically.',
     mwName: 'Wine name (optional)', mwNamePh: 'e.g. Estate Grüner Veltliner',
+    mwMoreSummary: 'More detail — for a sharper answer (grape %, sugar, oak, vintage, bottle weight)',
+    mwGrapesFull: 'Grape composition (blend) — overrides the main grape', mwGrapesFullPh: 'e.g. grenache 60, syrah 30, mourvèdre 10',
+    mwSugarL: 'Residual sugar (g/l)', mwSugarPh: 'e.g. 2', mwVintagesL: 'Vintages available', mwVintagesPh: 'e.g. 2022, 2023',
+    mwWeightL: 'Bottle weight (g)', mwWeightPh: 'empty bottle, e.g. 420',
     mwColour: 'Colour', mwGrape: 'Main grape', mwGrapePh: 'e.g. riesling',
     mwPrice: 'Target shelf price (kr)', mwAbv: 'Alcohol (%)', mwCert: 'Certification', mwCertPh: 'organic, fairtrade…',
     mwFob: 'Your FOB € (optional)', mwFobPh: 'ex-cellar', btnMatchRun: 'Find tenders',
@@ -3612,13 +3634,18 @@ function fillLead(i) {
 }
 function matchWineRecord() {
   const colour = val('mwColour'), grape = val('mwGrape').toLowerCase();
+  const comp = parseGrapeInput(val('mwGrapesFull')) || {};     // null when blank
+  const grapes = Object.keys(comp).length ? comp : (grape ? { [grape]: 100 } : {});
+  const vint = (val('mwVintages').match(/\b(19|20)\d\d\b/g) || []).map(Number);
+  const sugar = val('mwSugar').trim() !== '' ? parseFloat(val('mwSugar')) : null;
+  const weight = val('mwWeight').trim() !== '' ? parseFloat(val('mwWeight')) : null;
   return {
     id: '_mw', producer: L.mwWinnable, name: val('mwName').trim() || '—',
-    country: val('mwCountry'), color: colour,
-    grapes: grape ? { [grape]: 100 } : {},
+    country: val('mwCountry'), color: colour, grapes,
     abv: parseFloat(val('mwAbv')) || 13,
     certs: readCerts(),
-    vintages_available: [], sugar_g_l: null, wood: null,
+    vintages_available: vint, sugar_g_l: sugar, wood: val('mwWood') || null,
+    packaging: { type: null, weight_g: weight },
     method: /sparkling/.test(colour) ? 'traditional' : null,
     fob_eur: val('mwFob') ? parseFloat(val('mwFob')) : null,
     representation: { NO: 'unrepresented — open for import' },
