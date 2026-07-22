@@ -38,6 +38,7 @@ works offline). Served via GitHub Pages at the repository's Pages URL.
 | `match.py` / `match_wines.py` | Portfolio scoring and wine↔spec eligibility engines |
 | `import_wines.py` | Producer bulk-upload validator |
 | `ingest_vmp.py` | Populates the wine DB with **verified** data from Vinmonopolet's own catalog (API key or portal export); producer-only fields stay flagged for confirmation |
+| `track_listings.py` | Diffs the daily Open-API catalog snapshots into a listing-date ledger (`vmp_listings.json`: first_seen / last_seen per product). Forward-looking evidence for a real fill-rate — cross-reference a new listing's date with a tender's launch month to see which lots actually got filled (see the fill-rate note below) |
 | `demand_map.py` | Ranks recurring tender demand (origin × grape × style × price × cert) → where to seed producers first (writes `demand_map.md`) |
 | `gap_analysis.py` | Cross-plan **gap directory**: which origin × style × grape clusters are chronically re-requested (a proxy for unfilled lots — VMP doesn't publish awards) vs. how few known wines qualify. Ranks by gap score → where to focus. Writes `gap_analysis.md` + `.json`. Also a live tab in the app (Analytics) |
 | `seed_producers.py` | Cold-starts the producer DB from **official** public sources (WoSA / WO scheme / IPW / WIETA), marked unverified-pending-claim; derives representation from the VMP index (see `SEED_SOURCES.md`) |
@@ -63,6 +64,25 @@ pending-claim. Regenerate the sample with `make_seed_sample.py`, or let the
 `refresh-seed-sample` workflow do it weekly.
 
 Commit `index.html` and GitHub Pages redeploys automatically (~1 min).
+
+## From gap proxy to real fill-rate
+
+`gap_analysis.py` currently proxies "unfilled" with **re-request recurrence** because
+Vinmonopolet publishes what it asks for, not which lots were awarded. The Open API
+(`products-v0`, no application needed — see `vinmonopolet.no/om-oss/presse/datadeling`)
+closes the loop with **listing dates**:
+
+1. `track_listings.py` records when each product first appears in the catalog (via daily
+   snapshot diffs; the monthly sales-per-article feed is an alternative first-sale-month
+   signal). Runs in the `refresh-vmp-index` workflow once `VMP_API_KEY` is set.
+2. Cross-reference a new listing's date with a tender's **launch month**: a product
+   appearing in the launch window ⇒ that lot was filled; a lot whose category gets no
+   matching new listing ⇒ unfilled.
+
+Two honest limits: it is **forward-only** (no historical snapshots for past plans), and
+attributing a listing to a specific *lot* needs the product's origin/grape/price — the
+**Restricted** tier (or the public product page). Category-level fill (origin × style
+counts vs. demand) is computable from Open data alone.
 
 ## Working on this repo with Claude
 
