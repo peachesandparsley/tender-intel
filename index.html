@@ -250,6 +250,26 @@
   .chiptoggle:has(input:checked) { border-color: var(--accent); color: #fff;
     background: var(--accent); font-weight: 600; }
   .fieldlabel { display: block; font-size: 11.5px; color: var(--muted); margin-bottom: 3px; }
+  /* "how to read this" plain-language key */
+  .howto { background: color-mix(in oklab, var(--accent) 6%, var(--surface-1));
+    border: 1px solid color-mix(in oklab, var(--accent) 22%, var(--border)); border-radius: 10px;
+    padding: 9px 14px; margin: 0 0 12px; font-size: 12.5px; color: var(--text-secondary); }
+  .howto summary { cursor: pointer; font-weight: 700; color: var(--text-primary); list-style: none;
+    user-select: none; }
+  .howto summary::-webkit-details-marker { display: none; }
+  .howto summary::before { content: '▸'; display: inline-block; margin-right: 7px; transition: transform .12s; }
+  .howto[open] summary::before { transform: rotate(90deg); }
+  .howto-body { margin-top: 8px; line-height: 1.5; }
+  .howto-body ul { margin: 6px 0; padding-left: 18px; }
+  .howto-body li { margin: 3px 0; }
+  .howto-body b { color: var(--text-primary); }
+  .howto-body .k { display: inline-block; min-width: 118px; font-weight: 700; color: var(--text-primary); }
+  /* per-card "why" rationale inside an expanded opportunity */
+  .oppwhy { font-size: 12px; color: var(--text-secondary); line-height: 1.5;
+    background: color-mix(in oklab, var(--accent) 5%, transparent);
+    border-left: 3px solid color-mix(in oklab, var(--accent) 38%, var(--border));
+    border-radius: 0 8px 8px 0; padding: 8px 12px; margin: 8px 0 10px; }
+  .oppwhy b { color: var(--text-primary); }
   /* clickable producer / grape → map spotlight */
   .clk-prod { cursor: pointer; }
   .clk-prod:hover { color: var(--accent); text-decoration: underline; }
@@ -373,7 +393,11 @@
     </div>
     <div class="card">
       <h2 data-i18n="h2Opp">Muligheter — anbud verdt å forfølge</h2>
-      <p class="note" style="margin:0 0 10px" data-i18n="noteOpp">Anbud rangert etter mulighet: urepresenterte kandidater (introduksjoner), marginrom og hvor nær fristen er. Åpne et anbud for de best matchede vinene og økonomien — stjernemerk dem du vil forfølge og eksporter lista.</p>
+      <p class="note" style="margin:0 0 8px" data-i18n="noteOpp">Anbud fra Vinmonopolet, rangert etter hvor lovende de er å forfølge.</p>
+      <details class="howto" id="oppHowto" open>
+        <summary data-i18n="howtoSummary">Slik leser du et kort</summary>
+        <div class="howto-body" data-i18n="howtoOpp"></div>
+      </details>
       <div class="filters" id="oppFilters">
         <button data-of="all" class="on" data-i18n="oppAll">Alle muligheter</button>
         <button data-of="intro" data-i18n="oppIntro">Kun introduksjoner</button>
@@ -428,6 +452,10 @@
     <div class="card" id="mwResultCard" style="display:none">
       <h2 id="mwResultH"></h2>
       <div class="tiles" id="mwTiles"></div>
+      <details class="howto" id="mwHowto" open>
+        <summary data-i18n="howtoSummary">Slik leser du et kort</summary>
+        <div class="howto-body" data-i18n="howtoMatch"></div>
+      </details>
       <div id="mwResults"></div>
       <div id="mwCta" style="margin-top:14px"></div>
     </div>
@@ -649,6 +677,10 @@
     <div class="card">
       <h2 data-i18n="h2Gap">Gap-analyse — udekket etterspørsel å målrette</h2>
       <p class="note" style="margin:0 0 10px" data-i18n="noteGap">Vinmonopolet publiserer ikke hvilke anbud som ble fylt. Men når samme opprinnelse × drue × stil etterspørres <b>plan etter plan</b>, er det et sterkt tegn på kronisk underdekket etterspørsel — lot som ikke fikk gode nok tilbud og lyses ut på nytt. Denne tabellen rangerer slike gap: hvor ofte noe etterspørres, mot hvor få kjente viner som kvalifiserer. Høy gap-score = mye/gjentatt etterspørsel og lite kjent tilbud = der innsats gir størst potensial.</p>
+      <details class="howto" id="gapHowto">
+        <summary data-i18n="howtoGapSummary">Hva betyr kolonnene?</summary>
+        <div class="howto-body" data-i18n="howtoGap"></div>
+      </details>
       <div class="tiles" id="gapTiles"></div>
       <div class="filters" id="gapFilters" style="margin-top:12px">
         <button data-gf="all" class="on" data-i18n="gapAll">Alle gap</button>
@@ -752,12 +784,43 @@ const I18N = {
     roleImporterSub: 'Finn anbud å vinne og vinene som vinner dem',
     roleProducer: 'Jeg er produsent', roleProducerSub: 'Se hvilke norske anbud vinen din kan vinne',
     h2Opp: 'Muligheter — anbud verdt å forfølge',
-    noteOpp: 'Anbud rangert etter mulighet: urepresenterte kandidater (introduksjoner), marginrom og hvor nær fristen er. Åpne et anbud for de best matchede vinene og økonomien — stjernemerk dem du vil forfølge og eksporter lista.',
+    noteOpp: 'Anbud fra Vinmonopolet, rangert etter hvor lovende de er å forfølge.',
+    howtoSummary: 'Slik leser du et kort',
+    howtoOpp: '<b>Hvert kort = ett anbud</b> fra Vinmonopolet. Linja «søker … fra … · &lt;pris» sier hva de vil ha (drue, land, prisbånd). De fem tallene:<ul>' +
+      '<li><span class="k">Introduksjoner</span> matchende viner som <b>ikke selges i Norge ennå</b> — de beste mulighetene.</li>' +
+      '<li><span class="k">Kandidater</span> viner i basen som oppfyller kravene totalt.</li>' +
+      '<li><span class="k">Trenger ≤ FOB</span> høyeste <b>kjellerpris</b> (fra produsent, før frakt/avgift/margin) som treffer prisbåndet.</li>' +
+      '<li><span class="k">Frist</span> dager til tilbudsfristen.</li>' +
+      '<li><span class="k">Datastyrke</span> hvor sikre dataene er: <b>Sterk</b> / Middels / <b>Tynn</b> (mest ubekreftede leads).</li></ul>' +
+      'Trykk et kort for å se vinene: <b>★</b> legger i shortlist, <b>Match</b> (f.eks. 3✓/3) = oppfylte krav, <b>Status i NO</b> = «representert» (har alt en norsk importør) eller «åpen» (ledig). Filtrene øverst: alle · kun introduksjoner · frist snart · kun kildeført grunnlag (skjul tynt datagrunnlag).',
+    howtoGapSummary: 'Hva betyr kolonnene?',
+    howtoGap: '<b>Hver rad = en type etterspørsel</b> (opprinnelse × stil × drue) som går igjen i anbudene. Kolonnene:<ul>' +
+      '<li><span class="k">Planer</span> i hvor mange lanseringsplaner denne typen er etterspurt. Høyere = mer kronisk behov.</li>' +
+      '<li><span class="k">Sist etterspurt</span> nyeste plan der den dukket opp. Er det den <b>nyeste</b> planen, er behovet fortsatt åpent.</li>' +
+      '<li><span class="k">Forespørsler</span> hvor mange anbudslinjer totalt (samme type kan gå igjen flere ganger i én plan).</li>' +
+      '<li><span class="k">Kjente viner</span> hvor mange viner i <b>vår base</b> som kvalifiserer. Lavt tall = få kjente alternativer å tilby.</li>' +
+      '<li><span class="k">Åpne</span> av dem: hvor mange som ennå ikke har en norsk importør.</li>' +
+      '<li><span class="k">Gap-score</span> etterspørsel ÷ kjent tilbud. <b>Høy score = mye gjentatt etterspørsel, lite kjent tilbud</b> — der innsatsen lønner seg mest.</li></ul>' +
+      'Merkelapper: <b>fortsatt åpne</b> = går igjen og står i nyeste plan (ikke dekket ennå), <b>udekket</b> = ingen kjent vin kvalifiserer, <b>dekket senere?</b> = gikk igjen før, men falt ut av nyeste plan (trolig løst). «Kjente viner» = vår base, ikke hele markedet.',
     oppAll: 'Alle muligheter', oppIntro: 'Kun introduksjoner', oppSoon: 'Frist snart',
     oppSourced: 'Kun kildeført grunnlag', oppSourcedTip: 'Skjul muligheter som bare hviler på ubekreftede leads (tynn datastyrke)',
     oppEmptySourced: 'Ingen muligheter har kildeført nok grunnlag ennå — de fleste kandidatene er ubekreftede leads. Datastyrken øker når produsenter fullfører profilene sine og Vinmonopolet-katalogen bekrefter representasjon.',
     btnShortlistExport: 'Eksporter shortlist',
     oppCandV: 'kandidater', oppIntroV: 'introduksjoner', oppFobV: 'trenger ≤ FOB', oppDeadV: 'frist',
+    oppIntroTip: 'Matchende viner som ikke selges i Norge ennå — de beste mulighetene',
+    oppCandTip: 'Viner i basen som oppfyller kravene totalt', oppDeadTip: 'Dager til tilbudsfristen',
+    oppFobTip: 'Høyeste kjellerpris (fra produsent) som treffer prisbåndet',
+    whyOppTitle: 'Hvorfor en mulighet:',
+    whyOpp: (nIntro, nOther, fob, dtd) =>
+      `${nIntro ? nIntro + (nIntro === 1 ? ' vin som ennå ikke selges i Norge matcher kravene — en mulig introduksjon som kan vinne listeplass' : ' viner som ennå ikke selges i Norge matcher kravene — hver er en mulig introduksjon som kan vinne listeplass') : 'Ingen urepresenterte viner matcher ennå'}.` +
+      `${nOther ? ` ${nOther} representert${nOther === 1 ? '' : 'e'} vin${nOther === 1 ? '' : 'er'} matcher også.` : ''}` +
+      `${fob ? ` En produsent må treffe ≈ €${fmt(fob, 1)} FOB.` : ''}` +
+      `${dtd != null && dtd >= 0 ? ` Frist om ${dtd} dager.` : ''}` +
+      ` Rangeringen vekter introduksjoner tyngst, deretter marginrom og hvor nær fristen er.`,
+    whyEvidence: (sourced, total, confirmed, rep, level) =>
+      `${sourced} av ${total} kandidat${total === 1 ? '' : 'er'} har kildeførte data · ${confirmed}% av kravene bekreftet · ${rep}% med verifisert NO-status. ` +
+      (level === 'high' ? 'Solid grunnlag → «Sterk».' : level === 'med' ? 'Delvis bekreftet → «Middels».'
+        : 'Mest ubekreftede leads → «Tynn». Blir sterkere når produsenter fullfører profilene og VMP-katalogen bekrefter representasjon.'),
     oppScoreV: 'score', oppSeeks: 'søker', oppFrom: ' fra ',
     oppSummary: n => `${n} anbud med kvalifiserte viner i denne planen`,
     btnDeadlineIcs: 'Fristvarsler',
@@ -770,6 +833,8 @@ const I18N = {
     evTip: (s, t, c, r) => `Datastyrke bak scoren: ${s} av ${t} kandidater har kildeførte data · ${c}% av kravene bekreftet · ${r}% med verifisert NO-status. Frødata teller svakt til produsenten eller katalogen bekrefter dem.`,
     oppEmpty: 'Ingen anbud med kvalifiserte viner i valgt filter. Prøv «Alle muligheter», bytt plan, eller legg til flere viner.',
     thWineCol: 'Vin', thFitCol: 'Match', thStatusCol: 'Status i NO', thPick: '★',
+    thFitTip: 'Hvor mange av anbudets krav vinen møter. ✓ = oppfylt · ? = kan ikke sjekkes før produsenten bekrefter detaljer (drue-%, årgang, sukker …).',
+    matchCellTip: (p, u, t) => `${p} av ${t} krav oppfylt${u ? `, ${u} kan ikke sjekkes ennå (mangler produsentdata)` : ''}.`,
     oppIntroBadge: 'introduksjon', oppRepBadge: 'representert', oppOpenNO: 'åpen i NO',
     oppNoDeadline: '—',
     h2Match: 'Match min vin — hvilke anbud kan den vinne?',
@@ -791,6 +856,16 @@ const I18N = {
     mwNeedFob: e => `du må treffe ≤ €${e} FOB`,
     mwPriceFits: 'din FOB passer ✓', mwPriceHigh: 'din FOB er for høy',
     mwClausePass: n => `${n} krav oppfylt`, mwUnknown: n => `${n} å bekrefte`,
+    howtoMatch: '<b>Hvert kort = ett anbud vinen din kan vinne.</b> Tittelen viser hva Vinmonopolet ber om (drue, land, prisbånd). Merkelappene:<ul>' +
+      '<li><span class="k">Treng ≤ €X FOB</span> høyeste <b>kjellerpris</b> din vin kan ha og fortsatt treffe prisbåndet.</li>' +
+      '<li><span class="k">Din FOB passer</span> vises bare hvis du fylte inn din egen FOB, og den er lav nok.</li>' +
+      '<li><span class="k">X krav oppfylt</span> hvor mange av anbudets krav vinen sikkert møter.</li>' +
+      '<li><span class="k">Y å bekrefte</span> krav vi ikke kan sjekke før du oppgir detaljene (sukker, årgang, eksakt drueandel). De teller ikke mot deg — de bekreftes når du lister vinen.</li></ul>' +
+      'Under hvert kort forklarer vi hvorfor vinen kvalifiserer. «X viner er listet» = konkurrenter som alt er i basen (et delvis utvalg — få betyr at du er tidlig ute).',
+    mwWhy: (passes, unknowns, total, fob, compet) =>
+      `Vinen din oppfyller <b>${passes} av ${total}</b> krav${unknowns ? `, og <b>${unknowns}</b> venter på detaljer bare du kan bekrefte (f.eks. sukker, årgang, eksakt drueandel) når du lister vinen` : ' — alt bekreftet'}.` +
+      `${fob ? ` Selg til <b>≤ €${fob} FOB</b> for å treffe prisbåndet.` : ''}` +
+      ` ${L.mwListed(compet)}.`,
     mwCtaText: 'Ser du anbud du kan vinne? Legg vinen (og resten av porteføljen) inn så importører finner den automatisk.',
     mwCtaBtn: 'List vinen min →', mwWinnable: 'Vinnbart',
     mwlH: 'List vinen — fyll ut det bare du vet',
@@ -982,12 +1057,43 @@ const I18N = {
     roleImporterSub: 'Find tenders to win and the wines that win them',
     roleProducer: "I'm a producer", roleProducerSub: 'See which Norwegian tenders your wine can win',
     h2Opp: 'Opportunities — tenders worth chasing',
-    noteOpp: 'Tenders ranked by opportunity: unrepresented candidates (introductions), margin headroom and how near the deadline is. Open a tender for the best-matched wines and the economics — star the ones to chase and export the list.',
+    noteOpp: 'Tenders from Vinmonopolet, ranked by how promising they are to chase.',
+    howtoSummary: 'How to read a card',
+    howtoOpp: '<b>Each card = one tender</b> from Vinmonopolet. The "seeks … from … · &lt;price" line is what they want (grape, country, price band). The five numbers:<ul>' +
+      '<li><span class="k">Introductions</span> matching wines <b>not sold in Norway yet</b> — the best openings.</li>' +
+      '<li><span class="k">Candidates</span> wines in the database that meet the requirements overall.</li>' +
+      '<li><span class="k">Needs ≤ FOB</span> the highest <b>ex-cellar price</b> (from the producer, before freight/duty/margin) that still fits the price band.</li>' +
+      '<li><span class="k">Deadline</span> days until the offer deadline.</li>' +
+      '<li><span class="k">Evidence</span> how solid the data is: <b>Strong</b> / Moderate / <b>Thin</b> (mostly unconfirmed leads).</li></ul>' +
+      'Tap a card to see the wines: <b>★</b> adds to your shortlist, <b>Fit</b> (e.g. 3✓/3) = requirements met, <b>Status in NO</b> = "represented" (already has a Norwegian importer) or "open" (available). Filters up top: all · introductions only · deadline soon · sourced evidence only (hide thin data).',
+    howtoGapSummary: 'What do the columns mean?',
+    howtoGap: '<b>Each row = one type of demand</b> (origin × style × grape) that recurs across the tenders. The columns:<ul>' +
+      '<li><span class="k">Plans</span> in how many launch plans this type was requested. Higher = more chronic need.</li>' +
+      '<li><span class="k">Last asked</span> the newest plan it appeared in. If it\'s the <b>newest</b> plan, the need is still open.</li>' +
+      '<li><span class="k">Requests</span> how many tender lines in total (the same type can recur several times within one plan).</li>' +
+      '<li><span class="k">Known wines</span> how many wines in <b>our database</b> qualify. A low number = few known options to offer.</li>' +
+      '<li><span class="k">Open</span> of those: how many still have no Norwegian importer.</li>' +
+      '<li><span class="k">Gap score</span> demand ÷ known supply. <b>High score = lots of repeated demand, little known supply</b> — where the effort pays off most.</li></ul>' +
+      'Badges: <b>still-open</b> = recurs and sits in the newest plan (not covered yet), <b>unmet</b> = no known wine qualifies, <b>covered-later?</b> = recurred before but dropped out of the newest plan (probably filled). "Known wines" = our database, not the whole market.',
     oppAll: 'All opportunities', oppIntro: 'Introductions only', oppSoon: 'Deadline soon',
     oppSourced: 'Sourced evidence only', oppSourcedTip: 'Hide opportunities resting only on unconfirmed leads (thin evidence)',
     oppEmptySourced: 'No opportunities have sourced-enough evidence yet — most candidates are unconfirmed leads. Evidence strengthens as producers complete their profiles and the Vinmonopolet catalog confirms representation.',
     btnShortlistExport: 'Export shortlist',
     oppCandV: 'candidates', oppIntroV: 'introductions', oppFobV: 'needs ≤ FOB', oppDeadV: 'deadline',
+    oppIntroTip: 'Matching wines not sold in Norway yet — the best openings',
+    oppCandTip: 'Wines in the database that meet the requirements overall', oppDeadTip: 'Days until the offer deadline',
+    oppFobTip: 'Highest ex-cellar price (from the producer) that fits the price band',
+    whyOppTitle: 'Why it\'s an opportunity:',
+    whyOpp: (nIntro, nOther, fob, dtd) =>
+      `${nIntro ? nIntro + (nIntro === 1 ? ' wine not yet sold in Norway matches the requirements — a possible introduction that could win a listing' : ' wines not yet sold in Norway match the requirements — each a possible introduction that could win a listing') : 'No unrepresented wines match yet'}.` +
+      `${nOther ? ` ${nOther} already-represented wine${nOther === 1 ? '' : 's'} also match${nOther === 1 ? 'es' : ''}.` : ''}` +
+      `${fob ? ` A producer must hit ≈ €${fmt(fob, 1)} FOB.` : ''}` +
+      `${dtd != null && dtd >= 0 ? ` Deadline in ${dtd} days.` : ''}` +
+      ` The ranking weights introductions most, then margin headroom and deadline proximity.`,
+    whyEvidence: (sourced, total, confirmed, rep, level) =>
+      `${sourced} of ${total} candidate${total === 1 ? '' : 's'} have sourced data · ${confirmed}% of requirements confirmed · ${rep}% with verified NO status. ` +
+      (level === 'high' ? 'Solid basis → "Strong".' : level === 'med' ? 'Partly confirmed → "Moderate".'
+        : 'Mostly unconfirmed leads → "Thin". It strengthens as producers complete profiles and the VMP catalog confirms representation.'),
     oppScoreV: 'score', oppSeeks: 'seeks', oppFrom: ' from ',
     oppSummary: n => `${n} tenders with qualified wines in this plan`,
     btnDeadlineIcs: 'Deadline alerts',
@@ -1000,6 +1106,8 @@ const I18N = {
     evTip: (s, t, c, r) => `Evidence behind the score: ${s} of ${t} candidates have sourced data · ${c}% of requirements confirmed · ${r}% with verified NO status. Seeded leads count weakly until a producer or the catalog confirms them.`,
     oppEmpty: 'No tenders with qualified wines under this filter. Try "All opportunities", switch plan, or add more wines.',
     thWineCol: 'Wine', thFitCol: 'Fit', thStatusCol: 'Status in NO', thPick: '★',
+    thFitTip: "How many of the tender's requirements the wine meets. ✓ = met · ? = can't be checked until the producer confirms details (grape %, vintage, sugar …).",
+    matchCellTip: (p, u, t) => `${p} of ${t} requirements met${u ? `, ${u} can't be checked yet (missing producer data)` : ''}.`,
     oppIntroBadge: 'introduction', oppRepBadge: 'represented', oppOpenNO: 'open in NO',
     oppNoDeadline: '—',
     h2Match: 'Match my wine — which tenders can it win?',
@@ -1021,6 +1129,16 @@ const I18N = {
     mwNeedFob: e => `you must hit ≤ €${e} FOB`,
     mwPriceFits: 'your FOB fits ✓', mwPriceHigh: 'your FOB is too high',
     mwClausePass: n => `${n} requirements met`, mwUnknown: n => `${n} to confirm`,
+    howtoMatch: '<b>Each card = one tender your wine can win.</b> The title shows what Vinmonopolet asks for (grape, country, price band). The chips:<ul>' +
+      '<li><span class="k">Needs ≤ €X FOB</span> the highest <b>ex-cellar price</b> your wine can have and still fit the price band.</li>' +
+      '<li><span class="k">Your FOB fits</span> shown only if you entered your own FOB and it\'s low enough.</li>' +
+      '<li><span class="k">X requirements met</span> how many of the tender\'s requirements the wine definitely meets.</li>' +
+      '<li><span class="k">Y to confirm</span> requirements we can\'t check until you give the details (sugar, vintage, exact grape %). They don\'t count against you — you confirm them when you list the wine.</li></ul>' +
+      'Below each card we explain why the wine qualifies. "X wines listed" = competitors already in the database (a partial set — few means you\'re early).',
+    mwWhy: (passes, unknowns, total, fob, compet) =>
+      `Your wine meets <b>${passes} of ${total}</b> requirements${unknowns ? `, and <b>${unknowns}</b> await details only you can confirm (e.g. sugar, vintage, exact grape %) when you list the wine` : ' — all confirmed'}.` +
+      `${fob ? ` Sell at <b>≤ €${fob} FOB</b> to fit the price band.` : ''}` +
+      ` ${L.mwListed(compet)}.`,
     mwCtaText: 'See tenders you can win? Add this wine (and the rest of your portfolio) so importers find it automatically.',
     mwCtaBtn: 'List my wine →', mwWinnable: 'Winnable',
     mwlH: 'List the wine — fill in what only you know',
@@ -3102,28 +3220,32 @@ function renderOpportunities() {
     const fob = r.fobEur ? '€' + fmt(r.fobEur, 1) : '–';
     const st = r.st;
     const stLabel = st.level === 'high' ? L.evStrong : st.level === 'med' ? L.evModerate : L.evThin;
-    const body = `<table><thead><tr><th>${L.thPick}</th><th>${L.thWineCol}</th><th>${L.thFitCol}</th><th>${L.thStatusCol}</th></tr></thead><tbody>${
+    const body = `<table><thead><tr><th>${L.thPick}</th><th>${L.thWineCol}</th><th title="${esc(L.thFitTip)}">${L.thFitCol}</th><th>${L.thStatusCol}</th></tr></thead><tbody>${
       cands.map(x => {
         const k = slKey(s.ref, x.wine.id), on = SHORTLIST.has(k) ? ' on' : '';
         const price = x.priceOk === true ? `<span class="chip hi">${L.priceIn}</span>`
           : x.priceOk === false ? `<span class="chip mid">${L.priceHigh}</span>` : '';
         return `<tr><td><button class="star${on}" title="shortlist" onclick="toggleStar('${esc(s.ref)}','${esc(x.wine.id)}',this)">★</button></td>
           <td><b>${esc(x.wine.producer)}</b> — ${esc(x.wine.name)}${isSeed(x.wine) ? ` <span class="chip sample">${L.sampleBadge}</span>` : ''}</td>
-          <td>${x.passes}✓${x.unknowns ? ' ' + x.unknowns + '?' : ''} / ${x.total} ${price}</td>
+          <td title="${esc(L.matchCellTip(x.passes, x.unknowns, x.total))}">${x.passes}✓${x.unknowns ? ' ' + x.unknowns + '?' : ''} / ${x.total} ${price}</td>
           <td>${statusCell(x)}</td></tr>`;
       }).join('')}</tbody></table>`;
+    const why = `<div class="oppwhy">
+      <div><b>${L.whyOppTitle}</b> ${L.whyOpp(r.nIntro, r.n - r.nIntro, r.fobEur, r.dtd)}</div>
+      <div style="margin-top:5px"><b>${L.evidence}: ${stLabel}</b> — ${L.whyEvidence(st.sourced, st.total, st.confirmed, st.rep, st.level)}</div>
+    </div>`;
     return `<div class="opp" data-i="${i}">
       <div class="opp-head" onclick="this.parentNode.classList.toggle('open')">
         <span class="opp-rank">${i + 1}</span>
         <span class="opp-title">${esc(s.ref)} — ${esc(groupLabel(s.group))}<small>${L.oppSeeks} ${esc(capGrapes(specGrapes(s).slice(0,3)) || mainDisp(mainCat(s)))}${L.oppFrom}${esc(s.country) || L.openOrigin} · ${esc(s.price_text)}</small></span>
-        <span class="opp-metric"><span class="v">${r.nIntro}</span><span class="l">${L.oppIntroV}</span></span>
-        <span class="opp-metric"><span class="v">${r.n}</span><span class="l">${L.oppCandV}</span></span>
-        <span class="opp-metric"><span class="v">${fob}</span><span class="l">${L.oppFobV}</span></span>
-        <span class="opp-metric"><span class="v">${dl}</span><span class="l">${L.oppDeadV}</span></span>
+        <span class="opp-metric" title="${esc(L.oppIntroTip)}"><span class="v">${r.nIntro}</span><span class="l">${L.oppIntroV}</span></span>
+        <span class="opp-metric" title="${esc(L.oppCandTip)}"><span class="v">${r.n}</span><span class="l">${L.oppCandV}</span></span>
+        <span class="opp-metric" title="${esc(L.oppFobTip)}"><span class="v">${fob}</span><span class="l">${L.oppFobV}</span></span>
+        <span class="opp-metric" title="${esc(L.oppDeadTip)}"><span class="v">${dl}</span><span class="l">${L.oppDeadV}</span></span>
         <span class="opp-metric" title="${esc(L.evTip(st.sourced, st.total, st.confirmed, st.rep))}"><span class="v ev"><span class="ev-dot ev-${st.level}"></span>${stLabel}</span><span class="l">${L.evidence}</span></span>
         <span class="opp-metric" title="${L.oppScoreV}"><span class="scorebar" style="width:${Math.round(38*r.score/maxScore)}px"></span></span>
       </div>
-      <div class="opp-body">${body}</div></div>`;
+      <div class="opp-body">${why}${body}</div></div>`;
   }).join('');
 }
 function exportShortlist() {
@@ -3321,10 +3443,10 @@ function runMatchWine() {
       : x.priceOk === false ? `<span class="chip mid">${L.mwPriceHigh}</span>` : '';
     const clauses = `<span class="chip ${x.unknowns ? 'mid' : 'hi'}">${L.mwClausePass(x.passes)}${x.unknowns ? ' · ' + L.mwUnknown(x.unknowns) : ''}</span>`;
     return `<div class="opp"><div class="opp-head" style="cursor:default">
-      <span class="opp-title">${esc(s.ref)} — ${esc(groupLabel(s.group))}<small>${esc(s.country) || L.openOrigin} · ${esc((s.spec || '').slice(0, 90))}</small></span>
+      <span class="opp-title">${esc(s.ref)} — ${esc(groupLabel(s.group))}<small>${L.oppSeeks} ${esc(capGrapes(specGrapes(s).slice(0,4)) || mainDisp(mainCat(s)))}${L.oppFrom}${esc(s.country) || L.openOrigin} · ${esc(s.price_text)}</small></span>
       <span style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">${need} ${pf} ${clauses}</span>
       </div><div class="opp-body" style="display:block;padding-top:0">
-      <p class="note" style="margin:6px 0 0">${L.oppSeeks} <b>${esc(capGrapes(specGrapes(s).slice(0,4)) || mainDisp(mainCat(s)))}</b> · ${esc(s.price_text)} · ${L.mwListed(h.compet)}${h.compet <= 2 ? ` <span style="color:var(--good-text)">— ${L.mwFirstMover}</span>` : ''}</p>
+      <div class="oppwhy">${L.mwWhy(x.passes, x.unknowns, x.total, h.fob ? fmt(h.fob.eur, 1) : null, h.compet)}${h.compet <= 2 ? ` <b style="color:var(--good-text)">${L.mwFirstMover}.</b>` : ''}</div>
       </div></div>`;
   }).join('') + `<p class="note" style="margin:10px 0 0;color:var(--muted)">${L.mwCoverage}</p>`;
   $('mwCta').innerHTML = `<div class="samplebar" style="border-color:color-mix(in oklab,var(--accent,#4670e0) 40%,var(--border))">
@@ -3426,6 +3548,12 @@ $('gapFilters').querySelectorAll('button').forEach(b => b.addEventListener('clic
 }));
 $('gfCountry').addEventListener('change', () => { GAPF.country = $('gfCountry').value; renderGapDirectory(); });
 $('gfStyle').addEventListener('change', () => { GAPF.style = $('gfStyle').value; renderGapDirectory(); });
+// remember whether the "how to read this" keys are collapsed
+document.querySelectorAll('details.howto').forEach(d => {
+  const k = 'ti_howto_' + d.id;
+  try { if (localStorage.getItem(k) === '0') d.open = false; } catch (e) {}
+  d.addEventListener('toggle', () => { try { localStorage.setItem(k, d.open ? '1' : '0'); } catch (e) {} });
+});
 ['mwCountry', 'mwColour', 'mwGrape', 'mwAbv', 'mwFob', 'mwName'].forEach(id =>
   $(id).addEventListener('keydown', e => { if (e.key === 'Enter') runMatchWine(); }));
 ['inRetail','inAbv','inVol','inPack','inMargin','inFreight','inCur2','inCur2Rate','inEur']
