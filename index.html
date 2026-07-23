@@ -508,6 +508,7 @@
         <div><label data-i18n="mwName">Vinnavn (valgfritt)</label><input id="mwName" data-i18n-ph="mwNamePh" placeholder="f.eks. Estate Grüner Veltliner"></div>
         <div><label data-i18n="lblGeo">Land</label><select id="mwCountry"></select></div>
         <div><label data-i18n="mwColour">Farge</label><select id="mwColour">
+          <option value="" data-i18n="mwAnyColour">Alle farger</option>
           <option value="red" data-i18n="grpRed">Rødvin</option>
           <option value="white" data-i18n="grpWhite">Hvitvin</option>
           <option value="rose" data-i18n="grpRose">Rosévin</option>
@@ -1022,6 +1023,7 @@ const I18N = {
     certVegan: 'Vegansk', certSustainable: 'Bærekraftig', certKosher: 'Kosher',
     mwLeadPre: 'Eller test en ekte lead fra databasen: ',
     mwExampleHint: '↑ Eksempel — endre et hvilket som helst felt for å beskrive din egen vin.',
+    mwAnyCountry: 'Alle land (uspesifisert)', mwAnyColour: 'Alle farger',
     cmpH: 'Fullfør vinen — gjør «?» om til ✓',
     cmpMeter: 'profil fullført',
     cmpSub: (t, u) => `${u} ${u === 1 ? 'kriterium' : 'kriterier'} på tvers av ${t} ${t === 1 ? 'anbud' : 'anbud'} er fortsatt ubekreftet (?). Bare du kan bekrefte dem — hvert felt gjør et «?» om til et sikkert ✓ eller ✗.`,
@@ -1347,6 +1349,7 @@ const I18N = {
     certVegan: 'Vegan', certSustainable: 'Sustainable', certKosher: 'Kosher',
     mwLeadPre: 'Or test a real lead from the database: ',
     mwExampleHint: '↑ Example — edit any field to describe your own wine.',
+    mwAnyCountry: 'Any country (unspecified)', mwAnyColour: 'Any colour',
     cmpH: 'Complete your wine — turn “?” into ✓',
     cmpMeter: 'profile complete',
     cmpSub: (t, u) => `${u} ${u === 1 ? 'criterion' : 'criteria'} across ${t} ${t === 1 ? 'tender' : 'tenders'} ${u === 1 ? 'is' : 'are'} still unconfirmed (?). Only you can confirm them — each field turns a “?” into a firm ✓ or ✗.`,
@@ -1841,6 +1844,18 @@ function checkClause(cl, w) {
   return 'unknown';
 }
 const EURO = ['austria','portugal','france','italy','spain','germany','greece','hungary','england','slovenia','croatia'];
+// A tender's origin can be a real requirement phrase ("EU or Norway", "The Nordic countries",
+// "Belgium, Netherlands, France…") — legitimate for filtering tenders, but not a value a producer
+// would pick to describe their own wine's single country of origin. Used to keep the match-my-wine
+// country picker to actual countries.
+function isRealCountry(c) {
+  const s = (c || '').trim();
+  if (!s) return false;
+  if (/\b(or|and|eller|og)\b/i.test(s)) return false;   // compound origins
+  if (/[,/]/.test(s)) return false;                       // lists
+  if (/^(the\s+)?(eu|eea|efta|europe|europa|nordics?|nordic|world|global|various|other)\b/i.test(s)) return false;
+  return true;
+}
 function originOk(spec, w) {
   const sc = N(spec.country || ''), wc = N(w.country || '');
   if (!sc || sc === '-' || sc.includes('open') || sc.includes('all countries')) return true;
@@ -1855,9 +1870,10 @@ function groupOk(spec, w) {
   const g = N(spec.group || '') || N(spec.main_type || ''), mt = N(spec.main_type || '');
   if (isNonWine(spec)) return false;
   if (mt && !/wine|vin/.test(mt)) return false;
+  const col = N(w.color || '');
+  if (!col) return true;   // colour left as "Any" → don't exclude on style/sparkling
   const sparkling = /sparkling|musserende/.test(g);
   if (sparkling !== !!w.method) return false;
-  const col = N(w.color || '');
   if (g.includes('rose')) return col.includes('rose');
   if (/red|rodvin/.test(g)) return col.includes('red');
   if (/white|hvitvin/.test(g)) return col.includes('white');
@@ -3924,9 +3940,16 @@ function readGrapeRows() {
   return Object.keys(out).length ? out : null;
 }
 function initMatchWine() {
+  // Rebuild the country picker each call (keeping the current pick) so its labels re-localize on a
+  // language switch. Only real single countries — a wine has one origin; tender origin-requirement
+  // phrases ("EU or Norway", "The Nordic countries") don't belong in the producer's country picker.
+  const keepC = $('mwCountry').value;
+  const cs = [...new Set([...SPECS.map(s => s.country), ...WINES.map(w => w.country)].filter(isRealCountry))]
+    .sort((a, b) => dispCountry(a).localeCompare(dispCountry(b)));
+  $('mwCountry').innerHTML = `<option value="">${esc(L.mwAnyCountry)}</option>` +
+    cs.map(c => `<option value="${esc(c)}">${esc(dispCountry(c))}</option>`).join('');
+  if ([...$('mwCountry').options].some(o => o.value === keepC)) $('mwCountry').value = keepC;
   if (!MW_INIT) {
-    const cs = [...new Set([...SPECS.map(s => s.country), ...WINES.map(w => w.country)].filter(Boolean))].sort();
-    $('mwCountry').innerHTML = cs.map(c => `<option>${esc(c)}</option>`).join('');
     const gOpts = grapeOptionsHTML();
     $('mwGrape').innerHTML = gOpts;
     $('mwlVintRow').innerHTML = [2021, 2022, 2023, 2024, 2025, 2026, 2027, 2028].map(y =>
@@ -3956,7 +3979,7 @@ function initMatchWine() {
 // illustrative wine (clearly editable) that actually wins tenders in the current plan and run
 // it, so a first-time producer sees the payoff before typing a single field.
 function demoQuery() {
-  const wineSpecs = SPECS.filter(s => isWineSpec(s) && (s.country || '').trim());
+  const wineSpecs = SPECS.filter(s => isWineSpec(s) && isRealCountry(s.country));
   if (!wineSpecs.length) return;
   const colorFor = g => /red/i.test(g) ? 'red' : /white/i.test(g) ? 'white' : /ros[eé]/i.test(g) ? 'rose'
     : /spark|mousser/i.test(g) ? 'sparkling white' : 'red';
