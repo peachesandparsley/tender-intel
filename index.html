@@ -49,6 +49,10 @@
     border: 1px solid var(--border); background: transparent; color: var(--text-secondary); cursor: pointer; }
   nav button.on { background: var(--s1); border-color: var(--s1); color: #fff; }
   .tab { display: none; } .tab.on { display: block; }
+  .mapwrap { position: relative; overflow: hidden; border-radius: 10px; touch-action: none; }
+  .mapwrap svg { will-change: transform; }
+  .mapzoomhint { position: absolute; right: 8px; bottom: 6px; font-size: 10.5px; color: var(--muted);
+    background: color-mix(in oklab, var(--surface-1) 78%, transparent); padding: 2px 7px; border-radius: 6px; pointer-events: none; }
   h3.section-div { font-size: 15px; margin: 22px 0 10px; padding-top: 16px; border-top: 1px solid var(--baseline); color: var(--text-secondary); }
   tr.clk-row { cursor: pointer; }
   tr.clk-row:hover td { background: color-mix(in oklab, var(--accent, var(--s1)) 8%, transparent); }
@@ -74,6 +78,32 @@
   .tile { background: var(--surface-1); border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; }
   .tile .v { font-size: 24px; font-weight: 650; }
   .tile .l { color: var(--muted); font-size: 12px; }
+  .tile .sub { color: var(--muted); font-size: 10.5px; margin-top: 3px; letter-spacing: .01em; }
+  .tile.accent { border-color: color-mix(in oklab, var(--s1) 45%, var(--border)); background: color-mix(in oklab, var(--s1) 6%, var(--surface-1)); }
+  .tile.accent .v { color: var(--s1); }
+  .tile.urgent { border-color: color-mix(in oklab, var(--warn) 60%, var(--border)); background: color-mix(in oklab, var(--warn) 10%, var(--surface-1)); }
+  .chip.urg { background: color-mix(in oklab, var(--warn) 32%, transparent); color: var(--text-primary); font-weight: 700; }
+  .chip.urg.hot { background: color-mix(in oklab, var(--warn) 60%, transparent); }
+  .emptycta { border: 1px dashed color-mix(in oklab, var(--s1) 35%, var(--border)); border-radius: 11px;
+    padding: 16px 18px; background: color-mix(in oklab, var(--s1) 4%, var(--surface-1)); }
+  .emptycta .ec-h { font-weight: 700; font-size: 15px; color: var(--text-primary); margin-bottom: 5px; }
+  .emptycta .ec-b { font-size: 13px; color: var(--text-secondary); line-height: 1.5; margin-bottom: 12px; max-width: 70ch; }
+  .complete { border: 1px solid color-mix(in oklab, var(--s1) 30%, var(--border)); border-radius: 12px;
+    padding: 14px 16px; background: color-mix(in oklab, var(--s1) 5%, var(--surface-1)); }
+  .complete-top { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+  .complete-h { font-weight: 700; font-size: 15px; color: var(--text-primary); }
+  .cmeter .cmeter-v { font-family: Georgia, 'Iowan Old Style', serif; font-size: 20px; font-weight: 600; color: var(--s1); }
+  .cmeter .cmeter-l { font-size: 11px; color: var(--muted); }
+  .cbar { height: 7px; border-radius: 999px; background: var(--grid); overflow: hidden; margin: 9px 0 10px; }
+  .cbar i { display: block; height: 100%; transition: width .45s cubic-bezier(.4, 0, .2, 1);
+    background: linear-gradient(90deg, color-mix(in oklab, var(--s1) 65%, transparent), var(--s1)); }
+  .complete-sub { font-size: 12.5px; color: var(--text-secondary); line-height: 1.5; margin-bottom: 10px; max-width: 74ch; }
+  .cfields { display: flex; flex-wrap: wrap; gap: 7px; }
+  .cf { font-size: 12px; border-radius: 999px; padding: 4px 11px; border: 1px solid var(--border); background: var(--surface-1); }
+  .cf.done { color: var(--good-text); background: color-mix(in oklab, var(--goodst) 14%, transparent); border-color: transparent; }
+  .cf.todo { cursor: pointer; color: var(--text-primary); font: inherit; font-size: 12px; transition: border-color .12s, transform .05s; }
+  .cf.todo:hover { border-color: var(--s1); transform: translateY(-1px); }
+  .cf.todo.key { border-color: color-mix(in oklab, var(--s1) 45%, var(--border)); font-weight: 600; }
   .card { background: var(--surface-1); border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin: 0 0 18px; }
   .card h2 { font-size: 15px; margin: 0 0 10px; }
   .filters { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
@@ -185,20 +215,34 @@
   nav .nav-lbl { align-self: center; font-size: 10px; font-weight: 700; letter-spacing: .06em;
     text-transform: uppercase; color: var(--muted); user-select: none; }
   nav .nav-sep { margin-left: 6px; padding-left: 12px; border-left: 1px solid var(--border); }
-  .rolepick { position: relative; display: flex; flex-wrap: wrap; align-items: stretch; gap: 10px;
-    background: color-mix(in oklab, var(--accent, #4670e0) 8%, var(--surface-1));
-    border: 1px solid color-mix(in oklab, var(--accent, #4670e0) 30%, var(--border));
-    border-radius: 12px; padding: 12px 14px; margin: 0 0 14px; }
-  .rolepick .rp-q { align-self: center; font-weight: 700; margin-right: 4px; }
-  .rp-btn { flex: 1; min-width: 220px; text-align: left; cursor: pointer; border-radius: 10px;
-    border: 1px solid var(--border); background: var(--surface-1); padding: 10px 14px; font: inherit;
-    display: flex; flex-direction: column; gap: 2px; transition: border-color .12s, transform .05s; }
-  .rp-btn:hover { border-color: var(--accent, #4670e0); transform: translateY(-1px); }
-  .rp-btn b { font-size: 14px; color: var(--text-primary); }
-  .rp-btn span { font-size: 12px; color: var(--muted); }
-  .rp-btn.sel { border-color: var(--accent, #4670e0); box-shadow: 0 0 0 2px color-mix(in oklab, var(--accent, #4670e0) 30%, transparent); }
-  .rolepick .x { position: absolute; top: 6px; right: 8px; background: none; border: none; cursor: pointer;
-    color: var(--muted); font-size: 16px; line-height: 1; }
+  .hero { position: relative; border: 1px solid color-mix(in oklab, var(--s1) 26%, var(--border));
+    background: linear-gradient(135deg, color-mix(in oklab, var(--s1) 9%, var(--surface-1)), var(--surface-1) 62%);
+    border-radius: 14px; padding: 20px 22px; margin: 0 0 16px; }
+  .hero-top { display: flex; gap: 22px; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; }
+  .hero-copy { flex: 1; min-width: 280px; }
+  .hero-h { font-family: Georgia, 'Iowan Old Style', serif; font-size: 23px; line-height: 1.18;
+    margin: 0 0 8px; color: var(--text-primary); max-width: 30ch; }
+  .hero-sub { font-size: 13.5px; line-height: 1.5; color: var(--text-secondary); margin: 0; max-width: 56ch; }
+  .hero-pulse { display: flex; gap: 18px; flex-wrap: wrap; align-content: flex-start; }
+  .hpstat { min-width: 62px; }
+  .hpstat .hpv { font-family: Georgia, 'Iowan Old Style', serif; font-size: 26px; font-weight: 600; line-height: 1; color: var(--s1); }
+  .hpstat.u .hpv { color: var(--text-primary); }
+  .hpstat .hpl { font-size: 10px; color: var(--muted); margin-top: 5px; letter-spacing: .03em; text-transform: uppercase; }
+  .hero-choices { display: flex; gap: 12px; margin-top: 18px; flex-wrap: wrap; }
+  .hero-card { position: relative; flex: 1; min-width: 240px; text-align: left; cursor: pointer;
+    border-radius: 11px; border: 1px solid var(--border); background: var(--surface-1);
+    padding: 14px 40px 14px 16px; font: inherit; display: flex; flex-direction: column; gap: 3px;
+    transition: border-color .12s, transform .06s, box-shadow .12s; }
+  .hero-card:hover { border-color: var(--s1); transform: translateY(-1px);
+    box-shadow: 0 5px 18px -9px color-mix(in oklab, var(--s1) 65%, transparent); }
+  .hero-card .hc-k { font-size: 15px; font-weight: 700; color: var(--text-primary); }
+  .hero-card .hc-d { font-size: 12.5px; color: var(--muted); line-height: 1.4; }
+  .hero-card .hc-go { position: absolute; top: 13px; right: 15px; color: var(--s1); font-size: 18px;
+    font-weight: 700; opacity: .45; transition: opacity .12s, transform .12s; }
+  .hero-card:hover .hc-go { opacity: 1; transform: translateX(3px); }
+  .hero-card.sel { border-color: var(--s1); box-shadow: 0 0 0 2px color-mix(in oklab, var(--s1) 30%, transparent); }
+  .hero .x { position: absolute; top: 8px; right: 10px; background: none; border: none; cursor: pointer;
+    color: var(--muted); font-size: 16px; line-height: 1; z-index: 2; }
   /* --- match-my-wine form --- */
   .mw-grid { display: flex; flex-wrap: wrap; gap: 10px 14px; align-items: end; }
   .mw-grid > div { display: flex; flex-direction: column; gap: 3px; min-width: 130px; flex: 1; }
@@ -391,8 +435,11 @@
     table { font-size: 12px; }
     th, td { padding: 6px 7px; }
     .twrap table { min-width: 520px; }
-    .rolepick { flex-direction: column; align-items: stretch; }
-    .rp-btn { min-width: 0; }
+    .hero { padding: 16px 15px; }
+    .hero-h { font-size: 20px; }
+    .hero-pulse { gap: 14px; margin-top: 4px; }
+    .hpstat .hpv { font-size: 22px; }
+    .hero-card { min-width: 0; }
     .opp-head { gap: 8px 10px; }
     .opp-title { flex-basis: 100%; }
     .opp-metric { min-width: 44px; }
@@ -462,11 +509,27 @@
           </div>
         </div>
       </div>
+      <details class="howto" id="mwMore" style="margin:8px 0 0">
+        <summary data-i18n="mwMoreSummary">Flere detaljer — for et skarpere svar (drue-%, sukker, fat, årgang, flaskevekt)</summary>
+        <div class="mw-grid" style="margin-top:10px">
+          <div style="flex-basis:100%"><label data-i18n="mwGrapesFull">Druesammensetning (blend) — overstyrer hoveddruen</label><input id="mwGrapesFull" data-i18n-ph="mwGrapesFullPh" placeholder="f.eks. grenache 60, syrah 30, mourvèdre 10"></div>
+          <div><label data-i18n="mwSugarL">Restsukker (g/l)</label><input type="number" id="mwSugar" step="0.5" data-i18n-ph="mwSugarPh" placeholder="f.eks. 2"></div>
+          <div><label data-i18n="mwlWood">Fatbruk</label><select id="mwWood">
+            <option value="" data-i18n="mwlWoodUnknown">—</option>
+            <option value="none" data-i18n="mwlWoodNone">Ingen / ståltank</option>
+            <option value="discreet" data-i18n="mwlWoodDiscreet">Diskret / brukt fat</option>
+            <option value="barrel" data-i18n="mwlWoodBarrel">Fatgjæret / nytt eik</option></select></div>
+          <div><label data-i18n="mwVintagesL">Årganger tilgjengelig</label><input id="mwVintages" data-i18n-ph="mwVintagesPh" placeholder="f.eks. 2022, 2023"></div>
+          <div><label data-i18n="mwWeightL">Flaskevekt (g)</label><input type="number" id="mwWeight" step="10" data-i18n-ph="mwWeightPh" placeholder="tom flaske, f.eks. 420"></div>
+        </div>
+      </details>
+      <p class="note" style="margin:9px 0 0"><span data-i18n="mwBulkPre">Har du mange viner?</span> <a href="#" onclick="gotoTab('opplasting');return false" data-i18n="mwBulkLink">Importer hele porteføljen fra Excel →</a></p>
       <p class="note" id="mwLeadPick" style="margin:8px 0 0"></p>
     </div>
     <div class="card" id="mwResultCard" style="display:none">
       <h2 id="mwResultH"></h2>
       <div class="tiles" id="mwTiles"></div>
+      <div id="mwComplete" style="margin:12px 0 0"></div>
       <details class="howto" id="mwHowto" open>
         <summary data-i18n="howtoSummary">Slik leser du et kort</summary>
         <div class="howto-body" data-i18n="howtoMatch"></div>
@@ -507,13 +570,25 @@
 
   <!-- ANBUD — tenders, with matching wines + opportunity ranking embedded -->
   <section class="tab on" id="tab-anbud">
-    <div class="rolepick" id="rolepick">
-      <span class="rp-q" data-i18n="roleQ">Hva jobber du med?</span>
-      <button class="rp-btn" data-role="importer" onclick="setRole('importer')">
-        <b data-i18n="roleImporter">Jeg er importør</b><span data-i18n="roleImporterSub">Finn anbud å vinne og vinene som vinner dem</span></button>
-      <button class="rp-btn" data-role="producer" onclick="setRole('producer')">
-        <b data-i18n="roleProducer">Jeg er produsent</b><span data-i18n="roleProducerSub">Se hvilke norske anbud vinen din kan vinne</span></button>
-      <button class="x" onclick="dismissRole()" title="Skjul" aria-label="Lukk">×</button>
+    <div class="hero" id="hero">
+      <button class="x" onclick="dismissRole()" data-i18n-title="heroSkip" title="Bare bla — skjul dette" aria-label="Lukk">×</button>
+      <div class="hero-top">
+        <div class="hero-copy">
+          <h2 class="hero-h" data-i18n="heroH">Vinn Vinmonopolets anbud — før konkurrentene rekker å se dem.</h2>
+          <p class="hero-sub" data-i18n="heroSub">Hver lanseringsplan, tolket ned til hvert enkelt krav. Match en vin på sekunder, se den nøyaktige kjellerprisen den må treffe, og gå aldri glipp av en frist.</p>
+        </div>
+        <div class="hero-pulse" id="heroPulse"></div>
+      </div>
+      <div class="hero-choices">
+        <button class="hero-card" data-role="importer" onclick="setRole('importer')">
+          <span class="hc-k" data-i18n="roleImporter">Jeg er importør</span>
+          <span class="hc-d" data-i18n="roleImporterSub">Finn anbud å vinne og vinene som vinner dem</span>
+          <span class="hc-go" aria-hidden="true">→</span></button>
+        <button class="hero-card" data-role="producer" onclick="setRole('producer')">
+          <span class="hc-k" data-i18n="roleProducer">Jeg er produsent</span>
+          <span class="hc-d" data-i18n="roleProducerSub">Se hvilke norske anbud vinen din kan vinne</span>
+          <span class="hc-go" aria-hidden="true">→</span></button>
+      </div>
     </div>
     <div class="card">
       <h2 data-i18n="h2Opp">Muligheter — anbud verdt å forfølge</h2>
@@ -548,7 +623,7 @@
       <div id="oppDigest" style="margin:0 0 10px"></div>
       <div id="oppList"></div>
     </div>
-    <h3 class="section-div" data-i18n="anbudBrowseH">Bla i alle anbud</h3>
+    <h3 class="section-div" id="browseTop" data-i18n="anbudBrowseH">Bla i alle anbud</h3>
     <div class="intro" id="intro">
       <button class="x" onclick="dismissIntro()" data-i18n-title="introX" title="Skjul (vises ikke igjen)" aria-label="Lukk">×</button>
       <h2 data-i18n="introH">Slik fungerer det</h2>
@@ -564,6 +639,7 @@
       <h2 data-i18n="h2FilterDist">Filtre og fordeling</h2>
       <div class="dimbar">
         <div><label data-i18n="lblGeo">Geografi</label><select id="fCountry"><option value="" data-i18n="optAllCountries">Alle land</option></select></div>
+        <div><label data-i18n="lblRegion">Distrikt/region</label><select id="fRegion"><option value="" data-i18n="optAllRegions">Alle distrikter</option></select></div>
         <div><label data-i18n="lblCategory">Kategori</label><select id="fMain"><option value="" data-i18n="optAllCategories">Alle kategorier</option></select></div>
         <div><label data-i18n="lblSubType">Undertype</label><select id="fGroup"><option value="" data-i18n="optAllSubTypes">Alle undertyper</option></select></div>
         <div><label data-i18n="lblGrape">Drue</label><select id="fGrape"><option value="" data-i18n="optAllGrapes">Alle druer</option></select></div>
@@ -574,11 +650,13 @@
         <div style="min-width:90px;flex:0"><label>&nbsp;</label><button class="btn ghost" data-i18n="btnReset" style="width:100%;padding:5px 8px" onclick="resetFilters()">Nullstill</button></div>
       </div>
       <p class="note" style="margin:4px 0 2px"><span data-i18n="noteMapClick">Klikk en stolpe eller et land på kartet for å filtrere; klikk igjen for å oppheve. </span><span id="filterCount"></span></p>
-      <div style="margin:8px 0 4px">
+      <div class="mapwrap" id="mapWrap" style="margin:8px 0 4px">
         <svg id="mapSvg" style="width:100%;display:block;border-radius:10px"></svg>
+        <span class="mapzoomhint" data-i18n="mapZoomHint">klyp / rull for å zoome · dobbelttrykk nullstiller</span>
       </div>
       <div class="charts-grid">
         <div class="chart-box"><h3 data-i18n="chGeo">Geografi</h3><svg id="chCountry"></svg></div>
+        <div class="chart-box"><h3 data-i18n="chDistrict">Distrikt / region</h3><svg id="chRegion"></svg></div>
         <div class="chart-box"><h3 data-i18n="chType">Produkttype</h3><svg id="chGroup"></svg></div>
         <div class="chart-box"><h3 data-i18n="chGrape">Drue / metode</h3><svg id="chGrape"></svg></div>
         <div class="chart-box"><h3 data-i18n="chPrice">Prisbånd (kr)</h3><svg id="chPrice"></svg></div>
@@ -665,7 +743,10 @@
         <div style="min-width:90px;flex:0"><label>&nbsp;</label><button class="btn ghost" data-i18n="btnReset" style="width:100%;padding:5px 8px" onclick="resetWineFilters()">Nullstill</button></div>
       </div>
       <div id="wineSpot" style="margin:8px 0 2px"></div>
-      <svg id="wineMapSvg" style="width:100%;display:block;border-radius:10px;margin:6px 0 4px"></svg>
+      <div class="mapwrap" id="wineMapWrap" style="margin:6px 0 4px">
+        <svg id="wineMapSvg" style="width:100%;display:block;border-radius:10px"></svg>
+        <span class="mapzoomhint" data-i18n="mapZoomHint">klyp / rull for å zoome · dobbelttrykk nullstiller</span>
+      </div>
       <p class="note" style="margin:0 0 8px"><span data-i18n="noteWineMapClick">Klikk et land på kartet for å filtrere. Klikk en <b>produsent</b> eller <b>drue</b> i tabellen for å se opprinnelsen på kartet. </span><span id="wineFilterCount"></span></p>
       <p>
         <button class="btn ghost" data-i18n="btnExportXlsx" onclick="exportWinesXlsx()">Eksporter (xlsx)</button>
@@ -890,7 +971,8 @@ const I18N = {
     evidence: 'Datastyrke', evStrong: 'Sterk', evModerate: 'Middels', evThin: 'Tynn',
     evNote: 'scoren måler attraktivitet; datastyrken viser hvor solid grunnlaget er (de fleste kandidatene er foreløpig ubekreftede leads).',
     evTip: (s, t, c, r, priced) => `Datastyrke bak scoren: ${priced} av ${t} kandidater har en kjellerpris (FOB) og kan prisvurderes · ${s} har offentlig kildeførte felt · ${c}% av kravene bekreftet · ${r}% med verifisert NO-status. Uten FOB kan ingen mulighet regnes som «Sterk».`,
-    oppEmpty: 'Ingen anbud med kvalifiserte viner i valgt filter. Prøv «Alle muligheter», bytt plan, eller legg til flere viner.',
+    oppEmpty: n => `<div class="emptycta"><div class="ec-h">Legg inn porteføljen din for å rangere anbudene du kan vinne</div><div class="ec-b">Vi matcher hver vin mot hvert anbud automatisk — med marginregnestykket, kjellerprisen hver vin må treffe, og fristene. Ingen viner ennå? Bla i alle <b>${n}</b> aktive anbud og filtrer på land, drue, pris og frist.</div><div class="pullbtns"><button class="btn" onclick="gotoTab('portefolje')">Legg inn porteføljen</button><button class="btn ghost" onclick="scrollToBrowse()">Bla i alle ${n} anbud →</button></div></div>`,
+    shortlistEmpty: 'Ingen anbud i shortlisten ennå. Klikk ★ på en vin i et anbud for å legge den til.',
     thWineCol: 'Vin', thFitCol: 'Match', thStatusCol: 'Status i NO', thPick: '★',
     thFitTip: 'Hvor mange av anbudets krav vinen møter. ✓ = oppfylt · ? = kan ikke sjekkes før produsenten bekrefter detaljer (drue-%, årgang, sukker …).',
     matchCellTip: (p, u, t) => `${p} av ${t} krav oppfylt${u ? `, ${u} kan ikke sjekkes ennå (mangler produsentdata)` : ''}.`,
@@ -899,6 +981,11 @@ const I18N = {
     h2Match: 'Match min vin — hvilke anbud kan den vinne?',
     noteMatch: 'Ingen opplasting nødvendig. Beskriv vinen din, så ser du umiddelbart hvilke av Vinmonopolets anbud den kvalifiserer til, hvilken FOB (kjellerpris) du må treffe, og hvor mange andre viner som konkurrerer. Fyll ut hele porteføljen din senere under <b>Last opp</b> for å bli funnet automatisk.',
     mwName: 'Vinnavn (valgfritt)', mwNamePh: 'f.eks. Estate Grüner Veltliner',
+    mwMoreSummary: 'Flere detaljer — for et skarpere svar (drue-%, sukker, fat, årgang, flaskevekt)',
+    mwBulkPre: 'Har du mange viner?', mwBulkLink: 'Importer hele porteføljen fra Excel →',
+    mwGrapesFull: 'Druesammensetning (blend) — overstyrer hoveddruen', mwGrapesFullPh: 'f.eks. grenache 60, syrah 30, mourvèdre 10',
+    mwSugarL: 'Restsukker (g/l)', mwSugarPh: 'f.eks. 2', mwVintagesL: 'Årganger tilgjengelig', mwVintagesPh: 'f.eks. 2022, 2023',
+    mwWeightL: 'Flaskevekt (g)', mwWeightPh: 'tom flaske, f.eks. 420',
     mwColour: 'Farge', mwGrape: 'Hoveddrue', mwGrapePh: 'f.eks. riesling',
     mwPrice: 'Målpris (hylle, kr)', mwAbv: 'Alkohol (%)', mwCert: 'Sertifisering', mwCertPh: 'organic, fairtrade…',
     mwFob: 'Din FOB € (valgfritt)', mwFobPh: 'kjellerpris', btnMatchRun: 'Finn anbud',
@@ -906,6 +993,15 @@ const I18N = {
     certOrganic: 'Økologisk', certBiodynamic: 'Biodynamisk', certFairtrade: 'Fairtrade',
     certVegan: 'Vegansk', certSustainable: 'Bærekraftig', certKosher: 'Kosher',
     mwLeadPre: 'Eller test en ekte lead fra databasen: ',
+    mwExampleHint: '↑ Eksempel — endre et hvilket som helst felt for å beskrive din egen vin.',
+    cmpH: 'Fullfør vinen — gjør «?» om til ✓',
+    cmpMeter: 'profil fullført',
+    cmpSub: (t, u) => `${u} ${u === 1 ? 'kriterium' : 'kriterier'} på tvers av ${t} ${t === 1 ? 'anbud' : 'anbud'} er fortsatt ubekreftet (?). Bare du kan bekrefte dem — hvert felt gjør et «?» om til et sikkert ✓ eller ✗.`,
+    cmpPrice: n => `Legg inn kjellerprisen (FOB), så blir «trolig innenfor» til en fast ja/nei på pris for ${n} ${n === 1 ? 'anbud' : 'anbud'}.`,
+    cmpClean: 'Alle kriterier er avklart for de matchede anbudene. Lagre vinen så importørene finner den.',
+    cmpSave: 'Lagre vinen i databasen →',
+    cfGrape: 'Drue', cfCert: 'Sertifisering', cfFob: 'Kjellerpris (FOB)', cfSugar: 'Restsukker',
+    cfWood: 'Fatbruk', cfVint: 'Årganger', cfWeight: 'Flaskevekt',
     mwResultH: n => n ? `Vinen din kvalifiserer til ${n} anbud` : 'Ingen anbud matcher ennå',
     mwTileMatches: 'anbud den kan vinne', mwTileIntro: 'der du er urepresentert', mwTileBest: 'beste marginrom €',
     mwNoMatch: 'Ingen av anbudene i denne planen passer akkurat denne profilen. Prøv en annen plan øverst til høyre, juster druen/prisen, eller se <b>Analyse</b> for hvilke opprinnelser og druer som går igjen.',
@@ -953,8 +1049,8 @@ const I18N = {
     mwlSavedBody: n => `Den teller nå som kildeført, og matcher ${n} anbud i denne planen.`,
     mwlDownload: 'Last ned JSON', mwlSeeOpp: 'Se i Muligheter →',
     introX: 'Skjul (vises ikke igjen)', introH: 'Slik fungerer det',
-    introLi1: 'Last opp vinene dine én gang under <b>Min portefølje</b> — eller utforsk demodataene som allerede ligger inne.',
-    introLi2: 'Under <b>Anbud</b> og <b>Marketplace</b> matches vinene automatisk mot Vinmonopolets krav, så du ser hvilke anbud du kan vinne.',
+    introLi1: 'Beskriv én vin under <b>Viner → Match min vin</b> og se med én gang hvilke anbud den kan vinne — eller last opp hele porteføljen din under <b>Min portefølje</b>.',
+    introLi2: 'Under <b>Anbud</b> matches vinene automatisk mot Vinmonopolets krav, med treff/bom på hvert enkelt krav, så du ser nøyaktig hvilke anbud du kan vinne.',
     introLi3: 'Bruk <b>Kalkulator</b> til å sjekke at produsentprisen treffer prisbåndet — <b>FOB</b> = prisen produsenten tar fra kjeller, før frakt, avgifter og importørmargin.',
     introFoot: 'Bytt lanseringsplan øverst til høyre. Alt kjører lokalt i nettleseren — ingen data forlater maskinen.',
     h2FilterDist: 'Filtre og fordeling', lblGeo: 'Geografi', lblType: 'Type', lblGrape: 'Drue',
@@ -972,7 +1068,9 @@ const I18N = {
     optOpenImport: 'Åpen for import', optRepresented: 'Representert/listet', optUnknown: 'Ukjent',
     phSpecText: 'søk i spesifikasjonstekst…', btnReset: 'Nullstill',
     noteMapClick: 'Klikk en stolpe eller et land på kartet for å filtrere; klikk igjen for å oppheve. ',
-    chGeo: 'Geografi', chType: 'Produkttype', chGrape: 'Drue / metode', chPrice: 'Prisbånd (kr)',
+    chGeo: 'Geografi', chDistrict: 'Distrikt / region', chType: 'Produkttype', chGrape: 'Drue / metode', chPrice: 'Prisbånd (kr)',
+    lblRegion: 'Distrikt/region', optAllRegions: 'Alle distrikter',
+    mapZoomHint: 'klyp / rull for å zoome · dobbelttrykk nullstiller',
     h2Specs: 'Anbudsspesifikasjoner', fAll: 'Alle', fMatch: 'Med kvalifiserte viner', fWine: 'Kun vin',
     thRef: 'Ref', thLaunch: 'Lansering', thSel: 'Utvalg', thGroup: 'Gruppe', thOrigin: 'Opprinnelse',
     thSpec: 'Spesifikasjon', thPriceBand: 'Prisbånd', thNeedFob: 'Trenger ≤ FOB', thHits: 'Treff',
@@ -1052,8 +1150,15 @@ const I18N = {
       analyse: 'Mønstre på tvers av alle innlastede planer — hvilke opprinnelser og druer som går igjen, og hvordan prisbåndene beveger seg.',
       opplasting: 'Last opp en ny lanseringsplan fra Vinmonopolet, eller produsentdata i bulk via Excel-malen.',
     },
-    tilesSpecs: 'spesifikasjoner i planen', tilesWithMatches: 'anbud med kvalifiserte viner',
+    tilesSpecs: 'spesifikasjoner i planen', tilesWithMatches: 'anbud du kan vinne',
     tilesWines: 'viner i databasen', tilesIntro: 'introduksjonsmuligheter (åpne viner)', anaWineTenders: 'vinanbud',
+    tileLive: 'aktive anbud', tileLiveSub: 'ekte krav fra Vinmonopolet',
+    tileCountries: 'land det etterspørres fra', tileClosing: 'med frist innen 45 dager',
+    tileNearest: 'til neste tilbudsfrist', tileDays: n => n === 0 ? 'i dag' : n === 1 ? '1 dag' : `${n} dager`,
+    heroH: 'Vinn Vinmonopolets anbud — før konkurrentene rekker å se dem.',
+    heroSub: 'Hver lanseringsplan, tolket ned til hvert enkelt krav. Match en vin på sekunder, se den nøyaktige kjellerprisen den må treffe, og gå aldri glipp av en frist.',
+    heroSkip: 'Bare bla — skjul dette',
+    hpTenders: 'aktive anbud', hpCountries: 'land', hpClosing: 'frist ≤ 45 dager', hpNext: 'til neste frist',
     filterCount: (n, tot) => `Viser ${n} av ${tot} anbud.`,
     wineFilterCountFn: (n, tot) => `Viser ${n} av ${tot} viner.`,
     wineCountFn: (n, tot) => `${n} av ${tot} viner`, portCountFn: n => `${n} viner`,
@@ -1184,7 +1289,8 @@ const I18N = {
     evidence: 'Evidence', evStrong: 'Strong', evModerate: 'Moderate', evThin: 'Thin',
     evNote: 'the score measures attractiveness; evidence shows how solid the basis is (most candidates are still unconfirmed leads).',
     evTip: (s, t, c, r, priced) => `Evidence behind the score: ${priced} of ${t} candidates have an ex-cellar price (FOB) and can be price-checked · ${s} have publicly sourced fields · ${c}% of requirements confirmed · ${r}% with verified NO status. Without an FOB no opportunity can count as "Strong".`,
-    oppEmpty: 'No tenders with qualified wines under this filter. Try "All opportunities", switch plan, or add more wines.',
+    oppEmpty: n => `<div class="emptycta"><div class="ec-h">Add your portfolio to rank the tenders you can win</div><div class="ec-b">We match every wine against every tender automatically — with the margin maths, the ex-cellar price each wine must hit, and the deadlines. No wines yet? Browse all <b>${n}</b> live tenders and filter by country, grape, price and deadline.</div><div class="pullbtns"><button class="btn" onclick="gotoTab('portefolje')">Add your portfolio</button><button class="btn ghost" onclick="scrollToBrowse()">Browse all ${n} tenders →</button></div></div>`,
+    shortlistEmpty: 'No tenders shortlisted yet. Click ★ on a wine in any tender to add it.',
     thWineCol: 'Wine', thFitCol: 'Fit', thStatusCol: 'Status in NO', thPick: '★',
     thFitTip: "How many of the tender's requirements the wine meets. ✓ = met · ? = can't be checked until the producer confirms details (grape %, vintage, sugar …).",
     matchCellTip: (p, u, t) => `${p} of ${t} requirements met${u ? `, ${u} can't be checked yet (missing producer data)` : ''}.`,
@@ -1193,6 +1299,11 @@ const I18N = {
     h2Match: 'Match my wine — which tenders can it win?',
     noteMatch: 'No upload needed. Describe your wine and instantly see which Vinmonopolet tenders it qualifies for, the FOB (ex-cellar price) you must hit, and how many other wines compete. Fill in your full portfolio later under <b>Upload</b> to be found automatically.',
     mwName: 'Wine name (optional)', mwNamePh: 'e.g. Estate Grüner Veltliner',
+    mwMoreSummary: 'More detail — for a sharper answer (grape %, sugar, oak, vintage, bottle weight)',
+    mwBulkPre: 'Have many wines?', mwBulkLink: 'Import your whole portfolio from Excel →',
+    mwGrapesFull: 'Grape composition (blend) — overrides the main grape', mwGrapesFullPh: 'e.g. grenache 60, syrah 30, mourvèdre 10',
+    mwSugarL: 'Residual sugar (g/l)', mwSugarPh: 'e.g. 2', mwVintagesL: 'Vintages available', mwVintagesPh: 'e.g. 2022, 2023',
+    mwWeightL: 'Bottle weight (g)', mwWeightPh: 'empty bottle, e.g. 420',
     mwColour: 'Colour', mwGrape: 'Main grape', mwGrapePh: 'e.g. riesling',
     mwPrice: 'Target shelf price (kr)', mwAbv: 'Alcohol (%)', mwCert: 'Certification', mwCertPh: 'organic, fairtrade…',
     mwFob: 'Your FOB € (optional)', mwFobPh: 'ex-cellar', btnMatchRun: 'Find tenders',
@@ -1200,6 +1311,15 @@ const I18N = {
     certOrganic: 'Organic', certBiodynamic: 'Biodynamic', certFairtrade: 'Fairtrade',
     certVegan: 'Vegan', certSustainable: 'Sustainable', certKosher: 'Kosher',
     mwLeadPre: 'Or test a real lead from the database: ',
+    mwExampleHint: '↑ Example — edit any field to describe your own wine.',
+    cmpH: 'Complete your wine — turn “?” into ✓',
+    cmpMeter: 'profile complete',
+    cmpSub: (t, u) => `${u} ${u === 1 ? 'criterion' : 'criteria'} across ${t} ${t === 1 ? 'tender' : 'tenders'} ${u === 1 ? 'is' : 'are'} still unconfirmed (?). Only you can confirm them — each field turns a “?” into a firm ✓ or ✗.`,
+    cmpPrice: n => `Add your ex-cellar price (FOB) to turn “likely within” into a firm yes/no on price for ${n} ${n === 1 ? 'tender' : 'tenders'}.`,
+    cmpClean: 'Every criterion is resolved for your matched tenders. Save the wine so importers can find it.',
+    cmpSave: 'Save the wine to the pool →',
+    cfGrape: 'Grape', cfCert: 'Certification', cfFob: 'Ex-cellar price (FOB)', cfSugar: 'Residual sugar',
+    cfWood: 'Oak', cfVint: 'Vintages', cfWeight: 'Bottle weight',
     mwResultH: n => n ? `Your wine qualifies for ${n} tenders` : 'No tenders match yet',
     mwTileMatches: 'tenders it can win', mwTileIntro: 'where you are unrepresented', mwTileBest: 'best margin headroom €',
     mwNoMatch: 'None of the tenders in this plan fit this exact profile. Try another plan (top right), adjust the grape/price, or see <b>Analytics</b> for which origins and grapes recur.',
@@ -1247,8 +1367,8 @@ const I18N = {
     mwlSavedBody: n => `It now counts as sourced, and matches ${n} tenders in this plan.`,
     mwlDownload: 'Download JSON', mwlSeeOpp: 'See in Opportunities →',
     introX: "Hide (won't show again)", introH: 'How it works',
-    introLi1: 'Upload your wines once under <b>My portfolio</b> — or explore the demo data already loaded.',
-    introLi2: "Under <b>Tenders</b> and <b>Marketplace</b> your wines are matched automatically against Vinmonopolet's requirements, so you see which tenders you can win.",
+    introLi1: 'Describe one wine under <b>Wines → Match my wine</b> and instantly see which tenders it can win — or upload your whole portfolio under <b>My portfolio</b>.',
+    introLi2: "Under <b>Tenders</b> your wines are matched automatically against Vinmonopolet's requirements, hit-or-miss on every single criterion, so you see exactly which tenders you can win.",
     introLi3: 'Use the <b>Calculator</b> to check the producer price hits the price band — <b>FOB</b> = the price the producer charges ex-cellar, before freight, duties and importer margin.',
     introFoot: 'Switch launch plan at the top right. Everything runs locally in your browser — no data leaves your machine.',
     h2FilterDist: 'Filters and distribution', lblGeo: 'Geography', lblType: 'Type', lblGrape: 'Grape',
@@ -1266,7 +1386,9 @@ const I18N = {
     optOpenImport: 'Open to import', optRepresented: 'Represented/listed', optUnknown: 'Unknown',
     phSpecText: 'search specification text…', btnReset: 'Reset',
     noteMapClick: 'Click a bar or a country on the map to filter; click again to clear. ',
-    chGeo: 'Geography', chType: 'Product type', chGrape: 'Grape / method', chPrice: 'Price band (kr)',
+    chGeo: 'Geography', chDistrict: 'District / region', chType: 'Product type', chGrape: 'Grape / method', chPrice: 'Price band (kr)',
+    lblRegion: 'District/region', optAllRegions: 'All districts',
+    mapZoomHint: 'pinch / scroll to zoom · double-tap resets',
     h2Specs: 'Tender specifications', fAll: 'All', fMatch: 'With qualifying wines', fWine: 'Wine only',
     thRef: 'Ref', thLaunch: 'Launch', thSel: 'Range', thGroup: 'Group', thOrigin: 'Origin',
     thSpec: 'Specification', thPriceBand: 'Price band', thNeedFob: 'Needs ≤ FOB', thHits: 'Matches',
@@ -1346,8 +1468,15 @@ const I18N = {
       analyse: 'Patterns across all loaded plans — which origins and grapes recur, and how the price bands move.',
       opplasting: "Upload a new launch plan from Vinmonopolet, or producer data in bulk via the Excel template.",
     },
-    tilesSpecs: 'specifications in the plan', tilesWithMatches: 'tenders with qualifying wines',
+    tilesSpecs: 'specifications in the plan', tilesWithMatches: 'tenders you can win',
     tilesWines: 'wines in the database', tilesIntro: 'introduction opportunities (open wines)', anaWineTenders: 'wine tenders',
+    tileLive: 'live tenders', tileLiveSub: 'real Vinmonopolet requirements',
+    tileCountries: 'countries being sourced', tileClosing: 'closing within 45 days',
+    tileNearest: 'to the next deadline', tileDays: n => n === 0 ? 'today' : n === 1 ? '1 day' : `${n} days`,
+    heroH: 'Win Vinmonopolet tenders — before your competitors even see them.',
+    heroSub: 'Every launch plan, parsed down to each individual requirement. Match a wine in seconds, see the exact ex-cellar price it must hit, and never miss a deadline.',
+    heroSkip: 'Just browsing — hide this',
+    hpTenders: 'live tenders', hpCountries: 'countries', hpClosing: 'closing ≤ 45 days', hpNext: 'to next deadline',
     filterCount: (n, tot) => `Showing ${n} of ${tot} tenders.`,
     wineFilterCountFn: (n, tot) => `Showing ${n} of ${tot} wines.`,
     wineCountFn: (n, tot) => `${n} of ${tot} wines`, portCountFn: n => `${n} wines`,
@@ -1965,7 +2094,7 @@ const fmt = (x, d = 2) => (+x).toLocaleString(LANG === 'en' ? 'en-GB' : 'no-NO',
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 let MARKET = [], specFilter = 'all', marketHideListed = true;
 const openTerm = () => L.openCountry;
-const FILTERS = { country: '', mainType: '', group: '', grape: '', classification: '', price: '', sel: '', q: '' };
+const FILTERS = { country: '', region: '', mainType: '', group: '', grape: '', classification: '', price: '', sel: '', q: '' };
 const GRAPE_LEX = ['chardonnay','chenin blanc','pinot noir','pinotage','cabernet franc',
   'cabernet sauvignon','merlot','syrah','shiraz','grenache','garnacha','cinsault','mourvedre','mataro',
   'tempranillo','sangiovese','nebbiolo','barbera','riesling','gruner veltliner','sauvignon blanc',
@@ -2125,6 +2254,7 @@ function specBucket(spec) {
 }
 function passes(spec, skip) {
   if (skip !== 'country' && FILTERS.country && (spec.country || openTerm()) !== FILTERS.country) return false;
+  if (skip !== 'region' && FILTERS.region && (spec.region || '').trim() !== FILTERS.region) return false;
   if (skip !== 'mainType' && FILTERS.mainType && mainCat(spec) !== FILTERS.mainType) return false;
   if (skip !== 'group' && FILTERS.group && subCat(spec) !== FILTERS.group) return false;
   if (skip !== 'grape' && FILTERS.grape && !specGrapes(spec).includes(FILTERS.grape)) return false;
@@ -2152,7 +2282,7 @@ function drawDimChart(svgId, dim, keyFn, activeVal, fixedOrder, labelFn) {
   let entries = [...c.entries()];
   entries = fixedOrder
     ? fixedOrder.filter(k => c.has(k)).map(k => [k, c.get(k)])
-    : entries.sort((a, b) => b[1] - a[1]).slice(0, 8);
+    : entries.sort((a, b) => b[1] - a[1]);   // show every category, not just the top 8
   const W = svg.parentElement.clientWidth || 250, rowH = 21, barH = 13, labW = 104;
   const H = Math.max(entries.length * rowH, rowH);
   svg.setAttribute('viewBox', `0 0 ${W} ${H}`); svg.style.height = H + 'px';
@@ -2299,7 +2429,7 @@ function renderMap() {
     lab => setFilter('country', lab, true));
 }
 
-const DIM_SELECT = { country: 'fCountry', mainType: 'fMain', group: 'fGroup', grape: 'fGrape',
+const DIM_SELECT = { country: 'fCountry', region: 'fRegion', mainType: 'fMain', group: 'fGroup', grape: 'fGrape',
   classification: 'fClass', price: 'fPrice', sel: 'fSel' };
 function setFilter(dim, val, scroll) {
   FILTERS[dim] = val;
@@ -2310,6 +2440,10 @@ function setFilter(dim, val, scroll) {
 function scrollToSpecs() {
   const el = $('specTable');
   if (el) el.closest('.card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+function scrollToBrowse() {
+  const el = $('browseTop');
+  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 function resetFilters() {
   Object.keys(FILTERS).forEach(k => FILTERS[k] = '');
@@ -2334,10 +2468,12 @@ function fillSelValueLabel(id, opts, current) {
 function renderDims() {
   renderMap();
   drawDimChart('chCountry', 'country', s => s.country || openTerm(), FILTERS.country);
+  drawDimChart('chRegion', 'region', s => (s.region || '').trim(), FILTERS.region);
   drawDimChart('chGroup', 'mainType', s => mainCat(s), FILTERS.mainType, null, mainDisp);
   drawDimChart('chGrape', 'grape', s => specGrapes(s), FILTERS.grape, null, dispGrape);
   drawDimChart('chPrice', 'price', s => specBucket(s), FILTERS.price, PRICE_BUCKETS.map(b => b[2]));
   fillSelect('fCountry', [...counts('country', s => s.country || openTerm()).keys()].sort(), FILTERS.country, dispCountry);
+  fillSelect('fRegion', [...counts('region', s => (s.region || '').trim()).keys()].sort(), FILTERS.region);
   const mainOpts = [...counts('mainType', s => mainCat(s)).keys()].map(c => [c, mainDisp(c)]).sort((a, b) => a[1].localeCompare(b[1]));
   fillSelValueLabel('fMain', mainOpts, FILTERS.mainType);
   const grpOpts = [...counts('group', s => subCat(s)).keys()].map(c => [c, subDisp(c)]).sort((a, b) => a[1].localeCompare(b[1]));
@@ -2354,6 +2490,7 @@ function recompute() {
   SPECS.forEach(s => { delete s._grapes; delete s._class; });
   MARKET = computeMarket();
   renderTiles(); renderDims(); renderSpecs(); renderMarket(); renderWineDims(); renderWines();
+  if (typeof renderHero === 'function') renderHero();
   if (typeof renderOpportunities === 'function') renderOpportunities();
   // refresh the producer tab's leads + result against the new plan when it's the active tab
   if (MW_INIT && $('tab-viner') && $('tab-viner').classList.contains('on')) {
@@ -2362,15 +2499,30 @@ function recompute() {
   }
 }
 function renderTiles() {
+  // Lead with the live tender data (always rich) rather than the wine-DB counts (empty until
+  // users add portfolios). A first-time visitor with no portfolio still sees a plan that's
+  // alive: real demand, real countries, real deadlines counting down.
+  const dtds = SPECS.map(daysToDeadline).filter(d => d != null && d >= 0);
+  const soon = dtds.filter(d => d <= 45).length;
+  const nearest = dtds.length ? Math.min(...dtds) : null;
+  const countries = new Set(SPECS.map(s => (s.country || '').trim()).filter(Boolean)).size;
   const withM = MARKET.filter(m => oppCands(m).length);
   const openIntro = new Set();
   withM.forEach(m => oppCands(m).forEach(x => { if (isIntroOpp(x)) openIntro.add(x.wine.id); }));
-  $('tiles').innerHTML = [
-    [SPECS.length, L.tilesSpecs],
-    [withM.length, L.tilesWithMatches],
-    [WINES.length, L.tilesWines],
-    [openIntro.size, L.tilesIntro],
-  ].map(([v, l]) => `<div class="tile"><div class="v">${v}</div><div class="l">${l}</div></div>`).join('');
+  // The 4th tile adapts: once the user has portfolio matches it shows the payoff (winnable
+  // tenders); with an empty DB it shows the nearest deadline, keeping every tile non-zero.
+  const payoff = WINES.length
+    ? { v: withM.length, l: L.tilesWithMatches, cls: withM.length ? 'accent' : '' }
+    : (nearest != null ? { v: L.tileDays(nearest), l: L.tileNearest, cls: nearest <= 21 ? 'urgent' : '' }
+                       : { v: '–', l: L.tileNearest, cls: '' });
+  const tiles = [
+    { v: SPECS.length, l: L.tileLive, sub: L.tileLiveSub, cls: 'accent' },
+    { v: countries, l: L.tileCountries, cls: '' },
+    { v: soon, l: L.tileClosing, cls: soon ? 'urgent' : '' },
+    payoff,
+  ];
+  $('tiles').innerHTML = tiles.map(t =>
+    `<div class="tile ${t.cls || ''}"><div class="v">${t.v}</div><div class="l">${t.l}</div>${t.sub ? `<div class="sub">${t.sub}</div>` : ''}</div>`).join('');
 }
 function renderSpecs() {
   const tb = $('specTable').querySelector('tbody');
@@ -2391,7 +2543,7 @@ function renderSpecs() {
     const mini = p ? `<div class="minibar" title="${esc(L.ttPriceCap)} ${fmt(p,0)} kr"><i style="width:${Math.min(100, 100*p/maxP)}%"></i></div>` : '';
     const gr = capGrapes(specGrapes(s).slice(0, 3));
     return `<tr class="rowx" data-i="${i}">
-      <td><b>${esc(s.ref)}</b></td><td>${esc(s.launch)}</td><td>${esc((s.selection || '').replace('utvalget',''))}</td>
+      <td><b>${esc(s.ref)}</b></td><td>${esc(s.launch)}${urgencyChip(s)}</td><td>${esc((s.selection || '').replace('utvalget',''))}</td>
       <td>${esc(mainDisp(mainCat(s))) || esc(s.group)}${subCat(s) ? ` <span style="color:var(--muted)">(${esc(subDisp(subCat(s)))})</span>` : ''}${gr ? `<br><span style="color:var(--muted);font-size:11.5px">${esc(gr)}</span>` : ''}</td>
       <td>${esc(dispCountry(s.country)) || openTerm()}${s.region ? `<br><span style="color:var(--muted);font-size:11.5px">${esc(s.region)}</span>` : ''}${s.appellation ? `<br><span style="color:var(--muted);font-size:11px" title="${esc(s.appellation)}">${esc(s.appellation.length > 42 ? s.appellation.slice(0, 40) + '…' : s.appellation)}</span>` : ''}${specClasses(s).length ? `<br>${specClasses(s).map(c => `<span class="chip lo" style="font-size:10.5px;padding:1px 6px;margin:2px 3px 0 0">${esc(c)}</span>`).join('')}` : ''}</td>
       <td>${esc((s.spec || '').slice(0, 110))}${(s.spec || '').length > 110 ? '…' : ''}</td>
@@ -3309,15 +3461,38 @@ let ROLE = null;
 function setRole(role) {
   ROLE = role;
   try { localStorage.setItem('ti_role', role); } catch (e) {}
-  document.querySelectorAll('.rp-btn').forEach(b => b.classList.toggle('sel', b.dataset.role === role));
-  gotoTab(role === 'producer' ? 'viner' : 'anbud');
+  document.querySelectorAll('.hero-card').forEach(b => b.classList.toggle('sel', b.dataset.role === role));
+  dismissRole();
+  if (role === 'producer') { gotoTab('viner'); return; }
+  // importer stays on Anbud: reveal the ranked opportunities right where the hero was
+  gotoTab('anbud');
+  const card = document.querySelector('#tab-anbud .card');
+  if (card) card.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
-function dismissRole() { const el = $('rolepick'); if (el) el.style.display = 'none'; }
+function dismissRole() { const el = $('hero'); if (el) el.style.display = 'none'; }
+// The live pulse in the hero — the same real, always-rich tender vitality as the tiles, but as
+// a compact ticker so the first fold proves the plan is alive before the user picks a side.
+function renderHero() {
+  const el = $('heroPulse'); if (!el) return;
+  const dtds = SPECS.map(daysToDeadline).filter(d => d != null && d >= 0);
+  const soon = dtds.filter(d => d <= 45).length;
+  const nearest = dtds.length ? Math.min(...dtds) : null;
+  const countries = new Set(SPECS.map(s => (s.country || '').trim()).filter(Boolean)).size;
+  const stats = [
+    [SPECS.length, L.hpTenders, false],
+    [countries, L.hpCountries, false],
+    [soon, L.hpClosing, soon > 0],
+    [nearest != null ? L.tileDays(nearest) : '–', L.hpNext, nearest != null && nearest <= 21],
+  ];
+  el.innerHTML = stats.map(([v, l, u]) =>
+    `<div class="hpstat${u ? ' u' : ''}"><div class="hpv">${v}</div><div class="hpl">${l}</div></div>`).join('');
+}
 function initRole() {
+  renderHero();
   let saved = null; try { saved = localStorage.getItem('ti_role'); } catch (e) {}
   if (saved) {
     ROLE = saved; dismissRole();
-    document.querySelectorAll('.rp-btn').forEach(b => b.classList.toggle('sel', b.dataset.role === saved));
+    document.querySelectorAll('.hero-card').forEach(b => b.classList.toggle('sel', b.dataset.role === saved));
     gotoTab(saved === 'producer' ? 'viner' : 'anbud');
   } else {
     renderOpportunities();
@@ -3336,6 +3511,13 @@ function daysToDeadline(spec) {
   else { m = s.match(/(\d{1,2})[.\/](\d{1,2})[.\/](\d{4})/); if (!m) return null; da = +m[1]; mo = +m[2]; y = +m[3]; }
   const dt = new Date(Date.UTC(y, mo - 1, da));
   return isNaN(dt) ? null : Math.round((dt - Date.now()) / 86400000);
+}
+// A small countdown chip for tenders whose deadline is near — turns a static table into a
+// live one and quietly nudges the user toward what's about to close. Amber ≤45d, hot ≤14d.
+function urgencyChip(spec) {
+  const d = daysToDeadline(spec);
+  if (d == null || d < 0 || d > 45) return '';
+  return ` <span class="chip urg${d <= 14 ? ' hot' : ''}" style="white-space:nowrap;min-width:0" title="${esc(L.oppDeadTip)} — ${esc(L.tileDays(d))}">${d}d</span>`;
 }
 // A wine is a real candidate for a tender only if it concretely meets at least one
 // requirement — or the tender has no checkable clauses at all (pure origin/price). This
@@ -3430,10 +3612,15 @@ function renderOpportunities() {
     })
     // rank by attractiveness, then let evidence break ties (rounded score avoids float-noise ties)
     .sort((a, b) => (Math.round(b.score * 10) - Math.round(a.score * 10)) || (b.st.pct - a.st.pct));
-  $('oppSummary').innerHTML = L.oppSummary(rows.length) + ` <span style="font-weight:400;color:var(--muted)">— ${L.evNote}</span>`;
+  $('oppSummary').innerHTML = rows.length ? L.oppSummary(rows.length) + ` <span style="font-weight:400;color:var(--muted)">— ${L.evNote}</span>` : '';
   renderDigest();
   const c = $('shortlistCount'); if (c) c.textContent = SHORTLIST.size ? `(${SHORTLIST.size})` : '';
-  if (!rows.length) { list.innerHTML = `<p class="note">${OPPF === 'sourced' ? L.oppEmptySourced : L.oppEmpty}</p>`; return; }
+  // With no ranked opportunities (e.g. no portfolio yet) the value CTA below already makes the
+  // "add your portfolio" ask, and there are no cards to explain — so hide the redundant pull box
+  // and the how-to-read-a-card guide until there's actually something to read.
+  const ip = $('impPull'); if (ip) ip.style.display = rows.length ? '' : 'none';
+  const hw = $('oppHowto'); if (hw) hw.style.display = rows.length ? '' : 'none';
+  if (!rows.length) { list.innerHTML = OPPF === 'sourced' ? `<p class="note">${L.oppEmptySourced}</p>` : L.oppEmpty(SPECS.length); return; }
   const maxScore = rows[0].score || 1;
   list.innerHTML = rows.map((r, i) => {
     const m = r.m, s = m.spec;
@@ -3481,7 +3668,7 @@ function renderOpportunities() {
   }));
 }
 function exportShortlist() {
-  if (!SHORTLIST.size) { alert(L.oppEmpty); return; }
+  if (!SHORTLIST.size) { alert(L.shortlistEmpty); return; }
   const rows = [['tender', 'deadline', 'price_band', 'need_fob_eur', 'producer', 'wine', 'country', 'grapes', 'status_no', 'evidence']];
   for (const k of SHORTLIST) {
     const [ref, id] = k.split('|');
@@ -3619,7 +3806,62 @@ function initMatchWine() {
   $('mwLeadPick').innerHTML = leads.length ? L.mwLeadPre + leads.map((w, i) =>
     `<button class="btn ghost" style="padding:3px 9px;margin:2px 4px 0 0;font-size:12px" onclick="fillLead(${i})">${esc(w.country)} · ${esc(dispGrape(Object.keys(w.grapes)[0]))}</button>`).join('') : '';
   // show a worked example on first open so the value is immediate; never overwrite the user's own input later
-  if (!MW_DEMOED && leads.length) { MW_DEMOED = true; fillLead(0); }
+  if (!MW_DEMOED) { MW_DEMOED = true; if (leads.length) fillLead(0); else demoQuery(); }
+}
+// With an empty wine database there are no seed leads to demo — but the matcher needs no
+// database at all: it matches a *described* wine against the real tenders. So we prefill an
+// illustrative wine (clearly editable) that actually wins tenders in the current plan and run
+// it, so a first-time producer sees the payoff before typing a single field.
+function demoQuery() {
+  const wineSpecs = SPECS.filter(s => isWineSpec(s) && (s.country || '').trim());
+  if (!wineSpecs.length) return;
+  const colorFor = g => /red/i.test(g) ? 'red' : /white/i.test(g) ? 'white' : /ros[eé]/i.test(g) ? 'rose'
+    : /spark|mousser/i.test(g) ? 'sparkling white' : 'red';
+  // Pick the (country, colour, grape) an illustrative *single* wine could carry that wins the
+  // MOST tenders in this plan, so the first thing a producer sees is a strong result. A grape
+  // matters: a wine with no stated grape fails every grape-specific tender, so we try each
+  // tender's own requested grape — an honest "a French Chardonnay wins N of these".
+  const grapeOpts = new Set([...$('mwGrape').options].map(o => o.value).filter(Boolean));
+  const combos = new Map();
+  for (const s of wineSpecs) {
+    const color = colorFor(s.group || '');
+    const gs = specGrapes(s).map(g => g.toLowerCase()).filter(g => grapeOpts.has(g));
+    for (const grape of gs.length ? gs : ['']) {
+      combos.set(s.country + '|' + color + '|' + grape, { country: s.country, color, grape });
+    }
+  }
+  // Most VMP tenders also mandate a certification (organic / sustainable), which a wine with no
+  // cert fails outright. A real archetype wine legitimately holds one, so we also try common
+  // cert bundles and keep whichever wins most — "an organic Chardonnay from France".
+  const certBundles = [[], ['organic'], ['sustainable'], ['organic', 'sustainable']];
+  const scoreOf = (c, certs) => {
+    const rec = { id: '_demo', producer: '', name: '', country: c.country, color: c.color,
+      grapes: c.grape ? { [c.grape]: 100 } : {}, abv: 13.5, certs, cert_on_label: !!certs.length,
+      vintages_available: [], sugar_g_l: null, wood: null, packaging: { type: null, weight_g: null },
+      method: /spark/.test(c.color) ? 'traditional' : null, fob_eur: null, representation: { NO: 'unrepresented' } };
+    let n = 0;
+    for (const s of SPECS) {
+      const hi = s.price_hi ?? s.price_lo;
+      const fob = hi ? fobFromRetail(+hi, rec.abv, s.litres || 0.75) : null;
+      if (evaluateWine(s, rec, fob)) n++;
+    }
+    return n;
+  };
+  let best = null, bestN = -1;
+  for (const c of combos.values()) for (const certs of certBundles) {
+    const n = scoreOf(c, certs);
+    if (n > bestN) { bestN = n; best = { ...c, certs }; }
+  }
+  if (!best) return;
+  $('mwName').value = '';
+  $('mwCountry').value = best.country;
+  $('mwColour').value = best.color;
+  $('mwGrape').value = best.grape || '';
+  $('mwAbv').value = 13.5;
+  setCerts(best.certs);
+  window._mwLead = null;
+  $('mwLeadPick').innerHTML = `<span class="note" style="color:var(--muted);display:inline-block;margin-top:2px">${L.mwExampleHint}</span>`;
+  runMatchWine();
 }
 function fillLead(i) {
   const w = (window._mwLeads || [])[i]; if (!w) return;
@@ -3634,13 +3876,18 @@ function fillLead(i) {
 }
 function matchWineRecord() {
   const colour = val('mwColour'), grape = val('mwGrape').toLowerCase();
+  const comp = parseGrapeInput(val('mwGrapesFull')) || {};     // null when blank
+  const grapes = Object.keys(comp).length ? comp : (grape ? { [grape]: 100 } : {});
+  const vint = (val('mwVintages').match(/\b(19|20)\d\d\b/g) || []).map(Number);
+  const sugar = val('mwSugar').trim() !== '' ? parseFloat(val('mwSugar')) : null;
+  const weight = val('mwWeight').trim() !== '' ? parseFloat(val('mwWeight')) : null;
   return {
     id: '_mw', producer: L.mwWinnable, name: val('mwName').trim() || '—',
-    country: val('mwCountry'), color: colour,
-    grapes: grape ? { [grape]: 100 } : {},
+    country: val('mwCountry'), color: colour, grapes,
     abv: parseFloat(val('mwAbv')) || 13,
     certs: readCerts(),
-    vintages_available: [], sugar_g_l: null, wood: null,
+    vintages_available: vint, sugar_g_l: sugar, wood: val('mwWood') || null,
+    packaging: { type: null, weight_g: weight },
     method: /sparkling/.test(colour) ? 'traditional' : null,
     fob_eur: val('mwFob') ? parseFloat(val('mwFob')) : null,
     representation: { NO: 'unrepresented — open for import' },
@@ -3697,6 +3944,7 @@ function runMatchWine() {
       <details class="critdet"><summary>${L.critShow}</summary>${critHtml(s, w, h.fob)}</details>
       </div></div>`;
   }).join('') + `<p class="note" style="margin:10px 0 0;color:var(--muted)">${L.mwCoverage}</p>`;
+  renderComplete(w, hits);
   const cross = crossPlanMatches(w);
   $('mwCta').innerHTML = `<div class="pullbox">
     <div class="pullbig">${L.mwPullTitle(hits.length, cross.total, cross.nPlans)}</div>
@@ -3705,6 +3953,54 @@ function runMatchWine() {
       <button class="btn" onclick="openListForm()">${L.mwCtaBtn}</button>
       <button class="btn ghost" onclick="gotoTab('portefolje')">${L.mwPullPortfolio}</button>
     </div></div>`;
+}
+// The one honest "game": a completeness meter whose score is real. Each field only the producer
+// holds turns an unknown (?) criterion into a checkable ✓/✗ across the matched tenders, and the
+// FOB flips every "likely within" into a firm price verdict. Clicking a missing field jumps to
+// it so the producer fills it and watches the tenders resolve live. No points, no badges — the
+// reward is qualified tenders and price certainty, which is the actual product.
+function renderComplete(w, hits) {
+  const box = $('mwComplete'); if (!box) return;
+  const cf = [
+    { ok: Object.keys(w.grapes).length > 0, id: 'mwGrape', lbl: L.cfGrape },
+    { ok: w.certs.length > 0, id: 'mwCertRow', lbl: L.cfCert },
+    { ok: w.fob_eur != null, id: 'mwFob', lbl: L.cfFob, key: true },
+    { ok: w.sugar_g_l != null, id: 'mwSugar', lbl: L.cfSugar },
+    { ok: !!w.wood, id: 'mwWood', lbl: L.cfWood },
+    { ok: (w.vintages_available || []).length > 0, id: 'mwVintages', lbl: L.cfVint },
+    { ok: w.packaging && w.packaging.weight_g != null, id: 'mwWeight', lbl: L.cfWeight },
+  ];
+  const filled = cf.filter(f => f.ok).length;
+  const pct = Math.round(100 * filled / cf.length);
+  const totUnknown = hits.reduce((a, h) => a + h.ev.unknowns, 0);
+  const tUnknown = hits.filter(h => h.ev.unknowns > 0).length;
+  const priceGain = hits.filter(h => h.fob && w.fob_eur == null).length;
+  const chips = cf.map(f => f.ok
+    ? `<span class="cf done">✓ ${f.lbl}</span>`
+    : `<button class="cf todo${f.key ? ' key' : ''}" onclick="focusMwField('${f.id}')">+ ${f.lbl}</button>`).join('');
+  const parts = [];
+  if (totUnknown) parts.push(L.cmpSub(tUnknown, totUnknown));
+  if (priceGain && w.fob_eur == null) parts.push(L.cmpPrice(priceGain));
+  if (!parts.length) parts.push(L.cmpClean);
+  box.innerHTML = `<div class="complete">
+    <div class="complete-top">
+      <div class="complete-h">${L.cmpH}</div>
+      <div class="cmeter"><span class="cmeter-v">${pct}%</span> <span class="cmeter-l">${L.cmpMeter}</span></div>
+    </div>
+    <div class="cbar"><i style="width:${pct}%"></i></div>
+    <div class="complete-sub">${parts.join(' ')}</div>
+    <div class="cfields">${chips}</div>
+    <div class="pullbtns" style="margin-top:12px"><button class="btn" onclick="openListForm()">${L.cmpSave}</button></div>
+  </div>`;
+}
+function focusMwField(id) {
+  if (['mwSugar', 'mwWood', 'mwVintages', 'mwWeight', 'mwGrapesFull'].includes(id)) {
+    const d = $('mwMore'); if (d) d.open = true;
+  }
+  const el = $(id); if (!el) return;
+  const focusEl = el.matches('input,select,textarea') ? el : (el.querySelector('input,select,textarea') || el);
+  el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  setTimeout(() => { try { focusEl.focus({ preventScroll: true }); } catch (e) {} }, 260);
 }
 function openListForm() {
   const lead = window._mwLead;
@@ -3810,6 +4106,21 @@ document.querySelectorAll('details.howto').forEach(d => {
 });
 ['mwCountry', 'mwColour', 'mwGrape', 'mwAbv', 'mwFob', 'mwName'].forEach(id =>
   $(id).addEventListener('keydown', e => { if (e.key === 'Enter') runMatchWine(); }));
+// Live matching: as the producer fills in a field, the tenders re-resolve on the spot — an
+// unknown (?) flips to ✓/✗ and the completeness meter climbs. The progression IS the payoff, so
+// it should feel immediate. Only re-runs once a result is already on screen (after the demo).
+let _liveT = null;
+function liveMatch() {
+  clearTimeout(_liveT);
+  _liveT = setTimeout(() => { if ($('mwResultCard').style.display !== 'none') runMatchWine(); }, 180);
+}
+['mwGrapesFull', 'mwSugar', 'mwWood', 'mwVintages', 'mwWeight'].forEach(id => {
+  const el = $(id); if (el) { el.addEventListener('input', liveMatch); el.addEventListener('change', liveMatch); }
+});
+['mwCountry', 'mwColour', 'mwGrape', 'mwAbv', 'mwFob', 'mwName'].forEach(id => {
+  const el = $(id); if (el) el.addEventListener('input', liveMatch);
+});
+document.querySelectorAll('.mwcert').forEach(cb => cb.addEventListener('change', liveMatch));
 ['inRetail','inAbv','inVol','inPack','inMargin','inFreight','inCur2','inCur2Rate','inEur']
   .forEach(id => $(id).addEventListener('input', () => { calc(); recompute(); }));
 Object.entries(DIM_SELECT).forEach(([dim, id]) =>
@@ -3840,6 +4151,88 @@ function toggleTheme() {
   }
   const mk = $('tab-marked'); if (mk) mk.remove();
 })();
+// Pinch / scroll / drag to zoom a map without zooming the whole page. touch-action:none on
+// the wrapper (CSS) stops the browser from hijacking the gesture; we drive a CSS transform on
+// the inner <svg> (which survives its innerHTML re-renders). Panning suppresses the click that
+// would otherwise toggle a country filter, so a drag never doubles as a selection.
+function enableMapZoom(wrap) {
+  if (!wrap) return;
+  const svg = wrap.querySelector('svg');
+  if (!svg) return;
+  let scale = 1, tx = 0, ty = 0;
+  const pointers = new Map();
+  let pinchStart = 0, pinchScale = 1, pinchMid = null, moved = 0;
+  svg.style.transformOrigin = '0 0';
+  const apply = () => { svg.style.transform = `translate(${tx}px,${ty}px) scale(${scale})`; };
+  const clamp = () => {
+    const w = svg.clientWidth || wrap.clientWidth, h = svg.clientHeight || wrap.clientHeight;
+    tx = Math.min(0, Math.max(w * (1 - scale), tx));
+    ty = Math.min(0, Math.max(h * (1 - scale), ty));
+  };
+  const zoomAt = (cx, cy, factor) => {
+    const next = Math.min(6, Math.max(1, scale * factor));
+    if (next === scale) return;
+    // keep the point under the cursor fixed: solve for tx' so (cx-tx)/scale stays put
+    tx = cx - (cx - tx) * (next / scale);
+    ty = cy - (cy - ty) * (next / scale);
+    scale = next;
+    if (scale === 1) { tx = 0; ty = 0; }
+    clamp(); apply();
+  };
+  const reset = () => { scale = 1; tx = 0; ty = 0; apply(); };
+  wrap.addEventListener('wheel', e => {
+    e.preventDefault();
+    const r = wrap.getBoundingClientRect();
+    zoomAt(e.clientX - r.left, e.clientY - r.top, e.deltaY < 0 ? 1.15 : 1 / 1.15);
+  }, { passive: false });
+  wrap.addEventListener('dblclick', e => { e.preventDefault(); reset(); });
+  wrap.addEventListener('pointerdown', e => {
+    pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    moved = 0;
+    if (pointers.size === 2) {
+      const [a, b] = [...pointers.values()];
+      pinchStart = Math.hypot(a.x - b.x, a.y - b.y) || 1;
+      pinchScale = scale;
+      const r = wrap.getBoundingClientRect();
+      pinchMid = { x: (a.x + b.x) / 2 - r.left, y: (a.y + b.y) / 2 - r.top };
+    }
+    if (wrap.setPointerCapture) try { wrap.setPointerCapture(e.pointerId); } catch (_) {}
+  });
+  wrap.addEventListener('pointermove', e => {
+    const p = pointers.get(e.pointerId);
+    if (!p) return;
+    const dx = e.clientX - p.x, dy = e.clientY - p.y;
+    if (pointers.size === 2) {
+      pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      const [a, b] = [...pointers.values()];
+      const dist = Math.hypot(a.x - b.x, a.y - b.y) || 1;
+      if (pinchMid) { const target = pinchScale * (dist / pinchStart);
+        zoomAt(pinchMid.x, pinchMid.y, target / scale); }
+      e.preventDefault();
+    } else if (scale > 1) {
+      moved += Math.abs(dx) + Math.abs(dy);
+      tx += dx; ty += dy; clamp(); apply();
+      pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      e.preventDefault();
+    }
+  }, { passive: false });
+  const up = e => {
+    pointers.delete(e.pointerId);
+    if (pointers.size < 2) { pinchMid = null; }
+    if (moved > 6) {   // a drag, not a tap: swallow the click that follows
+      const stop = ev => { ev.stopPropagation(); ev.preventDefault(); wrap.removeEventListener('click', stop, true); };
+      wrap.addEventListener('click', stop, true);
+      setTimeout(() => wrap.removeEventListener('click', stop, true), 0);
+    }
+    moved = 0;
+  };
+  wrap.addEventListener('pointerup', up);
+  wrap.addEventListener('pointercancel', up);
+}
+enableMapZoom($('mapWrap')); enableMapZoom($('wineMapWrap'));
+// The sample/lead-data banners describe seeded wines; with an empty database there are none,
+// so showing them would be misleading. Hide until real seed wines exist.
+if (!WINES.length) document.querySelectorAll('.samplebar').forEach(e => e.style.display = 'none');
 renderPlanSelect(); initLang(); initOrientation(); initRole(); loadVmpIndex();
 </script>
 </body>
