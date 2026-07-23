@@ -84,6 +84,10 @@
   .tile.urgent { border-color: color-mix(in oklab, var(--warn) 60%, var(--border)); background: color-mix(in oklab, var(--warn) 10%, var(--surface-1)); }
   .chip.urg { background: color-mix(in oklab, var(--warn) 32%, transparent); color: var(--text-primary); font-weight: 700; }
   .chip.urg.hot { background: color-mix(in oklab, var(--warn) 60%, transparent); }
+  .emptycta { border: 1px dashed color-mix(in oklab, var(--s1) 35%, var(--border)); border-radius: 11px;
+    padding: 16px 18px; background: color-mix(in oklab, var(--s1) 4%, var(--surface-1)); }
+  .emptycta .ec-h { font-weight: 700; font-size: 15px; color: var(--text-primary); margin-bottom: 5px; }
+  .emptycta .ec-b { font-size: 13px; color: var(--text-secondary); line-height: 1.5; margin-bottom: 12px; max-width: 70ch; }
   .card { background: var(--surface-1); border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin: 0 0 18px; }
   .card h2 { font-size: 15px; margin: 0 0 10px; }
   .filters { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
@@ -195,20 +199,34 @@
   nav .nav-lbl { align-self: center; font-size: 10px; font-weight: 700; letter-spacing: .06em;
     text-transform: uppercase; color: var(--muted); user-select: none; }
   nav .nav-sep { margin-left: 6px; padding-left: 12px; border-left: 1px solid var(--border); }
-  .rolepick { position: relative; display: flex; flex-wrap: wrap; align-items: stretch; gap: 10px;
-    background: color-mix(in oklab, var(--accent, #4670e0) 8%, var(--surface-1));
-    border: 1px solid color-mix(in oklab, var(--accent, #4670e0) 30%, var(--border));
-    border-radius: 12px; padding: 12px 14px; margin: 0 0 14px; }
-  .rolepick .rp-q { align-self: center; font-weight: 700; margin-right: 4px; }
-  .rp-btn { flex: 1; min-width: 220px; text-align: left; cursor: pointer; border-radius: 10px;
-    border: 1px solid var(--border); background: var(--surface-1); padding: 10px 14px; font: inherit;
-    display: flex; flex-direction: column; gap: 2px; transition: border-color .12s, transform .05s; }
-  .rp-btn:hover { border-color: var(--accent, #4670e0); transform: translateY(-1px); }
-  .rp-btn b { font-size: 14px; color: var(--text-primary); }
-  .rp-btn span { font-size: 12px; color: var(--muted); }
-  .rp-btn.sel { border-color: var(--accent, #4670e0); box-shadow: 0 0 0 2px color-mix(in oklab, var(--accent, #4670e0) 30%, transparent); }
-  .rolepick .x { position: absolute; top: 6px; right: 8px; background: none; border: none; cursor: pointer;
-    color: var(--muted); font-size: 16px; line-height: 1; }
+  .hero { position: relative; border: 1px solid color-mix(in oklab, var(--s1) 26%, var(--border));
+    background: linear-gradient(135deg, color-mix(in oklab, var(--s1) 9%, var(--surface-1)), var(--surface-1) 62%);
+    border-radius: 14px; padding: 20px 22px; margin: 0 0 16px; }
+  .hero-top { display: flex; gap: 22px; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; }
+  .hero-copy { flex: 1; min-width: 280px; }
+  .hero-h { font-family: Georgia, 'Iowan Old Style', serif; font-size: 23px; line-height: 1.18;
+    margin: 0 0 8px; color: var(--text-primary); max-width: 30ch; }
+  .hero-sub { font-size: 13.5px; line-height: 1.5; color: var(--text-secondary); margin: 0; max-width: 56ch; }
+  .hero-pulse { display: flex; gap: 18px; flex-wrap: wrap; align-content: flex-start; }
+  .hpstat { min-width: 62px; }
+  .hpstat .hpv { font-family: Georgia, 'Iowan Old Style', serif; font-size: 26px; font-weight: 600; line-height: 1; color: var(--s1); }
+  .hpstat.u .hpv { color: var(--text-primary); }
+  .hpstat .hpl { font-size: 10px; color: var(--muted); margin-top: 5px; letter-spacing: .03em; text-transform: uppercase; }
+  .hero-choices { display: flex; gap: 12px; margin-top: 18px; flex-wrap: wrap; }
+  .hero-card { position: relative; flex: 1; min-width: 240px; text-align: left; cursor: pointer;
+    border-radius: 11px; border: 1px solid var(--border); background: var(--surface-1);
+    padding: 14px 40px 14px 16px; font: inherit; display: flex; flex-direction: column; gap: 3px;
+    transition: border-color .12s, transform .06s, box-shadow .12s; }
+  .hero-card:hover { border-color: var(--s1); transform: translateY(-1px);
+    box-shadow: 0 5px 18px -9px color-mix(in oklab, var(--s1) 65%, transparent); }
+  .hero-card .hc-k { font-size: 15px; font-weight: 700; color: var(--text-primary); }
+  .hero-card .hc-d { font-size: 12.5px; color: var(--muted); line-height: 1.4; }
+  .hero-card .hc-go { position: absolute; top: 13px; right: 15px; color: var(--s1); font-size: 18px;
+    font-weight: 700; opacity: .45; transition: opacity .12s, transform .12s; }
+  .hero-card:hover .hc-go { opacity: 1; transform: translateX(3px); }
+  .hero-card.sel { border-color: var(--s1); box-shadow: 0 0 0 2px color-mix(in oklab, var(--s1) 30%, transparent); }
+  .hero .x { position: absolute; top: 8px; right: 10px; background: none; border: none; cursor: pointer;
+    color: var(--muted); font-size: 16px; line-height: 1; z-index: 2; }
   /* --- match-my-wine form --- */
   .mw-grid { display: flex; flex-wrap: wrap; gap: 10px 14px; align-items: end; }
   .mw-grid > div { display: flex; flex-direction: column; gap: 3px; min-width: 130px; flex: 1; }
@@ -401,8 +419,11 @@
     table { font-size: 12px; }
     th, td { padding: 6px 7px; }
     .twrap table { min-width: 520px; }
-    .rolepick { flex-direction: column; align-items: stretch; }
-    .rp-btn { min-width: 0; }
+    .hero { padding: 16px 15px; }
+    .hero-h { font-size: 20px; }
+    .hero-pulse { gap: 14px; margin-top: 4px; }
+    .hpstat .hpv { font-size: 22px; }
+    .hero-card { min-width: 0; }
     .opp-head { gap: 8px 10px; }
     .opp-title { flex-basis: 100%; }
     .opp-metric { min-width: 44px; }
@@ -532,13 +553,25 @@
 
   <!-- ANBUD — tenders, with matching wines + opportunity ranking embedded -->
   <section class="tab on" id="tab-anbud">
-    <div class="rolepick" id="rolepick">
-      <span class="rp-q" data-i18n="roleQ">Hva jobber du med?</span>
-      <button class="rp-btn" data-role="importer" onclick="setRole('importer')">
-        <b data-i18n="roleImporter">Jeg er importør</b><span data-i18n="roleImporterSub">Finn anbud å vinne og vinene som vinner dem</span></button>
-      <button class="rp-btn" data-role="producer" onclick="setRole('producer')">
-        <b data-i18n="roleProducer">Jeg er produsent</b><span data-i18n="roleProducerSub">Se hvilke norske anbud vinen din kan vinne</span></button>
-      <button class="x" onclick="dismissRole()" title="Skjul" aria-label="Lukk">×</button>
+    <div class="hero" id="hero">
+      <button class="x" onclick="dismissRole()" data-i18n-title="heroSkip" title="Bare bla — skjul dette" aria-label="Lukk">×</button>
+      <div class="hero-top">
+        <div class="hero-copy">
+          <h2 class="hero-h" data-i18n="heroH">Vinn Vinmonopolets anbud — før konkurrentene rekker å se dem.</h2>
+          <p class="hero-sub" data-i18n="heroSub">Hver lanseringsplan, tolket ned til hvert enkelt krav. Match en vin på sekunder, se den nøyaktige kjellerprisen den må treffe, og gå aldri glipp av en frist.</p>
+        </div>
+        <div class="hero-pulse" id="heroPulse"></div>
+      </div>
+      <div class="hero-choices">
+        <button class="hero-card" data-role="importer" onclick="setRole('importer')">
+          <span class="hc-k" data-i18n="roleImporter">Jeg er importør</span>
+          <span class="hc-d" data-i18n="roleImporterSub">Finn anbud å vinne og vinene som vinner dem</span>
+          <span class="hc-go" aria-hidden="true">→</span></button>
+        <button class="hero-card" data-role="producer" onclick="setRole('producer')">
+          <span class="hc-k" data-i18n="roleProducer">Jeg er produsent</span>
+          <span class="hc-d" data-i18n="roleProducerSub">Se hvilke norske anbud vinen din kan vinne</span>
+          <span class="hc-go" aria-hidden="true">→</span></button>
+      </div>
     </div>
     <div class="card">
       <h2 data-i18n="h2Opp">Muligheter — anbud verdt å forfølge</h2>
@@ -573,7 +606,7 @@
       <div id="oppDigest" style="margin:0 0 10px"></div>
       <div id="oppList"></div>
     </div>
-    <h3 class="section-div" data-i18n="anbudBrowseH">Bla i alle anbud</h3>
+    <h3 class="section-div" id="browseTop" data-i18n="anbudBrowseH">Bla i alle anbud</h3>
     <div class="intro" id="intro">
       <button class="x" onclick="dismissIntro()" data-i18n-title="introX" title="Skjul (vises ikke igjen)" aria-label="Lukk">×</button>
       <h2 data-i18n="introH">Slik fungerer det</h2>
@@ -921,7 +954,8 @@ const I18N = {
     evidence: 'Datastyrke', evStrong: 'Sterk', evModerate: 'Middels', evThin: 'Tynn',
     evNote: 'scoren måler attraktivitet; datastyrken viser hvor solid grunnlaget er (de fleste kandidatene er foreløpig ubekreftede leads).',
     evTip: (s, t, c, r, priced) => `Datastyrke bak scoren: ${priced} av ${t} kandidater har en kjellerpris (FOB) og kan prisvurderes · ${s} har offentlig kildeførte felt · ${c}% av kravene bekreftet · ${r}% med verifisert NO-status. Uten FOB kan ingen mulighet regnes som «Sterk».`,
-    oppEmpty: 'Ingen anbud med kvalifiserte viner i valgt filter. Prøv «Alle muligheter», bytt plan, eller legg til flere viner.',
+    oppEmpty: n => `<div class="emptycta"><div class="ec-h">Legg inn porteføljen din for å rangere anbudene du kan vinne</div><div class="ec-b">Vi matcher hver vin mot hvert anbud automatisk — med marginregnestykket, kjellerprisen hver vin må treffe, og fristene. Ingen viner ennå? Bla i alle <b>${n}</b> aktive anbud og filtrer på land, drue, pris og frist.</div><div class="pullbtns"><button class="btn" onclick="gotoTab('portefolje')">Legg inn porteføljen</button><button class="btn ghost" onclick="scrollToBrowse()">Bla i alle ${n} anbud →</button></div></div>`,
+    shortlistEmpty: 'Ingen anbud i shortlisten ennå. Klikk ★ på en vin i et anbud for å legge den til.',
     thWineCol: 'Vin', thFitCol: 'Match', thStatusCol: 'Status i NO', thPick: '★',
     thFitTip: 'Hvor mange av anbudets krav vinen møter. ✓ = oppfylt · ? = kan ikke sjekkes før produsenten bekrefter detaljer (drue-%, årgang, sukker …).',
     matchCellTip: (p, u, t) => `${p} av ${t} krav oppfylt${u ? `, ${u} kan ikke sjekkes ennå (mangler produsentdata)` : ''}.`,
@@ -1096,6 +1130,10 @@ const I18N = {
     tileLive: 'aktive anbud', tileLiveSub: 'ekte krav fra Vinmonopolet',
     tileCountries: 'land det etterspørres fra', tileClosing: 'med frist innen 45 dager',
     tileNearest: 'til neste tilbudsfrist', tileDays: n => n === 0 ? 'i dag' : n === 1 ? '1 dag' : `${n} dager`,
+    heroH: 'Vinn Vinmonopolets anbud — før konkurrentene rekker å se dem.',
+    heroSub: 'Hver lanseringsplan, tolket ned til hvert enkelt krav. Match en vin på sekunder, se den nøyaktige kjellerprisen den må treffe, og gå aldri glipp av en frist.',
+    heroSkip: 'Bare bla — skjul dette',
+    hpTenders: 'aktive anbud', hpCountries: 'land', hpClosing: 'frist ≤ 45 dager', hpNext: 'til neste frist',
     filterCount: (n, tot) => `Viser ${n} av ${tot} anbud.`,
     wineFilterCountFn: (n, tot) => `Viser ${n} av ${tot} viner.`,
     wineCountFn: (n, tot) => `${n} av ${tot} viner`, portCountFn: n => `${n} viner`,
@@ -1226,7 +1264,8 @@ const I18N = {
     evidence: 'Evidence', evStrong: 'Strong', evModerate: 'Moderate', evThin: 'Thin',
     evNote: 'the score measures attractiveness; evidence shows how solid the basis is (most candidates are still unconfirmed leads).',
     evTip: (s, t, c, r, priced) => `Evidence behind the score: ${priced} of ${t} candidates have an ex-cellar price (FOB) and can be price-checked · ${s} have publicly sourced fields · ${c}% of requirements confirmed · ${r}% with verified NO status. Without an FOB no opportunity can count as "Strong".`,
-    oppEmpty: 'No tenders with qualified wines under this filter. Try "All opportunities", switch plan, or add more wines.',
+    oppEmpty: n => `<div class="emptycta"><div class="ec-h">Add your portfolio to rank the tenders you can win</div><div class="ec-b">We match every wine against every tender automatically — with the margin maths, the ex-cellar price each wine must hit, and the deadlines. No wines yet? Browse all <b>${n}</b> live tenders and filter by country, grape, price and deadline.</div><div class="pullbtns"><button class="btn" onclick="gotoTab('portefolje')">Add your portfolio</button><button class="btn ghost" onclick="scrollToBrowse()">Browse all ${n} tenders →</button></div></div>`,
+    shortlistEmpty: 'No tenders shortlisted yet. Click ★ on a wine in any tender to add it.',
     thWineCol: 'Wine', thFitCol: 'Fit', thStatusCol: 'Status in NO', thPick: '★',
     thFitTip: "How many of the tender's requirements the wine meets. ✓ = met · ? = can't be checked until the producer confirms details (grape %, vintage, sugar …).",
     matchCellTip: (p, u, t) => `${p} of ${t} requirements met${u ? `, ${u} can't be checked yet (missing producer data)` : ''}.`,
@@ -1401,6 +1440,10 @@ const I18N = {
     tileLive: 'live tenders', tileLiveSub: 'real Vinmonopolet requirements',
     tileCountries: 'countries being sourced', tileClosing: 'closing within 45 days',
     tileNearest: 'to the next deadline', tileDays: n => n === 0 ? 'today' : n === 1 ? '1 day' : `${n} days`,
+    heroH: 'Win Vinmonopolet tenders — before your competitors even see them.',
+    heroSub: 'Every launch plan, parsed down to each individual requirement. Match a wine in seconds, see the exact ex-cellar price it must hit, and never miss a deadline.',
+    heroSkip: 'Just browsing — hide this',
+    hpTenders: 'live tenders', hpCountries: 'countries', hpClosing: 'closing ≤ 45 days', hpNext: 'to next deadline',
     filterCount: (n, tot) => `Showing ${n} of ${tot} tenders.`,
     wineFilterCountFn: (n, tot) => `Showing ${n} of ${tot} wines.`,
     wineCountFn: (n, tot) => `${n} of ${tot} wines`, portCountFn: n => `${n} wines`,
@@ -2365,6 +2408,10 @@ function scrollToSpecs() {
   const el = $('specTable');
   if (el) el.closest('.card').scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
+function scrollToBrowse() {
+  const el = $('browseTop');
+  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
 function resetFilters() {
   Object.keys(FILTERS).forEach(k => FILTERS[k] = '');
   Object.values(DIM_SELECT).forEach(id => { const e = $(id); if (e) e.value = ''; });
@@ -2410,6 +2457,7 @@ function recompute() {
   SPECS.forEach(s => { delete s._grapes; delete s._class; });
   MARKET = computeMarket();
   renderTiles(); renderDims(); renderSpecs(); renderMarket(); renderWineDims(); renderWines();
+  if (typeof renderHero === 'function') renderHero();
   if (typeof renderOpportunities === 'function') renderOpportunities();
   // refresh the producer tab's leads + result against the new plan when it's the active tab
   if (MW_INIT && $('tab-viner') && $('tab-viner').classList.contains('on')) {
@@ -3380,15 +3428,38 @@ let ROLE = null;
 function setRole(role) {
   ROLE = role;
   try { localStorage.setItem('ti_role', role); } catch (e) {}
-  document.querySelectorAll('.rp-btn').forEach(b => b.classList.toggle('sel', b.dataset.role === role));
-  gotoTab(role === 'producer' ? 'viner' : 'anbud');
+  document.querySelectorAll('.hero-card').forEach(b => b.classList.toggle('sel', b.dataset.role === role));
+  dismissRole();
+  if (role === 'producer') { gotoTab('viner'); return; }
+  // importer stays on Anbud: reveal the ranked opportunities right where the hero was
+  gotoTab('anbud');
+  const card = document.querySelector('#tab-anbud .card');
+  if (card) card.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
-function dismissRole() { const el = $('rolepick'); if (el) el.style.display = 'none'; }
+function dismissRole() { const el = $('hero'); if (el) el.style.display = 'none'; }
+// The live pulse in the hero — the same real, always-rich tender vitality as the tiles, but as
+// a compact ticker so the first fold proves the plan is alive before the user picks a side.
+function renderHero() {
+  const el = $('heroPulse'); if (!el) return;
+  const dtds = SPECS.map(daysToDeadline).filter(d => d != null && d >= 0);
+  const soon = dtds.filter(d => d <= 45).length;
+  const nearest = dtds.length ? Math.min(...dtds) : null;
+  const countries = new Set(SPECS.map(s => (s.country || '').trim()).filter(Boolean)).size;
+  const stats = [
+    [SPECS.length, L.hpTenders, false],
+    [countries, L.hpCountries, false],
+    [soon, L.hpClosing, soon > 0],
+    [nearest != null ? L.tileDays(nearest) : '–', L.hpNext, nearest != null && nearest <= 21],
+  ];
+  el.innerHTML = stats.map(([v, l, u]) =>
+    `<div class="hpstat${u ? ' u' : ''}"><div class="hpv">${v}</div><div class="hpl">${l}</div></div>`).join('');
+}
 function initRole() {
+  renderHero();
   let saved = null; try { saved = localStorage.getItem('ti_role'); } catch (e) {}
   if (saved) {
     ROLE = saved; dismissRole();
-    document.querySelectorAll('.rp-btn').forEach(b => b.classList.toggle('sel', b.dataset.role === saved));
+    document.querySelectorAll('.hero-card').forEach(b => b.classList.toggle('sel', b.dataset.role === saved));
     gotoTab(saved === 'producer' ? 'viner' : 'anbud');
   } else {
     renderOpportunities();
@@ -3508,10 +3579,15 @@ function renderOpportunities() {
     })
     // rank by attractiveness, then let evidence break ties (rounded score avoids float-noise ties)
     .sort((a, b) => (Math.round(b.score * 10) - Math.round(a.score * 10)) || (b.st.pct - a.st.pct));
-  $('oppSummary').innerHTML = L.oppSummary(rows.length) + ` <span style="font-weight:400;color:var(--muted)">— ${L.evNote}</span>`;
+  $('oppSummary').innerHTML = rows.length ? L.oppSummary(rows.length) + ` <span style="font-weight:400;color:var(--muted)">— ${L.evNote}</span>` : '';
   renderDigest();
   const c = $('shortlistCount'); if (c) c.textContent = SHORTLIST.size ? `(${SHORTLIST.size})` : '';
-  if (!rows.length) { list.innerHTML = `<p class="note">${OPPF === 'sourced' ? L.oppEmptySourced : L.oppEmpty}</p>`; return; }
+  // With no ranked opportunities (e.g. no portfolio yet) the value CTA below already makes the
+  // "add your portfolio" ask, and there are no cards to explain — so hide the redundant pull box
+  // and the how-to-read-a-card guide until there's actually something to read.
+  const ip = $('impPull'); if (ip) ip.style.display = rows.length ? '' : 'none';
+  const hw = $('oppHowto'); if (hw) hw.style.display = rows.length ? '' : 'none';
+  if (!rows.length) { list.innerHTML = OPPF === 'sourced' ? `<p class="note">${L.oppEmptySourced}</p>` : L.oppEmpty(SPECS.length); return; }
   const maxScore = rows[0].score || 1;
   list.innerHTML = rows.map((r, i) => {
     const m = r.m, s = m.spec;
@@ -3559,7 +3635,7 @@ function renderOpportunities() {
   }));
 }
 function exportShortlist() {
-  if (!SHORTLIST.size) { alert(L.oppEmpty); return; }
+  if (!SHORTLIST.size) { alert(L.shortlistEmpty); return; }
   const rows = [['tender', 'deadline', 'price_band', 'need_fob_eur', 'producer', 'wine', 'country', 'grapes', 'status_no', 'evidence']];
   for (const k of SHORTLIST) {
     const [ref, id] = k.split('|');
