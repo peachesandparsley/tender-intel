@@ -241,6 +241,9 @@
     font-weight: 700; opacity: .45; transition: opacity .12s, transform .12s; }
   .hero-card:hover .hc-go { opacity: 1; transform: translateX(3px); }
   .hero-card.sel { border-color: var(--s1); box-shadow: 0 0 0 2px color-mix(in oklab, var(--s1) 30%, transparent); }
+  .hero-browse { display: inline-block; margin: 14px 2px 0; background: none; border: none; cursor: pointer;
+    font: inherit; font-size: 13px; color: var(--s1); opacity: .85; padding: 2px 0; transition: opacity .12s; }
+  .hero-browse:hover { opacity: 1; text-decoration: underline; }
   .hero .x { position: absolute; top: 8px; right: 10px; background: none; border: none; cursor: pointer;
     color: var(--muted); font-size: 16px; line-height: 1; z-index: 2; }
   /* --- match-my-wine form --- */
@@ -464,7 +467,7 @@
         <button class="ctl-btn" data-i18n="themeToggle" onclick="toggleTheme()">lys/mørk</button>
       </div>
     </div>
-    <p data-i18n="subtitle">Nordiske monopolanbud · klausulmatching · FOB-kalkulator · produsentopplasting — alt kjører i denne filen, ingen server.</p>
+    <p data-i18n="subtitle">Se hvilke av Vinmonopolets anbud en vin kan vinne — og nøyaktig hva som skal til for å vinne dem.</p>
   </header>
 
   <nav id="nav">
@@ -589,7 +592,9 @@
           <span class="hc-d" data-i18n="roleProducerSub">Se hvilke norske anbud vinen din kan vinne</span>
           <span class="hc-go" aria-hidden="true">→</span></button>
       </div>
+      <button class="hero-browse" onclick="browseFromHero()" data-i18n="heroBrowse">Eller bare se alle anbudene i planen →</button>
     </div>
+    <div id="anbudBody">
     <div class="card">
       <h2 data-i18n="h2Opp">Muligheter — anbud verdt å forfølge</h2>
       <p class="note" style="margin:0 0 8px" data-i18n="noteOpp">Anbud fra Vinmonopolet, rangert etter hvor lovende de er å forfølge.</p>
@@ -677,6 +682,7 @@
       </tr></thead><tbody></tbody></table></div>
       <p class="note" data-i18n="noteSpecTable">Klikk en rad for klausulene. «Trenger ≤ FOB» = høyeste produsentpris fra kjeller (før frakt, avgifter og margin) som fortsatt treffer prisbåndets tak, gitt kalkulatorens forutsetninger.</p>
     </div>
+    </div><!-- /#anbudBody -->
   </section>
 
   <!-- MARKETPLACE -->
@@ -914,7 +920,7 @@ const I18N = {
   no: {
     themeToggle: 'lys/mørk', whoTitle: 'Brukes til å stemple hvem som lastet opp/endret data',
     planLabel: 'Plan:', planTitle: 'Bytt lanseringsplan — hele appen viser data fra planen du velger her',
-    subtitle: 'Nordiske monopolanbud · klausulmatching · FOB-kalkulator · produsentopplasting — alt kjører i denne filen, ingen server.',
+    subtitle: 'Se hvilke av Vinmonopolets anbud en vin kan vinne — og nøyaktig hva som skal til for å vinne dem.',
     navAnbud: 'Anbud', navMarked: 'Marketplace', navKalk: 'Kalkulator', navViner: 'Viner',
     navPort: 'Min portefølje', navKat: 'Produsenter', navAnalyse: 'Analyse', navOpp: 'Last opp',
     anbudBrowseH: 'Bla i alle anbud',
@@ -1156,7 +1162,8 @@ const I18N = {
     tileCountries: 'land det etterspørres fra', tileClosing: 'med frist innen 45 dager',
     tileNearest: 'til neste tilbudsfrist', tileDays: n => n === 0 ? 'i dag' : n === 1 ? '1 dag' : `${n} dager`,
     heroH: 'Vinn Vinmonopolets anbud — før konkurrentene rekker å se dem.',
-    heroSub: 'Hver lanseringsplan, tolket ned til hvert enkelt krav. Match en vin på sekunder, se den nøyaktige kjellerprisen den må treffe, og gå aldri glipp av en frist.',
+    heroSub: 'Vinmonopolet publiserer hvert anbud på forhånd. Beskriv en vin, så ser du på sekundet hvilke den kan vinne, kjellerprisen den må treffe, og når fristen går ut. Ingen innlogging, ingen opplasting.',
+    heroBrowse: 'Eller bare se alle anbudene i planen →',
     heroSkip: 'Bare bla — skjul dette',
     hpTenders: 'aktive anbud', hpCountries: 'land', hpClosing: 'frist ≤ 45 dager', hpNext: 'til neste frist',
     filterCount: (n, tot) => `Viser ${n} av ${tot} anbud.`,
@@ -1232,7 +1239,7 @@ const I18N = {
   en: {
     themeToggle: 'light/dark', whoTitle: 'Used to stamp who uploaded / edited data',
     planLabel: 'Plan:', planTitle: 'Switch launch plan — the whole app shows data from the plan you pick here',
-    subtitle: 'Nordic monopoly tenders · clause matching · FOB calculator · producer upload — everything runs in this one file, no server.',
+    subtitle: 'See which Vinmonopolet tenders a wine can win — and exactly what it takes to win them.',
     navAnbud: 'Tenders', navMarked: 'Marketplace', navKalk: 'Calculator', navViner: 'Wines',
     navPort: 'My portfolio', navKat: 'Producers', navAnalyse: 'Analytics', navOpp: 'Upload',
     anbudBrowseH: 'Browse all tenders',
@@ -1474,7 +1481,8 @@ const I18N = {
     tileCountries: 'countries being sourced', tileClosing: 'closing within 45 days',
     tileNearest: 'to the next deadline', tileDays: n => n === 0 ? 'today' : n === 1 ? '1 day' : `${n} days`,
     heroH: 'Win Vinmonopolet tenders — before your competitors even see them.',
-    heroSub: 'Every launch plan, parsed down to each individual requirement. Match a wine in seconds, see the exact ex-cellar price it must hit, and never miss a deadline.',
+    heroSub: 'Vinmonopolet publishes every tender in advance. Describe a wine and see in seconds which ones it can win, the ex-cellar price it must hit, and when the deadline is. No login, no upload.',
+    heroBrowse: 'Or just see every tender in the plan →',
     heroSkip: 'Just browsing — hide this',
     hpTenders: 'live tenders', hpCountries: 'countries', hpClosing: 'closing ≤ 45 days', hpNext: 'to next deadline',
     filterCount: (n, tot) => `Showing ${n} of ${tot} tenders.`,
@@ -3422,7 +3430,13 @@ wireSort('wineTable', SORTS.wine, () => renderWines());
 wireSort('katTable', SORTS.kat, () => renderKatalog());
 
 /* ---- nav & theme ---- */
-const setTabHelp = t => { $('tabHelp').textContent = (L.tabHelp && L.tabHelp[t]) || ''; };
+const setTabHelp = t => {
+  const el = $('tabHelp');
+  el.textContent = (L.tabHelp && L.tabHelp[t]) || '';
+  // on the Tenders tab, while the hero is the whole screen, the tab-help line is redundant noise
+  const heroUp = t === 'anbud' && $('hero') && $('hero').style.display !== 'none';
+  el.style.display = heroUp ? 'none' : '';
+};
 function dismissIntro() {
   $('intro').style.display = 'none';
   try { localStorage.setItem('ti_intro_dismissed', '1'); } catch (e) {}
@@ -3458,18 +3472,38 @@ $('nav').querySelectorAll('button').forEach(b => b.addEventListener('click', () 
 
 /* ============ role-based entry ============ */
 let ROLE = null;
+// Progressive disclosure: before the visitor chooses, the Tenders tab shows ONLY the hero —
+// the whole importer workspace (opportunity ranking, filters, export, browse table, charts, map)
+// stays hidden so nobody is dumped into machinery they didn't ask for. Choosing a path — or the
+// "just browse" link — reveals it. The tab help line is hidden while the hero is the whole screen.
+function revealAnbudBody() {
+  const b = $('anbudBody'); if (b) b.style.display = '';
+  setTabHelp('anbud');
+}
+function hideAnbudBody() {
+  const b = $('anbudBody'); if (b) b.style.display = 'none';
+  setTabHelp('anbud');
+}
 function setRole(role) {
   ROLE = role;
   try { localStorage.setItem('ti_role', role); } catch (e) {}
   document.querySelectorAll('.hero-card').forEach(b => b.classList.toggle('sel', b.dataset.role === role));
   dismissRole();
+  revealAnbudBody();
   if (role === 'producer') { gotoTab('viner'); return; }
   // importer stays on Anbud: reveal the ranked opportunities right where the hero was
   gotoTab('anbud');
-  const card = document.querySelector('#tab-anbud .card');
+  const card = document.querySelector('#anbudBody .card');
   if (card) card.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
-function dismissRole() { const el = $('hero'); if (el) el.style.display = 'none'; }
+// "Just browse" — commit to nothing, but open the tenders and jump to the browse table.
+function browseFromHero() {
+  dismissRole();
+  revealAnbudBody();
+  scrollToBrowse();
+}
+// Hiding the hero always means "show me the content" — the × / skip must never leave a blank tab.
+function dismissRole() { const el = $('hero'); if (el) el.style.display = 'none'; revealAnbudBody(); }
 // The live pulse in the hero — the same real, always-rich tender vitality as the tiles, but as
 // a compact ticker so the first fold proves the plan is alive before the user picks a side.
 function renderHero() {
@@ -3491,10 +3525,12 @@ function initRole() {
   renderHero();
   let saved = null; try { saved = localStorage.getItem('ti_role'); } catch (e) {}
   if (saved) {
-    ROLE = saved; dismissRole();
+    ROLE = saved; dismissRole();   // also reveals the body
     document.querySelectorAll('.hero-card').forEach(b => b.classList.toggle('sel', b.dataset.role === saved));
     gotoTab(saved === 'producer' ? 'viner' : 'anbud');
   } else {
+    // fresh visitor: hero is the whole first screen; the workspace waits until they choose
+    hideAnbudBody();
     renderOpportunities();
   }
 }
