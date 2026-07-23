@@ -78,6 +78,12 @@
   .tile { background: var(--surface-1); border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; }
   .tile .v { font-size: 24px; font-weight: 650; }
   .tile .l { color: var(--muted); font-size: 12px; }
+  .tile .sub { color: var(--muted); font-size: 10.5px; margin-top: 3px; letter-spacing: .01em; }
+  .tile.accent { border-color: color-mix(in oklab, var(--s1) 45%, var(--border)); background: color-mix(in oklab, var(--s1) 6%, var(--surface-1)); }
+  .tile.accent .v { color: var(--s1); }
+  .tile.urgent { border-color: color-mix(in oklab, var(--warn) 60%, var(--border)); background: color-mix(in oklab, var(--warn) 10%, var(--surface-1)); }
+  .chip.urg { background: color-mix(in oklab, var(--warn) 32%, transparent); color: var(--text-primary); font-weight: 700; }
+  .chip.urg.hot { background: color-mix(in oklab, var(--warn) 60%, transparent); }
   .card { background: var(--surface-1); border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin: 0 0 18px; }
   .card h2 { font-size: 15px; margin: 0 0 10px; }
   .filters { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
@@ -936,6 +942,7 @@ const I18N = {
     certOrganic: 'Økologisk', certBiodynamic: 'Biodynamisk', certFairtrade: 'Fairtrade',
     certVegan: 'Vegansk', certSustainable: 'Bærekraftig', certKosher: 'Kosher',
     mwLeadPre: 'Eller test en ekte lead fra databasen: ',
+    mwExampleHint: '↑ Eksempel — endre et hvilket som helst felt for å beskrive din egen vin.',
     mwResultH: n => n ? `Vinen din kvalifiserer til ${n} anbud` : 'Ingen anbud matcher ennå',
     mwTileMatches: 'anbud den kan vinne', mwTileIntro: 'der du er urepresentert', mwTileBest: 'beste marginrom €',
     mwNoMatch: 'Ingen av anbudene i denne planen passer akkurat denne profilen. Prøv en annen plan øverst til høyre, juster druen/prisen, eller se <b>Analyse</b> for hvilke opprinnelser og druer som går igjen.',
@@ -983,8 +990,8 @@ const I18N = {
     mwlSavedBody: n => `Den teller nå som kildeført, og matcher ${n} anbud i denne planen.`,
     mwlDownload: 'Last ned JSON', mwlSeeOpp: 'Se i Muligheter →',
     introX: 'Skjul (vises ikke igjen)', introH: 'Slik fungerer det',
-    introLi1: 'Last opp vinene dine én gang under <b>Min portefølje</b> — eller utforsk demodataene som allerede ligger inne.',
-    introLi2: 'Under <b>Anbud</b> og <b>Marketplace</b> matches vinene automatisk mot Vinmonopolets krav, så du ser hvilke anbud du kan vinne.',
+    introLi1: 'Beskriv én vin under <b>Viner → Match min vin</b> og se med én gang hvilke anbud den kan vinne — eller last opp hele porteføljen din under <b>Min portefølje</b>.',
+    introLi2: 'Under <b>Anbud</b> matches vinene automatisk mot Vinmonopolets krav, med treff/bom på hvert enkelt krav, så du ser nøyaktig hvilke anbud du kan vinne.',
     introLi3: 'Bruk <b>Kalkulator</b> til å sjekke at produsentprisen treffer prisbåndet — <b>FOB</b> = prisen produsenten tar fra kjeller, før frakt, avgifter og importørmargin.',
     introFoot: 'Bytt lanseringsplan øverst til høyre. Alt kjører lokalt i nettleseren — ingen data forlater maskinen.',
     h2FilterDist: 'Filtre og fordeling', lblGeo: 'Geografi', lblType: 'Type', lblGrape: 'Drue',
@@ -1084,8 +1091,11 @@ const I18N = {
       analyse: 'Mønstre på tvers av alle innlastede planer — hvilke opprinnelser og druer som går igjen, og hvordan prisbåndene beveger seg.',
       opplasting: 'Last opp en ny lanseringsplan fra Vinmonopolet, eller produsentdata i bulk via Excel-malen.',
     },
-    tilesSpecs: 'spesifikasjoner i planen', tilesWithMatches: 'anbud med kvalifiserte viner',
+    tilesSpecs: 'spesifikasjoner i planen', tilesWithMatches: 'anbud du kan vinne',
     tilesWines: 'viner i databasen', tilesIntro: 'introduksjonsmuligheter (åpne viner)', anaWineTenders: 'vinanbud',
+    tileLive: 'aktive anbud', tileLiveSub: 'ekte krav fra Vinmonopolet',
+    tileCountries: 'land det etterspørres fra', tileClosing: 'med frist innen 45 dager',
+    tileNearest: 'til neste tilbudsfrist', tileDays: n => n === 0 ? 'i dag' : n === 1 ? '1 dag' : `${n} dager`,
     filterCount: (n, tot) => `Viser ${n} av ${tot} anbud.`,
     wineFilterCountFn: (n, tot) => `Viser ${n} av ${tot} viner.`,
     wineCountFn: (n, tot) => `${n} av ${tot} viner`, portCountFn: n => `${n} viner`,
@@ -1237,6 +1247,7 @@ const I18N = {
     certOrganic: 'Organic', certBiodynamic: 'Biodynamic', certFairtrade: 'Fairtrade',
     certVegan: 'Vegan', certSustainable: 'Sustainable', certKosher: 'Kosher',
     mwLeadPre: 'Or test a real lead from the database: ',
+    mwExampleHint: '↑ Example — edit any field to describe your own wine.',
     mwResultH: n => n ? `Your wine qualifies for ${n} tenders` : 'No tenders match yet',
     mwTileMatches: 'tenders it can win', mwTileIntro: 'where you are unrepresented', mwTileBest: 'best margin headroom €',
     mwNoMatch: 'None of the tenders in this plan fit this exact profile. Try another plan (top right), adjust the grape/price, or see <b>Analytics</b> for which origins and grapes recur.',
@@ -1284,8 +1295,8 @@ const I18N = {
     mwlSavedBody: n => `It now counts as sourced, and matches ${n} tenders in this plan.`,
     mwlDownload: 'Download JSON', mwlSeeOpp: 'See in Opportunities →',
     introX: "Hide (won't show again)", introH: 'How it works',
-    introLi1: 'Upload your wines once under <b>My portfolio</b> — or explore the demo data already loaded.',
-    introLi2: "Under <b>Tenders</b> and <b>Marketplace</b> your wines are matched automatically against Vinmonopolet's requirements, so you see which tenders you can win.",
+    introLi1: 'Describe one wine under <b>Wines → Match my wine</b> and instantly see which tenders it can win — or upload your whole portfolio under <b>My portfolio</b>.',
+    introLi2: "Under <b>Tenders</b> your wines are matched automatically against Vinmonopolet's requirements, hit-or-miss on every single criterion, so you see exactly which tenders you can win.",
     introLi3: 'Use the <b>Calculator</b> to check the producer price hits the price band — <b>FOB</b> = the price the producer charges ex-cellar, before freight, duties and importer margin.',
     introFoot: 'Switch launch plan at the top right. Everything runs locally in your browser — no data leaves your machine.',
     h2FilterDist: 'Filters and distribution', lblGeo: 'Geography', lblType: 'Type', lblGrape: 'Grape',
@@ -1385,8 +1396,11 @@ const I18N = {
       analyse: 'Patterns across all loaded plans — which origins and grapes recur, and how the price bands move.',
       opplasting: "Upload a new launch plan from Vinmonopolet, or producer data in bulk via the Excel template.",
     },
-    tilesSpecs: 'specifications in the plan', tilesWithMatches: 'tenders with qualifying wines',
+    tilesSpecs: 'specifications in the plan', tilesWithMatches: 'tenders you can win',
     tilesWines: 'wines in the database', tilesIntro: 'introduction opportunities (open wines)', anaWineTenders: 'wine tenders',
+    tileLive: 'live tenders', tileLiveSub: 'real Vinmonopolet requirements',
+    tileCountries: 'countries being sourced', tileClosing: 'closing within 45 days',
+    tileNearest: 'to the next deadline', tileDays: n => n === 0 ? 'today' : n === 1 ? '1 day' : `${n} days`,
     filterCount: (n, tot) => `Showing ${n} of ${tot} tenders.`,
     wineFilterCountFn: (n, tot) => `Showing ${n} of ${tot} wines.`,
     wineCountFn: (n, tot) => `${n} of ${tot} wines`, portCountFn: n => `${n} wines`,
@@ -2404,15 +2418,30 @@ function recompute() {
   }
 }
 function renderTiles() {
+  // Lead with the live tender data (always rich) rather than the wine-DB counts (empty until
+  // users add portfolios). A first-time visitor with no portfolio still sees a plan that's
+  // alive: real demand, real countries, real deadlines counting down.
+  const dtds = SPECS.map(daysToDeadline).filter(d => d != null && d >= 0);
+  const soon = dtds.filter(d => d <= 45).length;
+  const nearest = dtds.length ? Math.min(...dtds) : null;
+  const countries = new Set(SPECS.map(s => (s.country || '').trim()).filter(Boolean)).size;
   const withM = MARKET.filter(m => oppCands(m).length);
   const openIntro = new Set();
   withM.forEach(m => oppCands(m).forEach(x => { if (isIntroOpp(x)) openIntro.add(x.wine.id); }));
-  $('tiles').innerHTML = [
-    [SPECS.length, L.tilesSpecs],
-    [withM.length, L.tilesWithMatches],
-    [WINES.length, L.tilesWines],
-    [openIntro.size, L.tilesIntro],
-  ].map(([v, l]) => `<div class="tile"><div class="v">${v}</div><div class="l">${l}</div></div>`).join('');
+  // The 4th tile adapts: once the user has portfolio matches it shows the payoff (winnable
+  // tenders); with an empty DB it shows the nearest deadline, keeping every tile non-zero.
+  const payoff = WINES.length
+    ? { v: withM.length, l: L.tilesWithMatches, cls: withM.length ? 'accent' : '' }
+    : (nearest != null ? { v: L.tileDays(nearest), l: L.tileNearest, cls: nearest <= 21 ? 'urgent' : '' }
+                       : { v: '–', l: L.tileNearest, cls: '' });
+  const tiles = [
+    { v: SPECS.length, l: L.tileLive, sub: L.tileLiveSub, cls: 'accent' },
+    { v: countries, l: L.tileCountries, cls: '' },
+    { v: soon, l: L.tileClosing, cls: soon ? 'urgent' : '' },
+    payoff,
+  ];
+  $('tiles').innerHTML = tiles.map(t =>
+    `<div class="tile ${t.cls || ''}"><div class="v">${t.v}</div><div class="l">${t.l}</div>${t.sub ? `<div class="sub">${t.sub}</div>` : ''}</div>`).join('');
 }
 function renderSpecs() {
   const tb = $('specTable').querySelector('tbody');
@@ -2433,7 +2462,7 @@ function renderSpecs() {
     const mini = p ? `<div class="minibar" title="${esc(L.ttPriceCap)} ${fmt(p,0)} kr"><i style="width:${Math.min(100, 100*p/maxP)}%"></i></div>` : '';
     const gr = capGrapes(specGrapes(s).slice(0, 3));
     return `<tr class="rowx" data-i="${i}">
-      <td><b>${esc(s.ref)}</b></td><td>${esc(s.launch)}</td><td>${esc((s.selection || '').replace('utvalget',''))}</td>
+      <td><b>${esc(s.ref)}</b></td><td>${esc(s.launch)}${urgencyChip(s)}</td><td>${esc((s.selection || '').replace('utvalget',''))}</td>
       <td>${esc(mainDisp(mainCat(s))) || esc(s.group)}${subCat(s) ? ` <span style="color:var(--muted)">(${esc(subDisp(subCat(s)))})</span>` : ''}${gr ? `<br><span style="color:var(--muted);font-size:11.5px">${esc(gr)}</span>` : ''}</td>
       <td>${esc(dispCountry(s.country)) || openTerm()}${s.region ? `<br><span style="color:var(--muted);font-size:11.5px">${esc(s.region)}</span>` : ''}${s.appellation ? `<br><span style="color:var(--muted);font-size:11px" title="${esc(s.appellation)}">${esc(s.appellation.length > 42 ? s.appellation.slice(0, 40) + '…' : s.appellation)}</span>` : ''}${specClasses(s).length ? `<br>${specClasses(s).map(c => `<span class="chip lo" style="font-size:10.5px;padding:1px 6px;margin:2px 3px 0 0">${esc(c)}</span>`).join('')}` : ''}</td>
       <td>${esc((s.spec || '').slice(0, 110))}${(s.spec || '').length > 110 ? '…' : ''}</td>
@@ -3379,6 +3408,13 @@ function daysToDeadline(spec) {
   const dt = new Date(Date.UTC(y, mo - 1, da));
   return isNaN(dt) ? null : Math.round((dt - Date.now()) / 86400000);
 }
+// A small countdown chip for tenders whose deadline is near — turns a static table into a
+// live one and quietly nudges the user toward what's about to close. Amber ≤45d, hot ≤14d.
+function urgencyChip(spec) {
+  const d = daysToDeadline(spec);
+  if (d == null || d < 0 || d > 45) return '';
+  return ` <span class="chip urg${d <= 14 ? ' hot' : ''}" style="white-space:nowrap;min-width:0" title="${esc(L.oppDeadTip)} — ${esc(L.tileDays(d))}">${d}d</span>`;
+}
 // A wine is a real candidate for a tender only if it concretely meets at least one
 // requirement — or the tender has no checkable clauses at all (pure origin/price). This
 // stops thin-data leads that meet 0 of N requirements ("0✓ 1?/1") from flooding every card.
@@ -3661,7 +3697,62 @@ function initMatchWine() {
   $('mwLeadPick').innerHTML = leads.length ? L.mwLeadPre + leads.map((w, i) =>
     `<button class="btn ghost" style="padding:3px 9px;margin:2px 4px 0 0;font-size:12px" onclick="fillLead(${i})">${esc(w.country)} · ${esc(dispGrape(Object.keys(w.grapes)[0]))}</button>`).join('') : '';
   // show a worked example on first open so the value is immediate; never overwrite the user's own input later
-  if (!MW_DEMOED && leads.length) { MW_DEMOED = true; fillLead(0); }
+  if (!MW_DEMOED) { MW_DEMOED = true; if (leads.length) fillLead(0); else demoQuery(); }
+}
+// With an empty wine database there are no seed leads to demo — but the matcher needs no
+// database at all: it matches a *described* wine against the real tenders. So we prefill an
+// illustrative wine (clearly editable) that actually wins tenders in the current plan and run
+// it, so a first-time producer sees the payoff before typing a single field.
+function demoQuery() {
+  const wineSpecs = SPECS.filter(s => isWineSpec(s) && (s.country || '').trim());
+  if (!wineSpecs.length) return;
+  const colorFor = g => /red/i.test(g) ? 'red' : /white/i.test(g) ? 'white' : /ros[eé]/i.test(g) ? 'rose'
+    : /spark|mousser/i.test(g) ? 'sparkling white' : 'red';
+  // Pick the (country, colour, grape) an illustrative *single* wine could carry that wins the
+  // MOST tenders in this plan, so the first thing a producer sees is a strong result. A grape
+  // matters: a wine with no stated grape fails every grape-specific tender, so we try each
+  // tender's own requested grape — an honest "a French Chardonnay wins N of these".
+  const grapeOpts = new Set([...$('mwGrape').options].map(o => o.value).filter(Boolean));
+  const combos = new Map();
+  for (const s of wineSpecs) {
+    const color = colorFor(s.group || '');
+    const gs = specGrapes(s).map(g => g.toLowerCase()).filter(g => grapeOpts.has(g));
+    for (const grape of gs.length ? gs : ['']) {
+      combos.set(s.country + '|' + color + '|' + grape, { country: s.country, color, grape });
+    }
+  }
+  // Most VMP tenders also mandate a certification (organic / sustainable), which a wine with no
+  // cert fails outright. A real archetype wine legitimately holds one, so we also try common
+  // cert bundles and keep whichever wins most — "an organic Chardonnay from France".
+  const certBundles = [[], ['organic'], ['sustainable'], ['organic', 'sustainable']];
+  const scoreOf = (c, certs) => {
+    const rec = { id: '_demo', producer: '', name: '', country: c.country, color: c.color,
+      grapes: c.grape ? { [c.grape]: 100 } : {}, abv: 13.5, certs, cert_on_label: !!certs.length,
+      vintages_available: [], sugar_g_l: null, wood: null, packaging: { type: null, weight_g: null },
+      method: /spark/.test(c.color) ? 'traditional' : null, fob_eur: null, representation: { NO: 'unrepresented' } };
+    let n = 0;
+    for (const s of SPECS) {
+      const hi = s.price_hi ?? s.price_lo;
+      const fob = hi ? fobFromRetail(+hi, rec.abv, s.litres || 0.75) : null;
+      if (evaluateWine(s, rec, fob)) n++;
+    }
+    return n;
+  };
+  let best = null, bestN = -1;
+  for (const c of combos.values()) for (const certs of certBundles) {
+    const n = scoreOf(c, certs);
+    if (n > bestN) { bestN = n; best = { ...c, certs }; }
+  }
+  if (!best) return;
+  $('mwName').value = '';
+  $('mwCountry').value = best.country;
+  $('mwColour').value = best.color;
+  $('mwGrape').value = best.grape || '';
+  $('mwAbv').value = 13.5;
+  setCerts(best.certs);
+  window._mwLead = null;
+  $('mwLeadPick').innerHTML = `<span class="note" style="color:var(--muted);display:inline-block;margin-top:2px">${L.mwExampleHint}</span>`;
+  runMatchWine();
 }
 function fillLead(i) {
   const w = (window._mwLeads || [])[i]; if (!w) return;
@@ -3966,6 +4057,9 @@ function enableMapZoom(wrap) {
   wrap.addEventListener('pointercancel', up);
 }
 enableMapZoom($('mapWrap')); enableMapZoom($('wineMapWrap'));
+// The sample/lead-data banners describe seeded wines; with an empty database there are none,
+// so showing them would be misleading. Hide until real seed wines exist.
+if (!WINES.length) document.querySelectorAll('.samplebar').forEach(e => e.style.display = 'none');
 renderPlanSelect(); initLang(); initOrientation(); initRole(); loadVmpIndex();
 </script>
 </body>
