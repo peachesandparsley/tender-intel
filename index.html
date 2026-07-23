@@ -88,6 +88,22 @@
     padding: 16px 18px; background: color-mix(in oklab, var(--s1) 4%, var(--surface-1)); }
   .emptycta .ec-h { font-weight: 700; font-size: 15px; color: var(--text-primary); margin-bottom: 5px; }
   .emptycta .ec-b { font-size: 13px; color: var(--text-secondary); line-height: 1.5; margin-bottom: 12px; max-width: 70ch; }
+  .complete { border: 1px solid color-mix(in oklab, var(--s1) 30%, var(--border)); border-radius: 12px;
+    padding: 14px 16px; background: color-mix(in oklab, var(--s1) 5%, var(--surface-1)); }
+  .complete-top { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+  .complete-h { font-weight: 700; font-size: 15px; color: var(--text-primary); }
+  .cmeter .cmeter-v { font-family: Georgia, 'Iowan Old Style', serif; font-size: 20px; font-weight: 600; color: var(--s1); }
+  .cmeter .cmeter-l { font-size: 11px; color: var(--muted); }
+  .cbar { height: 7px; border-radius: 999px; background: var(--grid); overflow: hidden; margin: 9px 0 10px; }
+  .cbar i { display: block; height: 100%; transition: width .45s cubic-bezier(.4, 0, .2, 1);
+    background: linear-gradient(90deg, color-mix(in oklab, var(--s1) 65%, transparent), var(--s1)); }
+  .complete-sub { font-size: 12.5px; color: var(--text-secondary); line-height: 1.5; margin-bottom: 10px; max-width: 74ch; }
+  .cfields { display: flex; flex-wrap: wrap; gap: 7px; }
+  .cf { font-size: 12px; border-radius: 999px; padding: 4px 11px; border: 1px solid var(--border); background: var(--surface-1); }
+  .cf.done { color: var(--good-text); background: color-mix(in oklab, var(--goodst) 14%, transparent); border-color: transparent; }
+  .cf.todo { cursor: pointer; color: var(--text-primary); font: inherit; font-size: 12px; transition: border-color .12s, transform .05s; }
+  .cf.todo:hover { border-color: var(--s1); transform: translateY(-1px); }
+  .cf.todo.key { border-color: color-mix(in oklab, var(--s1) 45%, var(--border)); font-weight: 600; }
   .card { background: var(--surface-1); border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin: 0 0 18px; }
   .card h2 { font-size: 15px; margin: 0 0 10px; }
   .filters { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
@@ -513,6 +529,7 @@
     <div class="card" id="mwResultCard" style="display:none">
       <h2 id="mwResultH"></h2>
       <div class="tiles" id="mwTiles"></div>
+      <div id="mwComplete" style="margin:12px 0 0"></div>
       <details class="howto" id="mwHowto" open>
         <summary data-i18n="howtoSummary">Slik leser du et kort</summary>
         <div class="howto-body" data-i18n="howtoMatch"></div>
@@ -977,6 +994,14 @@ const I18N = {
     certVegan: 'Vegansk', certSustainable: 'Bærekraftig', certKosher: 'Kosher',
     mwLeadPre: 'Eller test en ekte lead fra databasen: ',
     mwExampleHint: '↑ Eksempel — endre et hvilket som helst felt for å beskrive din egen vin.',
+    cmpH: 'Fullfør vinen — gjør «?» om til ✓',
+    cmpMeter: 'profil fullført',
+    cmpSub: (t, u) => `${u} ${u === 1 ? 'kriterium' : 'kriterier'} på tvers av ${t} ${t === 1 ? 'anbud' : 'anbud'} er fortsatt ubekreftet (?). Bare du kan bekrefte dem — hvert felt gjør et «?» om til et sikkert ✓ eller ✗.`,
+    cmpPrice: n => `Legg inn kjellerprisen (FOB), så blir «trolig innenfor» til en fast ja/nei på pris for ${n} ${n === 1 ? 'anbud' : 'anbud'}.`,
+    cmpClean: 'Alle kriterier er avklart for de matchede anbudene. Lagre vinen så importørene finner den.',
+    cmpSave: 'Lagre vinen i databasen →',
+    cfGrape: 'Drue', cfCert: 'Sertifisering', cfFob: 'Kjellerpris (FOB)', cfSugar: 'Restsukker',
+    cfWood: 'Fatbruk', cfVint: 'Årganger', cfWeight: 'Flaskevekt',
     mwResultH: n => n ? `Vinen din kvalifiserer til ${n} anbud` : 'Ingen anbud matcher ennå',
     mwTileMatches: 'anbud den kan vinne', mwTileIntro: 'der du er urepresentert', mwTileBest: 'beste marginrom €',
     mwNoMatch: 'Ingen av anbudene i denne planen passer akkurat denne profilen. Prøv en annen plan øverst til høyre, juster druen/prisen, eller se <b>Analyse</b> for hvilke opprinnelser og druer som går igjen.',
@@ -1287,6 +1312,14 @@ const I18N = {
     certVegan: 'Vegan', certSustainable: 'Sustainable', certKosher: 'Kosher',
     mwLeadPre: 'Or test a real lead from the database: ',
     mwExampleHint: '↑ Example — edit any field to describe your own wine.',
+    cmpH: 'Complete your wine — turn “?” into ✓',
+    cmpMeter: 'profile complete',
+    cmpSub: (t, u) => `${u} ${u === 1 ? 'criterion' : 'criteria'} across ${t} ${t === 1 ? 'tender' : 'tenders'} ${u === 1 ? 'is' : 'are'} still unconfirmed (?). Only you can confirm them — each field turns a “?” into a firm ✓ or ✗.`,
+    cmpPrice: n => `Add your ex-cellar price (FOB) to turn “likely within” into a firm yes/no on price for ${n} ${n === 1 ? 'tender' : 'tenders'}.`,
+    cmpClean: 'Every criterion is resolved for your matched tenders. Save the wine so importers can find it.',
+    cmpSave: 'Save the wine to the pool →',
+    cfGrape: 'Grape', cfCert: 'Certification', cfFob: 'Ex-cellar price (FOB)', cfSugar: 'Residual sugar',
+    cfWood: 'Oak', cfVint: 'Vintages', cfWeight: 'Bottle weight',
     mwResultH: n => n ? `Your wine qualifies for ${n} tenders` : 'No tenders match yet',
     mwTileMatches: 'tenders it can win', mwTileIntro: 'where you are unrepresented', mwTileBest: 'best margin headroom €',
     mwNoMatch: 'None of the tenders in this plan fit this exact profile. Try another plan (top right), adjust the grape/price, or see <b>Analytics</b> for which origins and grapes recur.',
@@ -3911,6 +3944,7 @@ function runMatchWine() {
       <details class="critdet"><summary>${L.critShow}</summary>${critHtml(s, w, h.fob)}</details>
       </div></div>`;
   }).join('') + `<p class="note" style="margin:10px 0 0;color:var(--muted)">${L.mwCoverage}</p>`;
+  renderComplete(w, hits);
   const cross = crossPlanMatches(w);
   $('mwCta').innerHTML = `<div class="pullbox">
     <div class="pullbig">${L.mwPullTitle(hits.length, cross.total, cross.nPlans)}</div>
@@ -3919,6 +3953,54 @@ function runMatchWine() {
       <button class="btn" onclick="openListForm()">${L.mwCtaBtn}</button>
       <button class="btn ghost" onclick="gotoTab('portefolje')">${L.mwPullPortfolio}</button>
     </div></div>`;
+}
+// The one honest "game": a completeness meter whose score is real. Each field only the producer
+// holds turns an unknown (?) criterion into a checkable ✓/✗ across the matched tenders, and the
+// FOB flips every "likely within" into a firm price verdict. Clicking a missing field jumps to
+// it so the producer fills it and watches the tenders resolve live. No points, no badges — the
+// reward is qualified tenders and price certainty, which is the actual product.
+function renderComplete(w, hits) {
+  const box = $('mwComplete'); if (!box) return;
+  const cf = [
+    { ok: Object.keys(w.grapes).length > 0, id: 'mwGrape', lbl: L.cfGrape },
+    { ok: w.certs.length > 0, id: 'mwCertRow', lbl: L.cfCert },
+    { ok: w.fob_eur != null, id: 'mwFob', lbl: L.cfFob, key: true },
+    { ok: w.sugar_g_l != null, id: 'mwSugar', lbl: L.cfSugar },
+    { ok: !!w.wood, id: 'mwWood', lbl: L.cfWood },
+    { ok: (w.vintages_available || []).length > 0, id: 'mwVintages', lbl: L.cfVint },
+    { ok: w.packaging && w.packaging.weight_g != null, id: 'mwWeight', lbl: L.cfWeight },
+  ];
+  const filled = cf.filter(f => f.ok).length;
+  const pct = Math.round(100 * filled / cf.length);
+  const totUnknown = hits.reduce((a, h) => a + h.ev.unknowns, 0);
+  const tUnknown = hits.filter(h => h.ev.unknowns > 0).length;
+  const priceGain = hits.filter(h => h.fob && w.fob_eur == null).length;
+  const chips = cf.map(f => f.ok
+    ? `<span class="cf done">✓ ${f.lbl}</span>`
+    : `<button class="cf todo${f.key ? ' key' : ''}" onclick="focusMwField('${f.id}')">+ ${f.lbl}</button>`).join('');
+  const parts = [];
+  if (totUnknown) parts.push(L.cmpSub(tUnknown, totUnknown));
+  if (priceGain && w.fob_eur == null) parts.push(L.cmpPrice(priceGain));
+  if (!parts.length) parts.push(L.cmpClean);
+  box.innerHTML = `<div class="complete">
+    <div class="complete-top">
+      <div class="complete-h">${L.cmpH}</div>
+      <div class="cmeter"><span class="cmeter-v">${pct}%</span> <span class="cmeter-l">${L.cmpMeter}</span></div>
+    </div>
+    <div class="cbar"><i style="width:${pct}%"></i></div>
+    <div class="complete-sub">${parts.join(' ')}</div>
+    <div class="cfields">${chips}</div>
+    <div class="pullbtns" style="margin-top:12px"><button class="btn" onclick="openListForm()">${L.cmpSave}</button></div>
+  </div>`;
+}
+function focusMwField(id) {
+  if (['mwSugar', 'mwWood', 'mwVintages', 'mwWeight', 'mwGrapesFull'].includes(id)) {
+    const d = $('mwMore'); if (d) d.open = true;
+  }
+  const el = $(id); if (!el) return;
+  const focusEl = el.matches('input,select,textarea') ? el : (el.querySelector('input,select,textarea') || el);
+  el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  setTimeout(() => { try { focusEl.focus({ preventScroll: true }); } catch (e) {} }, 260);
 }
 function openListForm() {
   const lead = window._mwLead;
@@ -4024,6 +4106,21 @@ document.querySelectorAll('details.howto').forEach(d => {
 });
 ['mwCountry', 'mwColour', 'mwGrape', 'mwAbv', 'mwFob', 'mwName'].forEach(id =>
   $(id).addEventListener('keydown', e => { if (e.key === 'Enter') runMatchWine(); }));
+// Live matching: as the producer fills in a field, the tenders re-resolve on the spot — an
+// unknown (?) flips to ✓/✗ and the completeness meter climbs. The progression IS the payoff, so
+// it should feel immediate. Only re-runs once a result is already on screen (after the demo).
+let _liveT = null;
+function liveMatch() {
+  clearTimeout(_liveT);
+  _liveT = setTimeout(() => { if ($('mwResultCard').style.display !== 'none') runMatchWine(); }, 180);
+}
+['mwGrapesFull', 'mwSugar', 'mwWood', 'mwVintages', 'mwWeight'].forEach(id => {
+  const el = $(id); if (el) { el.addEventListener('input', liveMatch); el.addEventListener('change', liveMatch); }
+});
+['mwCountry', 'mwColour', 'mwGrape', 'mwAbv', 'mwFob', 'mwName'].forEach(id => {
+  const el = $(id); if (el) el.addEventListener('input', liveMatch);
+});
+document.querySelectorAll('.mwcert').forEach(cb => cb.addEventListener('change', liveMatch));
 ['inRetail','inAbv','inVol','inPack','inMargin','inFreight','inCur2','inCur2Rate','inEur']
   .forEach(id => $(id).addEventListener('input', () => { calc(); recompute(); }));
 Object.entries(DIM_SELECT).forEach(([dim, id]) =>
