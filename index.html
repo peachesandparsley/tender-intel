@@ -102,6 +102,14 @@
     align-items: center; padding: 8px 2px; border-bottom: 1px solid var(--baseline); }
   .recur-row:last-child { border-bottom: none; }
   .recur-label { font-weight: 600; font-size: 13.5px; color: var(--text-primary); }
+  .trend { display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: .02em;
+    padding: 1px 6px; border-radius: 999px; vertical-align: middle; white-space: nowrap; }
+  .trend-up { color: var(--good-text); background: color-mix(in oklab, var(--goodst) 15%, transparent); }
+  .trend-flat { color: var(--text-secondary); background: var(--grid); }
+  .trend-down { color: var(--muted); background: var(--grid); }
+  .trend-new { color: var(--accent); background: color-mix(in oklab, var(--accent) 9%, transparent); }
+  .dtag { display: inline-block; font-size: 9.5px; letter-spacing: .04em; text-transform: uppercase;
+    color: var(--muted); border: 1px solid var(--border); border-radius: 999px; padding: 1px 6px; vertical-align: middle; }
   .recur-bar { height: 7px; border-radius: 999px; background: var(--grid); overflow: hidden; }
   .recur-bar i { display: block; height: 100%; border-radius: 999px;
     background: linear-gradient(90deg, color-mix(in oklab, var(--s1) 60%, transparent), var(--s1)); }
@@ -853,7 +861,7 @@
   <section class="tab" id="tab-analyse">
     <div class="card">
       <h2 data-i18n="h2Recur">Gjentakende etterspørsel — det Vinmonopolet ber om igjen og igjen</h2>
-      <p class="note" style="margin:0 0 10px" data-i18n="noteRecur">Vinmonopolet publiserer ikke hvilke lot som ble fylt — men når samme opprinnelse × stil × drue etterspørres <b>plan etter plan</b>, er det forutsigbar, varig etterspørsel. Det er langt tryggere å satse på enn et engangsanbud. Her er profilene som går igjen, rangert etter hvor mange planer de dukker opp i. Du ser samme signal som et ↻-merke på hvert anbud du blar i og matcher.</p>
+      <p class="note" style="margin:0 0 10px" data-i18n="noteRecur">Vinmonopolet publiserer ikke hvilke lot som ble fylt — men det publiserer hva det ber om. Vi grupperer anbudene på et handlingsnivå — <b>distrikt × stil × drue × prisbånd</b> — og viser, på tvers av planene i tidsrekkefølge, hvor ofte en profil går igjen <b>og hvor den er på vei</b>: ↗ økende, ● vedvarende, ↘ avtakende. «Chablis · Chardonnay · 200–350 kr» sier noe; «Frankrike · hvitvin» gjør ikke det. Tynt med fire planer — bygd for fem års planer (~10).</p>
       <div class="tiles" id="recurTiles"></div>
       <div id="recurList" style="margin-top:12px"></div>
     </div>
@@ -1167,7 +1175,7 @@ const I18N = {
     thWinesCount: 'Viner', thNO: 'Norge', thSE: 'Sverige', thFI: 'Finland',
     h2Gap: 'Gap-analyse — udekket etterspørsel å målrette',
     noteGap: 'Vinmonopolet publiserer ikke hvilke anbud som ble fylt — men planene selv skiller de virkelige gapene fra de løste: en klynge som etterspørres <b>gjentatte ganger OG fortsatt i den nyeste planen</b> er ennå ikke dekket (de spør fordi de ikke fikk gode nok tilbud); en som var gjentatt men <b>falt ut</b> av de siste planene ble trolig dekket til slutt. «Fortsatt åpne» er premien. Tabellen rangerer på gjentakelse + at det fremdeles etterspørres, mot hvor få kjente viner som kvalifiserer.',
-    noteRecur: 'Vinmonopolet publiserer ikke hvilke lot som ble fylt — men når samme opprinnelse × stil × drue etterspørres <b>plan etter plan</b>, er det forutsigbar, varig etterspørsel. Det er langt tryggere å satse på enn et engangsanbud. Her er profilene som går igjen, rangert etter hvor mange planer de dukker opp i. Du ser samme signal som et ↻-merke på hvert anbud du blar i og matcher.',
+    noteRecur: 'Vinmonopolet publiserer ikke hvilke lot som ble fylt — men det publiserer hva det ber om. Vi grupperer anbudene på et handlingsnivå — <b>distrikt × stil × drue × prisbånd</b> — og viser, på tvers av planene i tidsrekkefølge, hvor ofte en profil går igjen <b>og hvor den er på vei</b>: ↗ økende, ● vedvarende, ↘ avtakende. «Chablis · Chardonnay · 200–350 kr» sier noe; «Frankrike · hvitvin» gjør ikke det. Tynt med fire planer — bygd for fem års planer (~10).',
     gapAll: 'Alle gap', gapStillOpen: 'Fortsatt åpne', gapStillOpenTip: 'Gjentatt OG fortsatt etterspurt i nyeste plan — altså ennå ikke dekket', gapUnmet: 'Udekket (ingen kjent vin)',
     gapStyleLabel: 'Stil', gapAllStyles: 'Alle stiler', gapAnyStyle: 'Vin', gapAnyGrape: 'drue uspesifisert',
     gapTileClusters: 'etterspørselsklynger', gapTilePersistent: 'fortsatt åpne (gjentatt + nyeste plan)', gapTileUnmet: 'udekket i basen',
@@ -1207,9 +1215,11 @@ const I18N = {
     tileNearest: 'til neste tilbudsfrist', tileDays: n => n === 0 ? 'i dag' : n === 1 ? '1 dag' : `${n} dager`,
     tileGo: 'Vis detaljene', anaPlanGo: 'Bytt til denne planen',
     recurTip: (p, t) => `Gjentakende etterspørsel: samme opprinnelse × stil × drue er etterspurt i ${p} av ${t} innlastede planer. Varig etterspørsel, ikke et engangsanbud.`,
-    h2Recur: 'Gjentakende etterspørsel — det Vinmonopolet ber om igjen og igjen',
-    recurT1: 'gjentakende profiler', recurT2: n => `i alle ${n} planer`, recurT3: 'innlastede planer',
-    recurPlans: 'planer', recurReqs: 'forespørsler', recurEmpty: 'Ingen profil går igjen på tvers av planene ennå — last inn flere lanseringsplaner for å se mønstre.',
+    h2Recur: 'Etterspørselssignaler — spesifikke profiler Vinmonopolet ber om, og hvor de er på vei',
+    recurT1: 'gjentakende profiler', recurTEmerging: 'økende (↗ etterspørres mer)', recurTPersistent: 'vedvarende (spørres fortsatt)',
+    recurPlans: 'planer', recurReqs: 'forespørsler', dLast: 'sist:', dOrganic: 'oftest øko',
+    tEmerging: 'Økende', tSteady: 'Vedvarende', tFading: 'Avtakende', tNew: 'Ny',
+    recurEmpty: 'Ingen spesifikk profil går igjen på tvers av planene ennå — last inn flere lanseringsplaner (systemet er bygd for fem års planer) for å se mønstrene.',
     mwRecur: (k, n) => k === n ? `Alle ${n} går igjen på tvers av tidligere planer — varig etterspørsel, ikke engangsanbud.` : `${k} av ${n} går igjen på tvers av tidligere planer — varig etterspørsel, ikke engangsanbud.`,
     heroH: 'Vinn Vinmonopolets anbud — før konkurrentene rekker å se dem.',
     heroSub: 'Vinmonopolet publiserer hvert anbud på forhånd. Beskriv en vin, så ser du på sekundet hvilke den kan vinne, kjellerprisen den må treffe, og når fristen går ut. Ingen innlogging, ingen opplasting.',
@@ -1497,7 +1507,7 @@ const I18N = {
     thWinesCount: 'Wines', thNO: 'Norway', thSE: 'Sweden', thFI: 'Finland',
     h2Gap: 'Gap analysis — under-served demand to target',
     noteGap: 'Vinmonopolet does not publish which tenders were filled — but the plans themselves separate the real gaps from the resolved ones: a cluster requested <b>repeatedly AND still in the latest plan</b> is not covered yet (they keep asking because they did not get good enough offers); one that recurred but <b>dropped out</b> of the recent plans was probably covered eventually. "Still open" is the prize. The table ranks on recurrence + still-being-asked, against how few known wines qualify.',
-    noteRecur: 'Vinmonopolet does not publish which lots were filled — but when the same origin × style × grape is requested <b>plan after plan</b>, that is predictable, durable demand. Far safer to invest in than a one-off tender. Here are the profiles that keep coming back, ranked by how many plans they appear in. You see the same signal as a ↻ badge on every tender you browse and match.',
+    noteRecur: 'Vinmonopolet does not publish which lots were filled — but it publishes what it asks for. We group the tenders at an actionable grain — <b>district × style × grape × price band</b> — and, across the plans in time order, show how often a profile recurs <b>and where it is heading</b>: ↗ emerging, ● persistent, ↘ fading. “Chablis · Chardonnay · 200–350 kr” tells you something; “France · white” does not. Thin at four plans — built for five years of them (~10).',
     gapAll: 'All gaps', gapStillOpen: 'Still open', gapStillOpenTip: 'Recurring AND still requested in the latest plan — i.e. not covered yet', gapUnmet: 'Unmet (no known wine)',
     gapStyleLabel: 'Style', gapAllStyles: 'All styles', gapAnyStyle: 'Wine', gapAnyGrape: 'grape unspecified',
     gapTileClusters: 'demand clusters', gapTilePersistent: 'still open (recurring + latest plan)', gapTileUnmet: 'unmet in the database',
@@ -1537,9 +1547,11 @@ const I18N = {
     tileNearest: 'to the next deadline', tileDays: n => n === 0 ? 'today' : n === 1 ? '1 day' : `${n} days`,
     tileGo: 'Show the details', anaPlanGo: 'Switch to this plan',
     recurTip: (p, t) => `Recurring demand: the same origin × style × grape has been requested in ${p} of ${t} loaded plans. Durable demand, not a one-off tender.`,
-    h2Recur: 'Recurring demand — what Vinmonopolet asks for again and again',
-    recurT1: 'recurring profiles', recurT2: n => `in all ${n} plans`, recurT3: 'loaded plans',
-    recurPlans: 'plans', recurReqs: 'requests', recurEmpty: 'No profile recurs across the plans yet — load more launch plans to see patterns.',
+    h2Recur: 'Demand signals — the specific profiles Vinmonopolet keeps asking for, and where they’re heading',
+    recurT1: 'recurring profiles', recurTEmerging: 'emerging (↗ asked more)', recurTPersistent: 'persistent (still asked)',
+    recurPlans: 'plans', recurReqs: 'requests', dLast: 'last:', dOrganic: 'usually organic',
+    tEmerging: 'Emerging', tSteady: 'Persistent', tFading: 'Fading', tNew: 'New',
+    recurEmpty: 'No specific profile recurs across the plans yet — load more launch plans (the engine is built for five years of them) to see the patterns.',
     mwRecur: (k, n) => k === n ? `All ${n} recur across past plans — durable demand, not one-off tenders.` : `${k} of ${n} recur across past plans — durable demand, not one-off tenders.`,
     heroH: 'Win Vinmonopolet tenders — before your competitors even see them.',
     heroSub: 'Vinmonopolet publishes every tender in advance. Describe a wine and see in seconds which ones it can win, the ex-cellar price it must hit, and when the deadline is. No login, no upload.',
@@ -3194,53 +3206,96 @@ function renderGapDirectory() {
   }).join('') || `<tr><td colspan="11" style="color:var(--muted)">${L.gapEmpty}</td></tr>`;
   $('gapNote').textContent = L.gapNote(rows.length, nPlans, newest.replace(/\s*\(live\)/, ''));
 }
-// ---- Recurrence: turn the historical plans into a live signal ----
-// Vinmonopolet never publishes which lots were filled, but it does publish what it asks for. When
-// the same origin × style × grape shows up plan after plan, that's durable, predictable demand —
-// far more worth investing in than a one-off. We key each wine tender by (country, style, primary
-// grape), then count in how many loaded plans that profile appears. Surfaced as a ↻ chip right on
-// the tenders a user browses/matches, so the history informs the decision in the primary flow —
-// not just an analytics tab.
-let RECUR = null;
+// ---- Demand intelligence: turn the historical plans into an actionable signal ----
+// Vinmonopolet never publishes which lots were filled, but it publishes what it asks for. Keyed at
+// COUNTRY × STYLE, "France · white" recurs every plan and tells you nothing. So we key each wine
+// tender at an actionable grain — sub-region × style × grape × price band — and, across the loaded
+// plans in time order, compute not just how often a profile recurs but where it's HEADING
+// (emerging / steady / fading) and how recently it was asked. Sparse at 4 plans; it comes into its
+// own across five years of launch plans (~10), which is what the engine is built for.
+let RECUR = null, PLAN_CHRONO = null;
+// Coarser bands than the browse filter — a demand tier a producer can actually price to.
+function profileBand(s) {
+  const p = s.price_hi ?? s.price_lo;
+  if (p == null) return '';
+  return p < 200 ? '<200' : p < 350 ? '200–350' : p < 500 ? '350–500' : '500+';
+}
+// Sub-region is the actionable origin (Burgundy, Chablis, Douro); fall back to country only when a
+// tender states no region. Compound origins ("Essex, Kent or Sussex") collapse to their first part.
+function subOrigin(s) {
+  const r = (s.region || '').trim();
+  return (r ? r.split(/\s*[,/]\s*|\s+or\s+/i)[0].trim() : (s.country || '').trim());
+}
+// "traditional method" is a production method the grape parser surfaces for sparkling — not a
+// grape variety, so it shouldn't stand in as one in a demand profile.
+function primaryGrape(s) { return (specGrapes(s).find(g => g !== 'traditional method') || '').toLowerCase(); }
 function profileKey(s) {
-  const g = (specGrapes(s)[0] || '').toLowerCase();
-  return N(s.country || 'open') + '|' + mainCat(s) + '|' + g;
+  return [N(subOrigin(s)), mainCat(s), primaryGrape(s), profileBand(s)].join('|');
+}
+function planChrono() {
+  if (PLAN_CHRONO) return PLAN_CHRONO;
+  return PLAN_CHRONO = Object.keys(PLANS).map(n => {
+    const m = n.match(/(\d{4})\D*(\d)?/); return { n, y: m ? +m[1] : 0, h: m && m[2] ? +m[2] : 1 };
+  }).sort((a, b) => a.y - b.y || a.h - b.h).map(x => x.n);   // oldest -> newest
 }
 function buildRecurrence() {
-  RECUR = new Map();
-  for (const pn in PLANS) {
-    const seen = new Set();
-    for (const s of PLANS[pn]) if (isWineSpec(s)) seen.add(profileKey(s));
-    for (const k of seen) { if (!RECUR.has(k)) RECUR.set(k, new Set()); RECUR.get(k).add(pn); }
+  RECUR = new Map(); PLAN_CHRONO = null;
+  for (const pn in PLANS) for (const s of PLANS[pn]) {
+    if (!isWineSpec(s)) continue;
+    const k = profileKey(s);
+    let e = RECUR.get(k);
+    if (!e) { e = { plans: new Set(), req: 0, organic: 0, ex: s }; RECUR.set(k, e); }
+    e.plans.add(pn); e.req++;
+    if (clausesForSpec(s).some(c => c.type === 'cert')) e.organic++;
   }
+}
+// Direction of a profile across the loaded plans: is Vinmonopolet asking for it more, steadily, or
+// tailing off? Needs the plans in chronological order; undefined below two data points.
+function trendOf(e) {
+  const chrono = planChrono(), nP = chrono.length, idx = new Map(chrono.map((n, i) => [n, i]));
+  const at = [...e.plans].map(n => idx.get(n)).sort((a, b) => a - b);
+  const current = at.includes(nP - 1);
+  if (at.length < 2) return current ? 'new' : 'once';
+  const mid = (nP - 1) / 2, recent = at.filter(i => i > mid).length, early = at.filter(i => i <= mid).length;
+  if (!current) return 'fading';
+  return recent > early ? 'emerging' : 'steady';
 }
 function recurrenceOf(spec) {
   if (!RECUR) buildRecurrence();
-  const s = RECUR.get(profileKey(spec));
-  return { plans: s ? s.size : 0, total: Object.keys(PLANS).length };
+  const e = RECUR.get(profileKey(spec));
+  return { plans: e ? e.plans.size : 0, total: Object.keys(PLANS).length, trend: e ? trendOf(e) : '' };
 }
-// Only worth a badge when at least one OTHER plan also asked for it (the current plan always counts 1).
+// The ↻ chip: this SPECIFIC profile (not "France · white") recurs across plans; ↗ if it's growing,
+// ↘ if it's tailing off. Only shown when at least one other plan also asked for it.
 function recurChip(spec) {
   if (!isWineSpec(spec)) return '';
   const r = recurrenceOf(spec);
   if (r.plans < 2 || r.total < 2) return '';
-  return ` <span class="chip recur" title="${esc(L.recurTip(r.plans, r.total))}">↻ ${r.plans}/${r.total}</span>`;
+  const arrow = r.trend === 'emerging' ? '↗' : r.trend === 'fading' ? '↘' : '↻';
+  return ` <span class="chip recur" title="${esc(L.recurTip(r.plans, r.total))}">${arrow} ${r.plans}/${r.total}</span>`;
 }
-// The most durable demand profiles across every loaded plan — a plain-language directory of what
-// Vinmonopolet reliably re-requests, ranked by how many plans it appears in.
-function topRecurringProfiles() {
+function demandLabel(s) {
+  const grape = primaryGrape(s), band = profileBand(s);
+  return [grape ? dispGrape(grape) : '', mainDisp(mainCat(s)), subOrigin(s), band ? band + ' kr' : '']
+    .filter(Boolean).join(' · ');
+}
+// Every specific demand profile, scored so persistent + emerging + repeatedly-requested rises.
+function demandRows() {
   buildRecurrence();
-  const req = new Map(), ex = new Map();
-  for (const pn in PLANS) for (const s of PLANS[pn]) {
-    if (!isWineSpec(s)) continue;
-    const k = profileKey(s);
-    req.set(k, (req.get(k) || 0) + 1);
-    if (!ex.has(k)) ex.set(k, s);
+  const chrono = planChrono();
+  const rows = [];
+  for (const [k, e] of RECUR) {
+    const s = e.ex;
+    // drop trivially-general profiles (country-level with no grape) — the whole point of the fix
+    if (!(s.region || '').trim() && !primaryGrape(s)) continue;
+    const trend = trendOf(e);
+    rows.push({ k, e, s, plans: e.plans.size, req: e.req, trend,
+      organicShare: e.req ? e.organic / e.req : 0,
+      lastPlan: chrono.filter(n => e.plans.has(n)).slice(-1)[0] });
   }
-  return [...RECUR.entries()]
-    .map(([k, plans]) => ({ k, plans: plans.size, req: req.get(k) || 0, s: ex.get(k) }))
-    .filter(r => r.plans >= 2)
-    .sort((a, b) => b.plans - a.plans || b.req - a.req);
+  const w = { emerging: 4, steady: 3, new: 1, once: 0, fading: -2 };
+  const score = r => r.plans * 3 + r.req + (w[r.trend] || 0);
+  return rows.sort((a, b) => score(b) - score(a) || b.req - a.req);
 }
 function renderAnalyse() {
   renderGapDirectory();
@@ -3281,26 +3336,35 @@ function renderAnalyse() {
   };
   drawSingle('anaCert', names, names.map(certShare), ' %');
 }
+function trendBadge(t) {
+  const m = { emerging: ['up', L.tEmerging, '↗'], steady: ['flat', L.tSteady, '●'],
+    fading: ['down', L.tFading, '↘'], new: ['new', L.tNew, '✦'] }[t];
+  return m ? ` <span class="trend trend-${m[0]}" title="${esc(m[1])}">${m[2]} ${esc(m[1])}</span>` : '';
+}
 function renderRecurring() {
   const box = $('recurList'); if (!box) return;
-  const rows = topRecurringProfiles();
+  const all = demandRows();
   const nPlans = Object.keys(PLANS).length;
-  const everyPlan = rows.filter(r => r.plans === nPlans).length;
+  const recurring = all.filter(r => r.plans >= 2);
+  const emerging = all.filter(r => r.trend === 'emerging').length;
+  const persistent = all.filter(r => r.trend === 'steady').length;
   $('recurTiles').innerHTML = [
-    { v: rows.length, l: L.recurT1, go: 'recurList' },
-    { v: everyPlan, l: L.recurT2(nPlans), go: 'recurList' },
-    { v: nPlans, l: L.recurT3 },
+    { v: recurring.length, l: L.recurT1, go: 'recurList' },
+    { v: emerging, l: L.recurTEmerging, go: 'recurList' },
+    { v: persistent, l: L.recurTPersistent, go: 'recurList' },
   ].map(tileHtml).join('');
+  // Prefer profiles that recur across plans; if none do yet (thin data), fall back to the most
+  // specific single-plan demand so the panel is still useful before more plans are loaded.
+  const rows = recurring.length ? recurring : all;
   if (!rows.length) { box.innerHTML = `<p class="note">${L.recurEmpty}</p>`; return; }
-  box.innerHTML = rows.slice(0, 18).map(r => {
-    const s = r.s, grape = specGrapes(s)[0];
-    const label = [grape ? dispGrape(grape) : '', mainDisp(mainCat(s)), dispCountry(s.country) || L.openOrigin]
-      .filter(Boolean).join(' · ');
+  box.innerHTML = rows.slice(0, 24).map(r => {
     const pct = Math.round(100 * r.plans / nPlans);
+    const org = r.organicShare >= 0.5 ? ` <span class="dtag">${L.dOrganic}</span>` : '';
+    const last = (r.lastPlan || '').replace(/\s*\(live\)/, '');
     return `<div class="recur-row">
-      <div class="recur-label">${esc(label)}</div>
+      <div class="recur-label">${esc(demandLabel(r.s))}${trendBadge(r.trend)}${org}</div>
       <div class="recur-bar"><i style="width:${pct}%"></i></div>
-      <div class="recur-meta"><b>${r.plans}/${nPlans}</b> ${L.recurPlans} · ${r.req} ${L.recurReqs}</div>
+      <div class="recur-meta"><b>${r.plans}/${nPlans}</b> ${L.recurPlans} · ${r.req} ${L.recurReqs}${last ? ` · ${L.dLast} ${esc(last)}` : ''}</div>
     </div>`;
   }).join('');
 }

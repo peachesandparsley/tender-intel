@@ -67,10 +67,25 @@ importers add their portfolios.
 
 Commit `index.html` and GitHub Pages redeploys automatically (~1 min).
 
+## Demand intelligence (built for five years of plans)
+
+The Analytics tab reads every loaded plan **in chronological order** and profiles demand at
+an *actionable* grain — **sub-region × style × grape × price band** (e.g. `Chablis ·
+Chardonnay · 200–350 kr`), not the useless `France · white`. For each profile it reports how
+often it recurs, its **trend** (↗ emerging / ● persistent / ↘ fading, from the plans' time
+order), how recently it was asked, and how often it also carries a certification requirement.
+The same signal rides as a ↻/↗ badge on every tender in the browse table and match results.
+
+This is deliberately **thin at 3–4 plans and comes into its own across ~10** (five years of
+half-yearly plans): granular profiles only start recurring — and trends only become real —
+with that much history. The engine (`profileKey` / `demandRows` / `trendOf` in
+`app_template.html`) scales to any number of plans with no code change. Feed it history via the
+section below.
+
 ## Thicken the database with more launch plans
 
 Launch plans are **auto-discovered** — every `specs_*.json` in the repo is embedded
-(newest tagged "(live)"), and each one deepens the gap analysis and recurrence stats.
+(newest tagged "(live)"), and each one deepens the demand-intelligence, gap and trend stats.
 To add a historical plan:
 
 1. Download the Excel from Vinmonopolet's launch-plan archive (the **Lanseringer**
