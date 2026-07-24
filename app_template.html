@@ -386,6 +386,17 @@
   .howto-body li { margin: 3px 0; }
   .howto-body b { color: var(--text-primary); }
   .howto-body .k { display: inline-block; min-width: 118px; font-weight: 700; color: var(--text-primary); }
+  /* Progressive disclosure for secondary controls (filters, export, options) — a quiet pill that
+     expands only when wanted, so the content leads and the machinery stays out of the way. */
+  details.disclose { margin: 14px 0 0; }
+  details.disclose > summary { cursor: pointer; list-style: none; user-select: none; display: inline-flex;
+    align-items: center; gap: 7px; font-size: 12.5px; font-weight: 600; color: var(--text-secondary);
+    padding: 6px 13px; border: 1px solid var(--border); border-radius: 999px; transition: color .12s, border-color .12s; }
+  details.disclose > summary::-webkit-details-marker { display: none; }
+  details.disclose > summary::before { content: '▸'; font-size: 10px; transition: transform .12s; }
+  details.disclose[open] > summary::before { transform: rotate(90deg); }
+  details.disclose > summary:hover, details.disclose[open] > summary { color: var(--text-primary); border-color: var(--accent); }
+  details.disclose .disclose-body { margin-top: 14px; }
   /* per-card "why" rationale inside an expanded opportunity */
   .oppwhy { font-size: 12px; color: var(--text-secondary); line-height: 1.5;
     background: color-mix(in oklab, var(--accent) 5%, transparent);
@@ -574,7 +585,7 @@
       <h2 id="mwResultH"></h2>
       <div class="tiles" id="mwTiles"></div>
       <div id="mwComplete" style="margin:12px 0 0"></div>
-      <details class="howto" id="mwHowto" open>
+      <details class="howto" id="mwHowto">
         <summary data-i18n="howtoSummary">Slik leser du et kort</summary>
         <div class="howto-body" data-i18n="howtoMatch"></div>
       </details>
@@ -638,7 +649,9 @@
     <div id="anbudBody">
     <div class="card">
       <h2 data-i18n="h2Opp">Muligheter — anbud verdt å forfølge</h2>
-      <p class="note" style="margin:0 0 8px" data-i18n="noteOpp">Anbud fra Vinmonopolet, rangert etter hvor lovende de er å forfølge.</p>
+      <p class="note" id="oppSummary" style="margin:2px 0 10px;font-weight:600"></p>
+      <div id="oppDigest" style="margin:0 0 10px"></div>
+      <div id="oppList"></div>
       <div class="pullbox" id="impPull">
         <div class="pullbig" data-i18n="impPullTitle">Representerer du viner?</div>
         <div class="pullbody" data-i18n="impPullBody">Legg inn porteføljen din én gang, så matcher vi hver vin mot hvert anbud automatisk — med marginregnestykket, kjellerprisen hver vin må treffe, og fristene. Hver nye lanseringsplan sjekkes mot porteføljen din, så du aldri går glipp av et anbud du kan vinne.</div>
@@ -647,42 +660,37 @@
           <button class="btn ghost" onclick="gotoTab('opplasting')" data-i18n="impPullBtn2">Last opp Excel</button>
         </div>
       </div>
-      <details class="howto" id="oppHowto" open>
+      <details class="disclose" id="oppControls">
+        <summary data-i18n="oppRefine">Filtrer, eksporter & varsle</summary>
+        <div class="disclose-body">
+          <div class="filters" id="oppFilters">
+            <button data-of="all" class="on" data-i18n="oppAll">Alle muligheter</button>
+            <button data-of="intro" data-i18n="oppIntro">Kun introduksjoner</button>
+            <button data-of="soon" data-i18n="oppSoon">Frist snart</button>
+            <button data-of="sourced" data-i18n="oppSourced" data-i18n-title="oppSourcedTip" title="Skjul muligheter som bare hviler på ubekreftede leads">Kun kildeført grunnlag</button>
+          </div>
+          <div class="dimbar" style="margin-bottom:6px">
+            <div><label data-i18n="lblGeo">Geografi</label><select id="ofCountry"><option value="" data-i18n="optAllCountries">Alle land</option></select></div>
+            <div><label data-i18n="lblCategory">Kategori</label><select id="ofMain"><option value="" data-i18n="optAllCategories">Alle kategorier</option></select></div>
+            <div style="flex:0;min-width:150px"><label>&nbsp;</label>
+              <button class="btn" id="oppExport" style="width:100%;padding:6px 10px" onclick="exportShortlist()"><span data-i18n="btnShortlistExport">Eksporter shortlist</span> <span id="shortlistCount"></span></button></div>
+            <div style="flex:0;min-width:170px"><label>&nbsp;</label>
+              <button class="btn ghost" style="width:100%;padding:6px 10px" data-i18n="btnDeadlineIcs" onclick="exportDeadlinesICS()">Fristvarsler (kalender)</button></div>
+          </div>
+        </div>
+      </details>
+      <details class="howto" id="oppHowto">
         <summary data-i18n="howtoSummary">Slik leser du et kort</summary>
         <div class="howto-body" data-i18n="howtoOpp"></div>
       </details>
-      <div class="filters" id="oppFilters">
-        <button data-of="all" class="on" data-i18n="oppAll">Alle muligheter</button>
-        <button data-of="intro" data-i18n="oppIntro">Kun introduksjoner</button>
-        <button data-of="soon" data-i18n="oppSoon">Frist snart</button>
-        <button data-of="sourced" data-i18n="oppSourced" data-i18n-title="oppSourcedTip" title="Skjul muligheter som bare hviler på ubekreftede leads">Kun kildeført grunnlag</button>
-      </div>
-      <div class="dimbar" style="margin-bottom:6px">
-        <div><label data-i18n="lblGeo">Geografi</label><select id="ofCountry"><option value="" data-i18n="optAllCountries">Alle land</option></select></div>
-        <div><label data-i18n="lblCategory">Kategori</label><select id="ofMain"><option value="" data-i18n="optAllCategories">Alle kategorier</option></select></div>
-        <div style="flex:0;min-width:150px"><label>&nbsp;</label>
-          <button class="btn" id="oppExport" style="width:100%;padding:6px 10px" onclick="exportShortlist()"><span data-i18n="btnShortlistExport">Eksporter shortlist</span> <span id="shortlistCount"></span></button></div>
-        <div style="flex:0;min-width:170px"><label>&nbsp;</label>
-          <button class="btn ghost" style="width:100%;padding:6px 10px" data-i18n="btnDeadlineIcs" onclick="exportDeadlinesICS()">Fristvarsler (kalender)</button></div>
-      </div>
-      <p class="note" id="oppSummary" style="margin:2px 0 8px;font-weight:600"></p>
-      <div id="oppDigest" style="margin:0 0 10px"></div>
-      <div id="oppList"></div>
     </div>
     <h3 class="section-div" id="browseTop" data-i18n="anbudBrowseH">Bla i alle anbud</h3>
-    <div class="intro" id="intro">
-      <button class="x" onclick="dismissIntro()" data-i18n-title="introX" title="Skjul (vises ikke igjen)" aria-label="Lukk">×</button>
-      <h2 data-i18n="introH">Slik fungerer det</h2>
-      <ol>
-        <li data-i18n="introLi1">Last opp vinene dine én gang under <b>Min portefølje</b> — eller utforsk demodataene som allerede ligger inne.</li>
-        <li data-i18n="introLi2">Under <b>Anbud</b> og <b>Marketplace</b> matches vinene automatisk mot Vinmonopolets krav, så du ser hvilke anbud du kan vinne.</li>
-        <li data-i18n="introLi3">Bruk <b>Kalkulator</b> til å sjekke at produsentprisen treffer prisbåndet — <b>FOB</b> = prisen produsenten tar fra kjeller, før frakt, avgifter og importørmargin.</li>
-      </ol>
-      <p class="foot" data-i18n="introFoot">Bytt lanseringsplan øverst til høyre. Alt kjører lokalt i nettleseren — ingen data forlater maskinen.</p>
-    </div>
     <div class="tiles" id="tiles"></div>
     <div class="card">
-      <h2 data-i18n="h2FilterDist">Filtre og fordeling</h2>
+      <h2 data-i18n="h2FilterDist">Alle anbud i planen</h2>
+      <details class="disclose" id="browseControls" style="margin:0 0 12px">
+        <summary data-i18n="browseRefine">Filtrer</summary>
+        <div class="disclose-body">
       <div class="dimbar">
         <div><label data-i18n="lblGeo">Geografi</label><select id="fCountry"><option value="" data-i18n="optAllCountries">Alle land</option></select></div>
         <div><label data-i18n="lblRegion">Distrikt/region</label><select id="fRegion"><option value="" data-i18n="optAllRegions">Alle distrikter</option></select></div>
@@ -695,6 +703,8 @@
         <div style="flex:1.4"><label data-i18n="lblText">Fritekst</label><input id="fQ" data-i18n-ph="phSpecText" placeholder="søk i spesifikasjonstekst…"></div>
         <div style="min-width:90px;flex:0"><label>&nbsp;</label><button class="btn ghost" data-i18n="btnReset" style="width:100%;padding:5px 8px" onclick="resetFilters()">Nullstill</button></div>
       </div>
+        </div>
+      </details>
       <p class="note" style="margin:4px 0 2px"><span data-i18n="noteMapClick">Klikk en stolpe eller et land på kartet for å filtrere; klikk igjen for å oppheve. </span><span id="filterCount"></span></p>
       <div class="mapwrap" id="mapWrap" style="margin:8px 0 4px">
         <svg id="mapSvg" style="width:100%;display:block;border-radius:10px"></svg>
@@ -779,6 +789,7 @@
   <section class="tab" id="tab-viner">
     <div class="card">
       <h2><span data-i18n="h2Wines">Vindatabase</span> <span class="pill" id="wineCount"></span></h2>
+      <details class="disclose" id="wineDbDetails" style="margin-top:6px"><summary data-i18n="wineDbOpen">Åpne vindatabasen — bla i alle viner</summary><div class="disclose-body">
       <div class="samplebar" data-i18n="sampleBanner"><b>Prøvedata:</b> vinene under er AI-seedede eksempler fra offentlige kilder — FOB, volum og smaksprofil er <b>estimat</b>, ikke verifisert. Ekte, kildeførte data hentes fra Vinmonopolets katalog (<code>ingest_vmp.py</code>) og fra produsentopplasting. Ikke ta tallene for god fisk ennå.</div>
       <p class="note" style="margin:0 0 10px" data-i18n="noteWinesMem">Kjører i minnet i denne økten. Eksporter for å lagre; importer JSON for å fortsette senere.</p>
       <div class="dimbar">
@@ -812,6 +823,7 @@
         <th data-sort="quality" data-i18n-title="ttQuality" title="verifiseringsstatus per felt — klikk raden for detaljer" data-i18n="thQuality">Datakvalitet</th>
       </tr></thead><tbody></tbody></table></div>
       <p class="note" data-i18n="noteWineLegend">✓ verifisert mot kilde · ◦ offentlig dokumentert (lenke ikke arkivert) · ~ estimat som venter bekreftelse · ? mangler. Klikk en rad for felt-for-felt-status. I produksjon fylles ✓ av katalogsync, registeroppslag, produsentens tech sheet/analysebevis og parts-bekreftelser med tidsstempel — og verifisering eldes: en ✓ eldre enn 12 mnd faller tilbake til ◦.</p>
+      </div></details>
     </div>
   </section>
 
@@ -955,6 +967,7 @@ const I18N = {
     roleImporterSub: 'Finn anbud å vinne og vinene som vinner dem',
     roleProducer: 'Jeg er produsent', roleProducerSub: 'Se hvilke norske anbud vinen din kan vinne',
     h2Opp: 'Muligheter — anbud verdt å forfølge',
+    oppRefine: 'Filtrer, eksporter & varsle', browseRefine: 'Filtrer',
     noteOpp: 'Anbud fra Vinmonopolet, rangert etter hvor lovende de er å forfølge.',
     howtoSummary: 'Slik leser du et kort',
     howtoOpp: '<b>Hvert kort = ett anbud</b> fra Vinmonopolet. Linja «søker … fra … · &lt;pris» sier hva de vil ha (drue, land, prisbånd). De fem tallene:<ul>' +
@@ -1010,7 +1023,7 @@ const I18N = {
     oppIntroBadge: 'introduksjon', oppRepBadge: 'representert', oppOpenNO: 'åpen i NO',
     oppNoDeadline: '—',
     h2Match: 'Match min vin — hvilke anbud kan den vinne?',
-    noteMatch: 'Ingen opplasting nødvendig. Beskriv vinen din, så ser du umiddelbart hvilke av Vinmonopolets anbud den kvalifiserer til, hvilken FOB (kjellerpris) du må treffe, og hvor mange andre viner som konkurrerer. Fyll ut hele porteføljen din senere under <b>Last opp</b> for å bli funnet automatisk.',
+    noteMatch: 'Ingen opplasting nødvendig — beskriv en vin, så ser du på sekundet hvilke anbud den kan vinne og kjellerprisen (FOB) du må treffe.',
     mwName: 'Vinnavn (valgfritt)', mwNamePh: 'f.eks. Estate Grüner Veltliner',
     mwMoreSummary: 'Flere detaljer — for et skarpere svar (drue-%, sukker, fat, årgang, flaskevekt)',
     mwBulkPre: 'Har du mange viner?', mwBulkLink: 'Importer hele porteføljen fra Excel →',
@@ -1088,7 +1101,7 @@ const I18N = {
     introLi2: 'Under <b>Anbud</b> matches vinene automatisk mot Vinmonopolets krav, med treff/bom på hvert enkelt krav, så du ser nøyaktig hvilke anbud du kan vinne.',
     introLi3: 'Bruk <b>Kalkulator</b> til å sjekke at produsentprisen treffer prisbåndet — <b>FOB</b> = prisen produsenten tar fra kjeller, før frakt, avgifter og importørmargin.',
     introFoot: 'Bytt lanseringsplan øverst til høyre. Alt kjører lokalt i nettleseren — ingen data forlater maskinen.',
-    h2FilterDist: 'Filtre og fordeling', lblGeo: 'Geografi', lblType: 'Type', lblGrape: 'Drue',
+    h2FilterDist: 'Alle anbud i planen', lblGeo: 'Geografi', lblType: 'Type', lblGrape: 'Drue',
     lblPrice: 'Prisbånd', lblSelection: 'Utvalg', lblText: 'Fritekst',
     optAllCountries: 'Alle land', optAllTypes: 'Alle typer', optAllGrapes: 'Alle druer',
     optAllPrices: 'Alle priser', optAllRanges: 'Alle utvalg', optAll: 'Alle',
@@ -1114,7 +1127,7 @@ const I18N = {
     noteMarket: '<b>Slik leser du listen:</b> Hvert anbud viser først hva Vinmonopolet ber om, deretter vinene i databasen som oppfyller kravene. Fire statuser avgjør om det er verdt å gå videre: kravene, prisen, om vinen allerede står i sortimentet, og om produsenten er åpen for import. Klikk en vinrad for klausul-for-klausul-vurderingen.',
     thCandidate: 'Kandidatvin', thAssessment: 'Vurdering',
     h2Calc: 'Prisbånd-kalkulator — fra hyllepris til påkrevd FOB (2026-satser, Norge)',
-    noteCalc: 'Fyll inn hylleprisen Vinmonopolet vil ha, så regner appen seg bakover til hvor lav <b>FOB</b> (produsentens pris fra kjeller, før frakt, avgifter og importørmargin) må være for at regnestykket skal gå opp.',
+    noteCalc: 'Fyll inn hylleprisen, så regner appen seg bakover til kjellerprisen (<b>FOB</b>, før frakt, avgifter og importørmargin) du må treffe.',
     lblRetail: 'Hyllepris (kr)', lblAbv: 'Alkohol (%)', lblVol: 'Volum (liter)', lblPack: 'Emballasje',
     lblMargin: 'Importørmargin (%)', lblFreight: 'Frakt+håndtering (kr/fl)', lblEur: 'NOK per EUR',
     lblCur2: 'Valuta 2', lblCur2Rate: 'NOK per valuta 2',
@@ -1122,7 +1135,7 @@ const I18N = {
     outFobNokL: 'Påkrevd FOB, NOK', outFobEurL: 'FOB i euro (€)', outVerdictL: 'Vurdering',
     thComponent: 'Komponent', thKr: 'kr', thShare: 'Andel',
     calcFooter: 'Alkoholavgift 5,41 kr/vol%/l (4,7–22 %) · avanse 10,82 kr/l + 21 % (knekk 133,70, tak 250) · mva 25 %. Verifisert mot Vinmonopolets priseksempel (199,90 kr → grossist 80,67 kr).',
-    h2Wines: 'Vindatabase', noteWinesMem: 'Kjører i minnet i denne økten. Eksporter for å lagre; importer JSON for å fortsette senere.',
+    h2Wines: 'Vindatabase', wineDbOpen: 'Åpne vindatabasen — bla i alle viner', noteWinesMem: 'Kjører i minnet i denne økten. Eksporter for å lagre; importer JSON for å fortsette senere.',
     sampleBanner: '<b>Prøve- og lead-data:</b> de merkede vinene er enten AI-seedede eksempler (de opprinnelige) eller <b>ekte leads</b> fra åpne nordiske monopolkataloger (Systembolaget) — druer, sertifiseringer, sukker og region er ekte offentlige data, men <b>uverifisert for NO</b> og venter på at produsenten bekrefter. Produsent-eide tall (FOB, volum) er blanke til produsenten fyller dem inn. Representasjon i NO avgjøres av Vinmonopolet-katalogen (<code>ingest_vmp.py</code>).',
     sampleBannerShort: '<b>Prøve/lead:</b> merkede viner er AI-eksempler eller ekte, men uverifiserte leads fra nordiske monopolkataloger. FOB/volum er blanke til produsenten bekrefter.',
     sampleBadge: 'lead', sampleBadgeTitle: 'Seedet lead — ekte offentlige data der de finnes, men uverifisert for NO og venter på produsentbekreftelse',
@@ -1147,7 +1160,7 @@ const I18N = {
     portMatchPre: 'Anbud i ', portMatchPost: ' som porteføljen din kan vinne',
     thTender: 'Anbud', thDeadline: 'Frist', thYourWine: 'Din vin', thClauses: 'Klausuler', thPrice: 'Pris',
     h2Kat: 'Katalog — produsenter og representasjon per marked',
-    noteKat: 'Avledet av vinregistrene. I produksjon bygges denne automatisk fra monopolkatalogene (grossist er oppgitt på hvert produkt — offentlige data) og korrigeres av partene selv. «Åpen» = urepresentert og synlig som introduksjonsmulighet.',
+    noteKat: 'Produsenter og hvem som representerer dem i hvert marked. «Åpen» = urepresentert — en ledig introduksjonsmulighet.',
     katAll: 'Alle', katOpenNO: 'Åpne i Norge', katTakenNO: 'Representert i Norge',
     lblLand: 'Land', phProducerName: 'produsentnavn…',
     thWinesCount: 'Viner', thNO: 'Norge', thSE: 'Sverige', thFI: 'Finland',
@@ -1178,9 +1191,9 @@ const I18N = {
     tabHelp: {
       muligheter: 'For importører: anbud rangert etter mulighet. Åpne et anbud for de best matchede vinene, økonomien og status i Norge — stjernemerk og eksporter dem du vil forfølge.',
       minvin: 'For produsenter: beskriv vinen din og se umiddelbart hvilke norske anbud den kan vinne, hvilken FOB du må treffe, og hvor mange som konkurrerer. Ingen opplasting nødvendig.',
-      anbud: 'Anbudene rangert etter mulighet, med vinene som møter kravene. Trykk en vin for treff/bom på hvert krav. Bla i alle anbud lenger ned — filtrer på land, drue, type og prisbånd.',
-      kalk: 'Regn deg bakover fra hylleprisen til hvor lav produsentprisen (FOB) må være — med alle norske avgifter og marginer for 2026.',
-      viner: 'Beskriv en vin og se hvilke anbud den kan vinne (treff/bom per krav), og bla i hele vindatabasen. Importer/eksporter for å jobbe med dine egne data.',
+      anbud: 'Anbud rangert etter mulighet — åpne et for vinene som møter kravene.',
+      kalk: 'Regn deg bakover fra hylleprisen til kjellerprisen (FOB) du må treffe.',
+      viner: 'Beskriv en vin og se på sekundet hvilke anbud den kan vinne.',
       portefolje: 'Last opp dine egne viner én gang — hver lanseringsplan matches automatisk mot porteføljen din.',
       katalog: 'Produsenter og hvem som representerer dem i hvert marked. «Åpen» = urepresentert, altså en ledig introduksjonsmulighet.',
       analyse: 'Mønstre på tvers av alle innlastede planer — hvilke opprinnelser og druer som går igjen, og hvordan prisbåndene beveger seg.',
@@ -1287,6 +1300,7 @@ const I18N = {
     roleImporterSub: 'Find tenders to win and the wines that win them',
     roleProducer: "I'm a producer", roleProducerSub: 'See which Norwegian tenders your wine can win',
     h2Opp: 'Opportunities — tenders worth chasing',
+    oppRefine: 'Filter, export & alerts', browseRefine: 'Filter',
     noteOpp: 'Tenders from Vinmonopolet, ranked by how promising they are to chase.',
     howtoSummary: 'How to read a card',
     howtoOpp: '<b>Each card = one tender</b> from Vinmonopolet. The "seeks … from … · &lt;price" line is what they want (grape, country, price band). The five numbers:<ul>' +
@@ -1342,7 +1356,7 @@ const I18N = {
     oppIntroBadge: 'introduction', oppRepBadge: 'represented', oppOpenNO: 'open in NO',
     oppNoDeadline: '—',
     h2Match: 'Match my wine — which tenders can it win?',
-    noteMatch: 'No upload needed. Describe your wine and instantly see which Vinmonopolet tenders it qualifies for, the FOB (ex-cellar price) you must hit, and how many other wines compete. Fill in your full portfolio later under <b>Upload</b> to be found automatically.',
+    noteMatch: 'No upload needed — describe a wine and instantly see which tenders it can win and the ex-cellar price (FOB) you must hit.',
     mwName: 'Wine name (optional)', mwNamePh: 'e.g. Estate Grüner Veltliner',
     mwMoreSummary: 'More detail — for a sharper answer (grape %, sugar, oak, vintage, bottle weight)',
     mwBulkPre: 'Have many wines?', mwBulkLink: 'Import your whole portfolio from Excel →',
@@ -1420,7 +1434,7 @@ const I18N = {
     introLi2: "Under <b>Tenders</b> your wines are matched automatically against Vinmonopolet's requirements, hit-or-miss on every single criterion, so you see exactly which tenders you can win.",
     introLi3: 'Use the <b>Calculator</b> to check the producer price hits the price band — <b>FOB</b> = the price the producer charges ex-cellar, before freight, duties and importer margin.',
     introFoot: 'Switch launch plan at the top right. Everything runs locally in your browser — no data leaves your machine.',
-    h2FilterDist: 'Filters and distribution', lblGeo: 'Geography', lblType: 'Type', lblGrape: 'Grape',
+    h2FilterDist: 'All tenders in the plan', lblGeo: 'Geography', lblType: 'Type', lblGrape: 'Grape',
     lblPrice: 'Price band', lblSelection: 'Range', lblText: 'Free text',
     optAllCountries: 'All countries', optAllTypes: 'All types', optAllGrapes: 'All grapes',
     optAllPrices: 'All prices', optAllRanges: 'All ranges', optAll: 'All',
@@ -1446,7 +1460,7 @@ const I18N = {
     noteMarket: "<b>How to read this:</b> Each tender first shows what Vinmonopolet asks for, then the wines in the database that meet it. Four statuses decide whether it's worth pursuing: the requirements, the price, whether the wine is already in the range, and whether the producer is open to import. Click a wine row for the clause-by-clause assessment.",
     thCandidate: 'Candidate wine', thAssessment: 'Assessment',
     h2Calc: 'Price-band calculator — from shelf price to required FOB (2026 rates, Norway)',
-    noteCalc: 'Enter the shelf price Vinmonopolet wants, and the app works backwards to how low the <b>FOB</b> (the producer\'s ex-cellar price, before freight, duties and importer margin) must be for the maths to work.',
+    noteCalc: 'Enter the shelf price; the app works backwards to the ex-cellar price (<b>FOB</b>, before freight, duties and importer margin) you must hit.',
     lblRetail: 'Shelf price (kr)', lblAbv: 'Alcohol (%)', lblVol: 'Volume (litres)', lblPack: 'Packaging',
     lblMargin: 'Importer margin (%)', lblFreight: 'Freight+handling (kr/btl)', lblEur: 'NOK per EUR',
     lblCur2: 'Currency 2', lblCur2Rate: 'NOK per currency 2',
@@ -1454,7 +1468,7 @@ const I18N = {
     outFobNokL: 'Required FOB, NOK', outFobEurL: 'FOB in euros (€)', outVerdictL: 'Verdict',
     thComponent: 'Component', thKr: 'kr', thShare: 'Share',
     calcFooter: "Alcohol duty 5.41 kr/vol%/l (4.7–22 %) · markup 10.82 kr/l + 21 % (knee 133.70, cap 250) · VAT 25 %. Verified against Vinmonopolet's price example (199.90 kr → wholesale 80.67 kr).",
-    h2Wines: 'Wine database', noteWinesMem: 'Runs in memory for this session. Export to save; import JSON to continue later.',
+    h2Wines: 'Wine database', wineDbOpen: 'Open the wine database — browse all wines', noteWinesMem: 'Runs in memory for this session. Export to save; import JSON to continue later.',
     sampleBanner: '<b>Sample & lead data:</b> the badged wines are either AI-seeded examples (the originals) or <b>real leads</b> from open Nordic monopoly catalogs (Systembolaget) — grapes, certifications, sugar and region are real public data, but <b>unverified for NO</b> and pending producer confirmation. Producer-owned figures (FOB, volume) are left blank until the producer fills them in. NO representation is decided by the Vinmonopolet catalog (<code>ingest_vmp.py</code>).',
     sampleBannerShort: '<b>Sample/lead:</b> badged wines are AI examples or real-but-unverified leads from Nordic monopoly catalogs. FOB/volume left blank pending producer confirmation.',
     sampleBadge: 'lead', sampleBadgeTitle: 'Seeded lead — real public data where available, but unverified for NO and pending producer confirmation',
@@ -1479,7 +1493,7 @@ const I18N = {
     portMatchPre: 'Tenders in ', portMatchPost: ' your portfolio can win',
     thTender: 'Tender', thDeadline: 'Deadline', thYourWine: 'Your wine', thClauses: 'Clauses', thPrice: 'Price',
     h2Kat: 'Directory — producers and representation per market',
-    noteKat: 'Derived from the wine records. In production this is built automatically from the monopoly catalogs (the wholesaler is stated on each product — public data) and corrected by the parties themselves. "Open" = unrepresented and visible as an introduction opportunity.',
+    noteKat: 'Producers and who represents them in each market. "Open" = unrepresented — an available introduction opportunity.',
     katAll: 'All', katOpenNO: 'Open in Norway', katTakenNO: 'Represented in Norway',
     lblLand: 'Country', phProducerName: 'producer name…',
     thWinesCount: 'Wines', thNO: 'Norway', thSE: 'Sweden', thFI: 'Finland',
@@ -1510,9 +1524,9 @@ const I18N = {
     tabHelp: {
       muligheter: 'For importers: tenders ranked by opportunity. Open a tender for the best-matched wines, the economics and status in Norway — star and export the ones you want to chase.',
       minvin: 'For producers: describe your wine and instantly see which Norwegian tenders it can win, the FOB you must hit, and how many others compete. No upload needed.',
-      anbud: 'Tenders ranked by opportunity, with the wines that meet each one. Tap a wine for hit/miss on every requirement. Browse all tenders further down — filter by country, grape, type and price band.',
-      kalk: 'Work backwards from the shelf price to how low the producer price (FOB) must be — with all Norwegian duties and margins for 2026.',
-      viner: 'Describe a wine and see which tenders it can win (hit/miss per requirement), and browse the whole wine database. Import/export to work with your own data.',
+      anbud: 'Tenders ranked by opportunity — open one for the wines that meet its requirements.',
+      kalk: 'Work backwards from the shelf price to the ex-cellar price (FOB) you must hit.',
+      viner: 'Describe a wine and see, in seconds, which tenders it can win.',
       portefolje: 'Upload your own wines once — every launch plan is matched against your portfolio automatically.',
       katalog: 'Producers and who represents them in each market. "Open" = unrepresented, i.e. an available introduction opportunity.',
       analyse: 'Patterns across all loaded plans — which origins and grapes recur, and how the price bands move.',
@@ -3646,13 +3660,10 @@ const setTabHelp = t => {
   el.style.display = heroUp ? 'none' : '';
 };
 function dismissIntro() {
-  $('intro').style.display = 'none';
+  const el = $('intro'); if (el) el.style.display = 'none';
   try { localStorage.setItem('ti_intro_dismissed', '1'); } catch (e) {}
 }
 function initOrientation() {
-  let dismissed = false;
-  try { dismissed = localStorage.getItem('ti_intro_dismissed') === '1'; } catch (e) {}
-  if (dismissed) $('intro').style.display = 'none';
   setTabHelp('anbud');
 }
 function onTabShown(t) {
