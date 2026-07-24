@@ -1024,6 +1024,9 @@ const I18N = {
     mwLeadPre: 'Eller test en ekte lead fra databasen: ',
     mwExampleHint: '↑ Eksempel — endre et hvilket som helst felt for å beskrive din egen vin.',
     mwAnyCountry: 'Alle land (uspesifisert)', mwAnyColour: 'Alle farger',
+    mwAnyHint: 'Feltene står på «alle» — beskriv vinen din for å snevre inn.',
+    mwTryExample: 'Se et eksempel →',
+    mwAnyResult: n => `${n} anbud stiller ingen krav til drue eller sertifisering — beskriv vinen din over for å se resten.`,
     cmpH: 'Fullfør vinen — gjør «?» om til ✓',
     cmpMeter: 'profil fullført',
     cmpSub: (t, u) => `${u} ${u === 1 ? 'kriterium' : 'kriterier'} på tvers av ${t} ${t === 1 ? 'anbud' : 'anbud'} er fortsatt ubekreftet (?). Bare du kan bekrefte dem — hvert felt gjør et «?» om til et sikkert ✓ eller ✗.`,
@@ -1350,6 +1353,9 @@ const I18N = {
     mwLeadPre: 'Or test a real lead from the database: ',
     mwExampleHint: '↑ Example — edit any field to describe your own wine.',
     mwAnyCountry: 'Any country (unspecified)', mwAnyColour: 'Any colour',
+    mwAnyHint: "Fields are set to “any” — describe your wine to narrow it down.",
+    mwTryExample: 'See a worked example →',
+    mwAnyResult: n => `${n} tenders ask for no specific grape or certification — describe your wine above to see the rest.`,
     cmpH: 'Complete your wine — turn “?” into ✓',
     cmpMeter: 'profile complete',
     cmpSub: (t, u) => `${u} ${u === 1 ? 'criterion' : 'criteria'} across ${t} ${t === 1 ? 'tender' : 'tenders'} ${u === 1 ? 'is' : 'are'} still unconfirmed (?). Only you can confirm them — each field turns a “?” into a firm ✓ or ✗.`,
@@ -3970,9 +3976,13 @@ function initMatchWine() {
   const leads = good.length ? good : cand.slice(0, 4);
   window._mwLeads = leads;
   $('mwLeadPick').innerHTML = leads.length ? L.mwLeadPre + leads.map((w, i) =>
-    `<button class="btn ghost" style="padding:3px 9px;margin:2px 4px 0 0;font-size:12px" onclick="fillLead(${i})">${esc(w.country)} · ${esc(dispGrape(Object.keys(w.grapes)[0]))}</button>`).join('') : '';
-  // show a worked example on first open so the value is immediate; never overwrite the user's own input later
-  if (!MW_DEMOED) { MW_DEMOED = true; if (leads.length) fillLead(0); else demoQuery(); }
+    `<button class="btn ghost" style="padding:3px 9px;margin:2px 4px 0 0;font-size:12px" onclick="fillLead(${i})">${esc(w.country)} · ${esc(dispGrape(Object.keys(w.grapes)[0]))}</button>`).join('')
+    : `<span class="note" style="color:var(--muted);display:inline-block;margin-top:2px">${L.mwAnyHint} <a href="#" onclick="demoQuery();return false">${L.mwTryExample}</a></span>`;
+  // The form defaults to Any/all (the first option of each dropdown) — it should describe the
+  // producer's own wine, not assert one they never entered. On first open we still show an instant
+  // result from those neutral defaults (the tenders any wine with no stated grape/cert can win),
+  // which the producer then narrows by describing their wine. A worked example is one click away.
+  if (!MW_DEMOED) { MW_DEMOED = true; if (leads.length) fillLead(0); else runMatchWine(); }
 }
 // With an empty wine database there are no seed leads to demo — but the matcher needs no
 // database at all: it matches a *described* wine against the real tenders. So we prefill an
@@ -4096,7 +4106,11 @@ function runMatchWine() {
     [bestFob ? fmt(bestFob, 1) : '–', L.mwTileBest],
   ].map(([v, l]) => `<div class="tile"><div class="v">${v}</div><div class="l">${l}</div></div>`).join('');
   if (!hits.length) { $('mwResults').innerHTML = `<p class="note">${L.mwNoMatch}</p>`; $('mwCta').innerHTML = ''; return; }
-  $('mwResults').innerHTML = hits.map(h => {
+  // When nothing is described yet (all fields on "any"), be honest that this is the unconstrained
+  // set — the tenders with no grape/cert requirement — not a claim about a specific wine.
+  const fullyAny = !w.country && !w.color && !Object.keys(w.grapes).length && !w.certs.length;
+  const anyNote = fullyAny ? `<p class="note" style="margin:0 0 10px;color:var(--text-secondary)">${L.mwAnyResult(hits.length)}</p>` : '';
+  $('mwResults').innerHTML = anyNote + hits.map(h => {
     const s = h.spec, x = h.ev;
     const need = h.fob ? `<span class="chip hi">${L.mwNeedFob(fmt(h.fob.eur, 1))}</span>` : '';
     const pf = x.priceOk === true ? `<span class="chip hi">${L.mwPriceFits}</span>`
