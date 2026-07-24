@@ -5,38 +5,42 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Tender Intelligence</title>
 <style>
+  /* Monochrome system: one ink accent (inverts by theme), neutrals with a whisper of warmth,
+     and a small desaturated semantic set for status only — never used as the accent. */
   .viz-root {
     color-scheme: light;
-    --page: #f7f3ec; --surface-1: #fffdf8;
-    --text-primary: #211c15; --text-secondary: #5b5348;
-    --muted: #948a7c; --grid: #eae3d7; --baseline: #d6cdbd;
-    --border: rgba(60,45,30,0.12); --good-text: #2c6b3f;
-    --accent: #8c2f44; --accent-soft: #a8506400;
-    --s1: #2a78d6; --s2: #008300; --s3: #e87ba4;
-    --s4: #eda100; --s5: #1baf7a; --s6: #eb6834;
-    --warn: #fab219; --crit: #d03b3b; --goodst: #0ca30c;
+    --page: #f4f4f3; --surface-1: #ffffff;
+    --text-primary: #17171a; --text-secondary: #57575d;
+    --muted: #93939a; --grid: #ececeb; --baseline: #e1e1df;
+    --border: rgba(20,20,25,0.11); --good-text: #3f7a52;
+    --accent: #17171a; --on-accent: #ffffff; --accent-soft: #17171a00;
+    --s1: #26262b; --s2: #3f7a52; --s3: #6b6b73;
+    --s4: #977523; --s5: #3f7a52; --s6: #57575d;
+    --warn: #977523; --crit: #b04a45; --goodst: #3f7a52;
   }
   @media (prefers-color-scheme: dark) {
     :root:where(:not([data-theme="light"])) .viz-root {
       color-scheme: dark;
-      --page: #141110; --surface-1: #1e1a17;
-      --text-primary: #f4efe8; --text-secondary: #c6bcae;
-      --muted: #8f867a; --grid: #2e2924; --baseline: #3d362f;
-      --border: rgba(255,240,220,0.12); --good-text: #7fbf8a;
-      --accent: #c9556e;
-      --s1: #3987e5; --s2: #008300; --s3: #d55181;
-      --s4: #c98500; --s5: #199e70; --s6: #d95926;
+      --page: #111113; --surface-1: #1a1a1d;
+      --text-primary: #f3f3f4; --text-secondary: #b7b7bd;
+      --muted: #83838b; --grid: #29292d; --baseline: #37373c;
+      --border: rgba(255,255,255,0.11); --good-text: #7dbb8b;
+      --accent: #f3f3f4; --on-accent: #17171a;
+      --s1: #d6d6da; --s2: #7dbb8b; --s3: #9a9aa2;
+      --s4: #cbab5e; --s5: #7dbb8b; --s6: #b7b7bd;
+      --warn: #cbab5e; --crit: #d69590; --goodst: #7dbb8b;
     }
   }
   :root[data-theme="dark"] .viz-root {
     color-scheme: dark;
-    --page: #141110; --surface-1: #1e1a17;
-    --text-primary: #f4efe8; --text-secondary: #c6bcae;
-    --muted: #8f867a; --grid: #2e2924; --baseline: #3d362f;
-    --border: rgba(255,240,220,0.12); --good-text: #7fbf8a;
-    --accent: #c9556e;
-    --s1: #3987e5; --s2: #008300; --s3: #d55181;
-    --s4: #c98500; --s5: #199e70; --s6: #d95926;
+    --page: #111113; --surface-1: #1a1a1d;
+    --text-primary: #f3f3f4; --text-secondary: #b7b7bd;
+    --muted: #83838b; --grid: #29292d; --baseline: #37373c;
+    --border: rgba(255,255,255,0.11); --good-text: #7dbb8b;
+    --accent: #f3f3f4; --on-accent: #17171a;
+    --s1: #d6d6da; --s2: #7dbb8b; --s3: #9a9aa2;
+    --s4: #cbab5e; --s5: #7dbb8b; --s6: #b7b7bd;
+    --warn: #cbab5e; --crit: #d69590; --goodst: #7dbb8b;
   }
   * { box-sizing: border-box; }
   body.viz-root { margin: 0; background: var(--page); color: var(--text-primary);
@@ -47,7 +51,7 @@
   nav { display: flex; gap: 6px; flex-wrap: wrap; margin: 14px 0 18px; border-bottom: 1px solid var(--baseline); padding-bottom: 10px; }
   nav button { font: inherit; font-size: 13.5px; padding: 6px 14px; border-radius: 999px;
     border: 1px solid var(--border); background: transparent; color: var(--text-secondary); cursor: pointer; }
-  nav button.on { background: var(--s1); border-color: var(--s1); color: #fff; }
+  nav button.on { background: var(--s1); border-color: var(--s1); color: var(--on-accent); }
   .tab { display: none; } .tab.on { display: block; }
   .mapwrap { position: relative; overflow: hidden; border-radius: 10px; touch-action: none; }
   .mapwrap svg { will-change: transform; }
@@ -75,18 +79,25 @@
   .critdet > summary::before { content: '▸ '; }
   .critdet[open] > summary::before { content: '▾ '; }
   .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px,1fr)); gap: 10px; margin: 0 0 16px; }
-  .tile { background: var(--surface-1); border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; }
-  .tile .v { font-size: 24px; font-weight: 650; }
-  .tile .l { color: var(--muted); font-size: 12px; }
-  .tile .sub { color: var(--muted); font-size: 10.5px; margin-top: 3px; letter-spacing: .01em; }
-  .tile.accent { border-color: color-mix(in oklab, var(--s1) 45%, var(--border)); background: color-mix(in oklab, var(--s1) 6%, var(--surface-1)); }
-  .tile.accent .v { color: var(--s1); }
-  .tile.urgent { border-color: color-mix(in oklab, var(--warn) 60%, var(--border)); background: color-mix(in oklab, var(--warn) 10%, var(--surface-1)); }
-  .chip.urg { background: color-mix(in oklab, var(--warn) 32%, transparent); color: var(--text-primary); font-weight: 700; }
-  .chip.urg.hot { background: color-mix(in oklab, var(--warn) 60%, transparent); }
-  .chip.recur { min-width: 0; background: color-mix(in oklab, var(--s1) 13%, var(--grid)); color: var(--s1);
+  .tile { position: relative; background: var(--surface-1); border: 1px solid var(--border);
+    border-radius: 12px; padding: 14px 15px; text-align: left; font: inherit; color: inherit; }
+  .tile .v { display: block; font-size: 27px; font-weight: 640; line-height: 1.05; }
+  .tile .l { display: block; color: var(--text-secondary); font-size: 11px; letter-spacing: .04em; text-transform: uppercase; margin-top: 5px; }
+  .tile .sub { display: block; color: var(--muted); font-size: 10.5px; margin-top: 4px; letter-spacing: .01em; text-transform: none; }
+  /* Every stat is a doorway to its detail — tiles that navigate look and behave like buttons. */
+  button.tile { display: block; width: 100%; cursor: pointer; transition: border-color .14s, transform .06s, box-shadow .14s; }
+  button.tile::after { content: "↗"; position: absolute; top: 11px; right: 12px; font-size: 13px;
+    color: var(--muted); opacity: 0; transition: opacity .14s, transform .14s; }
+  button.tile:hover { border-color: var(--accent); transform: translateY(-1px); box-shadow: 0 6px 20px -12px color-mix(in oklab, var(--accent) 70%, transparent); }
+  button.tile:hover::after { opacity: .7; transform: translate(1px, -1px); }
+  button.tile:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .tile.accent { border-color: color-mix(in oklab, var(--accent) 22%, var(--border)); }
+  .tile.urgent .v { color: var(--warn); }
+  .chip.urg { background: color-mix(in oklab, var(--warn) 22%, transparent); color: var(--text-primary); font-weight: 700; }
+  .chip.urg.hot { background: color-mix(in oklab, var(--warn) 42%, transparent); }
+  .chip.recur { min-width: 0; background: var(--grid); color: var(--text-secondary);
     font-weight: 650; letter-spacing: .01em; }
-  .recur-note { color: var(--s1) !important; font-weight: 600; }
+  .recur-note { color: var(--text-secondary) !important; font-weight: 600; }
   .recur-row { display: grid; grid-template-columns: minmax(150px, 1.4fr) minmax(90px, 1fr) auto; gap: 10px 14px;
     align-items: center; padding: 8px 2px; border-bottom: 1px solid var(--baseline); }
   .recur-row:last-child { border-bottom: none; }
@@ -108,7 +119,7 @@
     padding: 14px 16px; background: color-mix(in oklab, var(--s1) 5%, var(--surface-1)); }
   .complete-top { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
   .complete-h { font-weight: 700; font-size: 15px; color: var(--text-primary); }
-  .cmeter .cmeter-v { font-family: Georgia, 'Iowan Old Style', serif; font-size: 20px; font-weight: 600; color: var(--s1); }
+  .cmeter .cmeter-v { font-size: 20px; font-weight: 650; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; color: var(--text-primary); }
   .cmeter .cmeter-l { font-size: 11px; color: var(--muted); }
   .cbar { height: 7px; border-radius: 999px; background: var(--grid); overflow: hidden; margin: 9px 0 10px; }
   .cbar i { display: block; height: 100%; transition: width .45s cubic-bezier(.4, 0, .2, 1);
@@ -125,7 +136,7 @@
   .filters { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
   .filters button { font: inherit; font-size: 13px; padding: 5px 12px; border-radius: 999px;
     border: 1px solid var(--border); background: transparent; color: var(--text-secondary); cursor: pointer; }
-  .filters button.on { background: var(--s1); border-color: var(--s1); color: #fff; }
+  .filters button.on { background: var(--s1); border-color: var(--s1); color: var(--on-accent); }
   table { width: 100%; border-collapse: collapse; font-size: 13px; }
   th { text-align: left; color: var(--muted); font-weight: 500; padding: 6px 8px; border-bottom: 1px solid var(--baseline); white-space: nowrap; }
   td { padding: 7px 8px; border-bottom: 1px solid var(--grid); vertical-align: top; }
@@ -160,8 +171,8 @@
     padding: 6px 10px; font-size: 12.5px; box-shadow: 0 4px 14px rgba(0,0,0,.18); }
   .note { color: var(--muted); font-size: 12px; margin-top: 8px; }
   .btn { display: inline-block; font: inherit; font-size: 13.5px; padding: 8px 16px; border-radius: 9px;
-    border: 1px solid var(--s1); background: var(--s1); color: #fff; cursor: pointer; text-decoration: none; }
-  .btn.ghost { background: transparent; color: var(--s1); }
+    border: 1px solid var(--accent); background: var(--accent); color: var(--on-accent); cursor: pointer; text-decoration: none; }
+  .btn.ghost { background: transparent; color: var(--accent); }
   .drop { border: 2px dashed var(--baseline); border-radius: 12px; padding: 22px; text-align: center;
     color: var(--text-secondary); margin: 10px 0; }
   .drop.over { border-color: var(--s1); background: color-mix(in oklab, var(--s1) 6%, transparent); }
@@ -180,17 +191,17 @@
   .minibar i { position: absolute; left: 0; top: 0; bottom: 0; background: var(--s1); border-radius: 2px; }
   .pill { font-size: 11.5px; color: var(--muted); border: 1px solid var(--grid); border-radius: 999px; padding: 2px 8px; margin-left: 8px; vertical-align: middle; }
   footer { color: var(--muted); font-size: 12px; margin-top: 8px; }
-  /* ---- visual identity: warm minimalism, serif display, burgundy accent ---- */
-  h1, h2, h3 { font-family: Georgia, 'Iowan Old Style', 'Palatino Linotype', serif; font-weight: 600; letter-spacing: .2px; }
-  header h1 { font-size: 27px; }
+  /* ---- visual identity: monochrome minimalism, sans display, data-as-hero ---- */
+  h1, h2, h3 { font-weight: 650; letter-spacing: -0.014em; text-wrap: balance; }
+  header h1 { font-size: 25px; letter-spacing: -0.02em; }
   header p { font-size: 14.5px; }
-  .tile .v { font-family: Georgia, 'Iowan Old Style', serif; font-weight: 600; }
-  .card { border-radius: 14px; padding: 18px 20px;
-    box-shadow: 0 1px 2px rgba(45,28,12,.04), 0 12px 30px -22px rgba(70,45,25,.30); }
+  .tile .v { font-weight: 640; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+  .card { border-radius: 14px; padding: 20px 22px;
+    box-shadow: 0 1px 2px rgba(20,20,25,.03); }
   .tile { border-radius: 12px; }
   nav { border-bottom: 1px solid var(--baseline); }
   nav button { padding: 7px 16px; }
-  nav button.on, .filters button.on { background: var(--accent); border-color: var(--accent); color: #fff; }
+  nav button.on, .filters button.on { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
   .btn { background: var(--accent); border-color: var(--accent); }
   .btn.ghost { background: transparent; color: var(--accent); }
   .drop.over { border-color: var(--accent); background: color-mix(in oklab, var(--accent) 6%, transparent); }
@@ -226,24 +237,29 @@
   nav { align-items: center; }
   nav button.lead-tab { font-weight: 700; font-size: 14.5px; padding: 8px 18px;
     border-color: color-mix(in oklab, var(--accent, var(--s1)) 45%, var(--border)); color: var(--accent, var(--s1)); }
-  nav button.lead-tab.on { background: var(--accent, var(--s1)); border-color: var(--accent, var(--s1)); color: #fff; }
+  nav button.lead-tab.on { background: var(--accent, var(--s1)); border-color: var(--accent, var(--s1)); color: var(--on-accent); }
   nav button.tool-tab { font-size: 12.5px; padding: 5px 12px; color: var(--muted); }
   nav .nav-lbl { align-self: center; font-size: 10px; font-weight: 700; letter-spacing: .06em;
     text-transform: uppercase; color: var(--muted); user-select: none; }
   nav .nav-sep { margin-left: 6px; padding-left: 12px; border-left: 1px solid var(--border); }
-  .hero { position: relative; border: 1px solid color-mix(in oklab, var(--s1) 26%, var(--border));
-    background: linear-gradient(135deg, color-mix(in oklab, var(--s1) 9%, var(--surface-1)), var(--surface-1) 62%);
-    border-radius: 14px; padding: 20px 22px; margin: 0 0 16px; }
+  .hero { position: relative; border: 1px solid var(--border);
+    background: linear-gradient(180deg, color-mix(in oklab, var(--accent) 3%, var(--surface-1)), var(--surface-1) 70%);
+    border-radius: 16px; padding: 26px 26px 22px; margin: 0 0 16px; }
   .hero-top { display: flex; gap: 22px; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; }
   .hero-copy { flex: 1; min-width: 280px; }
-  .hero-h { font-family: Georgia, 'Iowan Old Style', serif; font-size: 23px; line-height: 1.18;
-    margin: 0 0 8px; color: var(--text-primary); max-width: 30ch; }
+  .hero-h { font-size: 25px; line-height: 1.12; letter-spacing: -0.025em; font-weight: 680;
+    margin: 0 0 10px; color: var(--text-primary); max-width: 20ch; text-wrap: balance; }
   .hero-sub { font-size: 13.5px; line-height: 1.5; color: var(--text-secondary); margin: 0; max-width: 56ch; }
   .hero-pulse { display: flex; gap: 18px; flex-wrap: wrap; align-content: flex-start; }
   .hpstat { min-width: 62px; }
-  .hpstat .hpv { font-family: Georgia, 'Iowan Old Style', serif; font-size: 26px; font-weight: 600; line-height: 1; color: var(--s1); }
-  .hpstat.u .hpv { color: var(--text-primary); }
-  .hpstat .hpl { font-size: 10px; color: var(--muted); margin-top: 5px; letter-spacing: .03em; text-transform: uppercase; }
+  .hpstat .hpv { display: block; font-size: 27px; font-weight: 650; line-height: 1; letter-spacing: -0.025em;
+    font-variant-numeric: tabular-nums; color: var(--text-primary); }
+  .hpstat.u .hpv { color: var(--warn); }
+  .hpstat .hpl { display: block; font-size: 10px; color: var(--muted); margin-top: 6px; letter-spacing: .05em; text-transform: uppercase; }
+  button.hpstat { background: none; border: none; padding: 0; font: inherit; text-align: left; cursor: pointer; }
+  button.hpstat .hpv { transition: color .12s; }
+  button.hpstat:hover .hpv { text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 2px; }
+  button.hpstat:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
   .hero-choices { display: flex; gap: 12px; margin-top: 18px; flex-wrap: wrap; }
   .hero-card { position: relative; flex: 1; min-width: 240px; text-align: left; cursor: pointer;
     border-radius: 11px; border: 1px solid var(--border); background: var(--surface-1);
@@ -345,7 +361,7 @@
     border: 1px solid var(--border); background: var(--surface-1); font-size: 12.5px; cursor: pointer;
     color: var(--text-secondary); user-select: none; transition: border-color .12s, background .12s, color .12s; }
   .chiptoggle input { position: absolute; opacity: 0; pointer-events: none; }
-  .chiptoggle:has(input:checked) { border-color: var(--accent); color: #fff;
+  .chiptoggle:has(input:checked) { border-color: var(--accent); color: var(--on-accent);
     background: var(--accent); font-weight: 600; }
   .fieldlabel { display: block; font-size: 11.5px; color: var(--muted); margin-bottom: 3px; }
   /* "how to read this" plain-language key */
@@ -1167,6 +1183,7 @@ const I18N = {
     tileLive: 'aktive anbud', tileLiveSub: 'ekte krav fra Vinmonopolet',
     tileCountries: 'land det etterspørres fra', tileClosing: 'med frist innen 45 dager',
     tileNearest: 'til neste tilbudsfrist', tileDays: n => n === 0 ? 'i dag' : n === 1 ? '1 dag' : `${n} dager`,
+    tileGo: 'Vis detaljene', anaPlanGo: 'Bytt til denne planen',
     recurTip: (p, t) => `Gjentakende etterspørsel: samme opprinnelse × stil × drue er etterspurt i ${p} av ${t} innlastede planer. Varig etterspørsel, ikke et engangsanbud.`,
     h2Recur: 'Gjentakende etterspørsel — det Vinmonopolet ber om igjen og igjen',
     recurT1: 'gjentakende profiler', recurT2: n => `i alle ${n} planer`, recurT3: 'innlastede planer',
@@ -1496,6 +1513,7 @@ const I18N = {
     tileLive: 'live tenders', tileLiveSub: 'real Vinmonopolet requirements',
     tileCountries: 'countries being sourced', tileClosing: 'closing within 45 days',
     tileNearest: 'to the next deadline', tileDays: n => n === 0 ? 'today' : n === 1 ? '1 day' : `${n} days`,
+    tileGo: 'Show the details', anaPlanGo: 'Switch to this plan',
     recurTip: (p, t) => `Recurring demand: the same origin × style × grape has been requested in ${p} of ${t} loaded plans. Durable demand, not a one-off tender.`,
     h2Recur: 'Recurring demand — what Vinmonopolet asks for again and again',
     recurT1: 'recurring profiles', recurT2: n => `in all ${n} plans`, recurT3: 'loaded plans',
@@ -2439,7 +2457,7 @@ function drawGeoMap(svgId, rawCounts, activeRaw, onToggle) {
       <circle cx="${n.x}" cy="${n.y}" r="${n.r}" fill="${dimmed ? 'var(--baseline)' : 'var(--s1)'}"
         stroke="var(--surface-1)" stroke-width="2" opacity="${dimmed ? 0.55 : 0.92}"></circle>
       <text x="${n.x}" y="${n.y + 3.5}" text-anchor="middle" font-size="${n.r > 11 ? 11 : 9}"
-        fill="#fff" font-weight="700" pointer-events="none">${a.count}</text>
+        fill="var(--on-accent)" font-weight="700" pointer-events="none">${a.count}</text>
     </g>`;
   }
   svg.innerHTML = html + lines + dots;
@@ -2486,6 +2504,14 @@ function scrollToSpecs() {
 function scrollToBrowse() {
   const el = $('browseTop');
   if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+// Every stat is a doorway: a tile/pulse number scrolls to the detail it summarises. On the
+// Tenders tab that means revealing the workspace first (the hero may still be gating it).
+function jump(id) {
+  const anbud = $('tab-anbud');
+  if (anbud && anbud.classList.contains('on') && typeof revealAnbudBody === 'function') revealAnbudBody();
+  const el = $(id);
+  if (el) requestAnimationFrame(() => el.scrollIntoView({ behavior: 'smooth', block: 'start' }));
 }
 function resetFilters() {
   Object.keys(FILTERS).forEach(k => FILTERS[k] = '');
@@ -2555,17 +2581,23 @@ function renderTiles() {
   // The 4th tile adapts: once the user has portfolio matches it shows the payoff (winnable
   // tenders); with an empty DB it shows the nearest deadline, keeping every tile non-zero.
   const payoff = WINES.length
-    ? { v: withM.length, l: L.tilesWithMatches, cls: withM.length ? 'accent' : '' }
-    : (nearest != null ? { v: L.tileDays(nearest), l: L.tileNearest, cls: nearest <= 21 ? 'urgent' : '' }
+    ? { v: withM.length, l: L.tilesWithMatches, cls: withM.length ? 'accent' : '', go: 'specTable' }
+    : (nearest != null ? { v: L.tileDays(nearest), l: L.tileNearest, cls: nearest <= 21 ? 'urgent' : '', go: 'specTable' }
                        : { v: '–', l: L.tileNearest, cls: '' });
   const tiles = [
-    { v: SPECS.length, l: L.tileLive, sub: L.tileLiveSub, cls: 'accent' },
-    { v: countries, l: L.tileCountries, cls: '' },
-    { v: soon, l: L.tileClosing, cls: soon ? 'urgent' : '' },
+    { v: SPECS.length, l: L.tileLive, sub: L.tileLiveSub, cls: 'accent', go: 'specTable' },
+    { v: countries, l: L.tileCountries, cls: '', go: 'mapWrap' },
+    { v: soon, l: L.tileClosing, cls: soon ? 'urgent' : '', go: 'specTable' },
     payoff,
   ];
-  $('tiles').innerHTML = tiles.map(t =>
-    `<div class="tile ${t.cls || ''}"><div class="v">${t.v}</div><div class="l">${t.l}</div>${t.sub ? `<div class="sub">${t.sub}</div>` : ''}</div>`).join('');
+  $('tiles').innerHTML = tiles.map(tileHtml).join('');
+}
+// One tile renderer for every stat row: a plain tile, or a button that jumps to its detail.
+function tileHtml(t) {
+  const inner = `<span class="v">${t.v}</span><span class="l">${t.l}</span>${t.sub ? `<span class="sub">${t.sub}</span>` : ''}`;
+  return t.go
+    ? `<button type="button" class="tile ${t.cls || ''}" onclick="jump('${t.go}')" title="${esc(L.tileGo || '')}">${inner}</button>`
+    : `<div class="tile ${t.cls || ''}">${inner}</div>`;
 }
 function renderSpecs() {
   const tb = $('specTable').querySelector('tbody');
@@ -2983,11 +3015,14 @@ function renderPlanSelect() {
   sel.innerHTML = Object.keys(PLANS).map(k =>
     `<option${k === currentPlan ? ' selected' : ''}>${esc(k)}</option>`).join('');
 }
-$('planSelect').addEventListener('change', () => {
-  currentPlan = $('planSelect').value;
-  SPECS = PLANS[currentPlan] || [];
+function setPlan(name) {
+  if (!PLANS[name]) return;
+  currentPlan = name;
+  $('planSelect').value = name;
+  SPECS = PLANS[name] || [];
   resetFilters(); recompute();
-});
+}
+$('planSelect').addEventListener('change', () => setPlan($('planSelect').value));
 
 /* ---- cross-plan analytics ---- */
 function isWineSpec(s) { return !isNonWine(s); }
@@ -3190,8 +3225,10 @@ function renderAnalyse() {
   renderRecurring();
   const names = Object.keys(PLANS);
   const wineSpecs = n => PLANS[n].filter(isWineSpec);
+  // Each plan tile switches the whole app to that plan (the active one is marked).
   $('anaTiles').innerHTML = names.map(n =>
-    `<div class="tile"><div class="v">${PLANS[n].length}</div><div class="l">${esc(n)}<br>${wineSpecs(n).length} ${L.anaWineTenders}</div></div>`
+    `<button type="button" class="tile${n === currentPlan ? ' accent' : ''}" onclick="setPlan('${esc(n)}')" title="${esc(L.anaPlanGo || '')}">
+      <span class="v">${PLANS[n].length}</span><span class="l">${esc(n)}</span><span class="sub">${wineSpecs(n).length} ${L.anaWineTenders}</span></button>`
   ).join('');
   // top countries across all plans
   const cAll = new Map();
@@ -3228,10 +3265,10 @@ function renderRecurring() {
   const nPlans = Object.keys(PLANS).length;
   const everyPlan = rows.filter(r => r.plans === nPlans).length;
   $('recurTiles').innerHTML = [
-    [rows.length, L.recurT1],
-    [everyPlan, L.recurT2(nPlans)],
-    [nPlans, L.recurT3],
-  ].map(([v, l]) => `<div class="tile"><div class="v">${v}</div><div class="l">${l}</div></div>`).join('');
+    { v: rows.length, l: L.recurT1, go: 'recurList' },
+    { v: everyPlan, l: L.recurT2(nPlans), go: 'recurList' },
+    { v: nPlans, l: L.recurT3 },
+  ].map(tileHtml).join('');
   if (!rows.length) { box.innerHTML = `<p class="note">${L.recurEmpty}</p>`; return; }
   box.innerHTML = rows.slice(0, 18).map(r => {
     const s = r.s, grape = specGrapes(s)[0];
@@ -3620,13 +3657,13 @@ function renderHero() {
   const nearest = dtds.length ? Math.min(...dtds) : null;
   const countries = new Set(SPECS.map(s => (s.country || '').trim()).filter(Boolean)).size;
   const stats = [
-    [SPECS.length, L.hpTenders, false],
-    [countries, L.hpCountries, false],
-    [soon, L.hpClosing, soon > 0],
-    [nearest != null ? L.tileDays(nearest) : '–', L.hpNext, nearest != null && nearest <= 21],
+    [SPECS.length, L.hpTenders, false, 'specTable'],
+    [countries, L.hpCountries, false, 'mapWrap'],
+    [soon, L.hpClosing, soon > 0, 'specTable'],
+    [nearest != null ? L.tileDays(nearest) : '–', L.hpNext, nearest != null && nearest <= 21, 'specTable'],
   ];
-  el.innerHTML = stats.map(([v, l, u]) =>
-    `<div class="hpstat${u ? ' u' : ''}"><div class="hpv">${v}</div><div class="hpl">${l}</div></div>`).join('');
+  el.innerHTML = stats.map(([v, l, u, go]) =>
+    `<button type="button" class="hpstat${u ? ' u' : ''}" onclick="jump('${go}')" title="${esc(L.tileGo || '')}"><span class="hpv">${v}</span><span class="hpl">${l}</span></button>`).join('');
 }
 function initRole() {
   renderHero();
@@ -4079,10 +4116,10 @@ function runMatchWine() {
   $('mwResultH').textContent = L.mwResultH(hits.length);
   const bestFob = hits.reduce((mx, h) => Math.max(mx, h.fob ? h.fob.eur : 0), 0);
   $('mwTiles').innerHTML = [
-    [hits.length, L.mwTileMatches],
-    [hits.length, L.mwTileIntro],
-    [bestFob ? fmt(bestFob, 1) : '–', L.mwTileBest],
-  ].map(([v, l]) => `<div class="tile"><div class="v">${v}</div><div class="l">${l}</div></div>`).join('');
+    { v: hits.length, l: L.mwTileMatches, go: 'mwResults' },
+    { v: hits.length, l: L.mwTileIntro, go: 'mwResults' },
+    { v: bestFob ? fmt(bestFob, 1) : '–', l: L.mwTileBest, go: 'mwResults' },
+  ].map(tileHtml).join('');
   if (!hits.length) { $('mwResults').innerHTML = `<p class="note">${L.mwNoMatch}</p>`; $('mwCta').innerHTML = ''; return; }
   // When nothing is described yet (all fields on "any"), be honest that this is the unconstrained
   // set — the tenders with no grape/cert requirement — not a claim about a specific wine.
