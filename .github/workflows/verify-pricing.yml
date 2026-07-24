@@ -1,0 +1,37 @@
+name: Verify pricing engine
+
+# Keeps the price-band calculator honest. Two layers (see verify_pricing.py):
+#   1. Internal model check — deterministic, offline; fails the build if the arithmetic in
+#      pricing.py no longer reproduces Vinmonopolet's worked example. Runs on every push that
+#      touches the engine.
+#   2. Live rate check — fetches Skatteetaten (wine excise) and Vinmonopolet (markup) and fails
+#      on CONFIRMED drift (the 2026 constants went stale). Runs monthly, because the rates change
+#      each January. A source that can't be read only warns (sites restructure) — see the run log.
+#
+# When the live check reports drift: update the constants in BOTH pricing.py and
+# app_template.html (const RATES = …), rebuild index.html, and commit.
+
+on:
+  push:
+    paths: [pricing.py, verify_pricing.py]
+  schedule:
+    - cron: "0 6 3 * *"        # 06:00 UTC on the 3rd of each month (after Jan rate changes land)
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Internal model check (deterministic — must pass)
+        run: python3 verify_pricing.py --selftest
+
+      - name: Live rate check (Skatteetaten + Vinmonopolet — fails on confirmed drift)
+        run: python3 verify_pricing.py

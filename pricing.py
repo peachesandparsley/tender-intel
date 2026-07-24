@@ -1,10 +1,18 @@
 """
-Vinmonopolet price-band engine — 2026 rates (verified against Vinmonopolet's own
-published example: kr 199.90 bottle, 13% ABV, 0.75 L, glass -> wholesale kr 80.67).
+Vinmonopolet price-band engine.
 
-Sources:
-- Vinmonopolet "Priser og avgifter" (avanse model per 2026-01-01)
-- Skatteetaten excise rates 2026 (NOK 5.41 per volume-% per litre, 4.7-22% ABV)
+What's verified vs. assumed (be honest about this):
+- The MODEL reproduces Vinmonopolet's worked price example (kr 199.90 bottle, 13% ABV, 0.75 L,
+  glass -> wholesale kr 80.67). `verify_pricing.py --selftest` asserts this deterministically.
+- The RATE CONSTANTS below are the Jan-2026 figures and MUST be re-confirmed against the live
+  sources — they change every January. `verify_pricing.py` (no flag) fetches Skatteetaten and
+  Vinmonopolet and fails on confirmed drift; the `verify-pricing` workflow runs it monthly.
+- Freight/handling and importer margin (see LandedCostAssumptions) are USER assumptions, not
+  published rates — they materially change the required FOB and the "viable" verdict.
+
+Sources to confirm against:
+- Vinmonopolet "Varer og priser" / markup (avanse) model
+- Skatteetaten alcohol excise, wine 4.7-22% ABV (NOK per volume-% per litre)
 
 Model (per sales unit):
   retail = (wholesale + excise + avanse + packaging) * 1.25   [25% VAT]
