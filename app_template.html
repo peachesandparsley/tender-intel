@@ -3212,11 +3212,16 @@ function profileBand(s) {
   if (p == null) return '';
   return p < 200 ? '<200' : p < 350 ? '200–350' : p < 500 ? '350–500' : '500+';
 }
-// Sub-region is the actionable origin (Burgundy, Chablis, Douro); fall back to country only when a
-// tender states no region. Compound origins ("Essex, Kent or Sussex") collapse to their first part.
+// The actionable origin is the appellation the tender actually names (Chablis Premier Cru,
+// Bourgogne Aligoté), not the broad region (Burgundy). Strip the scheme prefix (AOC/AOP, DO, DOCG,
+// IGP…) and collapse compound origins ("X or Y") to their first part; fall back to region, then
+// country, only when nothing finer is stated.
+function firstPart(s) { return String(s || '').split(/\s*[,/]\s*|\s+or\s+/i)[0].trim(); }
+function cleanAppellation(a) {
+  return firstPart(String(a || '').replace(/\b(AOC\/AOP|AOC|AOP|DOCG|DOCa|DOC|DOP|DO|DAC|IGP|IGT|IG|PDO|PGI|GI|AVA|WO|VdT|VDP)\b\.?\s*/gi, '').trim());
+}
 function subOrigin(s) {
-  const r = (s.region || '').trim();
-  return (r ? r.split(/\s*[,/]\s*|\s+or\s+/i)[0].trim() : (s.country || '').trim());
+  return cleanAppellation(s.appellation) || firstPart(s.region) || (s.country || '').trim();
 }
 // "traditional method" is a production method the grape parser surfaces for sparkling — not a
 // grape variety, so it shouldn't stand in as one in a demand profile.
