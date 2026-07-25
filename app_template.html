@@ -2174,6 +2174,20 @@ function importProducerWorkbook(wb) {
 
 /* ============ UI ============ */
 const $ = id => document.getElementById(id);
+// The chart/map hover tooltip is a pointer-only affordance. On touch there is no mouseleave, so a
+// tap would show it and leave it stranded over the content. Only show it on hover-capable, fine
+// pointers; on touch the tap just does its action (filter). Belt-and-suspenders: any scroll or new
+// touch hides it. CAN_HOVER is re-read lazily so it's correct even if the media query flips.
+const CAN_HOVER = () => matchMedia('(hover: hover) and (pointer: fine)').matches;
+function showTip(e, html) {
+  if (!CAN_HOVER()) return;
+  const t = $('tooltip'); if (!t) return;
+  t.style.display = 'block';
+  t.style.left = e.clientX + 12 + 'px'; t.style.top = e.clientY - 10 + 'px';
+  t.innerHTML = html;
+}
+function hideTip() { const t = $('tooltip'); if (t) t.style.display = 'none'; }
+['touchstart', 'scroll'].forEach(ev => addEventListener(ev, hideTip, { passive: true, capture: true }));
 const val = id => $(id).value;
 const css = v => getComputedStyle(document.body).getPropertyValue(v).trim();
 const fmt = (x, d = 2) => (+x).toLocaleString(LANG === 'en' ? 'en-GB' : 'no-NO', { minimumFractionDigits: d, maximumFractionDigits: d });
@@ -2400,10 +2414,8 @@ function drawDimChart(svgId, dim, keyFn, activeVal, fixedOrder, labelFn) {
     val2.textContent = v;
     g.appendChild(val2);
     g.addEventListener('click', () => { setFilter(dim, active ? '' : k, true); });
-    g.addEventListener('mousemove', e => { tip.style.display = 'block';
-      tip.style.left = e.clientX + 12 + 'px'; tip.style.top = e.clientY - 10 + 'px';
-      tip.innerHTML = L.tipFilter(esc(disp(k)), v); });
-    g.addEventListener('mouseleave', () => tip.style.display = 'none');
+    g.addEventListener('mousemove', e => showTip(e, L.tipFilter(esc(disp(k)), v)));
+    g.addEventListener('mouseleave', hideTip);
     svg.appendChild(g);
   });
 }
@@ -2495,12 +2507,8 @@ function drawGeoMap(svgId, rawCounts, activeRaw, onToggle) {
       const label = [...a.labels][0];
       onToggle(activeRaw && mapCountryName(activeRaw) === mn ? '' : label);
     });
-    el.addEventListener('mousemove', e => {
-      tip.style.display = 'block';
-      tip.style.left = e.clientX + 12 + 'px'; tip.style.top = e.clientY - 10 + 'px';
-      tip.innerHTML = L.mapTip(esc([...a.labels].join(', ')), a.count);
-    });
-    el.addEventListener('mouseleave', () => tip.style.display = 'none');
+    el.addEventListener('mousemove', e => showTip(e, L.mapTip(esc([...a.labels].join(', ')), a.count)));
+    el.addEventListener('mouseleave', hideTip);
   });
   if (openCount) {
     const note = document.createElementNS('http://www.w3.org/2000/svg', 'text');
@@ -2980,10 +2988,8 @@ function drawBar(parts, total) {
     const r = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
     r.setAttribute('x', x); r.setAttribute('y', y); r.setAttribute('width', w);
     r.setAttribute('height', h); r.setAttribute('rx', 4); r.setAttribute('fill', css(SLOTS[p.s]));
-    r.addEventListener('mousemove', e => { tip.style.display = 'block';
-      tip.style.left = e.clientX + 12 + 'px'; tip.style.top = e.clientY - 10 + 'px';
-      tip.innerHTML = `<b>${p.name}</b><br>${fmt(p.v)} kr · ${fmt(100 * p.v / total, 1)} %`; });
-    r.addEventListener('mouseleave', () => tip.style.display = 'none');
+    r.addEventListener('mousemove', e => showTip(e, `<b>${p.name}</b><br>${fmt(p.v)} kr · ${fmt(100 * p.v / total, 1)} %`));
+    r.addEventListener('mouseleave', hideTip);
     svg.appendChild(r);
     if (w > 90) {
       const t = document.createElementNS('http://www.w3.org/2000/svg', 'text');
@@ -3077,10 +3083,8 @@ function drawGrouped(svgId, legendId, cats, seriesNames, matrix) {
       r.setAttribute('x', labW); r.setAttribute('y', y0 + si * (barH + gap2));
       r.setAttribute('width', w); r.setAttribute('height', barH); r.setAttribute('rx', 3);
       r.setAttribute('fill', css(SLOTS[si]));
-      r.addEventListener('mousemove', e => { tip.style.display = 'block';
-        tip.style.left = e.clientX + 12 + 'px'; tip.style.top = e.clientY - 10 + 'px';
-        tip.innerHTML = L.tipSeries(esc(cat), esc(sn), v); });
-      r.addEventListener('mouseleave', () => tip.style.display = 'none');
+      r.addEventListener('mousemove', e => showTip(e, L.tipSeries(esc(cat), esc(sn), v)));
+      r.addEventListener('mouseleave', hideTip);
       svg.appendChild(r);
       if (v) {
         const t = document.createElementNS('http://www.w3.org/2000/svg', 'text');
