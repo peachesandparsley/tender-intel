@@ -32,7 +32,8 @@ works offline). Served via GitHub Pages at the repository's Pages URL.
 | `index.html` | The built app (everything inlined: engines, data, SheetJS, world map) |
 | `app_template.html` | App source template — edit this, then rebuild |
 | `build_app.py` | Assembles `index.html` from the template + data files |
-| `pricing.py` | Norwegian price/excise/avanse engine (2026 rates, verified) |
+| `pricing.py` | Norwegian price/excise/avanse engine. Model reproduces Vinmonopolet's worked example; rate constants are Jan-2026 and re-confirmed by `verify_pricing.py` |
+| `verify_pricing.py` | Keeps the calculator honest: a deterministic internal check (the model still reproduces VMP's example) **plus** a live check that fetches Skatteetaten (wine excise) and Vinmonopolet (markup) and fails on confirmed rate drift. The `verify-pricing` workflow runs it monthly |
 | `parse_lanseringsplan.py` | Parser for Vinmonopolet tender Excel files (both format generations) |
 | `clauses.py` | Clause-level spec parsing (grapes, sugar, wood, certs, bottle weight…) |
 | `match.py` / `match_wines.py` | Portfolio scoring and wine↔spec eligibility engines |
