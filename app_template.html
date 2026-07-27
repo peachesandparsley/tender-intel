@@ -110,6 +110,20 @@
   .trend-new { color: var(--accent); background: color-mix(in oklab, var(--accent) 9%, transparent); }
   .dtag { display: inline-block; font-size: 9.5px; letter-spacing: .04em; text-transform: uppercase;
     color: var(--muted); border: 1px solid var(--border); border-radius: 999px; padding: 1px 6px; vertical-align: middle; }
+  /* Backtest timeline: one bar per loaded plan, chronological — how many tenders the wine would
+     have qualified for, plan by plan. */
+  .bt-timeline { display: flex; gap: 6px; align-items: flex-end; overflow-x: auto; padding: 4px 0 2px; }
+  .bt-col { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 4px; min-width: 52px; flex: 1; }
+  .bt-col .bt-n { font-size: 12px; font-weight: 700; color: var(--text-primary); font-variant-numeric: tabular-nums; min-height: 14px; }
+  .bt-col .bt-bar { width: 100%; max-width: 44px; border-radius: 4px 4px 0 0; background: var(--s1); }
+  .bt-col.bt-0 .bt-bar { background: var(--baseline); }
+  .bt-col .bt-plan { font-size: 10px; color: var(--muted); white-space: nowrap; }
+  .bt-plan-block { margin-top: 12px; }
+  .bt-plan-h { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; color: var(--text-secondary);
+    border-bottom: 1px solid var(--baseline); padding-bottom: 5px; margin-bottom: 4px; }
+  .bt-row { display: flex; justify-content: space-between; gap: 12px; align-items: flex-start;
+    font-size: 13px; padding: 6px 0; border-bottom: 1px solid var(--grid); }
+  .bt-row:last-child { border-bottom: none; }
   .recur-bar { height: 7px; border-radius: 999px; background: var(--grid); overflow: hidden; }
   .recur-bar i { display: block; height: 100%; border-radius: 999px;
     background: linear-gradient(90deg, color-mix(in oklab, var(--s1) 60%, transparent), var(--s1)); }
@@ -590,6 +604,7 @@
         <div class="howto-body" data-i18n="howtoMatch"></div>
       </details>
       <div id="mwResults"></div>
+      <div id="mwBacktest" style="margin-top:14px"></div>
       <div id="mwCta" style="margin-top:14px"></div>
     </div>
     <div class="card" id="mwListCard" style="display:none">
@@ -1212,6 +1227,8 @@ const I18N = {
     tEmerging: 'Økende', tSteady: 'Vedvarende', tFading: 'Avtakende', tNew: 'Ny',
     recurEmpty: 'Ingen spesifikk profil går igjen på tvers av planene ennå — last inn flere lanseringsplaner (systemet er bygd for fem års planer) for å se mønstrene.',
     mwRecur: (k, n) => k === n ? `Alle ${n} går igjen på tvers av tidligere planer — varig etterspørsel, ikke engangsanbud.` : `${k} av ${n} går igjen på tvers av tidligere planer — varig etterspørsel, ikke engangsanbud.`,
+    btTitle: (t, p, n) => `Historikk — kvalifiserte til ${t} anbud i ${p} av ${n} planer`,
+    btNote: span => `Vinen testet mot hver innlastede lanseringsplan (${span}) — hvilke ekte anbud den ville kvalifisert til. Bygd for hele arkivet tilbake til 2020; jo flere planer du laster inn, jo lengre historikk.`,
     heroH: 'Vinn Vinmonopolets anbud — før konkurrentene rekker å se dem.',
     heroSub: 'Vinmonopolet publiserer hvert anbud på forhånd. Beskriv en vin, så ser du på sekundet hvilke den kan vinne, kjellerprisen den må treffe, og når fristen går ut. Ingen innlogging, ingen opplasting.',
     heroBrowse: 'Eller bare se alle anbudene i planen →',
@@ -1545,6 +1562,8 @@ const I18N = {
     tEmerging: 'Emerging', tSteady: 'Persistent', tFading: 'Fading', tNew: 'New',
     recurEmpty: 'No specific profile recurs across the plans yet — load more launch plans (the engine is built for five years of them) to see the patterns.',
     mwRecur: (k, n) => k === n ? `All ${n} recur across past plans — durable demand, not one-off tenders.` : `${k} of ${n} recur across past plans — durable demand, not one-off tenders.`,
+    btTitle: (t, p, n) => `Track record — qualified for ${t} tenders in ${p} of ${n} plans`,
+    btNote: span => `The wine tested against every loaded launch plan (${span}) — which real tenders it would have qualified for. Built for the full archive back to 2020; the more plans you load, the deeper the history.`,
     heroH: 'Win Vinmonopolet tenders — before your competitors even see them.',
     heroSub: 'Vinmonopolet publishes every tender in advance. Describe a wine and see in seconds which ones it can win, the ex-cellar price it must hit, and when the deadline is. No login, no upload.',
     heroBrowse: 'Or just see every tender in the plan →',
@@ -4183,6 +4202,51 @@ function crossPlanMatches(w) {
   }
   return { total, plansHit, nPlans: Object.keys(PLANS).length };
 }
+// Backtest: run this wine against EVERY loaded plan, in time order, so a producer/importer can see
+// which real tenders it would have qualified for over the years — the depth and recurrence of
+// demand, not just this half-year. Built for the full 2020-> archive; works with whatever is loaded.
+function planLabel(pn) { return (pn || '').replace(/\s*\(live\)/, ''); }
+function backtestWine(w) {
+  const chrono = planChrono();                                  // oldest -> newest
+  const perPlan = chrono.map(pn => {
+    const hits = [];
+    for (const spec of PLANS[pn]) {
+      const hi = spec.price_hi ?? spec.price_lo;
+      const fob = hi ? fobFromRetail(+hi, w.abv, spec.litres || 0.75) : null;
+      const ev = evaluateWine(spec, w, fob);
+      if (ev) hits.push({ spec, ev, fob });
+    }
+    return { plan: pn, hits, count: hits.length };
+  });
+  return { perPlan, total: perPlan.reduce((a, p) => a + p.count, 0),
+    present: perPlan.filter(p => p.count).length, nPlans: chrono.length };
+}
+function renderBacktest(w) {
+  const box = $('mwBacktest'); if (!box) return;
+  const bt = backtestWine(w);
+  // Only worth showing once there's history to look back over and something to find in it.
+  if (bt.nPlans < 2 || !bt.total) { box.innerHTML = ''; return; }
+  const maxC = Math.max(...bt.perPlan.map(p => p.count), 1);
+  const span = `${planLabel(bt.perPlan[0].plan)}–${planLabel(bt.perPlan[bt.nPlans - 1].plan)}`;
+  const bars = bt.perPlan.map(p => `<div class="bt-col${p.count ? '' : ' bt-0'}" title="${esc(planLabel(p.plan))}: ${p.count} ${esc(L.recurReqs)}">
+      <span class="bt-n">${p.count || ''}</span>
+      <span class="bt-bar" style="height:${p.count ? Math.round(5 + 40 * p.count / maxC) : 2}px"></span>
+      <span class="bt-plan">${esc(planLabel(p.plan))}</span></div>`).join('');
+  const lists = bt.perPlan.filter(p => p.count).map(p => `<div class="bt-plan-block">
+      <div class="bt-plan-h">${esc(planLabel(p.plan))} · ${p.count}</div>${
+    p.hits.map(h => { const s = h.spec, x = h.ev;
+      const price = h.fob ? `<span class="chip ${x.priceOk === false ? 'mid' : 'hi'}" style="min-width:0">≤ €${fmt(h.fob.eur, 1)}</span>` : '';
+      return `<div class="bt-row"><span>${esc(s.ref)} — ${esc(groupLabel(s.group))}${recurChip(s)}<small style="display:block;color:var(--muted)">${esc(capGrapes(specGrapes(s).slice(0, 3)) || mainDisp(mainCat(s)))} · ${esc(subOrigin(s)) || L.openOrigin} · ${esc(s.price_text)}</small></span>
+        <span style="white-space:nowrap">${x.passes}✓${x.unknowns ? ' ' + x.unknowns + '?' : ''}/${x.total} ${price}</span></div>`; }).join('')
+    }</div>`).join('');
+  box.innerHTML = `<details class="disclose" id="btDetails">
+    <summary>${L.btTitle(bt.total, bt.present, bt.nPlans)}</summary>
+    <div class="disclose-body">
+      <p class="note" style="margin:0 0 12px">${L.btNote(span)}</p>
+      <div class="bt-timeline">${bars}</div>
+      <div class="bt-lists">${lists}</div>
+    </div></details>`;
+}
 function runMatchWine() {
   const w = matchWineRecord();
   const hits = [];
@@ -4227,6 +4291,7 @@ function runMatchWine() {
   if (recurHits) $('mwResults').insertAdjacentHTML('beforeend',
     `<p class="note recur-note" style="margin:8px 0 0">↻ ${L.mwRecur(recurHits, hits.length)}</p>`);
   renderComplete(w, hits);
+  renderBacktest(w);
   const cross = crossPlanMatches(w);
   $('mwCta').innerHTML = `<div class="pullbox">
     <div class="pullbig">${L.mwPullTitle(hits.length, cross.total, cross.nPlans)}</div>
