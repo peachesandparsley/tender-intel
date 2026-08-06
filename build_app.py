@@ -103,6 +103,14 @@ print(f"wines embedded: {len(wines)} (seed leads removed — users add their own
 tpl_b64 = base64.b64encode(open("producer_upload_template.xlsx", "rb").read()).decode()
 imp_b64 = base64.b64encode(open("importer_portfolio_template.xlsx", "rb").read()).decode()
 
+# Compact market index distilled from Vinmonopolet's actual launch history (market_index.py).
+# Real retail benchmarks, volumes, vintages, producers and importers by origin × style — the app's
+# grounding in what actually got listed, not estimates. Absent → the app's benchmark panels hide.
+market_index = json.load(open("market_index.json", encoding="utf-8")) if os.path.exists("market_index.json") else {}
+html = html.replace("/*MARKET_INDEX*/{}", json.dumps(market_index, ensure_ascii=False))
+print(f"market index: {len(market_index.get('byCountryType', []))} origin×style benchmarks, "
+      f"{len(market_index.get('importers', []))} importers" if market_index else "market index: none")
+
 plans = load_plans()
 print(f"plans: {len(plans)} — {', '.join(plans)}")
 world = open("world_paths.json", encoding="utf-8").read()

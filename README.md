@@ -35,6 +35,8 @@ works offline). Served via GitHub Pages at the repository's Pages URL.
 | `pricing.py` | Norwegian price/excise/avanse engine. Model reproduces Vinmonopolet's worked example; rate constants are Jan-2026 and re-confirmed by `verify_pricing.py` |
 | `verify_pricing.py` | Keeps the calculator honest: a deterministic internal check (the model still reproduces VMP's example) **plus** a live check that fetches Skatteetaten (wine excise) and Vinmonopolet (markup) and fails on confirmed rate drift. The `verify-pricing` workflow runs it monthly |
 | `parse_lanseringsplan.py` | Parser for Vinmonopolet tender Excel files (both format generations) |
+| `parse_launch_list.py` | Parser for Vinmonopolet's historical **launch lists** (`data-from-vinmonopolet/*.xlsx`) — what actually got listed, one row per product: producer, origin (to vineyard), classification, vintage, ABV, **real retail price**, quantity, per-store allocation, and the importer. Consolidates all 82 files (2020→) into `launch_history.json` (~12k products) |
+| `market_index.py` | Distils `launch_history.json` into a compact `market_index.json` the app embeds: real price quartiles, typical volume, vintages, top producers **and importers** by origin × style (and × classification, and by appellation), the importer landscape, and the 6-year price/volume trend. Every benchmark rests on ≥ 5 real launches |
 | `clauses.py` | Clause-level spec parsing (grapes, sugar, wood, certs, bottle weight…) |
 | `match.py` / `match_wines.py` | Portfolio scoring and wine↔spec eligibility engines |
 | `import_wines.py` | Producer bulk-upload validator |
@@ -82,6 +84,26 @@ half-yearly plans): granular profiles only start recurring — and trends only b
 with that much history. The engine (`profileKey` / `demandRows` / `trendOf` in
 `app_template.html`) scales to any number of plans with no code change. Feed it history via the
 section below.
+
+## Market benchmark — grounded in six years of actual launches
+
+Vinmonopolet's historical **launch lists** (not the tender requests — what actually got listed and
+sold) are the strongest data in the app. `parse_launch_list.py` consolidates every file in
+`data-from-vinmonopolet/` into `launch_history.json`; `market_index.py` distils that into the compact
+`market_index.json` the build embeds.
+
+In **Match my wine**, describing a wine now surfaces a **Market benchmark** panel: what comparable
+wines (its country × style) *actually retailed at* — 25th / median / 75th-percentile real prices —
+plus typical volume, the vintage span, the most-launched producers, and **the importers behind them**
+(a producer's route to market, or an importer's competition). Every panel states its sample size and
+that these are real retail prices, not estimates. Buckets with fewer than five real launches are never
+shown. To refresh after adding more launch lists:
+
+```bash
+python3 parse_launch_list.py    # data-from-vinmonopolet/*.xlsx -> launch_history.json
+python3 market_index.py         # launch_history.json -> market_index.json
+python3 build_app.py            # embeds it into index.html
+```
 
 ## Thicken the database with more launch plans
 
