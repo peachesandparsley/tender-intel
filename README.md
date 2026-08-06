@@ -92,12 +92,27 @@ sold) are the strongest data in the app. `parse_launch_list.py` consolidates eve
 `data-from-vinmonopolet/` into `launch_history.json`; `market_index.py` distils that into the compact
 `market_index.json` the build embeds.
 
-In **Match my wine**, describing a wine now surfaces a **Market benchmark** panel: what comparable
-wines (its country × style) *actually retailed at* — 25th / median / 75th-percentile real prices —
-plus typical volume, the vintage span, the most-launched producers, and **the importers behind them**
-(a producer's route to market, or an importer's competition). Every panel states its sample size and
-that these are real retail prices, not estimates. Buckets with fewer than five real launches are never
-shown. To refresh after adding more launch lists:
+This launch history powers five things across the app:
+
+- **Market benchmark** (in *Match my wine*) — describing a wine surfaces what comparable wines *actually
+  retailed at* (25th / median / 75th-percentile real prices), typical volume, vintage span, the
+  most-launched producers, and **the importers behind them**. Give a **district / appellation** and it
+  sharpens to appellation level (Burgundy, not "France red") — English/French names are aliased to the
+  list's Norwegian spellings.
+- **Market** tab — browse the whole dataset: the six-year premiumisation trend (median launch price
+  kr 755→1003, +33%) and a filterable benchmark table by origin × style *and* by appellation × style,
+  each row expandable to its top producers and importers.
+- **Importers** tab — every importer with their whole book: the origins and styles they bring in
+  (with counts), price tier, median volume, and active years. A producer's route to market; an
+  importer's view of the competition. Corporate-suffix variants ("Nafstad" / "Nafstad AS") are merged.
+- **Backtest** — each historically-matched tender now carries the real market price band for its
+  origin × style.
+- **Analytics** — every recurring demand profile is annotated with real **supply** (how many
+  comparable wines actually launched, and their median price) — demand and supply side by side, no
+  fabricated ratio.
+
+Every benchmark states its sample size; buckets with fewer than five real launches are never shown.
+To refresh after adding more launch lists:
 
 ```bash
 python3 parse_launch_list.py    # data-from-vinmonopolet/*.xlsx -> launch_history.json

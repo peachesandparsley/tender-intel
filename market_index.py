@@ -41,6 +41,23 @@ def canon_country(c):
     return COUNTRY_CANON.get(c.strip().lower(), c.strip())
 
 
+# Importer names carry inconsistent corporate suffixes across six years of lists ("Nafstad" vs
+# "Nafstad AS", "Moestue Grape Selections" vs "…AS"), splitting one real importer into two or three
+# buckets. Strip the trailing corporate form (AS/ASA/A-S/AB/…) — but NOT geographic words like
+# "Norge"/"Norway", which distinguish a real Norwegian subsidiary — so a firm's true book is whole.
+_IMP_SUFFIX = re.compile(r"[\s,]+(?:a/s|as|asa|ab|ans|da|sa|ltd|inc|co)\.?$", re.I)
+
+
+def canon_importer(s):
+    if not s:
+        return s
+    s = s.strip()
+    prev = None
+    while prev != s:                       # peel repeated suffixes, e.g. "… Wines AS AB"
+        prev, s = s, _IMP_SUFFIX.sub("", s).strip()
+    return s
+
+
 def q(xs, p):
     xs = sorted(x for x in xs if x)
     if not xs:
@@ -67,10 +84,30 @@ def bucket(records):
     }
 
 
+def counted(names, k=TOPK):
+    return [{"name": n, "n": c} for n, c in Counter(x for x in names if x).most_common(k)]
+
+
+def importer_detail(name, recs):
+    prices = [r["price"] for r in recs if r["price"]]
+    vols = [r["qty"] for r in recs if r["qty"]]
+    yrs = [int(r["period"][:4]) for r in recs if r["period"][:4].isdigit()]
+    return {
+        "name": name, "n": len(recs),
+        "p25": q(prices, .25), "med": q(prices, .5), "p75": q(prices, .75),
+        "volMed": q(vols, .5),
+        "origins": counted((r["country"] for r in recs), 6),
+        "styles": counted((r["type"] for r in recs), 6),
+        "districts": counted((r["district"] for r in recs), 6),
+        "years": [min(yrs), max(yrs)] if yrs else None,
+    }
+
+
 def main():
     R = json.load(open("launch_history.json", encoding="utf-8"))
     for r in R:
         r["country"] = canon_country(r.get("country"))
+        r["importer"] = canon_importer(r.get("importer"))
     years = sorted({r["period"][:4] for r in R})
 
     by_ct = defaultdict(list)          # (country, type)
@@ -95,17 +132,13 @@ def main():
             out.append(b)
         return sorted(out, key=lambda b: -b["n"])
 
-    # importer landscape (which origins/styles each brings in, how many)
+    # importer landscape (each importer's whole book — origins/styles/districts, price tier, volume, span)
     imp = defaultdict(list)
     for r in R:
         if r.get("importer"):
             imp[r["importer"]].append(r)
-    importers = sorted(({
-        "name": name, "n": len(recs),
-        "origins": [x for x, _ in Counter(r["country"] for r in recs if r["country"]).most_common(4)],
-        "styles": [x for x, _ in Counter(r["type"] for r in recs if r["type"]).most_common(4)],
-        "medPrice": q([r["price"] for r in recs], .5),
-    } for name, recs in imp.items() if len(recs) >= 3), key=lambda x: -x["n"])[:120]
+    importers = sorted((importer_detail(name, recs) for name, recs in imp.items() if len(recs) >= 3),
+                       key=lambda x: -x["n"])[:150]
 
     # 6-year trend
     trend = []
