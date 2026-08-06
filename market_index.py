@@ -76,6 +76,9 @@ def bucket(records):
     vints = [r["vintage"] for r in records if r["vintage"]]
     return {
         "n": len(records),
+        # importer is recorded on only a minority of rows (mostly the spirits lists) — carry HOW MANY
+        # so the UI can say "who's named on impKnown of n launches", not imply it's the whole field.
+        "impKnown": sum(1 for r in records if r["importer"]),
         "p25": q(prices, .25), "med": q(prices, .5), "p75": q(prices, .75),
         "volMed": q(vols, .5),
         "vintages": [min(vints), max(vints)] if vints else None,
@@ -88,11 +91,12 @@ def counted(names, k=TOPK):
     return [{"name": n, "n": c} for n, c in Counter(x for x in names if x).most_common(k)]
 
 
-def importer_detail(name, recs):
+def _detail(name, recs, extra_key, extra_field):
+    """Shared shape for an importer OR a producer: their whole book from the history."""
     prices = [r["price"] for r in recs if r["price"]]
     vols = [r["qty"] for r in recs if r["qty"]]
     yrs = [int(r["period"][:4]) for r in recs if r["period"][:4].isdigit()]
-    return {
+    d = {
         "name": name, "n": len(recs),
         "p25": q(prices, .25), "med": q(prices, .5), "p75": q(prices, .75),
         "volMed": q(vols, .5),
@@ -101,6 +105,18 @@ def importer_detail(name, recs):
         "districts": counted((r["district"] for r in recs), 6),
         "years": [min(yrs), max(yrs)] if yrs else None,
     }
+    d[extra_key] = counted((r[extra_field] for r in recs if r[extra_field]), 6)
+    return d
+
+
+def importer_detail(name, recs):
+    return _detail(name, recs, "producers", "producer")   # which producers this importer brings in
+
+
+def producer_detail(name, recs):
+    d = _detail(name, recs, "importers", "importer")       # which importers have carried this producer
+    d["impKnown"] = sum(1 for r in recs if r["importer"])  # honest: importer known on how many of their rows
+    return d
 
 
 def main():
@@ -140,6 +156,16 @@ def main():
     importers = sorted((importer_detail(name, recs) for name, recs in imp.items() if len(recs) >= 3),
                        key=lambda x: -x["n"])[:150]
 
+    # producer track record (each producer's whole book — origins/styles/districts, price tier, volume,
+    # span, and which importers carried them). Producer is recorded on ~100% of rows, so this is the most
+    # complete lens in the dataset — a producer can look up their own real Vinmonopolet launch history.
+    prod = defaultdict(list)
+    for r in R:
+        if r.get("producer"):
+            prod[r["producer"]].append(r)
+    producers = sorted((producer_detail(name, recs) for name, recs in prod.items() if len(recs) >= 3),
+                       key=lambda x: -x["n"])[:300]
+
     # 6-year trend
     trend = []
     for y in years:
@@ -147,22 +173,27 @@ def main():
         trend.append({"y": int(y), "n": len(ys), "med": q([r["price"] for r in ys], .5),
                       "vol": sum(r["qty"] for r in ys if r["qty"])})
 
+    imp_cov = sum(1 for r in R if r.get("importer"))
     idx = {
         "meta": {"n": len(R), "years": [int(y) for y in years],
                  "producers": len({r["producer"] for r in R if r["producer"]}),
                  "importers_known": len(imp),
+                 # honest coverage: importer recorded on this many of n rows (mostly the spirits lists)
+                 "impCoverage": round(imp_cov / len(R), 3), "impCoverageN": imp_cov,
                  "source": "Vinmonopolet launch lists (actuals), " + f"{years[0]}–{years[-1]}"},
         "byCountryType": dump(by_ct, ("country", "type")),
         "byCountryTypeClass": dump(by_ctc, ("country", "type", "classification")),
         "byDistrictType": dump(by_dt, ("district", "type")),
         "importers": importers,
+        "producers": producers,
         "trend": trend,
     }
     json.dump(idx, open("market_index.json", "w", encoding="utf-8"), ensure_ascii=False)
     kb = os.path.getsize("market_index.json") // 1024
     print(f"market_index.json written ({kb} KB): "
           f"{len(idx['byCountryType'])} country×style · {len(idx['byCountryTypeClass'])} ×class · "
-          f"{len(idx['byDistrictType'])} district×style · {len(importers)} importers · {len(trend)} years")
+          f"{len(idx['byDistrictType'])} district×style · {len(importers)} importers · {len(producers)} producers · "
+          f"{len(trend)} years · importer coverage {int(100 * idx['meta']['impCoverage'])}%")
 
 
 if __name__ == "__main__":

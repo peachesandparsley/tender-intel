@@ -82,7 +82,10 @@ def period_and_category(fname):
     return period, (cat or "generell")
 
 
-def parse_file(path):
+def parse_file(path, audit=None):
+    """Parse one launch list. If `audit` (a list) is passed, append a warning for any worksheet that
+    carries real content (>3 non-empty rows) yet had no detectable header — i.e. a silently-dropped
+    sheet — so a reimport can never quietly lose data."""
     wb = load_workbook(path, data_only=True, read_only=True)
     period, category = period_and_category(path)
     out = []
@@ -100,6 +103,11 @@ def parse_file(path):
                 hdr_i = i
                 break
         if hdr_i is None:
+            if audit is not None:
+                nonempty = sum(1 for r in rows if r and any(c is not None and str(c).strip() for c in r))
+                if nonempty > 3:
+                    audit.append(f"{os.path.basename(path)} · sheet '{ws.title}': {nonempty} non-empty "
+                                 f"rows but NO header detected — possible silent gap")
             continue
         for row in rows[hdr_i + 1:]:
             if row is None or all(c is None or str(c).strip() == "" for c in row):
@@ -141,15 +149,16 @@ def parse_file(path):
 def main():
     out = sys.argv[sys.argv.index("--out") + 1] if "--out" in sys.argv else "launch_history.json"
     files = sorted(glob.glob(os.path.join(DATA_DIR, "**", "*.xlsx"), recursive=True))
-    all_recs, per_file = [], []
+    all_recs, errored, zero, audit = [], [], [], []
     for f in files:
         try:
-            recs = parse_file(f)
+            recs = parse_file(f, audit=audit)
         except Exception as e:
-            per_file.append((os.path.basename(f), f"ERROR {e}"))
+            errored.append((os.path.basename(f), str(e)))
             continue
         all_recs.extend(recs)
-        per_file.append((os.path.basename(f), f"{len(recs)} rows"))
+        if not recs:
+            zero.append(os.path.basename(f))
     json.dump(all_recs, open(out, "w", encoding="utf-8"), ensure_ascii=False)
     print(f"{len(files)} files -> {len(all_recs)} launched products -> {out} ({os.path.getsize(out)//1024} KB)")
     # coverage
@@ -158,6 +167,20 @@ def main():
     for fld in ["producer", "product", "country", "district", "classification", "type",
                 "price", "abv", "importer", "qty", "vintage"]:
         print(f"  {cov(fld):>6} / {len(all_recs)}  have {fld}")
+    # self-verification: surface anything that would silently lose data on a reimport
+    print("--- completeness audit ---")
+    if errored:
+        print(f"  ⚠ {len(errored)} file(s) ERRORED:")
+        for name, e in errored:
+            print(f"      {name}: {e}")
+    if zero:
+        print(f"  ⚠ {len(zero)} file(s) produced 0 rows: {', '.join(zero)}")
+    if audit:
+        print(f"  ⚠ {len(audit)} content sheet(s) with no detected header (possible silent gap):")
+        for w in audit:
+            print(f"      {w}")
+    if not (errored or zero or audit):
+        print(f"  ✓ all {len(files)} files parsed; no errored files, no empty files, no dropped content sheets")
 
 
 if __name__ == "__main__":

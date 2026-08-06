@@ -158,6 +158,9 @@
     border: 1px solid var(--border); background: var(--surface-1); color: var(--text-primary); }
   .mkt-chip b { color: var(--muted); font-weight: 600; font-variant-numeric: tabular-nums; margin-left: 6px; }
   .mkt-src { font-size: 11px; color: var(--muted); margin: 11px 0 0; line-height: 1.45; }
+  .mkt-cov { display: inline-block; font-size: 10.5px; color: var(--muted); font-style: italic; margin-left: 4px; }
+  .mkt-chip.clk { cursor: pointer; }
+  .mkt-chip.clk:hover { border-color: var(--accent); }
   /* Market explorer + importer finder */
   .mkt-toggle { display: inline-flex; gap: 0; border: 1px solid var(--border); border-radius: 9px; overflow: hidden; margin-bottom: 12px; }
   .mkt-toggle .seg { background: var(--surface-1); border: none; padding: 7px 14px; font-size: 12.5px; font-weight: 600; color: var(--text-secondary); cursor: pointer; }
@@ -832,10 +835,14 @@
   <!-- IMPORTØRER (importer finder) -->
   <section class="tab" id="tab-importorer">
     <div class="card">
-      <h2 data-i18n="impH">Importørsøk — hvem tar inn viner som din?</h2>
-      <p class="note" style="margin:0 0 12px" data-i18n="impNote">Hver importør vist med hele sin bok fra Vinmonopolets lanseringshistorikk: opprinnelsene og stilene de faktisk tar inn, prisnivå, volum og hvor lenge de har vært aktive. For produsenter: din vei til markedet. For importører: konkurrentene og hvor de er sterke.</p>
+      <h2 id="findH"></h2>
+      <p class="note" style="margin:0 0 12px" id="findNote"></p>
+      <div class="mkt-toggle" style="margin-bottom:14px">
+        <button class="seg on" id="findSegImp" onclick="setFindMode('importer')" data-i18n="findImporters">Importører</button>
+        <button class="seg" id="findSegProd" onclick="setFindMode('producer')" data-i18n="findProducers">Produsenter</button>
+      </div>
       <div class="mw-grid" style="align-items:end">
-        <div style="flex:2 1 240px"><label data-i18n="impSearch">Søk importør, opprinnelse eller stil</label><input id="impQ" data-i18n-ph="impSearchPh" placeholder="f.eks. Bourgogne, whisky, Moestue"></div>
+        <div style="flex:2 1 240px"><label id="findSearchL" data-i18n="impSearch">Søk importør, opprinnelse eller stil</label><input id="impQ" data-i18n-ph="impSearchPh" placeholder="f.eks. Bourgogne, whisky, Moestue"></div>
         <div><label data-i18n="impFilterOrigin">Opprinnelse</label><select id="impOrigin"></select></div>
         <div><label data-i18n="impFilterStyle">Stil</label><select id="impStyle"></select></div>
       </div>
@@ -1168,14 +1175,22 @@ const I18N = {
     mktViewCountry: 'Opprinnelse × stil', mktViewDistrict: 'Appellasjon × stil',
     mktColProfile: 'Profil', mktColBand: 'Prisbånd (25 · median · 75)', mktColN: 'Lanseringer',
     impH: 'Importørsøk — hvem tar inn viner som din?',
-    impNote: 'Hver importør vist med hele sin bok fra Vinmonopolets lanseringshistorikk: opprinnelsene og stilene de faktisk tar inn, prisnivå, volum og hvor lenge de har vært aktive. For produsenter: din vei til markedet. For importører: konkurrentene og hvor de er sterke.',
+    impNote: 'Hver importør vist med hele sin bok fra Vinmonopolets lanseringshistorikk: opprinnelsene og stilene de faktisk tar inn, prisnivå, volum og hvor lenge de har vært aktive. For produsenter: din vei til markedet. For importører: konkurrentene og hvor de er sterke. Merk: importør er kun oppgitt på ~15 % av lanseringene (mest brennevinslistene), så dette er hvem som er navngitt — ikke hele importørlandskapet.',
     impSearch: 'Søk importør, opprinnelse eller stil', impSearchPh: 'f.eks. Bourgogne, whisky, Moestue',
     impFilterOrigin: 'Opprinnelse', impFilterStyle: 'Stil',
     impAnyOrigin: 'Alle opprinnelser', impAnyStyle: 'Alle stiler',
     impResults: (n, t) => `Viser ${n} av ${t} importører (≥ 3 lanseringer).`,
     impActive: 'aktiv nå', impLaunches: 'lanseringer', impVol: v => `median ${v} fl.`,
-    impOrigins: 'Opprinnelser', impStyles: 'Stiler', impDistricts: 'Distrikter',
-    impNone: 'Ingen importører matcher. Prøv et bredere søk.',
+    impOrigins: 'Opprinnelser', impStyles: 'Stiler', impDistricts: 'Distrikter', impProducers: 'Produsenter de tar inn',
+    impNone: 'Ingen treff. Prøv et bredere søk.',
+    findImporters: 'Importører', findProducers: 'Produsenter',
+    impCoverageNote: (k, n) => `importør oppgitt på ${k} av ${n} lanseringer`,
+    prodH: 'Produsent-historikk — hva Vinmonopolet faktisk har lansert',
+    prodNote: 'Hver produsent med hele sin faktiske historikk hos Vinmonopolet: hva som ble lansert, til hvilke priser, i hvilke stiler og distrikter, over hvilke år — og hvilke importører som har tatt dem inn (der det er oppgitt). Produsent er registrert på ~100 % av radene, så dette er datasettets mest komplette linse. Slå opp deg selv eller en konkurrent.',
+    prodSearch: 'Søk produsent, opprinnelse eller stil',
+    prodResults: (n, t) => `Viser ${n} av ${t} produsenter (topp etter antall lanseringer, ≥ 3).`,
+    prodImporters: 'Importører som har tatt dem inn',
+    prodNoImporter: 'ingen importør oppgitt i lanseringslistene for denne produsenten (importør er sjelden registrert på vinlister)',
     mwNeedFob: e => `du må treffe ≤ €${e} FOB`,
     mwPriceFits: 'din FOB passer ✓', mwPriceHigh: 'din FOB er for høy',
     mwClausePass: n => `${n} krav oppfylt`, mwUnknown: n => `${n} å bekrefte`,
@@ -1314,7 +1329,7 @@ const I18N = {
       viner: 'Beskriv en vin og se på sekundet hvilke anbud den kan vinne.',
       portefolje: 'Last opp dine egne viner én gang — hver lanseringsplan matches automatisk mot porteføljen din.',
       mkt: 'Hva som faktisk ble lansert 2020→: reelle priser, volum og produsenter per opprinnelse × stil, og seks års prisutvikling.',
-      importorer: 'Hver importørs faktiske bok — opprinnelsene og stilene de tar inn, prisnivå og volum. Din vei til markedet, eller konkurrentene.',
+      importorer: 'Bytt mellom importører og produsenter. Hver aktørs faktiske bok fra lanseringshistorikken — opprinnelser, stiler, prisnivå, volum. Slå opp deg selv, din vei til markedet, eller konkurrentene.',
       katalog: 'Produsenter og hvem som representerer dem i hvert marked. «Åpen» = urepresentert, altså en ledig introduksjonsmulighet.',
       analyse: 'Mønstre på tvers av alle innlastede planer — hvilke opprinnelser og druer som går igjen, og hvordan prisbåndene beveger seg.',
       opplasting: 'Last opp en ny lanseringsplan fra Vinmonopolet, eller produsentdata i bulk via Excel-malen.',
@@ -1534,14 +1549,22 @@ const I18N = {
     mktViewCountry: 'Origin × style', mktViewDistrict: 'Appellation × style',
     mktColProfile: 'Profile', mktColBand: 'Price band (25 · median · 75)', mktColN: 'Launches',
     impH: 'Importer finder — who brings in wines like yours?',
-    impNote: "Each importer shown with their whole book from Vinmonopolet's launch history: the origins and styles they actually bring in, price tier, volume and how long they've been active. For producers: your route to market. For importers: the competition and where they're strong.",
+    impNote: "Each importer shown with their whole book from Vinmonopolet's launch history: the origins and styles they actually bring in, price tier, volume and how long they've been active. For producers: your route to market. For importers: the competition and where they're strong. Note: importer is recorded on only ~15% of launches (mostly the spirits lists), so this is who's named — not the whole importer landscape.",
     impSearch: 'Search importer, origin or style', impSearchPh: 'e.g. Bourgogne, whisky, Moestue',
     impFilterOrigin: 'Origin', impFilterStyle: 'Style',
     impAnyOrigin: 'All origins', impAnyStyle: 'All styles',
     impResults: (n, t) => `Showing ${n} of ${t} importers (≥ 3 launches).`,
     impActive: 'active now', impLaunches: 'launches', impVol: v => `median ${v} btl`,
-    impOrigins: 'Origins', impStyles: 'Styles', impDistricts: 'Districts',
-    impNone: 'No importers match. Try a broader search.',
+    impOrigins: 'Origins', impStyles: 'Styles', impDistricts: 'Districts', impProducers: 'Producers they bring in',
+    impNone: 'No matches. Try a broader search.',
+    findImporters: 'Importers', findProducers: 'Producers',
+    impCoverageNote: (k, n) => `importer recorded on ${k} of ${n} launches`,
+    prodH: 'Producer track record — what Vinmonopolet has actually launched',
+    prodNote: "Each producer with their whole actual record at Vinmonopolet: what launched, at what prices, in which styles and districts, over which years — and which importers have carried them (where recorded). Producer is recorded on ~100% of rows, so this is the dataset's most complete lens. Look yourself — or a competitor — up.",
+    prodSearch: 'Search producer, origin or style',
+    prodResults: (n, t) => `Showing ${n} of ${t} producers (top by launch count, ≥ 3).`,
+    prodImporters: 'Importers who have carried them',
+    prodNoImporter: 'no importer recorded in the launch lists for this producer (importer is rarely recorded on wine lists)',
     mwNeedFob: e => `you must hit ≤ €${e} FOB`,
     mwPriceFits: 'your FOB fits ✓', mwPriceHigh: 'your FOB is too high',
     mwClausePass: n => `${n} requirements met`, mwUnknown: n => `${n} to confirm`,
@@ -1680,7 +1703,7 @@ const I18N = {
       viner: 'Describe a wine and see, in seconds, which tenders it can win.',
       portefolje: 'Upload your own wines once — every launch plan is matched against your portfolio automatically.',
       mkt: 'What actually launched 2020→: real prices, volume and producers per origin × style, and six years of price movement.',
-      importorer: "Each importer's actual book — the origins and styles they bring in, price tier and volume. Your route to market, or the competition.",
+      importorer: "Toggle between importers and producers. Each player's actual book from the launch history — origins, styles, price tier, volume. Look yourself up, your route to market, or the competition.",
       katalog: 'Producers and who represents them in each market. "Open" = unrepresented, i.e. an available introduction opportunity.',
       analyse: 'Patterns across all loaded plans — which origins and grapes recur, and how the price bands move.',
       opplasting: "Upload a new launch plan from Vinmonopolet, or producer data in bulk via the Excel template.",
@@ -1923,7 +1946,12 @@ function classify(cl) {
 function parseVintageText(t) {
   const years = ((t || '').match(/(?:19|20)\d\d/g) || []).map(Number);
   if (!years.length) return null;
-  if (/more recent|or younger/i.test(t)) return { type:'vintage', min_year: Math.min(...years) };
+  if (/more recent|or younger|nyere|yngre/i.test(t)) return { type:'vintage', min_year: Math.min(...years) };
+  if (/or older|older than|eldre/i.test(t)) return { type:'vintage', max_year: Math.max(...years) };
+  // "2020–2022" / "2020 to 2022" → a range, so any interior vintage qualifies (not only the endpoints)
+  if (years.length >= 2 && /\d\s*(?:[-–—]|to|til)\s*\d/.test(t)) {
+    return { type:'vintage', min_year: Math.min(...years), max_year: Math.max(...years) };
+  }
   return { type:'vintage', years };
 }
 // The numbered requirement text normally lives in `spec`; Norwegian-edition sheets shift it
@@ -1962,6 +1990,12 @@ function grapePct(wine, variety) {
     if (grapeNameMatch(g, variety)) return pct;
   return 0;
 }
+// Total percentage of a wine's grapes that match ANY of the clause varieties, counting each wine grape
+// at most once (so synonym pairs like Syrah/Shiraz in a clause don't double-count the same grape).
+function sumMatchedPct(wineGrapes, varieties) {
+  return wineGrapes.filter(([g]) => varieties.some(v => grapeNameMatch(g, v)))
+    .reduce((s, [, p]) => s + (+p || 0), 0);
+}
 function checkClause(cl, w) {
   const t = cl.type;
   if (t === 'grape') {
@@ -1977,13 +2011,15 @@ function checkClause(cl, w) {
     }
     if (cl.mode === 'min_pct') {
       if (!vs.some(hasVar)) return 'fail';
-      if (known) return vs.reduce((s, v) => s + grapePct(w, v), 0) >= cl.pct ? 'pass' : 'fail';
+      // Sum each matching WINE grape once — never per clause-variety, or a "Syrah/Shiraz" clause would
+      // double-count the same 50% Shiraz to 100% and wrongly pass a sub-threshold blend.
+      if (known) return sumMatchedPct(wg, vs) >= cl.pct ? 'pass' : 'fail';
       return 'unknown';                                    // variety present, exact % pending → unknown, not fail
     }
     if (cl.mode === 'any_of') {
       const allPermitted = wg.length > 0 && wg.every(([g]) => vs.some(v => grapeNameMatch(g, v)));
       if (allPermitted) return 'pass';                     // every grape is from the permitted set — knowable without %
-      if (known) return vs.reduce((s, v) => s + grapePct(w, v), 0) >= 99 ? 'pass' : 'fail';
+      if (known) return sumMatchedPct(wg, vs) >= 99 ? 'pass' : 'fail';
       return 'fail';                                       // contains a grape outside the permitted set
     }
     if (cl.mode === 'blend_multi') {                       // field blend: the wine must itself be a blend
@@ -1996,7 +2032,10 @@ function checkClause(cl, w) {
     const a = w.vintages_available || [];
     if (!a.length) return 'unknown';   // no vintage stated (e.g. a seeded lead) → unknown, not a fail
     if (a.includes(0)) return 'pass';
-    if (cl.min_year != null) return a.some(y => y >= cl.min_year) ? 'pass' : 'fail';
+    if (cl.min_year != null || cl.max_year != null) {   // open-ended or a range → any vintage inside qualifies
+      const lo = cl.min_year ?? -Infinity, hi = cl.max_year ?? Infinity;
+      return a.some(y => y >= lo && y <= hi) ? 'pass' : 'fail';
+    }
     return (cl.years || []).some(y => a.includes(y)) ? 'pass' : 'fail';
   }
   if (t === 'sugar_max') return w.sugar_g_l == null ? 'unknown' : (w.sugar_g_l <= cl.g_l ? 'pass' : 'fail');
@@ -2007,6 +2046,7 @@ function checkClause(cl, w) {
   }
   if (t === 'cert') {
     const held = (w.certs || []).map(N);
+    if (!held.length) return 'unknown';   // no cert data → can't confirm (like every other field), don't hard-fail
     if (!cl.certs.some(n => held.some(h => h.includes(N(n)) || N(n).includes(h)))) return 'fail';
     if (cl.on_label && !w.cert_on_label) return 'unknown';
     return 'pass';
@@ -2030,7 +2070,13 @@ function checkClause(cl, w) {
   if (['offer_rule','packaging_rule','confirmation_rule'].includes(t)) return 'info';
   return 'unknown';
 }
-const EURO = ['austria','portugal','france','italy','spain','germany','greece','hungary','england','slovenia','croatia'];
+// European wine nations (normalised, English) — for tenders scoped to "Europe" / "EU" / "EØS".
+const EURO = ['austria','portugal','france','italy','spain','germany','greece','hungary','england',
+  'great britain','united kingdom','scotland','slovenia','croatia','romania','bulgaria','moldova',
+  'switzerland','netherlands','luxembourg','serbia','macedonia','north macedonia','montenegro',
+  'ukraine','slovakia','poland','czech republic','czechia','belgium','malta','cyprus',
+  'norway','sweden','denmark','finland','iceland'];
+const NORDIC = ['norway','sweden','denmark','finland','iceland'];
 // A tender's origin can be a real requirement phrase ("EU or Norway", "The Nordic countries",
 // "Belgium, Netherlands, France…") — legitimate for filtering tenders, but not a value a producer
 // would pick to describe their own wine's single country of origin. Used to keep the match-my-wine
@@ -2046,8 +2092,30 @@ function isRealCountry(c) {
 function originOk(spec, w) {
   const sc = N(spec.country || ''), wc = N(w.country || '');
   if (!sc || sc === '-' || sc.includes('open') || sc.includes('all countries')) return true;
-  if (sc.includes('europe')) return EURO.includes(wc);
-  return sc.includes(wc) || wc.includes(sc);
+  if (!wc) return true;                          // origin unspecified — originVerdict treats this as 'unknown'
+  // Group origins: a wine qualifies if it's in the named group OR explicitly named in the phrase
+  // (handles "Europe", "EU", "EØS/EEA", "the Nordic countries", "EU or Norway", "Belgium, Netherlands…").
+  if (/\b(eu|eos|eea|efta)\b|europ/.test(sc) && EURO.includes(wc)) return true;
+  if (/nordic|norden/.test(sc) && NORDIC.includes(wc)) return true;
+  return sc.includes(wc) || wc.includes(sc);     // explicit country token in the requirement phrase
+}
+// Tri-state origin/style so an UNSPECIFIED wine field (the "Any" defaults) against a restricted tender
+// reads as 'unknown' (show it, flag it to confirm) — never a silent pass (false positive) or a hard drop.
+function originVerdict(spec, w) {
+  const sc = N(spec.country || '');
+  const restricted = sc && sc !== '-' && !sc.includes('open') && !sc.includes('all countries');
+  if (!restricted) return 'pass';
+  if (!(w.country || '').trim()) return 'unknown';
+  return originOk(spec, w) ? 'pass' : 'fail';
+}
+function groupVerdict(spec, w) {
+  if (isNonWine(spec)) return 'fail';
+  const mt = N(spec.main_type || '');
+  if (mt && !/wine|vin/.test(mt)) return 'fail';
+  const g = N(spec.group || '') || mt;
+  const styleRestricted = /sparkling|musserende|rose|red|rodvin|white|hvitvin/.test(g);
+  if (!N(w.color || '')) return styleRestricted ? 'unknown' : 'pass';
+  return groupOk(spec, w) ? 'pass' : 'fail';
 }
 // Non-wine categories, both English and Norwegian (matched after N() strips ø/æ/å).
 // Deliberately excludes "vin"/"sterkvin" so fortified wine still counts as wine.
@@ -2114,16 +2182,24 @@ async function loadVmpIndex() {
 const SE_TO_NO_RETAIL = 1.15;
 function noRetailEst(w) { return w.retail_sek != null ? w.retail_sek * SE_TO_NO_RETAIL : null; }
 function evaluateWine(spec, w, fobReq) {
-  if (!originOk(spec, w) || !groupOk(spec, w)) return null;
+  const ov = originVerdict(spec, w), gv = groupVerdict(spec, w);
+  if (ov === 'fail' || gv === 'fail') return null;
   const verdicts = clausesForSpec(spec).map(cl => ({ clause: cl.text.slice(0, 90), verdict: checkClause(cl, w) }));
+  // An unconfirmed origin/style (wine left on "Any") counts as a criterion to confirm — honest, not a pass.
+  if (ov === 'unknown') verdicts.push({ clause: L.critOrigin, verdict: 'unknown' });
+  if (gv === 'unknown') verdicts.push({ clause: L.critType, verdict: 'unknown' });
   if (verdicts.some(v => v.verdict === 'fail')) return null;
   const passes = verdicts.filter(v => v.verdict === 'pass').length;
   const unknowns = verdicts.filter(v => v.verdict === 'unknown').length;
   const total = verdicts.filter(v => v.verdict !== 'info').length;
   let priceOk = null, priceBasis = null;
-  const bandCap = spec.price_hi ?? spec.price_lo;
-  if (fobReq && w.fob_eur != null) { priceOk = w.fob_eur <= fobReq.eur; priceBasis = 'fob'; }
-  else if (bandCap) { const est = noRetailEst(w); if (est != null) { priceOk = est <= +bandCap * 1.05; priceBasis = 'est'; } }
+  // Only a real upper bound caps the FOB. A minimum-price ("over X") tender has price_hi === null — no
+  // ceiling to check — so we don't flag price at all rather than mistaking the floor for a cap.
+  const cap = spec.price_hi;
+  if (cap != null) {
+    if (fobReq && w.fob_eur != null) { priceOk = w.fob_eur <= fobReq.eur; priceBasis = 'fob'; }
+    else { const est = noRetailEst(w); if (est != null) { priceOk = est <= +cap * 1.05; priceBasis = 'est'; } }
+  }
   const idxCat = catalogFromIndex(w);
   const cat = idxCat ? idxCat.status : ((w.catalog_no && w.catalog_no.status) || 'unchecked');
   return { wine: w, passes, unknowns, total, priceOk, priceBasis, catalog: cat, catalogMatch: idxCat, verdicts };
@@ -2134,12 +2210,13 @@ function evaluateWine(spec, w, fobReq) {
 function critList(spec, w, fob) {
   const out = [];
   const originVal = [dispCountry(spec.country), spec.region, spec.appellation].filter(Boolean).join(' · ');
-  out.push({ label: L.critOrigin, val: originVal || L.openOrigin, v: originOk(spec, w) ? 'pass' : 'fail' });
-  out.push({ label: L.critType, val: groupLabel(spec.group) + (spec.vintage ? ` · ${L.wlVintage}${spec.vintage}` : ''), v: groupOk(spec, w) ? 'pass' : 'fail' });
+  out.push({ label: L.critOrigin, val: originVal || L.openOrigin, v: originVerdict(spec, w) });
+  out.push({ label: L.critType, val: groupLabel(spec.group) + (spec.vintage ? ` · ${L.wlVintage}${spec.vintage}` : ''), v: groupVerdict(spec, w) });
   for (const cl of clausesForSpec(spec)) out.push({ label: '', val: cl.text, v: checkClause(cl, w) });
-  const bandCap = spec.price_hi ?? spec.price_lo;
-  if (fob && w.fob_eur != null) out.push({ label: L.critPrice, val: L.critFob(fmt(fob.eur, 1), fmt(w.fob_eur, 1)), v: w.fob_eur <= fob.eur ? 'pass' : 'fail' });
-  else if (bandCap && w.retail_sek != null) out.push({ label: L.critPrice, val: L.critFobEst(fmt(w.retail_sek, 0), fmt(noRetailEst(w), 0), fmt(bandCap, 0)), v: noRetailEst(w) <= +bandCap * 1.05 ? 'pass' : 'fail' });
+  const cap = spec.price_hi;                 // only a real ceiling; "over X" min-price tenders have none
+  if (cap == null) { /* no retail cap to check */ }
+  else if (fob && w.fob_eur != null) out.push({ label: L.critPrice, val: L.critFob(fmt(fob.eur, 1), fmt(w.fob_eur, 1)), v: w.fob_eur <= fob.eur ? 'pass' : 'fail' });
+  else if (w.retail_sek != null) out.push({ label: L.critPrice, val: L.critFobEst(fmt(w.retail_sek, 0), fmt(noRetailEst(w), 0), fmt(cap, 0)), v: noRetailEst(w) <= +cap * 1.05 ? 'pass' : 'fail' });
   else if (fob) out.push({ label: L.critPrice, val: L.critFobPending(fmt(fob.eur, 1)), v: 'unknown' });
   return out;
 }
@@ -4483,8 +4560,15 @@ function renderBenchmark(w) {
   const meta = [];
   if (b.volMed != null) meta.push(L.mktVol(fmt(b.volMed, 0)));
   if (b.vintages && b.vintages[0] !== b.vintages[1]) meta.push(L.mktVint(b.vintages[0], b.vintages[1]));
-  const grp = (title, arr) => (arr && arr.length) ? `<div class="mkt-grp"><div class="gh">${title}</div>${
-    arr.map(x => `<span class="mkt-chip">${esc(x.name)}<b>${x.n}</b></span>`).join('')}</div>` : '';
+  // producer chips are clickable → that producer's full track record; importer chips carry an honest
+  // coverage caveat (importer recorded on impKnown of the bucket's n launches, not the whole field).
+  const grp = (title, arr, clickable) => (arr && arr.length) ? `<div class="mkt-grp"><div class="gh">${title}</div>${
+    arr.map(x => clickable
+      ? `<span class="mkt-chip clk" onclick="openProducer('${esc(x.name).replace(/'/g, "\\'")}')">${esc(x.name)}<b>${x.n}</b></span>`
+      : `<span class="mkt-chip">${esc(x.name)}<b>${x.n}</b></span>`).join('')}</div>` : '';
+  const impGrp = (b.importers && b.importers.length)
+    ? `<div class="mkt-grp"><div class="gh">${L.mktTopImp}</div>${b.importers.map(x => `<span class="mkt-chip">${esc(x.name)}<b>${x.n}</b></span>`).join('')}<span class="mkt-cov">${L.impCoverageNote(b.impKnown || 0, b.n)}</span></div>`
+    : '';
   const yrs = MARKET_INDEX.meta.years;
   const linkCountry = w.country || b.country;
   const impLink = (b.type && linkCountry) ? `<p class="mkt-src" style="margin-top:8px"><a href="#" onclick="openImporters('${esc(linkCountry)}','${esc(b.type)}');return false">${L.mktSeeImporters} →</a></p>` : '';
@@ -4492,8 +4576,8 @@ function renderBenchmark(w) {
     <div class="mkt-h">${L.mktH(esc(mb.name), styl)}${mb.scope === 'district' ? ` <span class="dtag">${L.mktAppellation}</span>` : ''}${mb.broad ? ` <span class="dtag">${L.mktBroad}</span>` : ''}</div>
     <div class="mkt-band">${cell(b.p25, L.mktP25)}${cell(b.med, L.mktMed, true)}${cell(b.p75, L.mktP75)}</div>
     ${meta.length ? `<p class="mkt-meta">${meta.join(' · ')}</p>` : ''}
-    ${grp(L.mktTopProd, b.producers)}
-    ${grp(L.mktTopImp, b.importers)}
+    ${grp(L.mktTopProd, b.producers, true)}
+    ${impGrp}
     ${impLink}
     <p class="mkt-src">${L.mktSrc(b.n, yrs[0], yrs[yrs.length - 1])}</p>
   </div>`;
@@ -4520,9 +4604,11 @@ function renderMarketExplorer() {
   const rows = (MKT_VIEW === 'district' ? MARKET_INDEX.byDistrictType : MARKET_INDEX.byCountryType).map(b => ({
     label: MKT_VIEW === 'district' ? b.district : (dispCountry(b.country) || b.country),
     type: b.type, n: b.n, p25: b.p25, med: b.med, p75: b.p75, volMed: b.volMed,
-    producers: b.producers, importers: b.importers,
+    producers: b.producers, importers: b.importers, impKnown: b.impKnown,
   }));
-  const chip = arr => (arr || []).map(x => `<span class="mkt-chip">${esc(x.name)}<b>${x.n}</b></span>`).join('');
+  const chip = (arr, clickable) => (arr || []).map(x => clickable
+    ? `<span class="mkt-chip clk" onclick="openProducer('${esc(x.name).replace(/'/g, "\\'")}')">${esc(x.name)}<b>${x.n}</b></span>`
+    : `<span class="mkt-chip">${esc(x.name)}<b>${x.n}</b></span>`).join('');
   const body = rows.map((r, i) => `<details class="mktrow">
       <summary>
         <span class="mktrow-name">${esc(r.label)} <span class="mktrow-style">${esc(styleLabel(r.type).toLowerCase())}</span></span>
@@ -4531,8 +4617,8 @@ function renderMarketExplorer() {
       </summary>
       <div class="mktrow-body">
         ${r.volMed != null ? `<p class="mkt-meta">${L.mktVol(fmt(r.volMed, 0))}</p>` : ''}
-        <div class="mkt-grp"><div class="gh">${L.mktTopProd}</div>${chip(r.producers)}</div>
-        ${r.importers && r.importers.length ? `<div class="mkt-grp"><div class="gh">${L.mktTopImp}</div>${chip(r.importers)}</div>` : ''}
+        <div class="mkt-grp"><div class="gh">${L.mktTopProd}</div>${chip(r.producers, true)}</div>
+        ${r.importers && r.importers.length ? `<div class="mkt-grp"><div class="gh">${L.mktTopImp}</div>${chip(r.importers)}<span class="mkt-cov">${L.impCoverageNote(r.impKnown || 0, r.n)}</span></div>` : ''}
       </div></details>`).join('');
   tblBox.innerHTML = `<div class="mkt-toggle">
       <button class="seg${MKT_VIEW === 'country' ? ' on' : ''}" onclick="mktSetView('country')">${L.mktViewCountry}</button>
@@ -4541,27 +4627,54 @@ function renderMarketExplorer() {
     <div class="mktrow-head"><span>${L.mktColProfile}</span><span>${L.mktColBand}</span><span>${L.mktColN}</span></div>
     ${body}`;
 }
-// ============ Importer Finder ============
-let IMP_INIT = false;
+// ============ Trade finder: importers AND producers, same card, real launch history ============
+// Importers show the producers they bring in; producers show their launch record + which importers
+// carried them (thin — importer is recorded on ~15% of rows, so we flag coverage rather than imply it's
+// the whole field). A producer can look themselves up; an importer can size up producers and rivals.
+let IMP_INIT = false, FIND_MODE = 'importer';
+function findData() { return FIND_MODE === 'producer' ? (MARKET_INDEX.producers || []) : (MARKET_INDEX.importers || []); }
+function setFindMode(m) {
+  if (FIND_MODE === m) return;
+  FIND_MODE = m;
+  $('findSegImp').classList.toggle('on', m === 'importer');
+  $('findSegProd').classList.toggle('on', m === 'producer');
+  IMP_INIT = false;                              // rebuild the origin/style option sets for this dataset
+  $('impQ').value = ''; $('impOrigin').innerHTML = ''; $('impStyle').innerHTML = '';
+  renderImporterFinder();
+}
 function openImporters(country, type) {
-  gotoTab('importorer');                       // populates the selects via renderImporterFinder
+  gotoTab('importorer');
+  setFindMode('importer');
   const os = $('impOrigin'), ss = $('impStyle');
   if (os && country && [...os.options].some(o => o.value === country)) os.value = country;
   if (ss && type && [...ss.options].some(o => o.value === type)) ss.value = type;
   if ($('impQ')) $('impQ').value = '';
   renderImporterFinder();
 }
+function openProducer(name) {                    // jump from a benchmark chip to that producer's record
+  gotoTab('importorer');
+  setFindMode('producer');
+  if ($('impQ')) $('impQ').value = name || '';
+  renderImporterFinder();
+}
 function renderImporterFinder() {
-  const list = $('impList'); if (!list || !MARKET_INDEX.importers) return;
-  const imps = MARKET_INDEX.importers;
+  const list = $('impList'); if (!list) return;
+  const data = findData();
+  const prod = FIND_MODE === 'producer';
+  $('findH').textContent = prod ? L.prodH : L.impH;
+  $('findNote').textContent = prod ? L.prodNote : L.impNote;
+  if ($('findSearchL')) $('findSearchL').textContent = prod ? L.prodSearch : L.impSearch;
   if (!IMP_INIT) {
-    const origins = [...new Set(imps.flatMap(i => i.origins.map(o => o.name)))].sort((a, b) => (dispCountry(a) || a).localeCompare(dispCountry(b) || b));
-    const styles = [...new Set(imps.flatMap(i => i.styles.map(s => s.name)))].sort();
+    const origins = [...new Set(data.flatMap(i => i.origins.map(o => o.name)))].sort((a, b) => (dispCountry(a) || a).localeCompare(dispCountry(b) || b));
+    const styles = [...new Set(data.flatMap(i => i.styles.map(s => s.name)))].sort();
     $('impOrigin').innerHTML = `<option value="">${esc(L.impAnyOrigin)}</option>` + origins.map(c => `<option value="${esc(c)}">${esc(dispCountry(c) || c)}</option>`).join('');
     $('impStyle').innerHTML = `<option value="">${esc(L.impAnyStyle)}</option>` + styles.map(s => `<option value="${esc(s)}">${esc(styleLabel(s))}</option>`).join('');
-    $('impQ').addEventListener('input', renderImporterFinder);
-    $('impOrigin').addEventListener('change', renderImporterFinder);
-    $('impStyle').addEventListener('change', renderImporterFinder);
+    if (!$('impQ').dataset.wired) {
+      $('impQ').addEventListener('input', renderImporterFinder);
+      $('impOrigin').addEventListener('change', renderImporterFinder);
+      $('impStyle').addEventListener('change', renderImporterFinder);
+      $('impQ').dataset.wired = '1';
+    }
     IMP_INIT = true;
   }
   const q = normStr($('impQ').value), fo = $('impOrigin').value, fs = $('impStyle').value;
@@ -4575,11 +4688,17 @@ function renderImporterFinder() {
     }
     return true;
   };
-  const shown = imps.filter(match);
-  $('impCount').textContent = L.impResults(shown.length, imps.length);
+  const shown = data.filter(match);
+  $('impCount').textContent = (prod ? L.prodResults : L.impResults)(shown.length, data.length);
   const chip = (arr, disp) => arr.map(x => `<span class="mkt-chip">${esc(disp ? (disp(x.name) || x.name) : x.name)}<b>${x.n}</b></span>`).join('');
   list.innerHTML = shown.length ? shown.map(i => {
     const active = i.years ? (i.years[1] >= lastYr ? `<span class="chip hi" style="min-width:0">${L.impActive}</span>` : `<span class="dtag">${i.years[0]}–${i.years[1]}</span>`) : '';
+    // For producers, the "who carried them" group is honest only when importers are actually recorded.
+    const book = prod
+      ? (i.importers && i.importers.length
+        ? `<div class="mkt-grp"><div class="gh">${L.prodImporters}</div>${chip(i.importers)}<span class="mkt-cov">${L.impCoverageNote(i.impKnown || 0, i.n)}</span></div>`
+        : `<div class="mkt-grp"><div class="gh">${L.prodImporters}</div><span class="mkt-cov">${L.prodNoImporter}</span></div>`)
+      : `<div class="mkt-grp"><div class="gh">${L.impProducers}</div>${chip(i.producers)}</div>`;
     return `<div class="impcard">
       <div class="impcard-top">
         <span class="impcard-name">${esc(i.name)}</span>
@@ -4588,6 +4707,7 @@ function renderImporterFinder() {
       <div class="mkt-grp" style="margin-top:8px"><div class="gh">${L.impOrigins}</div>${chip(i.origins, dispCountry)}</div>
       <div class="mkt-grp"><div class="gh">${L.impStyles}</div>${i.styles.map(s => `<span class="mkt-chip">${esc(styleLabel(s.name))}<b>${s.n}</b></span>`).join('')}</div>
       ${i.districts && i.districts.length ? `<div class="mkt-grp"><div class="gh">${L.impDistricts}</div>${chip(i.districts)}</div>` : ''}
+      ${book}
     </div>`;
   }).join('') : `<p class="note" style="color:var(--muted)">${L.impNone}</p>`;
 }

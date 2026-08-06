@@ -102,16 +102,24 @@ This launch history powers five things across the app:
 - **Market** tab — browse the whole dataset: the six-year premiumisation trend (median launch price
   kr 755→1003, +33%) and a filterable benchmark table by origin × style *and* by appellation × style,
   each row expandable to its top producers and importers.
-- **Importers** tab — every importer with their whole book: the origins and styles they bring in
-  (with counts), price tier, median volume, and active years. A producer's route to market; an
-  importer's view of the competition. Corporate-suffix variants ("Nafstad" / "Nafstad AS") are merged.
+- **Importers / Producers** tab — a dual finder over the launch history. *Importers*: every importer's
+  whole book (origins and styles they bring in, price tier, median volume, active years) — a producer's
+  route to market, an importer's view of the competition; corporate-suffix variants ("Nafstad" /
+  "Nafstad AS") are merged. *Producers*: every producer's actual Vinmonopolet track record — what
+  launched, at what prices, in which styles/districts, over which years, and which importers carried
+  them. Producer is recorded on ~100% of rows, so a producer can reliably look themselves (or a rival) up.
 - **Backtest** — each historically-matched tender now carries the real market price band for its
   origin × style.
 - **Analytics** — every recurring demand profile is annotated with real **supply** (how many
   comparable wines actually launched, and their median price) — demand and supply side by side, no
   fabricated ratio.
 
-Every benchmark states its sample size; buckets with fewer than five real launches are never shown.
+**Honest coverage.** Importer is recorded on only ~15% of launches (mostly the spirits lists), so every
+importer display carries a caveat ("importer recorded on N of M launches") — it's who's *named*, not the
+whole field. Every benchmark states its sample size; buckets with fewer than five real launches are never
+shown. `parse_launch_list.py` self-audits on every run (per-file rows, and a warning for any content sheet
+with no detectable header) so a reimport can't silently drop data.
+
 To refresh after adding more launch lists:
 
 ```bash
