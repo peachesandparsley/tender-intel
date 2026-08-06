@@ -807,7 +807,6 @@
     <div class="card">
       <h2 data-i18n="h2Market">Marketplace — viner som møter anbudskravene</h2>
       <p class="note" style="margin:0 0 12px" data-i18n="noteMarket"><b>Slik leser du listen:</b> Hvert anbud viser først hva Vinmonopolet ber om, deretter vinene i databasen som oppfyller kravene. Fire statuser avgjør om det er verdt å gå videre: kravene, prisen, om vinen allerede står i sortimentet, og om produsenten er åpen for import. Klikk en vinrad for klausul-for-klausul-vurderingen.</p>
-      <div class="samplebar" data-i18n="sampleBannerShort"><b>Prøvedata:</b> kandidatvinene er AI-seedede eksempler (FOB/volum er estimat). Ekte data kommer fra Vinmonopolet-katalogen og produsentopplasting.</div>
       <p class="note" id="vmpIndexNote" style="margin:0 0 6px;color:var(--good-text);font-weight:600"></p>
       <div class="filters" id="marketFilters">
         <button data-mf="hide" class="on" data-i18n="mfHideListed">Skjul viner som alt er i VMP</button>
@@ -881,7 +880,6 @@
     <div class="card">
       <h2><span data-i18n="h2Wines">Vindatabase</span> <span class="pill" id="wineCount"></span></h2>
       <details class="disclose" id="wineDbDetails" style="margin-top:6px"><summary data-i18n="wineDbOpen">Åpne vindatabasen — bla i alle viner</summary><div class="disclose-body">
-      <div class="samplebar" data-i18n="sampleBanner"><b>Prøvedata:</b> vinene under er AI-seedede eksempler fra offentlige kilder — FOB, volum og smaksprofil er <b>estimat</b>, ikke verifisert. Ekte, kildeførte data hentes fra Vinmonopolets katalog (<code>ingest_vmp.py</code>) og fra produsentopplasting. Ikke ta tallene for god fisk ennå.</div>
       <p class="note" style="margin:0 0 10px" data-i18n="noteWinesMem">Kjører i minnet i denne økten. Eksporter for å lagre; importer JSON for å fortsette senere.</p>
       <div class="dimbar">
         <div><label data-i18n="lblGeo">Geografi</label><select id="wfCountry"><option value="" data-i18n="optAllCountries">Alle land</option></select></div>
@@ -1280,8 +1278,6 @@ const I18N = {
     thComponent: 'Komponent', thKr: 'kr', thShare: 'Andel',
     calcFooter: '<b>Modell:</b> mva 25 % + alkoholavgift (5,41 kr/vol%/l, 4,7–22 %) + Vinmonopolets avanse (10,82 kr/l + 21 %, knekk 133,70, tak 250) — reproduserer priseksemplet over (199,90 kr → grossist 80,67 kr). <b>Satser per jan. 2026 — bekreft mot kilde:</b> Skatteetaten (avgift) og Vinmonopolet (avanse); satsene endres hver januar. <b>Frakt og importørmargin er dine forutsetninger</b>, ikke offentlige satser — de avgjør «Vurdering», som er en tommelfingerregel, ikke en garanti.',
     h2Wines: 'Vindatabase', wineDbOpen: 'Åpne vindatabasen — bla i alle viner', noteWinesMem: 'Kjører i minnet i denne økten. Eksporter for å lagre; importer JSON for å fortsette senere.',
-    sampleBanner: '<b>Prøve- og lead-data:</b> de merkede vinene er enten AI-seedede eksempler (de opprinnelige) eller <b>ekte leads</b> fra åpne nordiske monopolkataloger (Systembolaget) — druer, sertifiseringer, sukker og region er ekte offentlige data, men <b>uverifisert for NO</b> og venter på at produsenten bekrefter. Produsent-eide tall (FOB, volum) er blanke til produsenten fyller dem inn. Representasjon i NO avgjøres av Vinmonopolet-katalogen (<code>ingest_vmp.py</code>).',
-    sampleBannerShort: '<b>Prøve/lead:</b> merkede viner er AI-eksempler eller ekte, men uverifiserte leads fra nordiske monopolkataloger. FOB/volum er blanke til produsenten bekrefter.',
     sampleBadge: 'lead', sampleBadgeTitle: 'Seedet lead — ekte offentlige data der de finnes, men uverifisert for NO og venter på produsentbekreftelse',
     lblCert: 'Sertifisering', lblStatusNO: 'Status Norge', phWineText: 'produsent, vin, drue…',
     noteWineMapClick: 'Klikk et land på kartet for å filtrere listen; klikk igjen for å oppheve. ',
@@ -1648,8 +1644,6 @@ const I18N = {
     thComponent: 'Component', thKr: 'kr', thShare: 'Share',
     calcFooter: "<b>Model:</b> 25% VAT + alcohol excise (5.41 kr/vol%/l, 4.7–22%) + Vinmonopolet's markup (10.82 kr/l + 21%, knee 133.70, cap 250) — reproduces the worked example above (199.90 kr → wholesale 80.67 kr). <b>Rates as of Jan 2026 — confirm against source:</b> Skatteetaten (excise) and Vinmonopolet (markup); rates change every January. <b>Freight and importer margin are your assumptions</b>, not published rates — they drive the verdict, which is a rule of thumb, not a guarantee.",
     h2Wines: 'Wine database', wineDbOpen: 'Open the wine database — browse all wines', noteWinesMem: 'Runs in memory for this session. Export to save; import JSON to continue later.',
-    sampleBanner: '<b>Sample & lead data:</b> the badged wines are either AI-seeded examples (the originals) or <b>real leads</b> from open Nordic monopoly catalogs (Systembolaget) — grapes, certifications, sugar and region are real public data, but <b>unverified for NO</b> and pending producer confirmation. Producer-owned figures (FOB, volume) are left blank until the producer fills them in. NO representation is decided by the Vinmonopolet catalog (<code>ingest_vmp.py</code>).',
-    sampleBannerShort: '<b>Sample/lead:</b> badged wines are AI examples or real-but-unverified leads from Nordic monopoly catalogs. FOB/volume left blank pending producer confirmation.',
     sampleBadge: 'lead', sampleBadgeTitle: 'Seeded lead — real public data where available, but unverified for NO and pending producer confirmation',
     lblCert: 'Certification', lblStatusNO: 'Status Norway', phWineText: 'producer, wine, grape…',
     noteWineMapClick: 'Click a country on the map to filter. Click a <b>producer</b> or <b>grape</b> in the table to spotlight its origins on the map. ',
