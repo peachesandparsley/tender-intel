@@ -162,6 +162,13 @@
   .mkt-chip.clk { cursor: pointer; }
   .mkt-chip.clk:hover { border-color: var(--accent); }
   /* Market explorer + importer finder */
+  /* Sub-navigation for the Marked hub (benchmarks · actors · demand) */
+  .subnav { display: flex; gap: 7px; margin-bottom: 16px; flex-wrap: wrap; }
+  .subnav .msub { background: var(--surface-1); border: 1px solid var(--border); border-radius: 999px;
+    padding: 7px 16px; font-size: 13px; font-weight: 600; color: var(--text-secondary); cursor: pointer;
+    transition: border-color .12s, color .12s; }
+  .subnav .msub:hover { border-color: var(--accent); color: var(--text-primary); }
+  .subnav .msub.on { background: var(--accent); color: var(--on-accent); border-color: var(--accent); }
   .mkt-toggle { display: inline-flex; gap: 0; border: 1px solid var(--border); border-radius: 9px; overflow: hidden; margin-bottom: 12px; }
   .mkt-toggle .seg { background: var(--surface-1); border: none; padding: 7px 14px; font-size: 12.5px; font-weight: 600; color: var(--text-secondary); cursor: pointer; }
   .mkt-toggle .seg + .seg { border-left: 1px solid var(--border); }
@@ -587,15 +594,11 @@
 
   <nav id="nav">
     <button data-t="anbud" class="on lead-tab" data-i18n="navAnbud">Anbud</button>
-    <button data-t="viner" class="lead-tab" data-i18n="navViner">Mine viner</button>
+    <button data-t="viner" class="lead-tab" data-i18n="navViner">Match min vin</button>
     <span class="nav-lbl nav-sep" data-i18n="navToolsLabel">Verktøy</span>
     <button data-t="mkt" class="tool-tab" data-i18n="navMarket">Marked</button>
-    <button data-t="importorer" class="tool-tab" data-i18n="navImporters">Importører</button>
-    <button data-t="katalog" class="tool-tab" data-i18n="navKat">Produsenter</button>
     <button data-t="kalk" class="tool-tab" data-i18n="navKalk">Kalkulator</button>
-    <button data-t="portefolje" class="tool-tab" data-i18n="navPort">Min portefølje</button>
-    <button data-t="analyse" class="tool-tab" data-i18n="navAnalyse">Analyse</button>
-    <button data-t="opplasting" class="tool-tab" data-i18n="navOpp">Last opp</button>
+    <button data-t="portefolje" class="tool-tab" data-i18n="navPort">Portefølje</button>
   </nav>
   <p class="tabhelp" id="tabHelp"></p>
 
@@ -824,6 +827,11 @@
 
   <!-- MARKED (market explorer) -->
   <section class="tab" id="tab-mkt">
+    <div class="subnav">
+      <button class="msub" data-sub="mkt" onclick="gotoTab('mkt')" data-i18n="subBench">Benchmarks</button>
+      <button class="msub" data-sub="importorer" onclick="gotoTab('importorer')" data-i18n="subActors">Aktører</button>
+      <button class="msub" data-sub="analyse" onclick="gotoTab('analyse')" data-i18n="subDemand">Etterspørsel</button>
+    </div>
     <div class="card">
       <h2 data-i18n="mktExH">Marked — hva som faktisk ble lansert</h2>
       <p class="note" style="margin:0 0 14px" data-i18n="mktExNote">Bygget på Vinmonopolets faktiske lanseringslister 2020→ (~12 000 produkter). Reelle utsalgspriser, volum, årganger, produsenter og importører — ikke estimater. Alle benchmarks hviler på minst fem ekte lanseringer.</p>
@@ -834,6 +842,11 @@
 
   <!-- IMPORTØRER (importer finder) -->
   <section class="tab" id="tab-importorer">
+    <div class="subnav">
+      <button class="msub" data-sub="mkt" onclick="gotoTab('mkt')" data-i18n="subBench">Benchmarks</button>
+      <button class="msub" data-sub="importorer" onclick="gotoTab('importorer')" data-i18n="subActors">Aktører</button>
+      <button class="msub" data-sub="analyse" onclick="gotoTab('analyse')" data-i18n="subDemand">Etterspørsel</button>
+    </div>
     <div class="card">
       <h2 id="findH"></h2>
       <p class="note" style="margin:0 0 12px" id="findNote"></p>
@@ -967,6 +980,11 @@
 
   <!-- ANALYSE -->
   <section class="tab" id="tab-analyse">
+    <div class="subnav">
+      <button class="msub" data-sub="mkt" onclick="gotoTab('mkt')" data-i18n="subBench">Benchmarks</button>
+      <button class="msub" data-sub="importorer" onclick="gotoTab('importorer')" data-i18n="subActors">Aktører</button>
+      <button class="msub" data-sub="analyse" onclick="gotoTab('analyse')" data-i18n="subDemand">Etterspørsel</button>
+    </div>
     <div class="card">
       <h2 data-i18n="h2Recur">Gjentakende etterspørsel — det Vinmonopolet ber om igjen og igjen</h2>
       <p class="note" style="margin:0 0 10px" data-i18n="noteRecur">Vinmonopolet publiserer ikke hvilke lot som ble fylt — men det publiserer hva det ber om. Vi grupperer anbudene på et handlingsnivå — <b>distrikt × stil × drue × prisbånd</b> — og viser, på tvers av planene i tidsrekkefølge, hvor ofte en profil går igjen <b>og hvor den er på vei</b>: ↗ økende, ● vedvarende, ↘ avtakende. «Chablis · Chardonnay · 200–350 kr» sier noe; «Frankrike · hvitvin» gjør ikke det. Tynt med fire planer — bygd for fem års planer (~10).</p>
@@ -1080,9 +1098,10 @@ const I18N = {
     themeToggle: 'lys/mørk', whoTitle: 'Brukes til å stemple hvem som lastet opp/endret data',
     planLabel: 'Plan:', planTitle: 'Bytt lanseringsplan — hele appen viser data fra planen du velger her',
     subtitle: 'Se hvilke av Vinmonopolets anbud en vin kan vinne — og nøyaktig hva som skal til for å vinne dem.',
-    navAnbud: 'Anbud', navMarked: 'Marketplace', navKalk: 'Kalkulator', navViner: 'Viner',
-    navPort: 'Min portefølje', navKat: 'Produsenter', navAnalyse: 'Analyse', navOpp: 'Last opp',
+    navAnbud: 'Anbud', navMarked: 'Marketplace', navKalk: 'Kalkulator', navViner: 'Match min vin',
+    navPort: 'Portefølje', navKat: 'Produsenter', navAnalyse: 'Analyse', navOpp: 'Last opp',
     navMarket: 'Marked', navImporters: 'Importører',
+    subBench: 'Benchmarks', subActors: 'Aktører', subDemand: 'Etterspørsel',
     anbudBrowseH: 'Bla i alle anbud',
     navOpp2: 'Muligheter', navMatch: 'Match min vin',
     navStartLabel: 'Start her', navToolsLabel: 'Verktøy',
@@ -1454,9 +1473,10 @@ const I18N = {
     themeToggle: 'light/dark', whoTitle: 'Used to stamp who uploaded / edited data',
     planLabel: 'Plan:', planTitle: 'Switch launch plan — the whole app shows data from the plan you pick here',
     subtitle: 'See which Vinmonopolet tenders a wine can win — and exactly what it takes to win them.',
-    navAnbud: 'Tenders', navMarked: 'Marketplace', navKalk: 'Calculator', navViner: 'Wines',
-    navPort: 'My portfolio', navKat: 'Producers', navAnalyse: 'Analytics', navOpp: 'Upload',
+    navAnbud: 'Tenders', navMarked: 'Marketplace', navKalk: 'Calculator', navViner: 'Match my wine',
+    navPort: 'Portfolio', navKat: 'Producers', navAnalyse: 'Analytics', navOpp: 'Upload',
     navMarket: 'Market', navImporters: 'Importers',
+    subBench: 'Benchmarks', subActors: 'Players', subDemand: 'Demand',
     anbudBrowseH: 'Browse all tenders',
     navOpp2: 'Opportunities', navMatch: 'Match my wine',
     navStartLabel: 'Start here', navToolsLabel: 'Tools',
@@ -3945,20 +3965,22 @@ function onTabShown(t) {
   else if (t === 'anbud') renderOpportunities();
   else if (t === 'viner') initMatchWine();
 }
+// Sub-views that live under a parent nav button (the "Marked" hub groups benchmarks, actors, demand).
+// A few tabs (opplasting, katalog) have no nav button at all — reachable only via in-page links.
+const TAB_PARENT = { importorer: 'mkt', analyse: 'mkt' };
+function syncSubnav(t) {
+  document.querySelectorAll('.subnav .msub').forEach(b => b.classList.toggle('on', b.dataset.sub === t));
+}
 function gotoTab(t) {
-  const btn = $('nav').querySelector(`button[data-t="${t}"]`); if (!btn) return;
-  $('nav').querySelectorAll('button').forEach(x => x.classList.toggle('on', x === btn));
+  const sec = $('tab-' + t); if (!sec) return;
+  const parent = TAB_PARENT[t] || t;
+  const btn = $('nav').querySelector(`button[data-t="${parent}"]`);
+  $('nav').querySelectorAll('button').forEach(x => x.classList.toggle('on', x === btn));  // btn null → none active
   document.querySelectorAll('.tab').forEach(s => s.classList.remove('on'));
-  $('tab-' + t).classList.add('on'); setTabHelp(t); onTabShown(t);
+  sec.classList.add('on'); setTabHelp(t); onTabShown(t); syncSubnav(t);
   scrollTo({ top: 0, behavior: 'smooth' });
 }
-$('nav').querySelectorAll('button').forEach(b => b.addEventListener('click', () => {
-  $('nav').querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b));
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('on'));
-  $('tab-' + b.dataset.t).classList.add('on');
-  setTabHelp(b.dataset.t);
-  onTabShown(b.dataset.t);
-}));
+$('nav').querySelectorAll('button').forEach(b => b.addEventListener('click', () => gotoTab(b.dataset.t)));
 
 /* ============ role-based entry ============ */
 let ROLE = null;
