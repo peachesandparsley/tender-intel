@@ -31,8 +31,8 @@ UA = "tender-intel pricing-verify/1.0 (+https://github.com/peachesandparsley/ten
 
 # Public sources. If a page moves, update the URL here and the parser below together — a fetch
 # failure is reported, never silently ignored.
-EXCISE_URL = "https://www.skatteetaten.no/en/rates/alcohol-tax/"
-VMP_MARKUP_URL = "https://www.vinmonopolet.no/informasjon-og-hjelp/varer-og-priser"
+EXCISE_URL = "https://www.skatteetaten.no/en/rates/alcoholic-beverages/"
+VMP_MARKUP_URL = "https://www.vinmonopolet.no/om-oss/drift/priser-og-avgifter"
 
 TOL = 0.01   # a rate that differs by more than this is "drift", not rounding
 
