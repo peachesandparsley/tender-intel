@@ -108,6 +108,9 @@ imp_b64 = base64.b64encode(open("importer_portfolio_template.xlsx", "rb").read()
 # grounding in what actually got listed, not estimates. Absent → the app's benchmark panels hide.
 market_index = json.load(open("market_index.json", encoding="utf-8")) if os.path.exists("market_index.json") else {}
 html = html.replace("/*MARKET_INDEX*/{}", json.dumps(market_index, ensure_ascii=False))
+# Representation-gap map (representation_gap.py): curated stature × VMP presence, candidate gaps. Optional.
+rep_gap = json.load(open("representation_gap.json", encoding="utf-8")) if os.path.exists("representation_gap.json") else {}
+html = html.replace("/*REPGAP*/{}", json.dumps(rep_gap, ensure_ascii=False))
 print(f"market index: {len(market_index.get('byCountryType', []))} origin×style benchmarks, "
       f"{len(market_index.get('importers', []))} importers" if market_index else "market index: none")
 

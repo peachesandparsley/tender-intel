@@ -187,6 +187,28 @@
   .subnav .msub:hover { border-color: var(--accent); color: var(--text-primary); }
   .subnav .msub.on { background: linear-gradient(180deg, var(--brand-2), var(--brand)); color: var(--on-brand);
     border-color: transparent; box-shadow: 0 6px 16px -10px color-mix(in oklab, var(--brand) 75%, transparent); }
+  /* Representation-gap caveat + rows */
+  .gap-caveat { background: color-mix(in oklab, var(--warn) 12%, var(--surface-1)); border: 1px solid color-mix(in oklab, var(--warn) 30%, var(--border));
+    border-radius: 10px; padding: 10px 13px; font-size: 12px; color: var(--text-secondary); line-height: 1.5; }
+  .gap-caveat b { color: var(--text-primary); }
+  .gaprow { display: flex; justify-content: space-between; gap: 16px; align-items: flex-start;
+    padding: 13px 6px; border-bottom: 1px solid var(--grid); flex-wrap: wrap; }
+  .gaprow.cand { background: var(--brand-tint); border: 1px solid color-mix(in oklab, var(--brand) 22%, var(--border));
+    border-radius: 12px; padding: 13px 14px; margin: 6px 0; }
+  .gap-cat b { font-size: 14px; letter-spacing: -0.01em; }
+  .gap-grape { color: var(--text-secondary); font-size: 12.5px; margin-left: 7px; }
+  .gap-note { display: block; color: var(--muted); font-size: 11.5px; margin-top: 3px; max-width: 64ch; line-height: 1.4; }
+  .gap-cols { display: flex; gap: 9px; align-items: center; flex-wrap: wrap; }
+  .gap-badge { font-size: 10.5px; text-transform: uppercase; letter-spacing: .04em; padding: 2px 9px;
+    border-radius: 999px; border: 1px solid var(--border); color: var(--muted); white-space: nowrap; }
+  .gap-badge.stat-iconic, .gap-badge.stat-major { color: var(--brand-ink); border-color: color-mix(in oklab, var(--brand) 40%, var(--border)); }
+  .gap-vmp { font-size: 13px; font-variant-numeric: tabular-nums; color: var(--text-primary); white-space: nowrap; }
+  .gap-vmp small { color: var(--muted); font-size: 11px; }
+  .gap-peer { font-size: 10.5px; color: var(--muted); font-style: italic; white-space: nowrap; }
+  .gap-read { font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 999px; background: var(--grid);
+    color: var(--text-secondary); white-space: nowrap; }
+  .gap-read.cand { background: linear-gradient(180deg, var(--brand-2), var(--brand)); color: var(--on-brand); }
+  .gap-read.watch { color: var(--brand-ink); background: var(--brand-tint); }
   .mkt-toggle { display: inline-flex; gap: 0; border: 1px solid var(--border); border-radius: 9px; overflow: hidden; margin-bottom: 12px; }
   .mkt-toggle .seg { background: var(--surface-1); border: none; padding: 7px 14px; font-size: 12.5px; font-weight: 600; color: var(--text-secondary); cursor: pointer; }
   .mkt-toggle .seg + .seg { border-left: 1px solid var(--border); }
@@ -883,6 +905,7 @@
       <button class="msub" data-sub="mkt" onclick="gotoTab('mkt')" data-i18n="subBench">Benchmarks</button>
       <button class="msub" data-sub="importorer" onclick="gotoTab('importorer')" data-i18n="subActors">Aktører</button>
       <button class="msub" data-sub="analyse" onclick="gotoTab('analyse')" data-i18n="subDemand">Etterspørsel</button>
+      <button class="msub" data-sub="gap" onclick="gotoTab('gap')" data-i18n="subGap">Gap</button>
     </div>
     <div class="card">
       <h2 data-i18n="mktExH">Marked — hva som faktisk ble lansert</h2>
@@ -898,6 +921,7 @@
       <button class="msub" data-sub="mkt" onclick="gotoTab('mkt')" data-i18n="subBench">Benchmarks</button>
       <button class="msub" data-sub="importorer" onclick="gotoTab('importorer')" data-i18n="subActors">Aktører</button>
       <button class="msub" data-sub="analyse" onclick="gotoTab('analyse')" data-i18n="subDemand">Etterspørsel</button>
+      <button class="msub" data-sub="gap" onclick="gotoTab('gap')" data-i18n="subGap">Gap</button>
     </div>
     <div class="card">
       <h2 id="findH"></h2>
@@ -1036,6 +1060,7 @@
       <button class="msub" data-sub="mkt" onclick="gotoTab('mkt')" data-i18n="subBench">Benchmarks</button>
       <button class="msub" data-sub="importorer" onclick="gotoTab('importorer')" data-i18n="subActors">Aktører</button>
       <button class="msub" data-sub="analyse" onclick="gotoTab('analyse')" data-i18n="subDemand">Etterspørsel</button>
+      <button class="msub" data-sub="gap" onclick="gotoTab('gap')" data-i18n="subGap">Gap</button>
     </div>
     <div class="card">
       <h2 data-i18n="h2Recur">Gjentakende etterspørsel — det Vinmonopolet ber om igjen og igjen</h2>
@@ -1084,6 +1109,23 @@
     </div>
   </section>
 
+  <!-- REPRESENTASJONSGAP -->
+  <section class="tab" id="tab-gap">
+    <div class="subnav">
+      <button class="msub" data-sub="mkt" onclick="gotoTab('mkt')" data-i18n="subBench">Benchmarks</button>
+      <button class="msub" data-sub="importorer" onclick="gotoTab('importorer')" data-i18n="subActors">Aktører</button>
+      <button class="msub" data-sub="analyse" onclick="gotoTab('analyse')" data-i18n="subDemand">Etterspørsel</button>
+      <button class="msub" data-sub="gap" onclick="gotoTab('gap')" data-i18n="subGap">Gap</button>
+    </div>
+    <div class="card">
+      <h2 data-i18n="gapH">Representasjonsgap — hva Vinmonopolet fører for lite av</h2>
+      <p class="note" style="margin:0 0 8px" data-i18n="gapIntro">Vi krysser Vinmonopolets hylleplass mot en ekstern målestokk for hvor viktig en kategori er. Høy anseelse + tynn tilstedeværelse = et <b>mulig</b> gap å utforske (som Aglianico) — ikke en bekreftet mulighet.</p>
+      <div class="gap-caveat" id="gapCaveat"></div>
+      <div id="gapList" style="margin-top:12px"></div>
+      <p class="mkt-src" id="gapSrc" style="margin-top:12px"></p>
+    </div>
+  </section>
+
   <!-- OPPLASTING -->
   <section class="tab" id="tab-opplasting">
     <div class="card">
@@ -1118,6 +1160,8 @@ let WINES = /*WINES*/[];
 // volumes, vintages, producers and importers by origin × style. Grounds the app in what actually
 // got listed rather than estimates. Empty {} when no data is embedded.
 const MARKET_INDEX = /*MARKET_INDEX*/{};
+// Representation-gap map: curated stature × VMP presence → candidate gaps (representation_gap.py). Optional.
+const REP_GAP = /*REPGAP*/{};
 const TEMPLATE_B64 = "/*TEMPLATE_B64*/";
 const IMPORTER_TEMPLATE_B64 = "/*IMPORTER_TEMPLATE_B64*/";
 let MYPORT = [];
@@ -1131,7 +1175,9 @@ const I18N = {
     navAnbud: 'Anbud', navMarked: 'Marketplace', navKalk: 'Kalkulator', navViner: 'Match min vin',
     navPort: 'Portefølje', navKat: 'Produsenter', navAnalyse: 'Analyse', navOpp: 'Last opp',
     navMarket: 'Marked', navImporters: 'Importører',
-    subBench: 'Benchmarks', subActors: 'Aktører', subDemand: 'Etterspørsel',
+    subBench: 'Benchmarks', subActors: 'Aktører', subDemand: 'Etterspørsel', subGap: 'Gap',
+    gapH: 'Representasjonsgap — hva Vinmonopolet fører for lite av',
+    gapIntro: 'Vi krysser Vinmonopolets hylleplass mot en ekstern målestokk for hvor viktig en kategori er. Høy anseelse + tynn tilstedeværelse = et <b>mulig</b> gap å utforske (som Aglianico) — ikke en bekreftet mulighet.',
     anbudBrowseH: 'Bla i alle anbud',
     navOpp2: 'Muligheter', navMatch: 'Match min vin',
     navStartLabel: 'Start her', navToolsLabel: 'Verktøy',
@@ -1506,7 +1552,9 @@ const I18N = {
     navAnbud: 'Tenders', navMarked: 'Marketplace', navKalk: 'Calculator', navViner: 'Match my wine',
     navPort: 'Portfolio', navKat: 'Producers', navAnalyse: 'Analytics', navOpp: 'Upload',
     navMarket: 'Market', navImporters: 'Importers',
-    subBench: 'Benchmarks', subActors: 'Players', subDemand: 'Demand',
+    subBench: 'Benchmarks', subActors: 'Players', subDemand: 'Demand', subGap: 'Gaps',
+    gapH: 'Representation gap — what Vinmonopolet under-carries',
+    gapIntro: 'We cross Vinmonopolet\'s shelf presence against an external measure of how important a category is. High stature + thin presence = a <b>candidate</b> gap worth investigating (like Aglianico) — not a proven opportunity.',
     anbudBrowseH: 'Browse all tenders',
     navOpp2: 'Opportunities', navMatch: 'Match my wine',
     navStartLabel: 'Start here', navToolsLabel: 'Tools',
@@ -3989,6 +4037,7 @@ function onTabShown(t) {
   if (t === 'kalk') calc();
   else if (t === 'mkt') renderMarketExplorer();
   else if (t === 'importorer') renderImporterFinder();
+  else if (t === 'gap') renderRepGap();
   else if (t === 'analyse') renderAnalyse();
   else if (t === 'portefolje') renderPortfolio();
   else if (t === 'katalog') renderKatalog();
@@ -3997,7 +4046,7 @@ function onTabShown(t) {
 }
 // Sub-views that live under a parent nav button (the "Marked" hub groups benchmarks, actors, demand).
 // A few tabs (opplasting, katalog) have no nav button at all — reachable only via in-page links.
-const TAB_PARENT = { importorer: 'mkt', analyse: 'mkt' };
+const TAB_PARENT = { importorer: 'mkt', analyse: 'mkt', gap: 'mkt' };
 function syncSubnav(t) {
   document.querySelectorAll('.subnav .msub').forEach(b => b.classList.toggle('on', b.dataset.sub === t));
 }
@@ -4719,6 +4768,42 @@ function renderMarketExplorer() {
     </div>
     <div class="mktrow-head"><span>${L.mktColProfile}</span><span>${L.mktColBand}</span><span>${L.mktColN}</span></div>
     ${body}`;
+}
+// ============ Representation gap: curated stature × VMP presence → candidate gaps ============
+// Deliberately a HYPOTHESIS surface, heavily labelled: presence is our partial launch sample, stature is a
+// curated/sourced reference, and the strongest signals (peer Nordic monopolies, real sell-through) are
+// marked pending. It never outputs a "buy" verdict — only ranked candidates to investigate.
+const GAP_READ = {
+  'under-represented — candidate gap': { no: 'underrepresentert — mulig gap', en: 'under-represented — candidate gap', cls: 'cand' },
+  'emerging — worth watching': { no: 'i vekst — verdt å følge', en: 'emerging — worth watching', cls: 'watch' },
+  'well represented': { no: 'godt representert', en: 'well represented', cls: 'ok' },
+  'represented': { no: 'representert', en: 'represented', cls: 'ok' },
+};
+const GAP_STAT = { iconic: { no: 'ikonisk', en: 'iconic' }, major: { no: 'stor', en: 'major' },
+  rising: { no: 'i vekst', en: 'rising' }, classic: { no: 'klassisk', en: 'classic' } };
+const GAP_PRES = { deep: { no: 'dyp', en: 'deep' }, solid: { no: 'solid', en: 'solid' },
+  moderate: { no: 'moderat', en: 'moderate' }, thin: { no: 'tynn', en: 'thin' }, absent: { no: 'fraværende', en: 'absent' } };
+function renderRepGap() {
+  const box = $('gapList'); if (!box) return;
+  const en = LANG === 'en', rows = (REP_GAP && REP_GAP.rows) || [], meta = REP_GAP.meta || {};
+  const pick = (m, k) => (m[k] ? (en ? m[k].en : m[k].no) : k);
+  const cav = $('gapCaveat'); if (cav) cav.innerHTML = `<b>${en ? 'Hypothesis, not verdict.' : 'Hypotese, ikke fasit.'}</b> ${esc(meta.disclaimer || '')}`;
+  const src = $('gapSrc'); if (src) src.innerHTML = meta.presenceSource
+    ? `${en ? 'Presence' : 'Tilstedeværelse'}: ${esc(meta.presenceSource)}<br>${en ? 'Stature' : 'Anseelse'}: ${esc(meta.statureSource)}<br>${en ? 'Pending' : 'Venter på'}: ${(meta.pending || []).map(esc).join(' · ')}` : '';
+  if (!rows.length) { box.innerHTML = `<p class="note" style="color:var(--muted)">${en ? 'Representation-gap data not loaded (run representation_gap.py).' : 'Gap-data ikke lastet (kjør representation_gap.py).'}</p>`; return; }
+  box.innerHTML = rows.map(r => {
+    const rd = GAP_READ[r.read] || { no: r.read, en: r.read, cls: '' };
+    return `<div class="gaprow ${rd.cls}">
+      <div class="gap-cat"><b>${esc(r.region)} · ${esc(styleLabel(r.style).toLowerCase())}</b>
+        <span class="gap-grape">${esc(r.grape)}</span>
+        <span class="gap-note">${esc(r.statureNote)}</span></div>
+      <div class="gap-cols">
+        <span class="gap-badge stat-${r.stature}" title="${esc(en ? 'stature — curated reference' : 'anseelse — kuratert referanse')}">${pick(GAP_STAT, r.stature)}</span>
+        <span class="gap-vmp" title="${esc(en ? 'VMP launch-history presence (partial sample)' : 'tilstedeværelse i VMPs lanseringshistorikk (delvis utvalg)')}">${r.vmpLaunches ? fmt(r.vmpLaunches, 0) : '—'} <small>${pick(GAP_PRES, r.presence)}</small></span>
+        <span class="gap-peer" title="Systembolaget / Alko">${en ? 'peer: pending' : 'peer: venter'}</span>
+        <span class="gap-read ${rd.cls}">${en ? rd.en : rd.no}${r.confidence !== 'n/a' ? ` · ${r.confidence}` : ''}</span>
+      </div></div>`;
+  }).join('');
 }
 // ============ Trade finder: importers AND producers, same card, real launch history ============
 // Importers show the producers they bring in; producers show their launch record + which importers
